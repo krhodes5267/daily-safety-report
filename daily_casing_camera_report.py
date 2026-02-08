@@ -16,7 +16,8 @@ All API speeds that arrive in km/h are converted to mph (* 0.621371).
 
 Tier Classification:
 - RED:    Immediate Action (distraction, cell phone, drowsiness, close following,
-          forward collision warning, collision, near collision, stop sign, unsafe lane change)
+          forward collision warning, collision, near collision, stop sign,
+          unsafe lane change, lane swerving)
 - ORANGE: Coaching Required (hard brake, seatbelt, camera obstruction, smoking)
           Also the default for any unknown event types.
 - YELLOW: Monitoring (hard accel, hard corner, speed violation)
@@ -26,6 +27,7 @@ import requests
 import smtplib
 import os
 import sys
+import json
 from datetime import datetime, timedelta, timezone
 from html import escape as html_escape
 from email.mime.multipart import MIMEMultipart
@@ -150,6 +152,9 @@ EVENT_TYPE_NORMALIZE = {
     "ran_stop_sign": "stop_sign_violation",
     "unsafe_lane_change": "unsafe_lane_change",
     "lane_change": "unsafe_lane_change",
+    "aggregated_lane_swerving": "lane_swerving",
+    "lane_swerving": "lane_swerving",
+    "lane_swerve": "lane_swerving",
     # ORANGE types
     "hard_brake": "hard_brake",
     "hard_braking": "hard_brake",
@@ -182,7 +187,7 @@ EVENT_TYPE_NORMALIZE = {
 RED_TYPES = {
     "distraction", "cell_phone", "drowsiness", "close_following",
     "forward_collision_warning", "collision", "near_collision",
-    "stop_sign_violation", "unsafe_lane_change",
+    "stop_sign_violation", "unsafe_lane_change", "lane_swerving",
 }
 
 ORANGE_TYPES = {
@@ -203,6 +208,7 @@ EVENT_SEVERITY_ORDER = {
     "drowsiness": 6,
     "stop_sign_violation": 7,
     "unsafe_lane_change": 8,
+    "lane_swerving": 8,   # Same severity as unsafe lane change (pre-crash indicator)
     "close_following": 9,
     "hard_brake": 10,
     "seat_belt_violation": 11,
@@ -224,6 +230,7 @@ EVENT_DISPLAY_NAMES = {
     "near_collision": "Near Collision",
     "stop_sign_violation": "Stop Sign Violation",
     "unsafe_lane_change": "Unsafe Lane Change",
+    "lane_swerving": "Lane Swerving",
     "hard_brake": "Hard Brake",
     "seat_belt_violation": "Seatbelt Violation",
     "camera_obstruction": "Camera Obstruction",
@@ -512,6 +519,26 @@ def get_camera_events_for_date(report_date, vehicle_drivers, vehicle_yards, casi
                 pag_info = data.get("pagination", {})
                 print(f"    First page: {len(events)} events, pagination: {pag_info}")
 
+                # Dump first event's full JSON for field discovery/debugging
+                if events:
+                    first_evt = events[0]
+                    unwrapped = first_evt.get("driver_performance_event", first_evt)
+                    print(f"\n    === FIRST RAW EVENT (full JSON for field discovery) ===")
+                    # Print all fields except large telemetry arrays
+                    debug_copy = {}
+                    for k, v in unwrapped.items():
+                        if isinstance(v, list) and len(v) > 5:
+                            debug_copy[k] = f"[array of {len(v)} items]"
+                        else:
+                            debug_copy[k] = v
+                    print(json.dumps(debug_copy, indent=2, default=str))
+                    # Specifically highlight video and speed fields
+                    print(f"\n    Speed fields: start_speed={unwrapped.get('start_speed')}, "
+                          f"max_speed={unwrapped.get('max_speed')}, "
+                          f"end_speed={unwrapped.get('end_speed')}")
+                    print(f"    camera_media={unwrapped.get('camera_media')}")
+                    print(f"    === END FIRST EVENT ===\n")
+
             raw_events.extend(events)
 
             # Handle pagination
@@ -634,29 +661,12 @@ def enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
     # --- Yard ---
     yard = vehicle_yards.get(vehicle_number, "")
 
-    # --- Speed (check for mph first, fall back to km/h conversion) ---
-    speed_raw = (
-        event.get("speed_miles_per_hour")
-        or event.get("speed_mph")
-        or event.get("vehicle_speed_mph")
-    )
-    if speed_raw is not None:
-        try:
-            speed_mph = round(float(speed_raw), 1)
-        except (ValueError, TypeError):
-            speed_mph = 0
-    else:
-        speed_kmh = (
-            event.get("speed")
-            or event.get("vehicle_speed")
-            or event.get("speed_km_per_hour")
-            or event.get("speed_kmh")
-            or 0
-        )
-        try:
-            speed_mph = round(float(speed_kmh) * KMH_TO_MPH, 1) if speed_kmh else 0
-        except (ValueError, TypeError):
-            speed_mph = 0
+    # --- Speed (API returns start_speed/max_speed in km/h, convert to mph) ---
+    speed_kmh = event.get("start_speed") or event.get("max_speed") or event.get("end_speed") or 0
+    try:
+        speed_mph = round(float(speed_kmh) * KMH_TO_MPH, 1) if speed_kmh else 0
+    except (ValueError, TypeError):
+        speed_mph = 0
 
     # --- Duration ---
     duration_raw = event.get("duration") or event.get("duration_seconds") or 0
@@ -670,30 +680,42 @@ def enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
     )
     formatted_time = _utc_to_central(timestamp)
 
-    # --- Video URL (check multiple possible fields) ---
-    video_url = (
-        event.get("video_url")
-        or event.get("s3_url")
-        or event.get("media_url")
-        or event.get("video_upload_url")
-        or ""
-    )
-    if not video_url:
-        media = event.get("media") or event.get("video") or {}
-        if isinstance(media, dict):
+    # --- Video URL (API uses 'camera_media' field) ---
+    video_url = ""
+    camera_media = event.get("camera_media")
+    if camera_media:
+        if isinstance(camera_media, str):
+            video_url = camera_media
+        elif isinstance(camera_media, dict):
             video_url = (
-                media.get("url", "")
-                or media.get("video_url", "")
-                or media.get("s3_url", "")
+                camera_media.get("url", "")
+                or camera_media.get("video_url", "")
+                or camera_media.get("s3_url", "")
+                or camera_media.get("media_url", "")
+                or camera_media.get("recording_url", "")
             )
-        elif isinstance(media, list) and media:
-            first = media[0]
+            # Check nested 'video' or 'media' sub-objects
+            if not video_url:
+                for sub_key in ("video", "media", "recording"):
+                    sub = camera_media.get(sub_key)
+                    if sub and isinstance(sub, dict):
+                        video_url = sub.get("url", "") or sub.get("video_url", "")
+                        if video_url:
+                            break
+        elif isinstance(camera_media, list) and camera_media:
+            first = camera_media[0]
             if isinstance(first, dict):
-                video_url = first.get("url", "") or first.get("video_url", "")
+                video_url = (
+                    first.get("url", "")
+                    or first.get("video_url", "")
+                    or first.get("s3_url", "")
+                )
+            elif isinstance(first, str):
+                video_url = first
 
-    # --- Location ---
-    lat = event.get("start_lat") or event.get("lat") or event.get("latitude")
-    lon = event.get("start_lon") or event.get("lon") or event.get("longitude")
+    # --- Location (API uses 'lat'/'lon') ---
+    lat = event.get("lat") or event.get("start_lat") or event.get("latitude")
+    lon = event.get("lon") or event.get("start_lon") or event.get("longitude")
     location = f"{lat:.4f}, {lon:.4f}" if lat and lon else ""
 
     return {
@@ -954,7 +976,7 @@ def create_word_document(events, grouped, yesterday_date):
         breakdown = _tier_breakdown_text(red_events, [
             "Distraction", "Cell Phone", "Drowsiness", "Close Following",
             "Forward Collision Warning", "Collision", "Near Collision",
-            "Stop Sign Violation", "Unsafe Lane Change",
+            "Stop Sign Violation", "Unsafe Lane Change", "Lane Swerving",
         ])
         if breakdown:
             p = doc.add_paragraph()
@@ -1351,7 +1373,8 @@ def main():
     print("=" * 80)
     print("\n  Tier Classification:")
     print("    RED:    Immediate Action (distraction, cell phone, drowsiness, close following,")
-    print("            collision, near collision, forward collision warning, stop sign, unsafe lane change)")
+    print("            collision, near collision, forward collision warning, stop sign,")
+    print("            unsafe lane change, lane swerving)")
     print("    ORANGE: Coaching Required (hard brake, seatbelt, camera obstruction, smoking)")
     print("    YELLOW: Monitoring (hard accel, hard corner, speed violation)")
     print("    Unknown event types default to ORANGE")

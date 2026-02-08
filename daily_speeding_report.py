@@ -8,10 +8,10 @@ Pulls speeding events from Motive API (last 24 hours) and generates:
 - Word document (.docx) with full event table
 - HTML email with the same data, sent via Gmail SMTP
 
-Thresholds:
-- RED: 100+ mph max speed (termination-level)
-- YELLOW: 90-99 mph max speed (formal coaching)
-- ORANGE: 80-89 mph max speed (monitoring)
+Thresholds (whichever is worse wins):
+- RED: 15+ mph over posted limit OR 90+ mph absolute (termination-level)
+- ORANGE: 10-14 mph over posted limit (formal coaching)
+- YELLOW: 6-9 mph over posted limit (monitoring)
 - Repeat offenders: drivers with 2+ events flagged separately
 
 Uses the /v1/speeding_events endpoint which returns actual speeding-over-posted-limit
@@ -199,15 +199,15 @@ def enrich_event(event):
     over_speed_kmh = event.get("max_over_speed_in_kph") or event.get("avg_over_speed_in_kph") or 0
     overspeed = round(over_speed_kmh * KMH_TO_MPH, 1)
 
-    # Tier classification based on max speed in mph
-    if max_speed >= 100:
+    # Tier classification: check BOTH absolute speed AND over-limit, worst wins
+    if overspeed >= 15 or max_speed >= 90:
         tier = "RED"
-    elif max_speed >= 90:
-        tier = "YELLOW"
-    elif max_speed >= 80:
+    elif overspeed >= 10:
         tier = "ORANGE"
+    elif overspeed >= 6:
+        tier = "YELLOW"
     else:
-        tier = "GREEN"
+        tier = "YELLOW"  # All API events are already 6+ over
 
     driver_name = _get_driver_name(event)
 
@@ -353,22 +353,22 @@ def create_word_document(events, yesterday_date):
 
     if red_events:
         p = doc.add_paragraph()
-        run = p.add_run(f"  RED - TERMINATION LEVEL (100+ mph): {len(red_events)}")
+        run = p.add_run(f"  RED - TERMINATION (15+ over or 90+ mph): {len(red_events)}")
         run.font.color.rgb = RGBColor(255, 0, 0)
-        run.font.bold = True
-
-    if yellow_events:
-        p = doc.add_paragraph()
-        run = p.add_run(
-            f"  YELLOW - FORMAL COACHING (90-99 mph): {len(yellow_events)}"
-        )
-        run.font.color.rgb = RGBColor(204, 102, 0)
         run.font.bold = True
 
     if orange_events:
         p = doc.add_paragraph()
-        run = p.add_run(f"  ORANGE - MONITOR (80-89 mph): {len(orange_events)}")
+        run = p.add_run(
+            f"  ORANGE - FORMAL COACHING (10-14 over): {len(orange_events)}"
+        )
         run.font.color.rgb = RGBColor(255, 153, 0)
+        run.font.bold = True
+
+    if yellow_events:
+        p = doc.add_paragraph()
+        run = p.add_run(f"  YELLOW - MONITORING (6-9 over): {len(yellow_events)}")
+        run.font.color.rgb = RGBColor(204, 102, 0)
         run.font.bold = True
 
     doc.add_paragraph()
@@ -439,7 +439,7 @@ def create_word_document(events, yesterday_date):
                         run.font.size = Pt(8)
     else:
         p = doc.add_paragraph()
-        run = p.add_run("No high-speed events (80+ mph) in the last 24 hours")
+        run = p.add_run("No speeding events in the last 24 hours")
         run.font.color.rgb = RGBColor(0, 128, 0)
         run.font.bold = True
 
@@ -507,11 +507,11 @@ def build_html_report(events, yesterday_date):
     # --- Summary ---
     summary = f"<b>Total Speeding Events: {len(events)}</b><br><br>"
     if red_events:
-        summary += f'<div style="color:#FF0000;font-weight:bold;margin:4px 0 4px 20px;">&#128308; RED - TERMINATION LEVEL (100+ mph): {len(red_events)}</div>'
-    if yellow_events:
-        summary += f'<div style="color:{C_ORANGE};font-weight:bold;margin:4px 0 4px 20px;">&#128992; YELLOW - FORMAL COACHING (90-99 mph): {len(yellow_events)}</div>'
+        summary += f'<div style="color:#FF0000;font-weight:bold;margin:4px 0 4px 20px;">&#128308; RED - TERMINATION (15+ over or 90+ mph): {len(red_events)}</div>'
     if orange_events:
-        summary += f'<div style="color:{C_AMBER};font-weight:bold;margin:4px 0 4px 20px;">&#128993; ORANGE - MONITOR (80-89 mph): {len(orange_events)}</div>'
+        summary += f'<div style="color:{C_AMBER};font-weight:bold;margin:4px 0 4px 20px;">&#128993; ORANGE - FORMAL COACHING (10-14 over): {len(orange_events)}</div>'
+    if yellow_events:
+        summary += f'<div style="color:{C_ORANGE};font-weight:bold;margin:4px 0 4px 20px;">&#128992; YELLOW - MONITORING (6-9 over): {len(yellow_events)}</div>'
     if not events:
         summary += f'<b style="color:{C_GREEN};">&#9989; No speeding events in the last 24 hours!</b>'
 
@@ -554,28 +554,28 @@ def build_html_report(events, yesterday_date):
 
         parts.append(f"""
 <tr><td style="padding:25px 40px;border-top:3px solid #FF0000;">
-  <h2 style="color:#FF0000;margin:0 0 15px 0;font-size:18px;">RED ALERTS - TERMINATION LEVEL ({len(red_events)})</h2>
+  <h2 style="color:#FF0000;margin:0 0 15px 0;font-size:18px;">RED ALERTS - TERMINATION (15+ over or 90+ mph) ({len(red_events)})</h2>
   {red_html}
 </td></tr>""")
 
-    # --- YELLOW Events Detail ---
-    if yellow_events:
-        yellow_html = ""
-        for e in yellow_events:
-            yellow_html += f'<div style="background:#fffbf0;border-left:4px solid {C_ORANGE};padding:12px 15px;margin:10px 0;">'
-            yellow_html += f'<b style="color:{C_ORANGE};">FORMAL COACHING REQUIRED</b><br>'
-            yellow_html += f'<b>Driver:</b> {_h(e["driver"])} | <b>Vehicle:</b> {_h(e["vehicle"])}<br>'
-            yellow_html += f'<b>Max Speed:</b> {e["speed"]} mph | <b>Limit:</b> {e["posted_speed"]} mph | <b>Over:</b> +{e["overspeed"]} mph<br>'
-            yellow_html += f'<b>Duration:</b> {_h(e["duration"])} | <b>Severity:</b> {_h(e["severity"])}<br>'
-            yellow_html += f'<b>Time:</b> {_h(e["time"])} | <b>Location:</b> {_h(e["location"])}<br>'
+    # --- ORANGE Events Detail ---
+    if orange_events:
+        orange_html = ""
+        for e in orange_events:
+            orange_html += f'<div style="background:#fffbf0;border-left:4px solid {C_AMBER};padding:12px 15px;margin:10px 0;">'
+            orange_html += f'<b style="color:{C_AMBER};">FORMAL COACHING REQUIRED</b><br>'
+            orange_html += f'<b>Driver:</b> {_h(e["driver"])} | <b>Vehicle:</b> {_h(e["vehicle"])}<br>'
+            orange_html += f'<b>Max Speed:</b> {e["speed"]} mph | <b>Limit:</b> {e["posted_speed"]} mph | <b>Over:</b> +{e["overspeed"]} mph<br>'
+            orange_html += f'<b>Duration:</b> {_h(e["duration"])} | <b>Severity:</b> {_h(e["severity"])}<br>'
+            orange_html += f'<b>Time:</b> {_h(e["time"])} | <b>Location:</b> {_h(e["location"])}<br>'
             if e["maps_link"] != "N/A":
-                yellow_html += f'<a href="{_h(e["maps_link"])}">View on Google Maps</a><br>'
-            yellow_html += "</div>"
+                orange_html += f'<a href="{_h(e["maps_link"])}">View on Google Maps</a><br>'
+            orange_html += "</div>"
 
         parts.append(f"""
-<tr><td style="padding:25px 40px;border-top:3px solid {C_ORANGE};">
-  <h2 style="color:{C_ORANGE};margin:0 0 15px 0;font-size:18px;">YELLOW ALERTS - FORMAL COACHING ({len(yellow_events)})</h2>
-  {yellow_html}
+<tr><td style="padding:25px 40px;border-top:3px solid {C_AMBER};">
+  <h2 style="color:{C_AMBER};margin:0 0 15px 0;font-size:18px;">ORANGE ALERTS - FORMAL COACHING (10-14 over) ({len(orange_events)})</h2>
+  {orange_html}
 </td></tr>""")
 
     # --- Full Event Table ---
@@ -703,10 +703,10 @@ def main():
     print("DAILY SPEEDING REPORT - AUTOMATED")
     print(f"Report for: {yesterday.strftime('%A, %B %d, %Y')}")
     print("=" * 80)
-    print("\n  Thresholds:")
-    print("    RED:    100+ mph (termination-level)")
-    print("    YELLOW: 90-99 mph (formal coaching)")
-    print("    ORANGE: 80-89 mph (monitoring)")
+    print("\n  Thresholds (whichever is worse wins):")
+    print("    RED:    15+ over posted limit OR 90+ mph (termination)")
+    print("    ORANGE: 10-14 over posted limit (formal coaching)")
+    print("    YELLOW: 6-9 over posted limit (monitoring)")
     print("    Repeat: 2+ events flagged\n")
 
     print("[1] Fetching speeding events from Motive...")

@@ -169,13 +169,15 @@ def get_24h_speeding_events():
             if not events:
                 break
 
-            for evt in events:
+            for wrapper in events:
+                # Each event is nested: {"speeding_event": {actual data}}
+                evt = wrapper.get("speeding_event", wrapper)
                 enriched = enrich_event(evt)
                 all_events.append(enriched)
 
-            # Check for more pages
-            pagination = data.get("pagination", {})
-            if pagination.get("has_next_page") or len(events) >= 100:
+            # Pagination: API returns total/per_page/page_no at top level
+            total = data.get("total", 0)
+            if page * 100 < total:
                 page += 1
             else:
                 break

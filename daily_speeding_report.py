@@ -85,14 +85,19 @@ MOTIVE_GROUP_MAP = {
 # MOTIVE API - PULL SPEEDING EVENTS
 # ==============================================================================
 
-def _get_max_speed(evt):
-    """Get the max speed from an event, checking multiple fields.
+KMH_TO_MPH = 0.621371
 
-    Motive API stores speed data in:
+
+def _get_max_speed(evt):
+    """Get the max speed from an event in mph.
+
+    Motive API returns all speeds in km/h. We convert to mph here so
+    every downstream consumer (thresholds, display, HTML) uses mph.
+
+    Speed fields checked:
     - start_speed: speed at event start
     - m_veh_spd: array of vehicle speed samples during the event
     - m_gps_spd: array of GPS-derived speed samples
-    The 'speed' and 'posted_speed' fields do NOT exist on these events.
     """
     candidates = []
 
@@ -108,7 +113,8 @@ def _get_max_speed(evt):
     if m_gps_spd and isinstance(m_gps_spd, list):
         candidates.append(max(m_gps_spd))
 
-    return max(candidates) if candidates else 0
+    max_kmh = max(candidates) if candidates else 0
+    return max_kmh * KMH_TO_MPH
 
 
 def _get_driver_name(evt):

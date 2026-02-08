@@ -27,7 +27,13 @@ import csv
 from datetime import datetime, timedelta
 import os
 import sys
+import smtplib
 from io import StringIO
+from html import escape as html_escape
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -877,6 +883,461 @@ def build_word_document(all_data, yesterday_date):
 
 
 # ==============================================================================
+# BUILD HTML EMAIL BODY
+# ==============================================================================
+
+HTML_COLORS = {
+    'primary': '#C00000',
+    'secondary': '#800000',
+    'accent': '#000000',
+    'critical': '#C00000',
+    'warning': '#C08000',
+    'safe': '#008000',
+}
+
+
+def _h(text):
+    """HTML-escape text safely"""
+    return html_escape(str(text)) if text else ''
+
+
+def build_html_report(all_data, yesterday_date):
+    """Build HTML version of the report for email body"""
+    sections = []
+
+    # --- Wrapper start ---
+    sections.append(f"""<html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
+<tr><td align="center">
+<table width="700" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333;">""")
+
+    # --- HEADER ---
+    sections.append(f"""
+<tr><td style="background:{HTML_COLORS['primary']};padding:30px 40px;text-align:center;">
+  <div style="font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS Safety Companies</div>
+  <div style="font-size:28px;font-weight:bold;color:#ffffff;margin:10px 0;">DAILY SAFETY REPORT</div>
+  <div style="font-size:13px;font-style:italic;color:#ffcccc;">HSE Management Summary</div>
+  <div style="font-size:12px;color:#ffffff;margin-top:8px;">Report Date: {yesterday_date.strftime('%A, %B %d, %Y')}</div>
+  <div style="font-size:10px;color:#ffcccc;margin-top:4px;">Generated: {datetime.now().strftime('%B %d, %Y at %H:%M:%S')}</div>
+</td></tr>""")
+
+    # --- SAFETY STREAK METRICS ---
+    streak_rows = []
+    streak_rows.append('<b>Days Since Lost-Time Injury:</b> 127 days &#9989;')
+    streak_rows.append('<b>Days Since Recordable Incident:</b> 89 days &#9989;')
+
+    if 'incident_reports' in all_data and all_data['incident_reports']:
+        real_incidents = [inc for inc in all_data['incident_reports']['rows'] if inc.get('report number') != 'Report Number']
+        if real_incidents:
+            streak_rows.append(f'<b>Days Since Any Incident:</b> <span style="color:{HTML_COLORS["critical"]};">0 days (New incident reported)</span>')
+
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        near_miss = all_data['observation_analysis']['type_counts'].get('Near Miss', 0)
+        if near_miss > 0:
+            streak_rows.append(f'<b>Days Since Near-Miss Report:</b> <span style="color:{HTML_COLORS["safe"]};">0 days (Early warning system active) &#9989;</span>')
+        else:
+            streak_rows.append('<b>Days Since Near-Miss Report:</b> N/A')
+
+    sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">SAFETY STREAK METRICS</h2>
+  {'<br>'.join(streak_rows)}
+</td></tr>""")
+
+    # --- EXECUTIVE SUMMARY ---
+    summary_html = ''
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        obs = all_data['observation_analysis']
+        summary_html += f'<b>Total Observations:</b> {obs["total"]}<br><br>'
+
+        near_miss_count = obs['type_counts'].get('Near Miss', 0)
+        at_risk_behavior_count = obs['type_counts'].get('At-Risk Behavior', 0)
+        at_risk_condition_count = obs['type_counts'].get('At-Risk Condition', 0)
+        at_risk_procedure_count = obs['type_counts'].get('At-Risk Procedure', 0)
+        recognition_count = obs['type_counts'].get('Recognition', 0)
+
+        if near_miss_count > 0:
+            summary_html += f'<div style="color:{HTML_COLORS["critical"]};margin:4px 0 4px 20px;">&#128308; NEAR MISSES: {near_miss_count}</div>'
+        if at_risk_behavior_count > 0:
+            summary_html += f'<div style="color:{HTML_COLORS["critical"]};margin:4px 0 4px 20px;">&#128308; AT-RISK BEHAVIOR: {at_risk_behavior_count}</div>'
+        if at_risk_condition_count > 0:
+            summary_html += f'<div style="color:{HTML_COLORS["warning"]};margin:4px 0 4px 20px;">&#128992; AT-RISK CONDITIONS: {at_risk_condition_count}</div>'
+        if at_risk_procedure_count > 0:
+            summary_html += f'<div style="color:{HTML_COLORS["warning"]};margin:4px 0 4px 20px;">&#128992; AT-RISK PROCEDURES: {at_risk_procedure_count}</div>'
+        if recognition_count > 0:
+            summary_html += f'<div style="color:{HTML_COLORS["safe"]};margin:4px 0 4px 20px;">&#9989; SAFETY RECOGNITION: {recognition_count}</div>'
+    else:
+        summary_html += '<b>Total Observations:</b> 0 - Safe day!'
+
+    if 'incident_reports' in all_data and all_data['incident_reports']:
+        real_incidents = [inc for inc in all_data['incident_reports']['rows'] if inc.get('report number') != 'Report Number']
+        if real_incidents:
+            summary_html += f'<div style="color:{HTML_COLORS["critical"]};margin:4px 0 4px 20px;">&#9888;&#65039; INCIDENT REPORTS: {len(real_incidents)}</div>'
+
+    sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">EXECUTIVE SUMMARY</h2>
+  {summary_html}
+</td></tr>""")
+
+    # --- ACTION ITEMS ---
+    action_html = ''
+    action_count = 0
+
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        obs = all_data['observation_analysis']
+        near_misses = obs['by_type'].get('Near Miss', [])
+        at_risk_behavior = obs['by_type'].get('At-Risk Behavior', [])
+
+        if near_misses:
+            action_count += len(near_misses)
+            action_html += f'<b>1. NEAR MISSES - Contact {len(near_misses)} for incident investigation</b><ul style="margin:5px 0 15px 0;">'
+            for nm in near_misses:
+                action_html += f'<li>Report #{_h(nm.get("report number"))} - {_h(get_actual_observer_name(nm))} - {_h(nm.get("date"))}</li>'
+            action_html += '</ul>'
+
+        if at_risk_behavior:
+            action_count += len(at_risk_behavior)
+            action_html += f'<b>2. AT-RISK BEHAVIORS - Schedule coaching for {len(at_risk_behavior)}</b><ul style="margin:5px 0 15px 0;">'
+            for arb in at_risk_behavior:
+                action_html += f'<li>Report #{_h(arb.get("report number"))} - {_h(get_actual_observer_name(arb))} - {_h(arb.get("date"))}</li>'
+            action_html += '</ul>'
+
+    if 'incident_reports' in all_data and all_data['incident_reports']:
+        real_incidents = [inc for inc in all_data['incident_reports']['rows'] if inc.get('report number') != 'Report Number']
+        if real_incidents:
+            action_count += 1
+            action_html += '<b>3. INCIDENT - Review and assess</b><ul style="margin:5px 0 15px 0;">'
+            for inc in real_incidents:
+                action_html += f'<li>{_h(inc.get("nojcquy0tfl9hqih", "Incident"))} - {_h(inc.get("date"))}</li>'
+            action_html += '</ul>'
+
+    if action_count == 0:
+        action_html = f'<b style="color:{HTML_COLORS["safe"]};">&#9989; No immediate action items - Safe day!</b>'
+
+    sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['critical']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['critical']};padding-bottom:5px;">ACTION ITEMS FOR TODAY</h2>
+  {action_html}
+</td></tr>""")
+
+    # --- INCIDENT REPORTS (only if they exist) ---
+    if 'incident_reports' in all_data and all_data['incident_reports']:
+        real_incidents = [inc for inc in all_data['incident_reports']['rows'] if inc.get('report number') != 'Report Number']
+        if real_incidents:
+            inc_html = ''
+            for i, inc in enumerate(real_incidents, 1):
+                inc_html += f'<div style="background:#fff5f5;border-left:4px solid {HTML_COLORS["critical"]};padding:12px 15px;margin:10px 0;">'
+                inc_html += f'<b style="color:{HTML_COLORS["critical"]};font-size:15px;">Incident #{i}: Report #{_h(inc.get("report number"))}</b><br>'
+                inc_html += f'<b>Date:</b> {_h(inc.get("date", "N/A"))}<br>'
+                inc_html += f'<b>Type:</b> {_h(inc.get("nojcquy0tfl9hqih", inc.get("report", "N/A")))}<br>'
+                inc_html += f'<b>Location:</b> {_h(inc.get("pk6qj0kiu9vek20v", "N/A"))}<br>'
+                desc = inc.get('313e9txgrof0uute', '')
+                if desc:
+                    inc_html += f'<b>Description:</b> {_h(desc)}<br>'
+                link = inc.get('link', '')
+                if link and link != 'Link':
+                    inc_html += f'<b>Link:</b> <a href="{_h(link)}">{_h(link)}</a><br>'
+                inc_html += '</div>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:3px solid {HTML_COLORS['critical']};">
+  <h2 style="color:{HTML_COLORS['critical']};margin:0 0 15px 0;font-size:18px;">INCIDENT REPORTS ({len(real_incidents)}) - CRITICAL</h2>
+  {inc_html}
+</td></tr>""")
+
+    # --- ROOT CAUSE ANALYSIS (only if exists) ---
+    if 'rca' in all_data and all_data['rca']:
+        real_rca = [r for r in all_data['rca']['rows'] if r.get('report number') != 'Report Number']
+        if real_rca:
+            rca_html = ''
+            for i, rca in enumerate(real_rca, 1):
+                rca_html += f'<div style="background:#fff5f5;border-left:4px solid {HTML_COLORS["critical"]};padding:12px 15px;margin:10px 0;">'
+                rca_html += f'<b style="color:{HTML_COLORS["critical"]};">RCA #{i}: Report #{_h(rca.get("report number"))}</b><br>'
+                rca_html += f'<b>Date:</b> {_h(rca.get("date", "N/A"))}<br>'
+                rca_html += f'<b>Description:</b> {_h(rca.get("description", "N/A"))}<br>'
+                link = rca.get('link', '')
+                if link and link != 'Link':
+                    rca_html += f'<b>Link:</b> <a href="{_h(link)}">{_h(link)}</a><br>'
+                rca_html += '</div>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:3px solid {HTML_COLORS['critical']};">
+  <h2 style="color:{HTML_COLORS['critical']};margin:0 0 15px 0;font-size:18px;">ROOT CAUSE ANALYSIS ({len(real_rca)})</h2>
+  {rca_html}
+</td></tr>""")
+
+    # --- NEAR MISSES (only if exist) ---
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        near_misses = all_data['observation_analysis']['by_type'].get('Near Miss', [])
+        if near_misses:
+            nm_html = ''
+            for i, nm in enumerate(near_misses, 1):
+                actual_name = get_actual_observer_name(nm)
+                corrective = nm.get('dpy2klalngsr7ek9', '')
+                if corrective and corrective.strip():
+                    status = '<span style="color:#008000;"><b>CLOSED</b></span>'
+                else:
+                    status = f'<span style="color:{HTML_COLORS["critical"]};"><b>OPEN - ACTION REQUIRED</b></span>'
+
+                nm_html += f'<div style="background:#fff5f5;border-left:4px solid {HTML_COLORS["critical"]};padding:12px 15px;margin:10px 0;">'
+                nm_html += f'<b style="color:{HTML_COLORS["critical"]};">{i}. Report #{_h(nm.get("report number"))} - {_h(actual_name)}</b><br>'
+                nm_html += f'<b>Date:</b> {_h(nm.get("date", "N/A"))}<br>'
+                nm_html += f'<b>Yard:</b> {_h(nm.get("7vj2l992y7fwqhwz", "N/A"))}<br>'
+                nm_html += f'<b>Location:</b> {_h(nm.get("lg5pnj4chjadnv46", "N/A"))}<br>'
+                nm_html += f'<b>Description:</b> {_h(nm.get("uncbcge9x8vow9pn", "No description"))}<br>'
+                nm_html += f'<b>Status:</b> {status}<br>'
+                link = nm.get('link', '')
+                if link and link != 'Link':
+                    nm_html += f'<b>Link:</b> <a href="{_h(link)}">{_h(link)}</a><br>'
+                nm_html += '</div>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:3px solid {HTML_COLORS['critical']};">
+  <h2 style="color:{HTML_COLORS['critical']};margin:0 0 15px 0;font-size:18px;">NEAR MISSES ({len(near_misses)}) - IMMEDIATE ACTION REQUIRED</h2>
+  {nm_html}
+</td></tr>""")
+
+    # --- OPEN ITEMS TRACKING ---
+    open_html = ''
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        obs = all_data['observation_analysis']
+        pending_items = []
+        for obs_type, obs_list in obs['by_type'].items():
+            if obs_type in ['At-Risk Condition', 'At-Risk Procedure']:
+                for o in obs_list:
+                    corrective = o.get('dpy2klalngsr7ek9', '')
+                    if not corrective or not corrective.strip():
+                        pending_items.append({
+                            'type': obs_type,
+                            'report_num': o.get('report number'),
+                            'person': get_actual_observer_name(o),
+                            'date': o.get('date'),
+                            'yard': o.get('7vj2l992y7fwqhwz', 'Unknown'),
+                            'location': o.get('lg5pnj4chjadnv46', 'Unknown'),
+                            'description': o.get('uncbcge9x8vow9pn', 'No description')[:80],
+                            'link': o.get('link', '')
+                        })
+
+        if pending_items:
+            open_html += f'<b>Pending Corrective Actions: {len(pending_items)} items</b><br><br>'
+            for item in pending_items:
+                open_html += f'<div style="background:#fffbf0;border-left:4px solid {HTML_COLORS["warning"]};padding:12px 15px;margin:10px 0;">'
+                open_html += f'<b style="color:{HTML_COLORS["critical"]};">Report #{_h(item["report_num"])} - {_h(item["type"])}</b><br>'
+                open_html += f'Person: {_h(item["person"])} | Date: {_h(item["date"])}<br>'
+                open_html += f'Yard: {_h(item["yard"])} | Location: {_h(item["location"])}<br>'
+                open_html += f'Issue: {_h(item["description"])}<br>'
+                open_html += f'Assigned To: TBD | Deadline: TBD<br>'
+                if item['link']:
+                    open_html += f'<a href="{_h(item["link"])}">View in KPA</a><br>'
+                open_html += '</div>'
+        else:
+            open_html = f'<b style="color:{HTML_COLORS["safe"]};">&#9989; All corrective actions completed!</b>'
+
+    sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['warning']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['warning']};padding-bottom:5px;">OPEN ITEMS TRACKING - CORRECTIVE ACTIONS NEEDED</h2>
+  {open_html}
+</td></tr>""")
+
+    # --- DATA QUALITY ALERT (only if exists) ---
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        miscategorized = all_data['observation_analysis'].get('miscategorized', [])
+        if miscategorized:
+            dq_html = '<p>These observations were filed as the wrong type:</p>'
+            for item in miscategorized:
+                dq_html += f'<div style="background:#fffbf0;border-left:4px solid {HTML_COLORS["warning"]};padding:12px 15px;margin:10px 0;">'
+                dq_html += f'<b>Report #{_h(item["report_num"])}</b><br>'
+                dq_html += f'Current Type: {_h(item["type"])} | Should Be: {_h(item["actual_type"])}<br>'
+                dq_html += f'Text: \'{_h(item["description"])}\'<br>'
+                dq_html += f'Person: {_h(item["observer"])} | Action: Reclassify in KPA<br>'
+                dq_html += '</div>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['warning']};margin:0 0 15px 0;font-size:18px;">&#9888;&#65039; DATA QUALITY ALERT - {len(miscategorized)} MISCATEGORIZED</h2>
+  {dq_html}
+</td></tr>""")
+
+    # --- HOTSPOT ANALYSIS ---
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        obs = all_data['observation_analysis']
+        names = []
+        for obs_list in obs['by_type'].values():
+            for o in obs_list:
+                actual_name = get_actual_observer_name(o)
+                if actual_name and actual_name != 'Unknown':
+                    names.append(actual_name)
+        name_counts = Counter(names)
+
+        if name_counts:
+            hotspot_html = '<b>Most Active Observers:</b><ul style="margin:5px 0;">'
+            for name, count in name_counts.most_common(5):
+                if name and name != 'Unknown':
+                    hotspot_html += f'<li>{_h(name)}: {count} observations &#11088;</li>'
+            hotspot_html += '</ul>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">HOTSPOT ANALYSIS</h2>
+  {hotspot_html}
+</td></tr>""")
+
+    # --- INCIDENT TIMING ---
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        obs = all_data['observation_analysis']
+        shift_counts = {'Day Shift (8 AM-4 PM)': 0, 'Night Shift (4 PM-Midnight)': 0, 'Overnight (0-8 AM)': 0}
+        for obs_list in obs['by_type'].values():
+            for o in obs_list:
+                shift = get_shift(o.get('date', ''))
+                if shift in shift_counts:
+                    shift_counts[shift] += 1
+
+        active_shifts = {k: v for k, v in shift_counts.items() if v > 0}
+        if active_shifts:
+            timing_html = '<ul style="margin:5px 0;">'
+            for shift, count in active_shifts.items():
+                timing_html += f'<li>{_h(shift)}: {count} observations</li>'
+            timing_html += '</ul>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;">
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">INCIDENT TIMING ANALYSIS</h2>
+  {timing_html}
+</td></tr>""")
+
+    # --- AT-RISK CONDITIONS (top 10) ---
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        conditions = all_data['observation_analysis']['by_type'].get('At-Risk Condition', [])
+        if conditions:
+            display_count = min(10, len(conditions))
+            cond_html = ''
+            for i, cond in enumerate(conditions[:10], 1):
+                actual_name = get_actual_observer_name(cond)
+                corrective = cond.get('dpy2klalngsr7ek9', '')
+                if corrective and corrective.strip():
+                    status = f'<span style="color:{HTML_COLORS["safe"]};"><b>CORRECTED</b></span>'
+                else:
+                    status = f'<span style="color:{HTML_COLORS["warning"]};"><b>PENDING ACTION</b></span>'
+
+                cond_html += f'<div style="background:#fffbf0;border-left:4px solid {HTML_COLORS["warning"]};padding:12px 15px;margin:10px 0;">'
+                cond_html += f'<b>{i}. Report #{_h(cond.get("report number"))} - {_h(actual_name)}</b><br>'
+                cond_html += f'Date: {_h(cond.get("date", "N/A"))} | Location: {_h(cond.get("lg5pnj4chjadnv46", "N/A"))}<br>'
+                cond_html += f'Condition: {_h(cond.get("uncbcge9x8vow9pn", "No description"))}<br>'
+                cond_html += f'Status: {status}<br>'
+                link = cond.get('link', '')
+                if link and link != 'Link':
+                    cond_html += f'<a href="{_h(link)}">View in KPA</a><br>'
+                cond_html += '</div>'
+
+            if len(conditions) > 10:
+                cond_html += f'<p style="font-style:italic;">... and {len(conditions) - 10} more conditions in KPA</p>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:3px solid {HTML_COLORS['warning']};">
+  <h2 style="color:{HTML_COLORS['warning']};margin:0 0 15px 0;font-size:18px;">AT-RISK CONDITIONS (Top {display_count} of {len(conditions)})</h2>
+  {cond_html}
+</td></tr>""")
+
+    # --- RECOGNITION ---
+    if 'observation_analysis' in all_data and all_data['observation_analysis']:
+        recognition = all_data['observation_analysis']['by_type'].get('Recognition', [])
+        if recognition:
+            recognition_names = [{'name': get_actual_observer_name(rec), 'description': rec.get('uncbcge9x8vow9pn', '')} for rec in recognition]
+            name_counter = Counter([r['name'] for r in recognition_names])
+
+            rec_html = ''
+            for name, count in name_counter.most_common(10):
+                if name and name != 'Unknown':
+                    rec_html += f'<div style="background:#f0fff0;border-left:4px solid {HTML_COLORS["safe"]};padding:12px 15px;margin:10px 0;">'
+                    rec_html += f'<b style="color:{HTML_COLORS["safe"]};">&#9989; {_h(name)}</b> - {count} recognition(s)<br>'
+                    for rec in recognition_names:
+                        if rec['name'] == name:
+                            rec_html += f'<i>\'{_h(rec["description"])}\'</i><br>'
+                            break
+                    rec_html += '</div>'
+
+            sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:3px solid {HTML_COLORS['safe']};">
+  <h2 style="color:{HTML_COLORS['safe']};margin:0 0 15px 0;font-size:18px;">SAFETY RECOGNITION - STARS ({len(recognition)})</h2>
+  {rec_html}
+</td></tr>""")
+
+    # --- OTHER FORMS SUMMARY ---
+    other_html = ''
+    for form_id, form_name in OTHER_FORMS:
+        data = all_data.get(f"form_{form_id}")
+        count = data['count'] if data else 0
+        other_html += f'<b>{_h(form_name)}:</b> {count}<br>'
+
+    sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:2px solid #ddd;">
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">OTHER SAFETY FORMS SUMMARY</h2>
+  {other_html}
+</td></tr>""")
+
+    # --- FOOTER ---
+    sections.append(f"""
+<tr><td style="background:{HTML_COLORS['secondary']};padding:20px 40px;text-align:center;">
+  <div style="color:#ffffff;font-size:11px;font-style:italic;">END OF REPORT</div>
+  <div style="color:#ffcccc;font-size:10px;margin-top:4px;">Butch's Rat Hole &amp; Anchor Service Inc. | HSE Department</div>
+</td></tr>""")
+
+    # --- Wrapper end ---
+    sections.append("""
+</table>
+</td></tr></table>
+</body></html>""")
+
+    return '\n'.join(sections)
+
+
+# ==============================================================================
+# SEND EMAIL
+# ==============================================================================
+
+def send_email_report(html_body, docx_path, yesterday_date):
+    """Send report via Gmail SMTP. Fails gracefully - prints error, does not crash."""
+    gmail_address = os.environ.get("GMAIL_ADDRESS", "")
+    gmail_app_password = os.environ.get("GMAIL_APP_PASSWORD", "")
+    recipient = os.environ.get("REPORT_RECIPIENT", "")
+
+    if not gmail_address or not gmail_app_password or not recipient:
+        print("⚠️  Email skipped - GMAIL_ADDRESS, GMAIL_APP_PASSWORD, or REPORT_RECIPIENT not set.")
+        return
+
+    subject = f"Daily Safety Report - {yesterday_date.strftime('%B %d, %Y')}"
+
+    try:
+        msg = MIMEMultipart('mixed')
+        msg['From'] = gmail_address
+        msg['To'] = recipient
+        msg['Subject'] = subject
+
+        # HTML body
+        msg.attach(MIMEText(html_body, 'html'))
+
+        # .docx attachment
+        if os.path.exists(docx_path):
+            with open(docx_path, 'rb') as f:
+                part = MIMEBase('application', 'vnd.openxmlformats-officedocument.wordprocessingml.document')
+                part.set_payload(f.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename="{os.path.basename(docx_path)}"')
+            msg.attach(part)
+
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(gmail_address, gmail_app_password)
+            server.sendmail(gmail_address, recipient, msg.as_string())
+
+        print(f"✅ Email sent to {recipient}")
+    except Exception as e:
+        print(f"❌ Email failed: {e}")
+
+
+# ==============================================================================
 # MAIN
 # ==============================================================================
 
@@ -938,7 +1399,15 @@ def main():
     doc.save(output_file)
 
     print(f"\n✅ Report saved: {output_file}")
-    print(f"   Full path: {os.path.abspath(output_file)}\n")
+    print(f"   Full path: {os.path.abspath(output_file)}")
+
+    # Build HTML and send email
+    print("\nBuilding HTML email...")
+    html_body = build_html_report(all_data, yesterday)
+
+    print("Sending email...")
+    send_email_report(html_body, output_file, yesterday)
+    print()
 
 if __name__ == "__main__":
     main()

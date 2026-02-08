@@ -1,0 +1,40 @@
+name: Daily Casing Camera Report
+
+on:
+  schedule:
+    # 5:15 AM Central = 11:15 UTC (CST is UTC-6)
+    # Offset 10 minutes after speeding report to avoid overlap.
+    # Note: During CDT (March-November), this runs at 6:15 AM Central.
+    - cron: '15 11 * * *'
+  workflow_dispatch: # Manual trigger for testing
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate casing camera report
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
+        run: python daily_casing_camera_report.py
+
+      - name: Upload report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-casing-camera-report
+          path: DailyCasingCameraReport_*.docx
+          retention-days: 30

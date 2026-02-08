@@ -328,6 +328,11 @@ def get_speeding_events_for_date(report_date, vehicle_drivers, vehicle_groups):
 
     report_date: datetime in Central Time — pulls from 00:00:00 to 23:59:59
     that day, converted to UTC for the API call.
+
+    The Motive API only supports date-level filtering via start_date/end_date
+    (whole UTC days), so we fetch the two UTC dates that overlap with
+    yesterday Central, then client-side filter to the exact Central window.
+
     Uses /v1/speeding_events endpoint. Each event is wrapped as
     {"speeding_event": {actual data}}.
     """
@@ -340,27 +345,31 @@ def get_speeding_events_for_date(report_date, vehicle_drivers, vehicle_groups):
     start_central = datetime(rd.year, rd.month, rd.day, 0, 0, 0, tzinfo=CENTRAL_TZ)
     end_central = datetime(rd.year, rd.month, rd.day, 23, 59, 59, tzinfo=CENTRAL_TZ)
 
-    # Convert to UTC for the API
+    # Convert to UTC to determine which UTC dates we need
     start_utc = start_central.astimezone(timezone.utc)
     end_utc = end_central.astimezone(timezone.utc)
 
-    start_iso = start_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
-    end_iso = end_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+    # API only supports whole-day filtering via start_date/end_date.
+    # start_time/end_time params are IGNORED by the API.
+    # Fetch the UTC date range that covers yesterday Central, then filter.
+    api_start_date = start_utc.strftime("%Y-%m-%d")
+    api_end_date = end_utc.strftime("%Y-%m-%d")
 
     print(f"    Pulling speeding events for {rd.strftime('%A, %B %d, %Y')} (Central Time)")
-    print(f"    Central range: {start_central.strftime('%m/%d/%Y %I:%M:%S %p')} to {end_central.strftime('%m/%d/%Y %I:%M:%S %p')}")
-    print(f"    UTC range: {start_iso} to {end_iso}")
+    print(f"    Central window: {start_central.strftime('%m/%d/%Y %I:%M:%S %p')} to {end_central.strftime('%m/%d/%Y %I:%M:%S %p')}")
+    print(f"    UTC equivalent: {start_utc.strftime('%Y-%m-%dT%H:%M:%SZ')} to {end_utc.strftime('%Y-%m-%dT%H:%M:%SZ')}")
+    print(f"    API date filter: start_date={api_start_date}, end_date={api_end_date}")
 
     headers = {"X-Api-Key": MOTIVE_API_KEY}
-    all_events = []
+    raw_events = []
     page = 1
 
     while True:
         params = {
             "per_page": 100,
             "page_no": page,
-            "start_time": start_iso,
-            "end_time": end_iso,
+            "start_date": api_start_date,
+            "end_date": api_end_date,
         }
 
         if page == 1:
@@ -382,16 +391,9 @@ def get_speeding_events_for_date(report_date, vehicle_drivers, vehicle_groups):
 
             if page == 1:
                 total_reported = data.get('total', '?')
-                print(f"    API reports total: {total_reported} events")
-                # Show sample event time for date range verification
-                if events:
-                    sample_evt = events[0].get("speeding_event", events[0])
-                    print(f"    Sample event time: {sample_evt.get('start_time', 'N/A')}")
+                print(f"    API reports total (before Central filter): {total_reported}")
 
-            for wrapper in events:
-                evt = wrapper.get("speeding_event", wrapper)
-                enriched = enrich_event(evt, vehicle_drivers, vehicle_groups)
-                all_events.append(enriched)
+            raw_events.extend(events)
 
             total = data.get("total", 0)
             if page * 100 >= total:
@@ -402,8 +404,26 @@ def get_speeding_events_for_date(report_date, vehicle_drivers, vehicle_groups):
             print(f"    Error fetching speeding page {page}: {e}")
             break
 
+    # Client-side filter: only keep events within yesterday Central Time
+    filtered = []
+    for wrapper in raw_events:
+        evt = wrapper.get("speeding_event", wrapper)
+        evt_time_str = evt.get("start_time", "")
+        try:
+            evt_utc = datetime.fromisoformat(evt_time_str.replace("Z", "+00:00"))
+            evt_central = evt_utc.astimezone(CENTRAL_TZ)
+            if start_central <= evt_central <= end_central:
+                enriched = enrich_event(evt, vehicle_drivers, vehicle_groups)
+                filtered.append(enriched)
+        except Exception:
+            # Can't parse time — include it to avoid silently dropping events
+            enriched = enrich_event(evt, vehicle_drivers, vehicle_groups)
+            filtered.append(enriched)
+
+    print(f"    After Central Time filter: {len(filtered)} event{'s' if len(filtered) != 1 else ''} (dropped {len(raw_events) - len(filtered)} outside window)")
+
     # Sort by overspeed descending (worst violations first)
-    return sorted(all_events, key=lambda x: x["overspeed"], reverse=True)
+    return sorted(filtered, key=lambda x: x["overspeed"], reverse=True)
 
 
 def enrich_event(event, vehicle_drivers, vehicle_groups):

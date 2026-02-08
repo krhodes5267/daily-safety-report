@@ -9,10 +9,13 @@ Pulls speeding events from Motive API (last 24 hours) and generates:
 - HTML email with the same data, sent via Gmail SMTP
 
 Thresholds:
-- RED: 100+ mph actual speed (termination-level)
-- YELLOW: 90-99 mph actual speed (formal coaching)
-- ORANGE: 6+ over posted speed limit (below 90 mph)
+- RED: 100+ mph max speed (termination-level)
+- YELLOW: 90-99 mph max speed (formal coaching)
+- ORANGE: 80-89 mph max speed (monitoring)
 - Repeat offenders: drivers with 2+ events flagged separately
+
+Uses the /v1/speeding_events endpoint which returns actual speeding-over-posted-limit
+events with posted speed limits, duration, severity, and GPS coordinates.
 """
 
 import requests
@@ -88,35 +91,6 @@ MOTIVE_GROUP_MAP = {
 KMH_TO_MPH = 0.621371
 
 
-def _get_max_speed(evt):
-    """Get the max speed from an event in mph.
-
-    Motive API returns all speeds in km/h. We convert to mph here so
-    every downstream consumer (thresholds, display, HTML) uses mph.
-
-    Speed fields checked:
-    - start_speed: speed at event start
-    - m_veh_spd: array of vehicle speed samples during the event
-    - m_gps_spd: array of GPS-derived speed samples
-    """
-    candidates = []
-
-    start_spd = evt.get("start_speed")
-    if start_spd and isinstance(start_spd, (int, float)):
-        candidates.append(start_spd)
-
-    m_veh_spd = evt.get("m_veh_spd", [])
-    if m_veh_spd and isinstance(m_veh_spd, list):
-        candidates.append(max(m_veh_spd))
-
-    m_gps_spd = evt.get("m_gps_spd", [])
-    if m_gps_spd and isinstance(m_gps_spd, list):
-        candidates.append(max(m_gps_spd))
-
-    max_kmh = max(candidates) if candidates else 0
-    return max_kmh * KMH_TO_MPH
-
-
 def _get_driver_name(evt):
     """Get driver name from the event, falling back to vehicle number.
 
@@ -141,12 +115,25 @@ def _get_driver_name(evt):
     return "Unknown"
 
 
-def get_24h_speeding_events():
-    """Pull all high-speed events from the last 24 hours.
+def _format_duration(seconds):
+    """Format duration in seconds to a readable string."""
+    if not seconds or not isinstance(seconds, (int, float)):
+        return "N/A"
+    seconds = int(seconds)
+    if seconds < 60:
+        return f"{seconds}s"
+    minutes = seconds // 60
+    secs = seconds % 60
+    if secs:
+        return f"{minutes}m {secs}s"
+    return f"{minutes}m"
 
-    Motive doesn't have a 'speeding' event type. Instead, we pull ALL
-    driver performance events (hard_brake, hard_accel, hard_corner) and
-    filter for ones where the max speed exceeded our thresholds.
+
+def get_24h_speeding_events():
+    """Pull all speeding events from the last 24 hours using /v1/speeding_events.
+
+    This endpoint returns actual speeding-over-posted-limit events with
+    posted speed limits, duration, severity, and GPS coordinates.
     """
     end_time = datetime.utcnow()
     start_time = end_time - timedelta(hours=24)
@@ -163,13 +150,13 @@ def get_24h_speeding_events():
         params = {
             "per_page": 100,
             "page_no": page,
-            "start_date": start_iso,
-            "end_date": end_iso,
+            "start_time": start_iso,
+            "end_time": end_iso,
         }
 
         try:
             response = requests.get(
-                f"{MOTIVE_BASE_URL}/driver_performance_events",
+                f"{MOTIVE_BASE_URL}/speeding_events",
                 headers=headers,
                 params=params,
                 timeout=30,
@@ -177,26 +164,21 @@ def get_24h_speeding_events():
             response.raise_for_status()
 
             data = response.json()
-            events = data.get("driver_performance_events", [])
+            events = data.get("speeding_events", [])
 
             if not events:
                 break
 
-            for event in events:
-                evt = event.get("driver_performance_event", event)
-                max_speed = _get_max_speed(evt)
+            for evt in events:
+                enriched = enrich_event(evt)
+                all_events.append(enriched)
 
-                # Only include events where speed hit 80+ mph
-                # (captures RED 100+, YELLOW 90-99, and high ORANGE)
-                if max_speed >= 80:
-                    enriched = enrich_event(evt, max_speed)
-                    if enriched["tier"] != "NONE":
-                        all_events.append(enriched)
-
-            if len(events) < 100:
+            # Check for more pages
+            pagination = data.get("pagination", {})
+            if pagination.get("has_next_page") or len(events) >= 100:
+                page += 1
+            else:
                 break
-
-            page += 1
 
         except Exception as e:
             print(f"    Error fetching page {page}: {e}")
@@ -205,9 +187,19 @@ def get_24h_speeding_events():
     return sorted(all_events, key=lambda x: x["speed"], reverse=True)
 
 
-def enrich_event(event, max_speed):
-    """Classify and enrich a speeding event."""
-    # Thresholds per company policy (absolute speed - no posted limit available)
+def enrich_event(event):
+    """Classify and enrich a speeding event from /v1/speeding_events."""
+    # Convert speeds from km/h to mph
+    max_speed_kmh = event.get("max_vehicle_speed") or event.get("avg_vehicle_speed") or 0
+    max_speed = round(max_speed_kmh * KMH_TO_MPH, 1)
+
+    posted_speed_kmh = event.get("min_posted_speed_limit_in_kph") or 0
+    posted_speed = round(posted_speed_kmh * KMH_TO_MPH, 1)
+
+    over_speed_kmh = event.get("max_over_speed_in_kph") or event.get("avg_over_speed_in_kph") or 0
+    overspeed = round(over_speed_kmh * KMH_TO_MPH, 1)
+
+    # Tier classification based on max speed in mph
     if max_speed >= 100:
         tier = "RED"
     elif max_speed >= 90:
@@ -215,7 +207,7 @@ def enrich_event(event, max_speed):
     elif max_speed >= 80:
         tier = "ORANGE"
     else:
-        tier = "NONE"
+        tier = "GREEN"
 
     driver_name = _get_driver_name(event)
 
@@ -224,12 +216,15 @@ def enrich_event(event, max_speed):
         vehicle.get("number", "Unknown") if isinstance(vehicle, dict) else str(vehicle)
     )
 
-    # Location is a text string in the API, not a dict
-    location = event.get("location", "Unknown")
-    if not location or not isinstance(location, str):
-        location = "Unknown"
+    # Duration
+    duration_secs = event.get("duration", 0)
+    duration_str = _format_duration(duration_secs)
 
-    # Timestamp: use start_time (when the event began)
+    # Severity from metadata
+    metadata = event.get("metadata", {})
+    severity = metadata.get("severity", "unknown") if isinstance(metadata, dict) else "unknown"
+
+    # Timestamp
     timestamp = event.get("start_time") or event.get("end_time", "")
     try:
         event_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
@@ -237,9 +232,9 @@ def enrich_event(event, max_speed):
     except Exception:
         formatted_time = str(timestamp)
 
-    # Lat/lon are top-level fields, not nested in location
-    latitude = event.get("lat")
-    longitude = event.get("lon")
+    # GPS coordinates are top-level
+    latitude = event.get("start_lat")
+    longitude = event.get("start_lon")
     maps_link = (
         f"https://www.google.com/maps?q={latitude},{longitude}"
         if latitude and longitude
@@ -249,14 +244,15 @@ def enrich_event(event, max_speed):
     return {
         "driver": driver_name,
         "vehicle": vehicle_number,
-        "speed": round(max_speed, 1),
-        "posted_speed": "N/A",
-        "overspeed": "",
+        "speed": max_speed,
+        "posted_speed": posted_speed,
+        "overspeed": overspeed,
+        "duration": duration_str,
+        "severity": severity,
         "time": formatted_time,
-        "location": location,
+        "location": f"{latitude:.4f}, {longitude:.4f}" if latitude and longitude else "Unknown",
         "maps_link": maps_link,
         "tier": tier,
-        "event_type": event.get("type", "unknown"),
     }
 
 
@@ -406,15 +402,15 @@ def create_word_document(events, yesterday_date):
 
         doc.add_paragraph()
 
-        table = doc.add_table(rows=1, cols=6)
+        table = doc.add_table(rows=1, cols=9)
         table.style = "Light Grid Accent 1"
 
-        headers = ["Tier", "Driver", "Vehicle", "Max Speed", "Location", "Time"]
+        headers = ["Tier", "Driver", "Vehicle", "Max Speed", "Limit", "Over", "Duration", "Location", "Time"]
         for i, h in enumerate(headers):
             table.rows[0].cells[i].text = h
             run = table.rows[0].cells[i].paragraphs[0].runs[0]
             run.bold = True
-            run.font.size = Pt(9)
+            run.font.size = Pt(8)
 
         for event in events:
             cells = table.add_row().cells
@@ -431,13 +427,16 @@ def create_word_document(events, yesterday_date):
             cells[1].text = event["driver"]
             cells[2].text = event["vehicle"]
             cells[3].text = f"{event['speed']} mph"
-            cells[4].text = event["location"]
-            cells[5].text = event["time"]
+            cells[4].text = f"{event['posted_speed']} mph"
+            cells[5].text = f"+{event['overspeed']} mph"
+            cells[6].text = event["duration"]
+            cells[7].text = event["location"]
+            cells[8].text = event["time"]
 
             for cell in cells[1:]:
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
-                        run.font.size = Pt(9)
+                        run.font.size = Pt(8)
     else:
         p = doc.add_paragraph()
         run = p.add_run("No high-speed events (80+ mph) in the last 24 hours")
@@ -546,7 +545,8 @@ def build_html_report(events, yesterday_date):
             red_html += f'<div style="background:#fff5f5;border-left:4px solid #FF0000;padding:12px 15px;margin:10px 0;">'
             red_html += f'<b style="color:#FF0000;">TERMINATION LEVEL</b><br>'
             red_html += f'<b>Driver:</b> {_h(e["driver"])} | <b>Vehicle:</b> {_h(e["vehicle"])}<br>'
-            red_html += f'<b>Max Speed:</b> {e["speed"]} mph<br>'
+            red_html += f'<b>Max Speed:</b> {e["speed"]} mph | <b>Limit:</b> {e["posted_speed"]} mph | <b>Over:</b> +{e["overspeed"]} mph<br>'
+            red_html += f'<b>Duration:</b> {_h(e["duration"])} | <b>Severity:</b> {_h(e["severity"])}<br>'
             red_html += f'<b>Time:</b> {_h(e["time"])} | <b>Location:</b> {_h(e["location"])}<br>'
             if e["maps_link"] != "N/A":
                 red_html += f'<a href="{_h(e["maps_link"])}">View on Google Maps</a><br>'
@@ -565,7 +565,8 @@ def build_html_report(events, yesterday_date):
             yellow_html += f'<div style="background:#fffbf0;border-left:4px solid {C_ORANGE};padding:12px 15px;margin:10px 0;">'
             yellow_html += f'<b style="color:{C_ORANGE};">FORMAL COACHING REQUIRED</b><br>'
             yellow_html += f'<b>Driver:</b> {_h(e["driver"])} | <b>Vehicle:</b> {_h(e["vehicle"])}<br>'
-            yellow_html += f'<b>Max Speed:</b> {e["speed"]} mph<br>'
+            yellow_html += f'<b>Max Speed:</b> {e["speed"]} mph | <b>Limit:</b> {e["posted_speed"]} mph | <b>Over:</b> +{e["overspeed"]} mph<br>'
+            yellow_html += f'<b>Duration:</b> {_h(e["duration"])} | <b>Severity:</b> {_h(e["severity"])}<br>'
             yellow_html += f'<b>Time:</b> {_h(e["time"])} | <b>Location:</b> {_h(e["location"])}<br>'
             if e["maps_link"] != "N/A":
                 yellow_html += f'<a href="{_h(e["maps_link"])}">View on Google Maps</a><br>'
@@ -600,7 +601,9 @@ def build_html_report(events, yesterday_date):
   <td style="padding:6px 8px;border:1px solid #ddd;">{_h(e["driver"])}</td>
   <td style="padding:6px 8px;border:1px solid #ddd;">{_h(e["vehicle"])}</td>
   <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-weight:bold;">{e["speed"]} mph</td>
-  <td style="padding:6px 8px;border:1px solid #ddd;">{_h(e["location"])}</td>
+  <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;">{e["posted_speed"]} mph</td>
+  <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-weight:bold;">+{e["overspeed"]}</td>
+  <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;">{_h(e["duration"])}</td>
   <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">{_h(e["time"])}</td>
   <td style="padding:6px 8px;border:1px solid #ddd;">{link_cell}</td>
 </tr>"""
@@ -608,13 +611,15 @@ def build_html_report(events, yesterday_date):
         parts.append(f"""
 <tr><td style="padding:25px 40px;border-top:2px solid #ddd;">
   <h2 style="color:{C_RED};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {C_RED};padding-bottom:5px;">ALL SPEEDING EVENTS ({len(events)})</h2>
-  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13px;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
     <tr style="background:{C_RED};">
       <th style="padding:8px;color:#fff;border:1px solid #ddd;">Tier</th>
       <th style="padding:8px;color:#fff;border:1px solid #ddd;">Driver</th>
       <th style="padding:8px;color:#fff;border:1px solid #ddd;">Vehicle</th>
       <th style="padding:8px;color:#fff;border:1px solid #ddd;">Max Speed</th>
-      <th style="padding:8px;color:#fff;border:1px solid #ddd;">Location</th>
+      <th style="padding:8px;color:#fff;border:1px solid #ddd;">Limit</th>
+      <th style="padding:8px;color:#fff;border:1px solid #ddd;">Over</th>
+      <th style="padding:8px;color:#fff;border:1px solid #ddd;">Duration</th>
       <th style="padding:8px;color:#fff;border:1px solid #ddd;">Time</th>
       <th style="padding:8px;color:#fff;border:1px solid #ddd;">Map</th>
     </tr>

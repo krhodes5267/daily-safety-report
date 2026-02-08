@@ -4,7 +4,7 @@ DAILY SPEEDING REPORT - AUTOMATED (GitHub Actions)
 ===================================================
 Runs daily at 5:05 AM Central via GitHub Actions.
 
-Pulls speeding events from Motive API (last 24 hours) and generates:
+Pulls speeding events from Motive API (yesterday's full day, Central Time) and generates:
 - Word document (.docx) in LANDSCAPE, grouped by division/yard
 - HTML email with the same structure, sent via Gmail SMTP
 
@@ -323,19 +323,33 @@ def _utc_to_central(timestamp_str):
         return str(timestamp_str)
 
 
-def get_24h_speeding_events(vehicle_drivers, vehicle_groups):
-    """Pull all speeding events from the last 24 hours.
+def get_speeding_events_for_date(report_date, vehicle_drivers, vehicle_groups):
+    """Pull all speeding events for a specific date (full day, Central Time).
 
+    report_date: datetime in Central Time — pulls from 00:00:00 to 23:59:59
+    that day, converted to UTC for the API call.
     Uses /v1/speeding_events endpoint. Each event is wrapped as
     {"speeding_event": {actual data}}.
     """
-    end_time = datetime.now(timezone.utc)
-    start_time = end_time - timedelta(hours=24)
+    # Calculate full day boundaries in Central Time
+    if hasattr(report_date, 'date'):
+        rd = report_date.date()
+    else:
+        rd = report_date
 
-    start_iso = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-    end_iso = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    start_central = datetime(rd.year, rd.month, rd.day, 0, 0, 0, tzinfo=CENTRAL_TZ)
+    end_central = datetime(rd.year, rd.month, rd.day, 23, 59, 59, tzinfo=CENTRAL_TZ)
 
-    print(f"    API date range: {start_iso} to {end_iso}")
+    # Convert to UTC for the API
+    start_utc = start_central.astimezone(timezone.utc)
+    end_utc = end_central.astimezone(timezone.utc)
+
+    start_iso = start_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+    end_iso = end_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    print(f"    Pulling speeding events for {rd.strftime('%A, %B %d, %Y')} (Central Time)")
+    print(f"    Central range: {start_central.strftime('%m/%d/%Y %I:%M:%S %p')} to {end_central.strftime('%m/%d/%Y %I:%M:%S %p')}")
+    print(f"    UTC range: {start_iso} to {end_iso}")
 
     headers = {"X-Api-Key": MOTIVE_API_KEY}
     all_events = []
@@ -348,6 +362,10 @@ def get_24h_speeding_events(vehicle_drivers, vehicle_groups):
             "start_time": start_iso,
             "end_time": end_iso,
         }
+
+        if page == 1:
+            print(f"    API URL: {MOTIVE_BASE_URL}/speeding_events")
+            print(f"    API params: {params}")
 
         try:
             resp = requests.get(
@@ -363,7 +381,12 @@ def get_24h_speeding_events(vehicle_drivers, vehicle_groups):
                 break
 
             if page == 1:
-                print(f"    API reports total: {data.get('total', '?')} events")
+                total_reported = data.get('total', '?')
+                print(f"    API reports total: {total_reported} events")
+                # Show sample event time for date range verification
+                if events:
+                    sample_evt = events[0].get("speeding_event", events[0])
+                    print(f"    Sample event time: {sample_evt.get('start_time', 'N/A')}")
 
             for wrapper in events:
                 evt = wrapper.get("speeding_event", wrapper)
@@ -741,7 +764,7 @@ def create_word_document(events, grouped, yesterday_date):
 
     if not events:
         p = doc.add_paragraph()
-        run = p.add_run("No speeding events in the last 24 hours")
+        run = p.add_run(f"No speeding events for {yesterday_date.strftime('%A, %B %d, %Y')}")
         _set_run_font(run, 11, bold=True, color=RGBColor(0, 128, 0))
 
     doc.add_paragraph()
@@ -822,7 +845,7 @@ def create_word_document(events, grouped, yesterday_date):
         div_orange = sum(1 for evts in yards_data.values() for e in evts if e["tier"] == "ORANGE")
         div_yellow = sum(1 for evts in yards_data.values() for e in evts if e["tier"] == "YELLOW")
         p = doc.add_paragraph()
-        run = p.add_run(f"{div_total} events")
+        run = p.add_run(f"{div_total} event{'s' if div_total != 1 else ''}")
         _set_run_font(run, 10, bold=True)
         run2 = p.add_run(f" (RED: {div_red} | ORANGE: {div_orange} | YELLOW: {div_yellow})")
         _set_run_font(run2, 10)
@@ -918,7 +941,7 @@ def build_html_report(events, grouped, yesterday_date):
     if yellow_events:
         summary += f'<div style="color:{C_YELLOW_DARK};font-weight:bold;margin:4px 0 4px 20px;">YELLOW — Monitoring (10-14 over): {len(yellow_events)}</div>'
     if not events:
-        summary += f'<b style="color:{C_GREEN};">No speeding events in the last 24 hours!</b>'
+        summary += f'<b style="color:{C_GREEN};">No speeding events for {yesterday_date.strftime("%A, %B %d, %Y")}!</b>'
 
     parts.append(f"""
 <tr><td style="padding:25px 40px;">
@@ -1121,8 +1144,8 @@ def main():
     print(f"    {len(vehicle_groups)} vehicles with group assignments")
 
     print("\n[2] Fetching speeding events from Motive...")
-    events = get_24h_speeding_events(vehicle_drivers, vehicle_groups)
-    print(f"    Found {len(events)} events")
+    events = get_speeding_events_for_date(yesterday, vehicle_drivers, vehicle_groups)
+    print(f"    Found {len(events)} event{'s' if len(events) != 1 else ''}")
 
     if events:
         red = len([e for e in events if e["tier"] == "RED"])
@@ -1139,7 +1162,7 @@ def main():
     grouped = group_events(events)
     for div, yards_data in grouped.items():
         total = sum(len(evts) for evts in yards_data.values())
-        print(f"    {div}: {total} events")
+        print(f"    {div}: {total} event{'s' if total != 1 else ''}")
 
     print("\n[4] Creating Word document (landscape)...")
     doc = create_word_document(events, grouped, yesterday)

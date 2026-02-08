@@ -1,0 +1,38 @@
+name: Daily KPA Safety Report
+
+on:
+  schedule:
+    # 5:00 AM Central = 11:00 UTC (CST is UTC-6)
+    # Note: During CDT (March-November), this runs at 6:00 AM Central.
+    # Change to "0 10 * * *" during CDT if you need exactly 5:00 AM year-round.
+    - cron: '0 11 * * *'
+  workflow_dispatch: # Manual trigger for testing
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate daily report
+        env:
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+        run: python daily_kpa_report.py
+
+      - name: Upload report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-kpa-report
+          path: DailyKPAReport_*.docx
+          retention-days: 30

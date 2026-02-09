@@ -688,7 +688,46 @@ def _enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
 KPA_FORMS = {
     151085: "Observation Cards",
     151622: "Incident Report",
+    381707: "CSG - Safety Casing Field Assessment",
 }
+
+ASSESSMENT_TARGET_PER_YARD = 3
+
+# Fields to skip when scanning for findings (metadata, not content)
+_KPA_META_FIELDS = {
+    'report number', 'date', 'observer', 'status', 'link', 'kpa_link',
+    'name', 'Name', 'form', 'form_id', 'updated_at', 'created_at',
+    'report', 'id', 'response_id',
+}
+
+# Keywords that indicate a finding vs. a clean pass
+_FINDING_KEYWORDS = [
+    'corrective', 'finding', 'hazard', 'deficien', 'violation', 'issue',
+    'damaged', 'broken', 'missing', 'expired', 'not completed', 'not worn',
+    'failed', 'needs repair', 'needs replacement', 'out of date',
+    'no jsa', 'no ppe', 'not in compliance', 'not following',
+    'improper', 'unsafe', 'leak', 'spill', 'trip', 'housekeeping',
+    'not secured', 'unsecured', 'obstruct', 'crack', 'worn', 'frayed',
+    'no fire', 'no extinguisher', 'no permit', 'incomplete',
+    'comment', 'note', 'observation', 'action',
+]
+
+# Keywords for categorizing findings
+_EQUIP_KEYWORDS = ['equipment', 'vehicle', 'truck', 'trailer', 'tire', 'brake',
+                    'light', 'engine', 'hydraulic', 'pump', 'hose', 'chain',
+                    'tool', 'wrench', 'damaged', 'broken', 'repair', 'maintenance',
+                    'defect', 'mechanical', 'gauge', 'pressure']
+_BEHAVIOR_KEYWORDS = ['ppe', 'hard hat', 'glasses', 'gloves', 'vest', 'jsa',
+                       'procedure', 'shortcut', 'compliance', 'not worn',
+                       'not completed', 'not following', 'behavior', 'seatbelt',
+                       'cell phone', 'speed', 'horseplay', 'training', 'cert']
+_HOUSEKEEPING_KEYWORDS = ['housekeeping', 'clean', 'messy', 'trip', 'slip',
+                          'rigging', 'spill', 'debris', 'clutter', 'organized',
+                          'stacked', 'stored', 'site condition', 'ground',
+                          'walk', 'path', 'access']
+_DOC_KEYWORDS = ['permit', 'certification', 'paperwork', 'document', 'expired',
+                 'inspection', 'checklist', 'log', 'record', 'sign', 'posted',
+                 'label', 'sds', 'msds']
 
 
 def _call_kpa(endpoint, params):
@@ -704,14 +743,14 @@ def _call_kpa(endpoint, params):
 
 
 def get_kpa_data_weekly(start_ct, end_ct):
-    """Pull KPA incidents and observation cards for the week."""
+    """Pull KPA incidents, observation cards, and field assessments for the week."""
     if not KPA_AVAILABLE:
-        return {"incidents": [], "observations": []}
+        return {"incidents": [], "observations": [], "assessments": []}
 
     start_ms = int(start_ct.timestamp() * 1000)
     end_ms = int(end_ct.timestamp() * 1000)
 
-    results = {"incidents": [], "observations": []}
+    results = {"incidents": [], "observations": [], "assessments": []}
 
     for form_id, form_name in KPA_FORMS.items():
         print(f"    Pulling KPA {form_name} (form {form_id})...")
@@ -741,7 +780,6 @@ def get_kpa_data_weekly(start_ct, end_ct):
                     row_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
                     row_date_ms = int(row_date.timestamp() * 1000)
                     if start_ms <= row_date_ms <= end_ms:
-                        # Build KPA link
                         report_num = row.get('report number', '')
                         if report_num:
                             row['kpa_link'] = f"https://brhas-ees.kpaehs.com/forms/responses/view/{report_num}"
@@ -755,6 +793,11 @@ def get_kpa_data_weekly(start_ct, end_ct):
                 results["incidents"] = filtered
             elif form_id == 151085:
                 results["observations"] = filtered
+            elif form_id == 381707:
+                results["assessments"] = filtered
+                # Log first assessment's field names for debugging
+                if filtered:
+                    print(f"      Assessment field names: {list(filtered[0].keys())[:20]}...")
 
         except Exception as e:
             print(f"      Error parsing {form_name}: {e}")
@@ -793,6 +836,138 @@ def _get_kpa_observer(row):
     if observer and observer.lower() not in ['unknown', 'none', '']:
         return observer
     return 'Unknown'
+
+
+def _extract_findings(row):
+    """Scan all fields in a KPA assessment row for finding-like content.
+
+    Returns list of finding strings. Empty list = clean assessment.
+    """
+    findings = []
+    for key, val in row.items():
+        if not val or not isinstance(val, str):
+            continue
+        # Skip metadata fields
+        key_lower = key.lower().strip()
+        if key_lower in _KPA_META_FIELDS or key_lower in {k.lower() for k in _KPA_META_FIELDS}:
+            continue
+        val_stripped = val.strip()
+        if not val_stripped or len(val_stripped) < 5:
+            continue
+        # Skip purely numeric or date values
+        if val_stripped.replace('.', '').replace('-', '').replace('/', '').isdigit():
+            continue
+        # Skip common non-finding values
+        val_lower = val_stripped.lower()
+        if val_lower in ('yes', 'no', 'n/a', 'na', 'pass', 'ok', 'good', 'safe',
+                         'true', 'false', 'compliant', 'satisfactory', 'acceptable',
+                         'not applicable', 'none', 'no issues', 'no findings'):
+            continue
+
+        # Check if this looks like a finding
+        has_keyword = any(kw in val_lower for kw in _FINDING_KEYWORDS)
+        # Also include longer text values that aren't obvious pass/safe
+        is_long_comment = len(val_stripped) >= 20 and val_lower not in ('yes', 'no')
+
+        if has_keyword or is_long_comment:
+            # Use field name as context if it's readable
+            field_label = key.replace('_', ' ').strip()
+            # Skip hash-like field codes — just use the value
+            if len(key) > 15 and not any(c.isupper() for c in key):
+                findings.append(val_stripped)
+            else:
+                findings.append(f"{field_label}: {val_stripped}" if field_label else val_stripped)
+
+    return findings
+
+
+def _categorize_finding(text):
+    """Categorize a finding into one of 4 categories."""
+    text_lower = text.lower()
+    scores = {
+        "EQUIPMENT/VEHICLE ISSUES": sum(1 for kw in _EQUIP_KEYWORDS if kw in text_lower),
+        "BEHAVIORAL/COMPLIANCE": sum(1 for kw in _BEHAVIOR_KEYWORDS if kw in text_lower),
+        "HOUSEKEEPING/SITE CONDITIONS": sum(1 for kw in _HOUSEKEEPING_KEYWORDS if kw in text_lower),
+        "DOCUMENTATION": sum(1 for kw in _DOC_KEYWORDS if kw in text_lower),
+    }
+    best = max(scores, key=scores.get)
+    if scores[best] > 0:
+        return best
+    return "BEHAVIORAL/COMPLIANCE"  # default
+
+
+def _get_assessment_status(row):
+    """Determine assessment finding status."""
+    for key, val in row.items():
+        if not val or not isinstance(val, str):
+            continue
+        val_lower = val.lower().strip()
+        if 'corrected on site' in val_lower or 'corrected on-site' in val_lower:
+            return 'Corrected on site'
+        if 'follow up' in val_lower or 'follow-up' in val_lower or 'requires follow' in val_lower:
+            return 'Requires follow-up'
+    status = (row.get('status', '') or '').strip()
+    if status:
+        return status
+    return 'Open'
+
+
+def analyze_field_assessments(assessments):
+    """Analyze field assessments into with-findings and clean.
+
+    Returns dict with:
+        with_findings: list of {row, yard, rep, date, findings, categories}
+        clean: list of {yard, date, report_num}
+        by_yard: {yard: count}
+        by_rep: {rep_name: count}
+    """
+    with_findings = []
+    clean = []
+    by_yard = Counter()
+    by_rep = Counter()
+
+    for row in assessments:
+        yard = _get_kpa_yard(row)
+        rep = _get_kpa_observer(row)
+        date = row.get('date', 'N/A')
+        report_num = row.get('report number', 'N/A')
+        link = row.get('kpa_link', '')
+
+        by_yard[yard or 'Unknown'] += 1
+        # Map observer to safety rep name for accountability
+        rep_key = rep
+        for sr_name, sr_yards in SAFETY_REP_YARDS.items():
+            if yard in sr_yards:
+                rep_key = sr_name
+                break
+        by_rep[rep_key] += 1
+
+        findings = _extract_findings(row)
+        if findings:
+            categorized = {}
+            for f in findings:
+                cat = _categorize_finding(f)
+                categorized.setdefault(cat, []).append(f)
+
+            status = _get_assessment_status(row)
+            with_findings.append({
+                "row": row, "yard": yard or "Unknown", "rep": rep,
+                "date": date, "report_num": report_num, "link": link,
+                "findings": findings, "categories": categorized,
+                "status": status,
+            })
+        else:
+            clean.append({
+                "yard": yard or "Unknown", "date": date,
+                "report_num": report_num,
+            })
+
+    return {
+        "with_findings": with_findings,
+        "clean": clean,
+        "by_yard": dict(by_yard),
+        "by_rep": dict(by_rep),
+    }
 
 
 # ==============================================================================
@@ -979,7 +1154,7 @@ def _tier_color(tier):
 # ==============================================================================
 
 def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_counts,
-                         start_date, end_date):
+                         start_date, end_date, assessment_analysis=None):
     doc = Document()
 
     # Landscape orientation
@@ -1040,16 +1215,17 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
     kpa_observations = kpa_data.get("observations", [])
     casing_incidents = [r for r in kpa_incidents if _is_casing_kpa(r)]
     casing_observations = [r for r in kpa_observations if _is_casing_kpa(r)]
+    aa = assessment_analysis or {"with_findings": [], "clean": [], "by_yard": {}, "by_rep": {}}
 
     red_flags = analyze_red_flag_drivers(camera_events, speeding_events, casing_incidents)
 
     # ===== SECTION 1: WEEK AT A GLANCE =====
     _add_section_header(doc, "SECTION 1 \u2014 WEEK AT A GLANCE")
 
-    table = doc.add_table(rows=1, cols=6)
+    table = doc.add_table(rows=1, cols=7)
     table.style = "Light Grid Accent 1"
     table.autofit = True
-    headers = ["Yard", "Camera Events", "Speeding Events", "KPA Incidents", "KPA Observations", ""]
+    headers = ["Yard", "Camera Events", "Speeding Events", "KPA Incidents", "Field Assessments", "Obs Cards", ""]
     for i, h in enumerate(headers):
         table.rows[0].cells[i].text = h
         if table.rows[0].cells[i].paragraphs[0].runs:
@@ -1060,6 +1236,7 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
         yard_spd = [e for e in speeding_events if e["yard"] == yard]
         yard_inc = [r for r in casing_incidents if _get_kpa_yard(r) == yard]
         yard_obs = [r for r in casing_observations if _get_kpa_yard(r) == yard]
+        yard_assess_ct = aa["by_yard"].get(yard, 0)
 
         cam_red = len([e for e in yard_cam if e["tier"] == "RED"])
         spd_red = len([e for e in yard_spd if e["tier"] == "RED"])
@@ -1080,9 +1257,17 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
             cells[2].text = "\u2014"
 
         cells[3].text = str(len(yard_inc)) if yard_inc else "0"
+        cells[4].text = str(yard_assess_ct) if yard_assess_ct else "0"
+        if yard_assess_ct < ASSESSMENT_TARGET_PER_YARD:
+            _set_cell_shading(cells[4], "FFF0E0")
         obs_count = len(yard_obs)
-        cells[4].text = str(obs_count)
-        cells[5].text = "" if obs_count > 0 else "No obs cards"
+        cells[5].text = str(obs_count)
+        warns = []
+        if obs_count == 0:
+            warns.append("No obs")
+        if yard_assess_ct == 0:
+            warns.append("No assess")
+        cells[6].text = " | ".join(warns) if warns else ""
 
         for c in cells:
             for p in c.paragraphs:
@@ -1260,61 +1445,142 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
 
     doc.add_paragraph()
 
-    # ===== SECTION 5: KPA INCIDENTS & OBSERVATIONS =====
-    _add_section_header(doc, "SECTION 5 \u2014 KPA INCIDENTS & OBSERVATIONS")
+    # ===== SECTION 5: FIELD ASSESSMENTS & KPA =====
+    _add_section_header(doc, "SECTION 5 \u2014 FIELD ASSESSMENTS, INCIDENTS & OBSERVATIONS")
 
     if not KPA_AVAILABLE:
         p = doc.add_paragraph()
         run = p.add_run("KPA data unavailable \u2014 API token not configured.")
         _set_run_font(run, 10, italic=True, color=RGBColor(192, 0, 0))
     else:
-        # Incidents
-        p = doc.add_paragraph()
-        run = p.add_run(f"Incident Reports: {len(casing_incidents)}")
-        _set_run_font(run, 11, bold=True)
-
-        for inc in casing_incidents:
+        # --- Incidents (brief) ---
+        if casing_incidents:
             p = doc.add_paragraph()
-            report_num = inc.get('report number', 'N/A')
-            form_name = inc.get('nojcquy0tfl9hqih', inc.get('report', 'Incident'))
-            date = inc.get('date', 'N/A')
-            yard = _get_kpa_yard(inc) or 'Unknown'
-            status = inc.get('status', 'Unknown')
-            link = inc.get('kpa_link', '')
-            run = p.add_run(f"  #{report_num} \u2014 {form_name} \u2014 {date} \u2014 {yard} \u2014 Status: {status}")
-            _set_run_font(run, 9)
-            if link:
-                p2 = doc.add_paragraph()
-                run2 = p2.add_run(f"    {link}")
-                _set_run_font(run2, 8, color=RGBColor(0, 0, 180))
+            run = p.add_run(f"Incident Reports: {len(casing_incidents)}")
+            _set_run_font(run, 11, bold=True)
+            for inc in casing_incidents:
+                report_num = inc.get('report number', 'N/A')
+                form_name = inc.get('nojcquy0tfl9hqih', inc.get('report', 'Incident'))
+                date = inc.get('date', 'N/A')
+                yard = _get_kpa_yard(inc) or 'Unknown'
+                link = inc.get('kpa_link', '')
+                p = doc.add_paragraph()
+                run = p.add_run(f"  #{report_num} \u2014 {form_name} \u2014 {date} \u2014 {yard}")
+                _set_run_font(run, 9)
+                if link:
+                    p2 = doc.add_paragraph()
+                    run2 = p2.add_run(f"    {link}")
+                    _set_run_font(run2, 8, color=RGBColor(0, 0, 180))
+            doc.add_paragraph()
+
+        # --- PART A: FINDINGS THAT NEED DISCUSSION ---
+        p = doc.add_paragraph()
+        run = p.add_run("PART A \u2014 FIELD ASSESSMENT FINDINGS THAT NEED DISCUSSION")
+        _set_run_font(run, 11, bold=True, color=RGBColor(192, 0, 0))
+
+        if aa["with_findings"]:
+            # Group by category
+            all_categorized = OrderedDict([
+                ("EQUIPMENT/VEHICLE ISSUES", []),
+                ("BEHAVIORAL/COMPLIANCE", []),
+                ("HOUSEKEEPING/SITE CONDITIONS", []),
+                ("DOCUMENTATION", []),
+            ])
+            for af in aa["with_findings"]:
+                for cat, findings_list in af["categories"].items():
+                    for finding in findings_list:
+                        all_categorized.setdefault(cat, []).append({
+                            "finding": finding, "yard": af["yard"],
+                            "date": af["date"], "rep": af["rep"],
+                            "status": af["status"], "link": af["link"],
+                            "report_num": af["report_num"],
+                        })
+
+            for cat, items in all_categorized.items():
+                if not items:
+                    continue
+                p = doc.add_paragraph()
+                run = p.add_run(f"  {cat}")
+                _set_run_font(run, 10, bold=True, color=RGBColor(128, 0, 0))
+
+                for item in items:
+                    p = doc.add_paragraph()
+                    run = p.add_run(f"    {item['yard']} | {item['date']} | {item['rep']}")
+                    _set_run_font(run, 8, bold=True)
+                    p = doc.add_paragraph()
+                    run = p.add_run(f"    FINDING: {item['finding'][:200]}")
+                    _set_run_font(run, 8)
+                    p = doc.add_paragraph()
+                    status_color = RGBColor(0, 128, 0) if 'corrected' in item['status'].lower() else RGBColor(192, 0, 0)
+                    run = p.add_run(f"    STATUS: {item['status']}")
+                    _set_run_font(run, 8, bold=True, color=status_color)
+                    if item["link"]:
+                        p2 = doc.add_paragraph()
+                        run2 = p2.add_run(f"    {item['link']}")
+                        _set_run_font(run2, 7, color=RGBColor(0, 0, 180))
+                doc.add_paragraph()
+        else:
+            p = doc.add_paragraph()
+            run = p.add_run("  No findings requiring discussion this week \u2014 all assessments clean.")
+            _set_run_font(run, 9, color=RGBColor(0, 128, 0))
 
         doc.add_paragraph()
 
-        # Observations
+        # --- PART B: ASSESSMENT ACCOUNTABILITY ---
+        p = doc.add_paragraph()
+        run = p.add_run("PART B \u2014 ASSESSMENT ACCOUNTABILITY")
+        _set_run_font(run, 11, bold=True, color=RGBColor(192, 0, 0))
+
+        # Count per safety rep
+        p = doc.add_paragraph()
+        run = p.add_run("  Assessments filed per safety rep:")
+        _set_run_font(run, 10, bold=True)
+
+        for rep_name, rep_yards in SAFETY_REP_YARDS.items():
+            rep_count = sum(aa["by_yard"].get(y, 0) for y in rep_yards)
+            yard_label = "/".join(rep_yards)
+            warn = " \u26a0\ufe0f" if rep_count < ASSESSMENT_TARGET_PER_YARD * len(rep_yards) else ""
+            p = doc.add_paragraph()
+            run = p.add_run(f"    {rep_name} ({yard_label}): {rep_count} filed{warn}")
+            _set_run_font(run, 9)
+
+        doc.add_paragraph()
+
+        # Target
+        p = doc.add_paragraph()
+        run = p.add_run(f"  Target: {ASSESSMENT_TARGET_PER_YARD} field assessments per yard per week")
+        _set_run_font(run, 9, bold=True)
+
+        # Missing assessments warning
+        for yard in YARD_ORDER:
+            yard_ct = aa["by_yard"].get(yard, 0)
+            if yard_ct < ASSESSMENT_TARGET_PER_YARD:
+                info = YARD_INFO.get(yard, {})
+                rep = info.get("safety_reps", "safety rep")
+                p = doc.add_paragraph()
+                run = p.add_run(f"  {yard}: {yard_ct} filed (below target) \u2014 {rep} to address")
+                _set_run_font(run, 9, bold=True, color=RGBColor(192, 0, 0))
+
+        doc.add_paragraph()
+
+        # Clean assessments summary
+        if aa["clean"]:
+            clean_yards = Counter(c["yard"] for c in aa["clean"])
+            clean_parts = ", ".join(f"{y} x{c}" for y, c in clean_yards.most_common())
+            p = doc.add_paragraph()
+            run = p.add_run(f"  {_plural(len(aa['clean']), 'assessment')} filed with no findings ({clean_parts}) \u2014 Good work.")
+            _set_run_font(run, 9, color=RGBColor(0, 128, 0))
+
+        doc.add_paragraph()
+
+        # --- Observation Cards ---
         p = doc.add_paragraph()
         run = p.add_run(f"Observation Cards: {len(casing_observations)}")
         _set_run_font(run, 11, bold=True)
 
-        for obs in casing_observations:
-            report_num = obs.get('report number', 'N/A')
-            observer = _get_kpa_observer(obs)
-            date = obs.get('date', 'N/A')
-            yard = _get_kpa_yard(obs) or 'Unknown'
-            link = obs.get('kpa_link', '')
-            p = doc.add_paragraph()
-            run = p.add_run(f"  #{report_num} \u2014 {observer} \u2014 {date} \u2014 {yard}")
-            _set_run_font(run, 9)
-            if link:
-                p2 = doc.add_paragraph()
-                run2 = p2.add_run(f"    {link}")
-                _set_run_font(run2, 8, color=RGBColor(0, 0, 180))
-
-        doc.add_paragraph()
-
-        # Missing observations warning
         p = doc.add_paragraph()
-        run = p.add_run(f"Observation Card Target: {OBS_TARGET_PER_YARD} per yard per week")
-        _set_run_font(run, 10, bold=True)
+        run = p.add_run(f"  Target: {OBS_TARGET_PER_YARD} per yard per week")
+        _set_run_font(run, 9, bold=True)
 
         for yard in YARD_ORDER:
             yard_obs = [r for r in casing_observations if _get_kpa_yard(r) == yard]
@@ -1409,8 +1675,17 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
         rep_obs = [r for r in casing_observations if _get_kpa_yard(r) in rep_yards]
         rep_inc = [r for r in casing_incidents if _get_kpa_yard(r) in rep_yards]
         rep_flags = [f for f in red_flags if f["yard"] in rep_yards]
+        rep_assess_count = sum(aa["by_yard"].get(y, 0) for y in rep_yards)
+        rep_assess_target = ASSESSMENT_TARGET_PER_YARD * len(rep_yards)
 
-        if not (rep_cam or rep_spd or rep_obs or rep_inc or rep_flags):
+        # Collect findings for this rep's yards
+        rep_findings = []
+        for item in aa.get("with_findings", []):
+            if item.get("yard") in rep_yards:
+                rep_findings.append(item)
+
+        has_data = rep_cam or rep_spd or rep_obs or rep_inc or rep_flags or rep_assess_count or rep_findings
+        if not has_data:
             continue
 
         yard_label = " / ".join(rep_yards)
@@ -1435,6 +1710,23 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
             p = doc.add_paragraph()
             run = p.add_run(f"  {_plural(len(rep_cam), 'camera event')} this week \u2014 {type_str}")
             _set_run_font(run, 9)
+
+        # Field assessments per rep
+        assess_warn = " \u26a0\ufe0f" if rep_assess_count < rep_assess_target else ""
+        p = doc.add_paragraph()
+        run = p.add_run(f"  Field assessments filed: {rep_assess_count} (target: {rep_assess_target}){assess_warn}")
+        _set_run_font(run, 9, bold=True if rep_assess_count < rep_assess_target else False)
+
+        if rep_findings:
+            finding_briefs = [f.get("finding", "")[:80] for f in rep_findings[:5]]
+            findings_str = "; ".join(finding_briefs) if finding_briefs else "None"
+            p = doc.add_paragraph()
+            run = p.add_run(f"  Findings to address: {findings_str}")
+            _set_run_font(run, 9, color=RGBColor(192, 0, 0))
+        else:
+            p = doc.add_paragraph()
+            run = p.add_run("  Findings to address: None \u2014 all clean")
+            _set_run_font(run, 9, color=RGBColor(0, 128, 0))
 
         for yard in rep_yards:
             yard_obs_count = len([r for r in rep_obs if _get_kpa_yard(r) == yard])
@@ -1562,7 +1854,7 @@ def _tier_colors_html(tier):
 
 
 def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_counts,
-                      start_date, end_date):
+                      start_date, end_date, assessment_analysis=None):
     now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
 
     kpa_incidents = kpa_data.get("incidents", [])
@@ -1570,6 +1862,7 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
     casing_incidents = [r for r in kpa_incidents if _is_casing_kpa(r)]
     casing_observations = [r for r in kpa_observations if _is_casing_kpa(r)]
     red_flags = analyze_red_flag_drivers(camera_events, speeding_events, casing_incidents)
+    aa = assessment_analysis or {"with_findings": [], "clean": [], "by_yard": {}, "by_rep": {}}
 
     parts = []
 
@@ -1595,16 +1888,20 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
         yard_spd = [e for e in speeding_events if e["yard"] == yard]
         yard_inc = [r for r in casing_incidents if _get_kpa_yard(r) == yard]
         yard_obs = [r for r in casing_observations if _get_kpa_yard(r) == yard]
+        yard_assess_ct = aa["by_yard"].get(yard, 0)
         cam_red = len([e for e in yard_cam if e["tier"] == "RED"])
         spd_red = len([e for e in yard_spd if e["tier"] == "RED"])
         cam_cell = f"{cam_red}/{len(yard_cam)}" if yard_cam else "&mdash;"
         spd_cell = f"{spd_red}/{len(yard_spd)}" if yard_spd else "&mdash;"
         obs_warn = " &#9888;&#65039;" if len(yard_obs) == 0 else ""
+        assess_warn = " &#9888;&#65039;" if yard_assess_ct < ASSESSMENT_TARGET_PER_YARD else ""
+        assess_bg = "#FFF0E0" if yard_assess_ct < ASSESSMENT_TARGET_PER_YARD else "#fff"
         glance_rows += f"""<tr>
   <td style="padding:5px 8px;border:1px solid #ddd;">{_h(yard)}</td>
   <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;background:{'#FFE0E0' if cam_red else '#fff'};">{cam_cell}</td>
   <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;background:{'#FFE0E0' if spd_red else '#fff'};">{spd_cell}</td>
   <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;">{len(yard_inc)}</td>
+  <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;background:{assess_bg};">{yard_assess_ct}{assess_warn}</td>
   <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;">{len(yard_obs)}{obs_warn}</td>
 </tr>"""
 
@@ -1612,7 +1909,7 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
 <tr><td style="padding:25px 40px;">
   <h2 style="color:{C_RED};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {C_RED};padding-bottom:5px;">SECTION 1 &mdash; WEEK AT A GLANCE</h2>
   <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
-    <tr style="background:{C_RED};"><th style="padding:6px;color:#fff;border:1px solid #ddd;">Yard</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">Camera (RED/total)</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">Speeding (RED/total)</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">KPA Incidents</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">KPA Observations</th></tr>
+    <tr style="background:{C_RED};"><th style="padding:6px;color:#fff;border:1px solid #ddd;">Yard</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">Camera (RED/total)</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">Speeding (RED/total)</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">KPA Incidents</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">Field Assessments</th><th style="padding:6px;color:#fff;border:1px solid #ddd;">Obs Cards</th></tr>
     {glance_rows}
   </table>
 </td></tr>""")
@@ -1681,11 +1978,12 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
   {spd_html}
 </td></tr>""")
 
-    # S5: KPA
+    # S5: KPA Incidents, Field Assessments & Observations
     kpa_html = ""
     if not KPA_AVAILABLE:
         kpa_html = f'<i style="color:{C_RED};">KPA data unavailable &mdash; API token not configured.</i>'
     else:
+        # Incidents
         kpa_html += f"<b>Incidents: {len(casing_incidents)}</b><br>"
         for inc in casing_incidents:
             link = inc.get('kpa_link', '')
@@ -1693,7 +1991,85 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
             if link:
                 kpa_html += f' &mdash; <a href="{_h(link)}">View</a>'
             kpa_html += '</div>'
-        kpa_html += f"<br><b>Observations: {len(casing_observations)}</b><br>"
+
+        # PART A: Findings That Need Discussion
+        kpa_html += f'<br><div style="background:#f8f0f0;border:2px solid {C_RED};padding:15px;margin:15px 0;">'
+        kpa_html += f'<b style="color:{C_RED};font-size:14px;">PART A &mdash; FINDINGS THAT NEED DISCUSSION</b><br><br>'
+
+        categories = [
+            ("EQUIPMENT / VEHICLE ISSUES", "EQUIPMENT"),
+            ("BEHAVIORAL / COMPLIANCE", "BEHAVIORAL"),
+            ("HOUSEKEEPING / SITE CONDITIONS", "HOUSEKEEPING"),
+            ("DOCUMENTATION", "DOCUMENTATION"),
+        ]
+
+        findings_with = aa.get("with_findings", [])
+        if findings_with:
+            # Group findings by category
+            cat_items = {}
+            for item in findings_with:
+                for f in item.get("findings", []):
+                    cat = f.get("category", "EQUIPMENT")
+                    cat_items.setdefault(cat, []).append({**item, "_finding": f})
+
+            for cat_label, cat_key in categories:
+                items = cat_items.get(cat_key, [])
+                if not items:
+                    continue
+                kpa_html += f'<b style="color:{C_DARK};">{cat_label}</b><br>'
+                for it in items:
+                    f = it["_finding"]
+                    finding_text = _h(f.get("text", "")[:200])
+                    yard = _h(it.get("yard", ""))
+                    date = _h(it.get("date", ""))
+                    rep = _h(it.get("observer", ""))
+                    status = _h(it.get("status", ""))
+                    link = it.get("link", "")
+                    status_color = C_GREEN if "corrected" in status.lower() else C_RED
+                    kpa_html += f'<div style="border-left:3px solid {status_color};padding:6px 12px;margin:4px 0;font-size:12px;">'
+                    kpa_html += f'{yard} &mdash; {date} &mdash; {rep}<br>'
+                    kpa_html += f'<i>{finding_text}</i><br>'
+                    kpa_html += f'<b style="color:{status_color};">Status: {status}</b>'
+                    if link:
+                        kpa_html += f' &mdash; <a href="{_h(link)}">View in KPA</a>'
+                    kpa_html += '</div>'
+                kpa_html += '<br>'
+        else:
+            kpa_html += f'<span style="color:{C_GREEN};">No findings requiring discussion this week &mdash; all assessments clean.</span><br>'
+
+        kpa_html += '</div>'
+
+        # PART B: Assessment Accountability
+        kpa_html += f'<div style="background:#f0f4f8;border:2px solid {C_DARK};padding:15px;margin:15px 0;">'
+        kpa_html += f'<b style="color:{C_DARK};font-size:14px;">PART B &mdash; ASSESSMENT ACCOUNTABILITY</b><br><br>'
+
+        kpa_html += '<b>Assessments filed per safety rep:</b><br>'
+        for rep_name, rep_yards in SAFETY_REP_YARDS.items():
+            rep_count = sum(aa["by_yard"].get(y, 0) for y in rep_yards)
+            target = ASSESSMENT_TARGET_PER_YARD * len(rep_yards)
+            yard_label = "/".join(rep_yards)
+            warn = f' <span style="color:red;font-weight:bold;">&#9888;&#65039; Below target</span>' if rep_count < target else ""
+            kpa_html += f'{_h(rep_name)} ({_h(yard_label)}): {rep_count} filed (target: {target}){warn}<br>'
+
+        kpa_html += f'<br><b>Target: {ASSESSMENT_TARGET_PER_YARD} field assessments per yard per week</b><br>'
+
+        for yard in YARD_ORDER:
+            yard_ct = aa["by_yard"].get(yard, 0)
+            if yard_ct < ASSESSMENT_TARGET_PER_YARD:
+                info = YARD_INFO.get(yard, {})
+                rep = info.get("safety_reps", "safety rep")
+                kpa_html += f'<span style="color:red;font-weight:bold;">{_h(yard)}: {yard_ct} filed (below target) &mdash; {_h(rep)} to address</span><br>'
+
+        if aa["clean"]:
+            clean_yards = Counter(c["yard"] for c in aa["clean"])
+            clean_parts = ", ".join(f"{y} x{c}" for y, c in clean_yards.most_common())
+            kpa_html += f'<br><span style="color:{C_GREEN};">{_plural(len(aa["clean"]), "assessment")} filed with no findings ({_h(clean_parts)}) &mdash; Good work.</span><br>'
+
+        kpa_html += '</div>'
+
+        # Observation Cards
+        kpa_html += f"<br><b>Observation Cards: {len(casing_observations)}</b><br>"
+        kpa_html += f"<b style='font-size:12px;'>Target: {OBS_TARGET_PER_YARD} per yard per week</b><br>"
         for yard in YARD_ORDER:
             yobs = [r for r in casing_observations if _get_kpa_yard(r) == yard]
             warn = f' <span style="color:red;font-weight:bold;">&#9888;&#65039; ZERO filed</span>' if not yobs else ""
@@ -1701,7 +2077,7 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
 
     parts.append(f"""
 <tr><td style="padding:25px 40px;">
-  <h2 style="color:{C_RED};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {C_RED};padding-bottom:5px;">SECTION 5 &mdash; KPA INCIDENTS &amp; OBSERVATIONS</h2>
+  <h2 style="color:{C_RED};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {C_RED};padding-bottom:5px;">SECTION 5 &mdash; KPA INCIDENTS, FIELD ASSESSMENTS &amp; OBSERVATIONS</h2>
   {kpa_html}
 </td></tr>""")
 
@@ -1759,8 +2135,17 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
         rep_obs = [r for r in casing_observations if _get_kpa_yard(r) in rep_yards]
         rep_inc = [r for r in casing_incidents if _get_kpa_yard(r) in rep_yards]
         rep_flags_list = [f for f in red_flags if f["yard"] in rep_yards]
+        rep_assess_count = sum(aa["by_yard"].get(y, 0) for y in rep_yards)
+        rep_assess_target = ASSESSMENT_TARGET_PER_YARD * len(rep_yards)
 
-        if not (rep_cam or rep_spd or rep_obs or rep_inc or rep_flags_list):
+        # Collect findings for this rep's yards
+        rep_findings = []
+        for item in aa.get("with_findings", []):
+            if item.get("yard") in rep_yards:
+                rep_findings.append(item)
+
+        has_data = rep_cam or rep_spd or rep_obs or rep_inc or rep_flags_list or rep_assess_count or rep_findings
+        if not has_data:
             continue
 
         yard_label = " / ".join(rep_yards)
@@ -1776,6 +2161,18 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
             cam_types = Counter(e["display_name"] for e in rep_cam)
             type_str = ", ".join(f"{t}: {c}" for t, c in cam_types.most_common(5))
             agenda_html += f'<li>{_plural(len(rep_cam), "camera event")} &mdash; {_h(type_str)}</li>'
+
+        # Field assessments per rep
+        assess_warn = ' <span style="color:red;font-weight:bold;">&#9888;&#65039;</span>' if rep_assess_count < rep_assess_target else ""
+        agenda_html += f'<li><b>Field assessments filed: {rep_assess_count} (target: {rep_assess_target})</b>{assess_warn}</li>'
+
+        if rep_findings:
+            finding_briefs = [_h(f.get("finding", "")[:80]) for f in rep_findings[:5]]
+            findings_str = "; ".join(finding_briefs)
+            agenda_html += f'<li style="color:{C_RED};">Findings to address: {findings_str}</li>'
+        else:
+            agenda_html += f'<li style="color:{C_GREEN};">Findings to address: None &mdash; all clean</li>'
+
         for yard in rep_yards:
             yard_obs_ct = len([r for r in rep_obs if _get_kpa_yard(r) == yard])
             agenda_html += f'<li>Observation cards ({_h(yard)}): {yard_obs_ct} (target: {OBS_TARGET_PER_YARD})</li>'
@@ -1951,9 +2348,18 @@ def main():
     for flag in red_flags:
         print(f"      {flag['name']}: {flag['total']} total events — {flag['action']}")
 
+    print("\n[5b] Analyzing field assessments...")
+    kpa_assessments = kpa_data.get("assessments", [])
+    casing_assessments = [r for r in kpa_assessments if _is_casing_kpa(r)]
+    assessment_analysis = analyze_field_assessments(casing_assessments)
+    print(f"    {_plural(len(casing_assessments), 'field assessment')} total")
+    print(f"    {_plural(len(assessment_analysis['with_findings']), 'assessment')} with findings")
+    print(f"    {_plural(len(assessment_analysis['clean']), 'assessment')} clean")
+
     print("\n[6] Creating Word document (landscape)...")
     doc = create_word_document(camera_events, speeding_events, kpa_data,
-                               yard_vehicle_counts, start_date, end_date)
+                               yard_vehicle_counts, start_date, end_date,
+                               assessment_analysis=assessment_analysis)
 
     output_file = f"WeeklyCasingBriefing_{start_date.strftime('%Y-%m-%d')}.docx"
     doc.save(output_file)
@@ -1961,7 +2367,8 @@ def main():
 
     print("\n[7] Building HTML email...")
     html_body = build_html_report(camera_events, speeding_events, kpa_data,
-                                   yard_vehicle_counts, start_date, end_date)
+                                   yard_vehicle_counts, start_date, end_date,
+                                   assessment_analysis=assessment_analysis)
 
     print("[8] Sending email...")
     send_email_report(html_body, output_file, start_date, end_date)

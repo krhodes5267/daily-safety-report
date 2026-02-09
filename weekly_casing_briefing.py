@@ -693,6 +693,26 @@ KPA_FORMS = {
 
 ASSESSMENT_TARGET_PER_YARD = 3
 
+# Map safety rep last names to their primary yard (for field assessment yard detection)
+_OBSERVER_TO_YARD = {
+    "salazar": "Midland",
+    "hancock": "Midland",
+    "conrad": "Bryan",
+    "barnett": "Kilgore",
+    "batts": "Hobbs",
+    "speyrer": "Jourdanton",
+}
+
+# Map safety rep last names to their SAFETY_REP_YARDS key (for accountability)
+_OBSERVER_TO_REP = {
+    "salazar": "MICHAEL HANCOCK & MICHAEL SALAZAR",
+    "hancock": "MICHAEL HANCOCK & MICHAEL SALAZAR",
+    "conrad": "JUSTIN CONRAD",
+    "barnett": "JAMES BARNETT (J.P.)",
+    "batts": "ALLEN BATTS",
+    "speyrer": "JOEY SPEYRER",
+}
+
 # Fields to skip when scanning for findings (metadata, not content)
 _KPA_META_FIELDS = {
     'report number', 'date', 'observer', 'status', 'link', 'kpa_link',
@@ -700,16 +720,27 @@ _KPA_META_FIELDS = {
     'report', 'id', 'response_id',
 }
 
+# Phrases that indicate a POSITIVE observation (skip these)
+_POSITIVE_PHRASES = [
+    'no unsafe practices', 'good hand placement', 'good communication',
+    'all good', 'no issues', 'doing a good job', 'no findings',
+    'good job', 'no concerns', 'satisfactory', 'in compliance',
+    'properly worn', 'properly secured', 'no deficiencies',
+    'good housekeeping', 'well maintained', 'good condition',
+    'no hazards', 'no violations', 'no corrective',
+    'safe practices', 'following procedure', 'good practice',
+]
+
 # Keywords that indicate a finding vs. a clean pass
 _FINDING_KEYWORDS = [
-    'corrective', 'finding', 'hazard', 'deficien', 'violation', 'issue',
-    'damaged', 'broken', 'missing', 'expired', 'not completed', 'not worn',
-    'failed', 'needs repair', 'needs replacement', 'out of date',
-    'no jsa', 'no ppe', 'not in compliance', 'not following',
-    'improper', 'unsafe', 'leak', 'spill', 'trip', 'housekeeping',
+    'corrective', 'corrected', 'finding', 'found', 'hazard', 'deficien',
+    'violation', 'issue', 'damaged', 'broken', 'missing', 'expired',
+    'not completed', 'not worn', 'failed', 'needs repair', 'need to',
+    'needs replacement', 'out of date', 'should not', 'replaced',
+    'disappointed', 'no jsa', 'no ppe', 'not in compliance',
+    'not following', 'improper', 'unsafe', 'leak', 'spill', 'trip',
     'not secured', 'unsecured', 'obstruct', 'crack', 'worn', 'frayed',
     'no fire', 'no extinguisher', 'no permit', 'incomplete',
-    'comment', 'note', 'observation', 'action',
 ]
 
 # Keywords for categorizing findings
@@ -795,9 +826,18 @@ def get_kpa_data_weekly(start_ct, end_ct):
                 results["observations"] = filtered
             elif form_id == 381707:
                 results["assessments"] = filtered
-                # Log first assessment's field names for debugging
+                # Debug: print raw CSV headers and first 2 rows
                 if filtered:
-                    print(f"      Assessment field names: {list(filtered[0].keys())[:20]}...")
+                    all_keys = list(filtered[0].keys())
+                    print(f"      [DEBUG] Assessment CSV headers ({len(all_keys)} columns):")
+                    for ki, k in enumerate(all_keys):
+                        print(f"        [{ki}] {k}")
+                    for ri, dbg_row in enumerate(filtered[:2]):
+                        print(f"      [DEBUG] Row {ri} (report #{dbg_row.get('report number', '?')}):")
+                        for k, v in dbg_row.items():
+                            if v and str(v).strip():
+                                print(f"        {k}: {str(v)[:120]}")
+                    print(f"      [DEBUG] End assessment debug")
 
         except Exception as e:
             print(f"      Error parsing {form_name}: {e}")
@@ -838,45 +878,106 @@ def _get_kpa_observer(row):
     return 'Unknown'
 
 
+def _get_assessment_observer(row):
+    """Get who FILED the assessment (the safety rep).
+
+    For field assessments, 'observer' = the safety rep who conducted it.
+    'Name' may be the person/area being assessed, so check observer first.
+    """
+    observer = row.get('observer', '').strip()
+    if observer and observer.lower() not in ['unknown', 'none', '']:
+        return observer
+    name = row.get('Name', '').strip()
+    if name and name.lower() not in ['none', 'unknown', '']:
+        return name
+    name = row.get('name', '').strip()
+    if name and name.lower() not in ['none', 'unknown', '']:
+        return name
+    return 'Unknown'
+
+
+def _map_observer_to_yard(observer_name):
+    """Map an observer name to their primary yard using last name matching."""
+    if not observer_name:
+        return ""
+    obs_lower = observer_name.lower().strip()
+    for last_name, yard in _OBSERVER_TO_YARD.items():
+        if last_name in obs_lower:
+            return yard
+    return ""
+
+
+def _map_observer_to_rep(observer_name):
+    """Map an observer name to their SAFETY_REP_YARDS key."""
+    if not observer_name:
+        return observer_name
+    obs_lower = observer_name.lower().strip()
+    for last_name, rep_key in _OBSERVER_TO_REP.items():
+        if last_name in obs_lower:
+            return rep_key
+    return observer_name
+
+
 def _extract_findings(row):
     """Scan all fields in a KPA assessment row for finding-like content.
 
     Returns list of finding strings. Empty list = clean assessment.
+
+    Skips: URLs, KPA field codes, company/operator names, positive observations.
+    Only includes fields that indicate something WRONG or CORRECTED.
     """
+    meta_lower = {k.lower() for k in _KPA_META_FIELDS}
     findings = []
     for key, val in row.items():
         if not val or not isinstance(val, str):
             continue
-        # Skip metadata fields
+
         key_lower = key.lower().strip()
-        if key_lower in _KPA_META_FIELDS or key_lower in {k.lower() for k in _KPA_META_FIELDS}:
+
+        # Skip metadata fields
+        if key_lower in meta_lower:
             continue
+
         val_stripped = val.strip()
         if not val_stripped or len(val_stripped) < 5:
             continue
-        # Skip purely numeric or date values
-        if val_stripped.replace('.', '').replace('-', '').replace('/', '').isdigit():
-            continue
-        # Skip common non-finding values
+
         val_lower = val_stripped.lower()
+
+        # Skip URLs (image uploads, KPA links, etc.)
+        if 'http://' in val_lower or 'https://' in val_lower:
+            continue
+
+        # Skip purely numeric or date values
+        if val_stripped.replace('.', '').replace('-', '').replace('/', '').replace(':', '').replace(' ', '').isdigit():
+            continue
+
+        # Skip KPA internal field codes (random alphanumeric strings like "vonz52oh7281f36pc831")
+        if len(val_stripped) < 30 and val_stripped.replace('_', '').replace('-', '').isalnum() and not any(c == ' ' for c in val_stripped):
+            # Short single-token alphanumeric = likely a field code or ID, not a finding
+            if not any(kw in val_lower for kw in _FINDING_KEYWORDS):
+                continue
+
+        # Skip common non-finding single-word values
         if val_lower in ('yes', 'no', 'n/a', 'na', 'pass', 'ok', 'good', 'safe',
                          'true', 'false', 'compliant', 'satisfactory', 'acceptable',
-                         'not applicable', 'none', 'no issues', 'no findings'):
+                         'not applicable', 'none', 'no issues', 'no findings',
+                         'casing', 'csg', 'brhas', 'butch'):
             continue
 
-        # Check if this looks like a finding
-        has_keyword = any(kw in val_lower for kw in _FINDING_KEYWORDS)
-        # Also include longer text values that aren't obvious pass/safe
-        is_long_comment = len(val_stripped) >= 20 and val_lower not in ('yes', 'no')
+        # Skip positive observations
+        if any(phrase in val_lower for phrase in _POSITIVE_PHRASES):
+            continue
 
-        if has_keyword or is_long_comment:
-            # Use field name as context if it's readable
-            field_label = key.replace('_', ' ').strip()
-            # Skip hash-like field codes — just use the value
-            if len(key) > 15 and not any(c.isupper() for c in key):
-                findings.append(val_stripped)
-            else:
-                findings.append(f"{field_label}: {val_stripped}" if field_label else val_stripped)
+        # Skip short company/operator name fields (operator, company, division fields)
+        if key_lower in ('operator', 'company', 'division', 'department', 'location',
+                         'site', 'yard', 'area', 'unit', 'rig', 'crew', 'shift'):
+            continue
+
+        # ONLY include if it has a finding keyword — no more "long text = finding"
+        has_keyword = any(kw in val_lower for kw in _FINDING_KEYWORDS)
+        if has_keyword:
+            findings.append(val_stripped)
 
     return findings
 
@@ -915,8 +1016,10 @@ def _get_assessment_status(row):
 def analyze_field_assessments(assessments):
     """Analyze field assessments into with-findings and clean.
 
+    Uses observer name to determine yard and safety rep for accountability.
+
     Returns dict with:
-        with_findings: list of {row, yard, rep, date, findings, categories}
+        with_findings: list of {yard, rep, date, report_num, link, findings, categories, status}
         clean: list of {yard, date, report_num}
         by_yard: {yard: count}
         by_rep: {rep_name: count}
@@ -927,20 +1030,20 @@ def analyze_field_assessments(assessments):
     by_rep = Counter()
 
     for row in assessments:
-        yard = _get_kpa_yard(row)
-        rep = _get_kpa_observer(row)
+        # Use assessment-specific observer (who filed it = the safety rep)
+        rep = _get_assessment_observer(row)
+        # Map observer to yard — use observer name, fallback to KPA field
+        yard = _get_kpa_yard(row) or _map_observer_to_yard(rep)
         date = row.get('date', 'N/A')
         report_num = row.get('report number', 'N/A')
         link = row.get('kpa_link', '')
 
         by_yard[yard or 'Unknown'] += 1
-        # Map observer to safety rep name for accountability
-        rep_key = rep
-        for sr_name, sr_yards in SAFETY_REP_YARDS.items():
-            if yard in sr_yards:
-                rep_key = sr_name
-                break
+        # Map observer to SAFETY_REP_YARDS key for accountability
+        rep_key = _map_observer_to_rep(rep)
         by_rep[rep_key] += 1
+
+        print(f"    [DEBUG] Assessment #{report_num}: observer='{rep}' -> yard='{yard}', rep_key='{rep_key}'")
 
         findings = _extract_findings(row)
         if findings:
@@ -951,10 +1054,10 @@ def analyze_field_assessments(assessments):
 
             status = _get_assessment_status(row)
             with_findings.append({
-                "row": row, "yard": yard or "Unknown", "rep": rep,
+                "yard": yard or "Unknown", "rep": rep,
                 "date": date, "report_num": report_num, "link": link,
                 "findings": findings, "categories": categorized,
-                "status": status,
+                "status": status, "observer": rep,
             })
         else:
             clean.append({
@@ -1222,10 +1325,10 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
     # ===== SECTION 1: WEEK AT A GLANCE =====
     _add_section_header(doc, "SECTION 1 \u2014 WEEK AT A GLANCE")
 
-    table = doc.add_table(rows=1, cols=7)
+    table = doc.add_table(rows=1, cols=6)
     table.style = "Light Grid Accent 1"
     table.autofit = True
-    headers = ["Yard", "Camera Events", "Speeding Events", "KPA Incidents", "Field Assessments", "Obs Cards", ""]
+    headers = ["Yard", "Camera Events", "Speeding Events", "KPA Incidents", "Field Assessments", "Obs Cards"]
     for i, h in enumerate(headers):
         table.rows[0].cells[i].text = h
         if table.rows[0].cells[i].paragraphs[0].runs:
@@ -1262,12 +1365,6 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
             _set_cell_shading(cells[4], "FFF0E0")
         obs_count = len(yard_obs)
         cells[5].text = str(obs_count)
-        warns = []
-        if obs_count == 0:
-            warns.append("No obs")
-        if yard_assess_ct == 0:
-            warns.append("No assess")
-        cells[6].text = " | ".join(warns) if warns else ""
 
         for c in cells:
             for p in c.paragraphs:
@@ -1479,45 +1576,29 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
         _set_run_font(run, 11, bold=True, color=RGBColor(192, 0, 0))
 
         if aa["with_findings"]:
-            # Group by category
-            all_categorized = OrderedDict([
-                ("EQUIPMENT/VEHICLE ISSUES", []),
-                ("BEHAVIORAL/COMPLIANCE", []),
-                ("HOUSEKEEPING/SITE CONDITIONS", []),
-                ("DOCUMENTATION", []),
-            ])
             for af in aa["with_findings"]:
+                # One entry per assessment
+                p = doc.add_paragraph()
+                run = p.add_run(f"  Assessment #{af['report_num']} \u2014 {af['yard']} \u2014 {af['date']} \u2014 {af['rep']}")
+                _set_run_font(run, 9, bold=True)
+
+                status_color = RGBColor(0, 128, 0) if 'corrected' in af['status'].lower() else RGBColor(192, 0, 0)
+                p = doc.add_paragraph()
+                run = p.add_run(f"    Status: {af['status']}")
+                _set_run_font(run, 8, bold=True, color=status_color)
+
+                # List all findings under this assessment with category tags
                 for cat, findings_list in af["categories"].items():
                     for finding in findings_list:
-                        all_categorized.setdefault(cat, []).append({
-                            "finding": finding, "yard": af["yard"],
-                            "date": af["date"], "rep": af["rep"],
-                            "status": af["status"], "link": af["link"],
-                            "report_num": af["report_num"],
-                        })
+                        p = doc.add_paragraph()
+                        run = p.add_run(f"    [{cat}] {finding[:200]}")
+                        _set_run_font(run, 8)
 
-            for cat, items in all_categorized.items():
-                if not items:
-                    continue
-                p = doc.add_paragraph()
-                run = p.add_run(f"  {cat}")
-                _set_run_font(run, 10, bold=True, color=RGBColor(128, 0, 0))
+                if af["link"]:
+                    p = doc.add_paragraph()
+                    run = p.add_run(f"    {af['link']}")
+                    _set_run_font(run, 7, color=RGBColor(0, 0, 180))
 
-                for item in items:
-                    p = doc.add_paragraph()
-                    run = p.add_run(f"    {item['yard']} | {item['date']} | {item['rep']}")
-                    _set_run_font(run, 8, bold=True)
-                    p = doc.add_paragraph()
-                    run = p.add_run(f"    FINDING: {item['finding'][:200]}")
-                    _set_run_font(run, 8)
-                    p = doc.add_paragraph()
-                    status_color = RGBColor(0, 128, 0) if 'corrected' in item['status'].lower() else RGBColor(192, 0, 0)
-                    run = p.add_run(f"    STATUS: {item['status']}")
-                    _set_run_font(run, 8, bold=True, color=status_color)
-                    if item["link"]:
-                        p2 = doc.add_paragraph()
-                        run2 = p2.add_run(f"    {item['link']}")
-                        _set_run_font(run2, 7, color=RGBColor(0, 0, 180))
                 doc.add_paragraph()
         else:
             p = doc.add_paragraph()
@@ -1999,57 +2080,34 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
         kpa_html += f'<br><div style="background:#f8f0f0;border:2px solid {C_RED};padding:15px;margin:15px 0;">'
         kpa_html += f'<b style="color:{C_RED};font-size:14px;">PART A &mdash; FINDINGS THAT NEED DISCUSSION</b><br><br>'
 
-        categories = [
-            ("EQUIPMENT / VEHICLE ISSUES", "EQUIPMENT"),
-            ("BEHAVIORAL / COMPLIANCE", "BEHAVIORAL"),
-            ("HOUSEKEEPING / SITE CONDITIONS", "HOUSEKEEPING"),
-            ("DOCUMENTATION", "DOCUMENTATION"),
-        ]
-
         findings_with = aa.get("with_findings", [])
         if findings_with:
-            # Group findings by category — findings are strings, categories
-            # dict maps category -> [string, ...] (same structure as Word doc)
-            cat_items = {}
-            for item in findings_with:
-                for cat, findings_list in item.get("categories", {}).items():
-                    for finding_text in findings_list:
-                        cat_items.setdefault(cat, []).append({
-                            "finding": finding_text,
-                            "yard": item.get("yard", ""),
-                            "date": item.get("date", ""),
-                            "rep": item.get("rep", ""),
-                            "status": item.get("status", ""),
-                            "link": item.get("link", ""),
-                        })
+            print(f"  [DEBUG] HTML S5 Part A: {len(findings_with)} assessments with findings")
+            for dbg_af in findings_with[:2]:
+                print(f"  [DEBUG]   #{dbg_af.get('report_num')}: {len(dbg_af.get('findings', []))} findings, categories={list(dbg_af.get('categories', {}).keys())}")
 
-            print(f"  [DEBUG] HTML S5 Part A: {len(findings_with)} assessments with findings, categories: {list(cat_items.keys())}")
-            if cat_items:
-                first_cat = next(iter(cat_items))
-                first_item = cat_items[first_cat][0]
-                print(f"  [DEBUG]   First item type: {type(first_item)}, value: {str(first_item)[:120]}")
+            # One entry per assessment, with findings listed below
+            for af in findings_with:
+                yard = _h(af.get("yard", ""))
+                date = _h(af.get("date", ""))
+                rep = _h(af.get("rep", ""))
+                status = _h(af.get("status", ""))
+                link = af.get("link", "")
+                report_num = _h(af.get("report_num", ""))
+                status_color = C_GREEN if "corrected" in status.lower() else C_RED
 
-            for cat_label, cat_key in categories:
-                items = cat_items.get(cat_key, [])
-                if not items:
-                    continue
-                kpa_html += f'<b style="color:{C_DARK};">{cat_label}</b><br>'
-                for it in items:
-                    finding_text = _h(str(it["finding"])[:200])
-                    yard = _h(it.get("yard", ""))
-                    date = _h(it.get("date", ""))
-                    rep = _h(it.get("rep", ""))
-                    status = _h(it.get("status", ""))
-                    link = it.get("link", "")
-                    status_color = C_GREEN if "corrected" in status.lower() else C_RED
-                    kpa_html += f'<div style="border-left:3px solid {status_color};padding:6px 12px;margin:4px 0;font-size:12px;">'
-                    kpa_html += f'{yard} &mdash; {date} &mdash; {rep}<br>'
-                    kpa_html += f'<i>{finding_text}</i><br>'
-                    kpa_html += f'<b style="color:{status_color};">Status: {status}</b>'
-                    if link:
-                        kpa_html += f' &mdash; <a href="{_h(link)}">View in KPA</a>'
-                    kpa_html += '</div>'
+                kpa_html += f'<div style="border-left:4px solid {status_color};padding:8px 12px;margin:8px 0;font-size:12px;background:#fff5f5;">'
+                kpa_html += f'<b>Assessment #{report_num}</b> &mdash; {yard} &mdash; {date} &mdash; {rep}<br>'
+                kpa_html += f'<b style="color:{status_color};">Status: {status}</b>'
+                if link:
+                    kpa_html += f' &mdash; <a href="{_h(link)}">View in KPA</a>'
                 kpa_html += '<br>'
+
+                for cat, findings_list in af.get("categories", {}).items():
+                    for finding_text in findings_list:
+                        kpa_html += f'<div style="margin:3px 0 3px 15px;font-size:11px;">[{_h(cat)}] <i>{_h(str(finding_text)[:200])}</i></div>'
+
+                kpa_html += '</div>'
         else:
             kpa_html += f'<span style="color:{C_GREEN};">No findings requiring discussion this week &mdash; all assessments clean.</span><br>'
 

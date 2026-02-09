@@ -1,0 +1,41 @@
+name: Weekly Casing Safety Briefing
+
+on:
+  schedule:
+    # 6:00 AM Central = 12:00 UTC (CST is UTC-6)
+    # Runs Monday mornings to prep for 2 PM CT safety meeting.
+    # Note: During CDT (March-November), this runs at 7:00 AM Central.
+    - cron: '0 12 * * 1'
+  workflow_dispatch: # Manual trigger for testing
+
+jobs:
+  generate-briefing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate weekly casing briefing
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
+        run: python weekly_casing_briefing.py
+
+      - name: Upload briefing as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-casing-briefing
+          path: WeeklyCasingBriefing_*.docx
+          retention-days: 30

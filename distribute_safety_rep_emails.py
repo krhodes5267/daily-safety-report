@@ -35,7 +35,7 @@ SAFETY_REP_MAP = [
         "divisions": [
             ("Rathole", "Midland"),
             ("Rathole", "Levelland"),
-            ("Transcend Drilling", ""),
+            ("Rathole", "Barstow"),
             ("Fencing", ""),
             ("Anchors", ""),
             ("Environmental", ""),

@@ -309,24 +309,34 @@ def _h(text):
 # ==============================================================================
 
 def get_week_range():
-    """Calculate Mon-Sun range for the previous week.
+    """Calculate the most recent Mon-Sun range.
 
-    If run on Monday Feb 16, covers Mon Feb 9 00:00:00 CT through Sun Feb 15 23:59:59 CT.
+    If today is Monday: covers the just-completed week (previous Mon through yesterday Sun).
+    If any other day: covers the current week starting from the most recent Monday.
+
+    Examples:
+      Monday Feb 9  -> Feb 2 (Mon) through Feb 8 (Sun)
+      Sunday Feb 8  -> Feb 2 (Mon) through Feb 8 (Sun)
+      Tuesday Feb 10 -> Feb 9 (Mon) through Feb 15 (Sun)  [current week]
     """
     now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
     today = now_central.date()
 
-    # Find last Monday (if today is Monday, go back 7 days)
-    days_since_monday = today.weekday()  # 0=Mon
+    days_since_monday = today.weekday()  # 0=Mon, 6=Sun
     if days_since_monday == 0:
+        # Monday: go back 7 days to get the just-completed week
         last_monday = today - timedelta(days=7)
     else:
-        last_monday = today - timedelta(days=days_since_monday + 7)
+        # Any other day: go back to this week's Monday
+        last_monday = today - timedelta(days=days_since_monday)
 
     last_sunday = last_monday + timedelta(days=6)
 
     start_ct = datetime(last_monday.year, last_monday.month, last_monday.day, 0, 0, 0, tzinfo=CENTRAL_TZ)
     end_ct = datetime(last_sunday.year, last_sunday.month, last_sunday.day, 23, 59, 59, tzinfo=CENTRAL_TZ)
+
+    print(f"  [DIAG] Today: {today} ({today.strftime('%A')}), weekday={days_since_monday}")
+    print(f"  [DIAG] Week range: {last_monday} (Mon) through {last_sunday} (Sun)")
 
     return start_ct, end_ct, last_monday, last_sunday
 
@@ -795,6 +805,10 @@ def get_kpa_data_weekly(start_ct, end_ct):
     start_ms = int(start_ct.timestamp() * 1000)
     end_ms = int(end_ct.timestamp() * 1000)
 
+    print(f"    [DIAG] KPA date range: {start_ct.strftime('%Y-%m-%d %H:%M:%S')} to {end_ct.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"    [DIAG] KPA date range (ms): {start_ms} to {end_ms}")
+    print(f"    [DIAG] KPA form IDs: {dict(KPA_FORMS)}")
+
     results = {"incidents": [], "observations": [], "assessments": []}
 
     for form_id, form_name in KPA_FORMS.items():
@@ -816,10 +830,13 @@ def get_kpa_data_weekly(start_ct, end_ct):
             reader = csv.DictReader(csv_file)
             rows = list(reader)
 
+            # Skip header-duplicate rows
+            rows = [r for r in rows if r.get('report number') != 'Report Number']
+            print(f"      [DIAG] Raw CSV rows returned by API: {len(rows)}")
+
             filtered = []
+            skipped_dates = []
             for row in rows:
-                if row.get('report number') == 'Report Number':
-                    continue
                 date_str = row.get('date', '')
                 try:
                     row_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
@@ -829,29 +846,58 @@ def get_kpa_data_weekly(start_ct, end_ct):
                         if report_num:
                             row['kpa_link'] = f"https://brhas-ees.kpaehs.com/forms/responses/view/{report_num}"
                         filtered.append(row)
-                except Exception:
-                    continue
+                    else:
+                        skipped_dates.append(f"#{row.get('report number', '?')} date={date_str}")
+                except Exception as date_err:
+                    skipped_dates.append(f"#{row.get('report number', '?')} date='{date_str}' parse_error={date_err}")
 
-            print(f"      {form_name}: {len(filtered)} in date range")
+            print(f"      {form_name}: {len(filtered)} in date range (skipped {len(skipped_dates)} outside range)")
+            if skipped_dates:
+                for sd in skipped_dates[:5]:
+                    print(f"        [DIAG] Skipped: {sd}")
+                if len(skipped_dates) > 5:
+                    print(f"        [DIAG] ... and {len(skipped_dates) - 5} more")
 
             if form_id == 151622:
                 results["incidents"] = filtered
+                # Debug: print incident data before Casing filtering
+                if filtered:
+                    print(f"      [DIAG] Incident rows ({len(filtered)}):")
+                    for ri, dbg_row in enumerate(filtered[:5]):
+                        rn = dbg_row.get('report number', '?')
+                        dt = dbg_row.get('date', '?')
+                        # Show all field values to help identify Casing markers
+                        vals_preview = {k: str(v)[:60] for k, v in dbg_row.items() if v and str(v).strip() and k != 'kpa_link'}
+                        print(f"        #{rn} date={dt}")
+                        for k, v in vals_preview.items():
+                            print(f"          {k}: {v}")
             elif form_id == 151085:
                 results["observations"] = filtered
+                if filtered:
+                    print(f"      [DIAG] Observation rows ({len(filtered)}):")
+                    for ri, dbg_row in enumerate(filtered[:3]):
+                        rn = dbg_row.get('report number', '?')
+                        dt = dbg_row.get('date', '?')
+                        obs = dbg_row.get('observer', dbg_row.get('Name', '?'))
+                        vals_preview = [f"{k}={str(v)[:40]}" for k, v in dbg_row.items() if v and str(v).strip() and 'casing' in str(v).lower() or 'csg' in str(v).lower()]
+                        casing_match = " | ".join(vals_preview) if vals_preview else "NO CASING/CSG MATCH"
+                        print(f"        #{rn} date={dt} observer={obs} casing_markers=[{casing_match}]")
+                else:
+                    print(f"      [DIAG] No observation rows in date range")
             elif form_id == 381707:
                 results["assessments"] = filtered
                 # Debug: print raw CSV headers and first 2 rows
                 if filtered:
                     all_keys = list(filtered[0].keys())
-                    print(f"      [DEBUG] Assessment CSV headers ({len(all_keys)} columns):")
+                    print(f"      [DIAG] Assessment CSV headers ({len(all_keys)} columns):")
                     for ki, k in enumerate(all_keys):
                         print(f"        [{ki}] {k}")
                     for ri, dbg_row in enumerate(filtered[:2]):
-                        print(f"      [DEBUG] Row {ri} (report #{dbg_row.get('report number', '?')}):")
+                        print(f"      [DIAG] Row {ri} (report #{dbg_row.get('report number', '?')}):")
                         for k, v in dbg_row.items():
                             if v and str(v).strip():
                                 print(f"        {k}: {str(v)[:120]}")
-                    print(f"      [DEBUG] End assessment debug")
+                    print(f"      [DIAG] End assessment debug")
 
         except Exception as e:
             print(f"      Error parsing {form_name}: {e}")
@@ -2435,8 +2481,52 @@ def main():
     kpa_data = get_kpa_data_weekly(start_ct, end_ct)
     kpa_incidents = kpa_data.get("incidents", [])
     kpa_observations = kpa_data.get("observations", [])
-    casing_incidents = [r for r in kpa_incidents if _is_casing_kpa(r)]
-    casing_observations = [r for r in kpa_observations if _is_casing_kpa(r)]
+
+    # Diagnostic: show raw vs Casing-filtered counts
+    print(f"\n    [DIAG] === KPA CASING FILTER DIAGNOSTIC ===")
+    print(f"    [DIAG] Raw incidents from KPA: {len(kpa_incidents)}")
+    print(f"    [DIAG] Raw observations from KPA: {len(kpa_observations)}")
+
+    casing_incidents = []
+    excluded_incidents = []
+    for r in kpa_incidents:
+        if _is_casing_kpa(r):
+            casing_incidents.append(r)
+        else:
+            excluded_incidents.append(r)
+
+    casing_observations = []
+    excluded_observations = []
+    for r in kpa_observations:
+        if _is_casing_kpa(r):
+            casing_observations.append(r)
+        else:
+            excluded_observations.append(r)
+
+    print(f"    [DIAG] After Casing filter — incidents: {len(casing_incidents)} kept, {len(excluded_incidents)} excluded")
+    print(f"    [DIAG] After Casing filter — observations: {len(casing_observations)} kept, {len(excluded_observations)} excluded")
+
+    if excluded_incidents:
+        print(f"    [DIAG] Excluded incidents (no 'casing'/'csg' in any field):")
+        for ei in excluded_incidents:
+            rn = ei.get('report number', '?')
+            dt = ei.get('date', '?')
+            obs = ei.get('observer', ei.get('Name', '?'))
+            # Show a sample of field values to see why it didn't match
+            all_vals = " | ".join(f"{k}={str(v)[:30]}" for k, v in ei.items() if v and str(v).strip() and k != 'kpa_link')
+            print(f"      #{rn} date={dt} observer={obs}")
+            print(f"        Fields: {all_vals[:300]}")
+
+    if excluded_observations:
+        print(f"    [DIAG] Excluded observations (first 5):")
+        for eo in excluded_observations[:5]:
+            rn = eo.get('report number', '?')
+            dt = eo.get('date', '?')
+            obs = eo.get('observer', eo.get('Name', '?'))
+            print(f"      #{rn} date={dt} observer={obs}")
+
+    print(f"    [DIAG] === END DIAGNOSTIC ===\n")
+
     print(f"    Casing incidents: {len(casing_incidents)}")
     print(f"    Casing observations: {len(casing_observations)}")
 

@@ -36,6 +36,7 @@ SAFETY_REP_MAP = [
             ("Rathole", "Midland"),
             ("Rathole", "Levelland"),
             ("Rathole", "Barstow"),
+            ("Transcend Drilling", ""),
             ("Fencing", ""),
             ("Anchors", ""),
             ("Environmental", ""),
@@ -100,8 +101,13 @@ SAFETY_REP_MAP = [
         "name": "Wes Franklin",
         "emails": ["wes@texasrigmove.com"],
         "divisions": [
-            ("Rathole", "Oklahoma"),
-            ("Rathole", "North Dakota"),
+            ("Rathole", "Midland"),
+            ("Rathole", "Levelland"),
+            ("Rathole", "Barstow"),
+            ("Fencing", ""),
+            ("Anchors", ""),
+            ("Environmental", ""),
+            ("Valor Energy Services", ""),
         ],
     },
     {

@@ -104,6 +104,8 @@ SAFETY_REP_MAP = [
             ("Rathole", "Midland"),
             ("Rathole", "Levelland"),
             ("Rathole", "Barstow"),
+            ("Rathole", "Oklahoma"),
+            ("Rathole", "North Dakota"),
             ("Fencing", ""),
             ("Anchors", ""),
             ("Environmental", ""),

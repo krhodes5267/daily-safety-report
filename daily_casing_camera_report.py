@@ -680,23 +680,6 @@ def enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
     )
     formatted_time = _utc_to_central(timestamp)
 
-    # --- Video (Motive API does not expose video download URLs; camera_media
-    #     contains metadata only. Build a dashboard link when video exists.) ---
-    event_id = event.get("id")
-    camera_media = event.get("camera_media")
-    video_url = ""
-    video_status = ""  # "available", "processing", or "" (no video)
-    if camera_media:
-        available = True  # default assume available
-        if isinstance(camera_media, dict):
-            available = camera_media.get("available", True)
-        if available:
-            video_status = "available"
-            if event_id:
-                video_url = f"https://app.gomotive.com/en/safety-analytics/events/{event_id}"
-        else:
-            video_status = "processing"
-
     # --- Location (API uses 'lat'/'lon') ---
     lat = event.get("lat") or event.get("start_lat") or event.get("latitude")
     lon = event.get("lon") or event.get("start_lon") or event.get("longitude")
@@ -712,8 +695,6 @@ def enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
         "speed": speed_mph,
         "duration": duration_str,
         "time": formatted_time,
-        "video_url": video_url,
-        "video_status": video_status,
         "location": location,
         "yard": yard,
     }
@@ -827,11 +808,11 @@ def _tier_bg_hex(tier):
 
 def _add_event_table(doc, events):
     """Add a camera events table to the document."""
-    table = doc.add_table(rows=1, cols=8)
+    table = doc.add_table(rows=1, cols=7)
     table.style = "Light Grid Accent 1"
     table.autofit = True
 
-    headers = ["Tier", "Driver", "Vehicle", "Event Type", "Speed", "Duration", "Time", "Video"]
+    headers = ["Tier", "Driver", "Vehicle", "Event Type", "Speed", "Duration", "Time"]
     for i, h in enumerate(headers):
         cell = table.rows[0].cells[i]
         cell.text = h
@@ -860,14 +841,6 @@ def _add_event_table(doc, events):
         cells[4].text = f"{evt['speed']} mph" if evt["speed"] else "N/A"
         cells[5].text = evt["duration"]
         cells[6].text = evt["time"]
-
-        # Video column: "View" link / "Processing" / empty
-        if evt["video_status"] == "available" and evt["video_url"]:
-            cells[7].text = "View"
-        elif evt["video_status"] == "processing":
-            cells[7].text = "Processing"
-        else:
-            cells[7].text = ""
 
         for c in cells[1:]:
             for p in c.paragraphs:
@@ -1015,11 +988,11 @@ def create_word_document(events, grouped, yesterday_date):
         _set_run_font(run, 14, bold=True, color=RGBColor(192, 0, 0))
 
         top5 = sorted(events, key=_event_sort_key)[:5]
-        table = doc.add_table(rows=1, cols=7)
+        table = doc.add_table(rows=1, cols=6)
         table.style = "Light Grid Accent 1"
         table.autofit = True
 
-        for i, h in enumerate(["Driver", "Vehicle", "Event Type", "Speed", "Time", "Yard", "Video"]):
+        for i, h in enumerate(["Driver", "Vehicle", "Event Type", "Speed", "Time", "Yard"]):
             table.rows[0].cells[i].text = h
             _set_run_font(table.rows[0].cells[i].paragraphs[0].runs[0], 9, bold=True)
 
@@ -1035,12 +1008,6 @@ def create_word_document(events, grouped, yesterday_date):
             cells[3].text = f"{evt['speed']} mph" if evt["speed"] else "N/A"
             cells[4].text = evt["time"]
             cells[5].text = evt["yard"] if evt["yard"] else "\u2014"
-            if evt["video_status"] == "available" and evt["video_url"]:
-                cells[6].text = "View"
-            elif evt["video_status"] == "processing":
-                cells[6].text = "Processing"
-            else:
-                cells[6].text = ""
 
             for c in cells:
                 for para in c.paragraphs:
@@ -1104,11 +1071,6 @@ def create_word_document(events, grouped, yesterday_date):
 
     # --- Footer ---
     doc.add_paragraph()
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run("Video links open in Motive dashboard. Login required.")
-    _set_run_font(run, 9, italic=True, color=RGBColor(128, 128, 128))
-
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = p.add_run("END OF REPORT")
@@ -1218,10 +1180,6 @@ def build_html_report(events, grouped, yesterday_date):
             if e["yard"]:
                 top5_html += f' | <b>Yard:</b> {_h(e["yard"])}'
             top5_html += f' | <b>Time:</b> {_h(e["time"])}'
-            if e["video_status"] == "available" and e["video_url"]:
-                top5_html += f' | <a href="{_h(e["video_url"])}" style="color:{tc};">View Video</a>'
-            elif e["video_status"] == "processing":
-                top5_html += ' | <i style="color:#999;">Processing</i>'
             top5_html += "</div>"
 
         parts.append(f"""
@@ -1272,12 +1230,6 @@ def build_html_report(events, grouped, yesterday_date):
         table_rows = ""
         for e in yard_events:
             tc, bg = _tier_colors(e["tier"])
-            if e["video_status"] == "available" and e["video_url"]:
-                video_cell = f'<a href="{_h(e["video_url"])}" style="font-size:11px;">View</a>'
-            elif e["video_status"] == "processing":
-                video_cell = '<i style="font-size:10px;color:#999;">Processing</i>'
-            else:
-                video_cell = ""
             table_rows += f"""<tr style="background:{bg};">
   <td style="padding:5px 6px;border:1px solid #ddd;"><b style="color:{tc};">{e["tier"]}</b></td>
   <td style="padding:5px 6px;border:1px solid #ddd;">{_h(e["driver"])}</td>
@@ -1286,7 +1238,6 @@ def build_html_report(events, grouped, yesterday_date):
   <td style="padding:5px 6px;border:1px solid #ddd;text-align:center;">{e["speed"] if e["speed"] else "N/A"}</td>
   <td style="padding:5px 6px;border:1px solid #ddd;text-align:center;">{_h(e["duration"])}</td>
   <td style="padding:5px 6px;border:1px solid #ddd;font-size:11px;">{_h(e["time"])}</td>
-  <td style="padding:5px 6px;border:1px solid #ddd;">{video_cell}</td>
 </tr>"""
 
         parts.append(f"""
@@ -1300,7 +1251,6 @@ def build_html_report(events, grouped, yesterday_date):
       <th style="padding:6px;color:#fff;border:1px solid #ddd;">Speed</th>
       <th style="padding:6px;color:#fff;border:1px solid #ddd;">Duration</th>
       <th style="padding:6px;color:#fff;border:1px solid #ddd;">Time</th>
-      <th style="padding:6px;color:#fff;border:1px solid #ddd;">Video</th>
     </tr>
     {table_rows}
   </table>
@@ -1308,9 +1258,6 @@ def build_html_report(events, grouped, yesterday_date):
 
     # --- Footer ---
     parts.append(f"""
-<tr><td style="padding:15px 40px;text-align:center;">
-  <div style="font-size:10px;font-style:italic;color:#999;">Video links open in Motive dashboard. Login required.</div>
-</td></tr>
 <tr><td style="background:{C_DARK};padding:20px 40px;text-align:center;">
   <div style="color:#ffffff;font-size:11px;font-style:italic;">END OF REPORT</div>
   <div style="color:#ffcccc;font-size:10px;margin-top:4px;">Butch's Rat Hole &amp; Anchor Service Inc. | Casing Division | HSE Department</div>

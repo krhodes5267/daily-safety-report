@@ -1718,7 +1718,10 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
         _set_run_font(run, 9, bold=True if rep_assess_count < rep_assess_target else False)
 
         if rep_findings:
-            finding_briefs = [f.get("finding", "")[:80] for f in rep_findings[:5]]
+            finding_briefs = []
+            for af in rep_findings[:5]:
+                for ft in af.get("findings", [])[:2]:
+                    finding_briefs.append(str(ft)[:80])
             findings_str = "; ".join(finding_briefs) if finding_briefs else "None"
             p = doc.add_paragraph()
             run = p.add_run(f"  Findings to address: {findings_str}")
@@ -2005,12 +2008,26 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
 
         findings_with = aa.get("with_findings", [])
         if findings_with:
-            # Group findings by category
+            # Group findings by category — findings are strings, categories
+            # dict maps category -> [string, ...] (same structure as Word doc)
             cat_items = {}
             for item in findings_with:
-                for f in item.get("findings", []):
-                    cat = f.get("category", "EQUIPMENT")
-                    cat_items.setdefault(cat, []).append({**item, "_finding": f})
+                for cat, findings_list in item.get("categories", {}).items():
+                    for finding_text in findings_list:
+                        cat_items.setdefault(cat, []).append({
+                            "finding": finding_text,
+                            "yard": item.get("yard", ""),
+                            "date": item.get("date", ""),
+                            "rep": item.get("rep", ""),
+                            "status": item.get("status", ""),
+                            "link": item.get("link", ""),
+                        })
+
+            print(f"  [DEBUG] HTML S5 Part A: {len(findings_with)} assessments with findings, categories: {list(cat_items.keys())}")
+            if cat_items:
+                first_cat = next(iter(cat_items))
+                first_item = cat_items[first_cat][0]
+                print(f"  [DEBUG]   First item type: {type(first_item)}, value: {str(first_item)[:120]}")
 
             for cat_label, cat_key in categories:
                 items = cat_items.get(cat_key, [])
@@ -2018,11 +2035,10 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
                     continue
                 kpa_html += f'<b style="color:{C_DARK};">{cat_label}</b><br>'
                 for it in items:
-                    f = it["_finding"]
-                    finding_text = _h(f.get("text", "")[:200])
+                    finding_text = _h(str(it["finding"])[:200])
                     yard = _h(it.get("yard", ""))
                     date = _h(it.get("date", ""))
-                    rep = _h(it.get("observer", ""))
+                    rep = _h(it.get("rep", ""))
                     status = _h(it.get("status", ""))
                     link = it.get("link", "")
                     status_color = C_GREEN if "corrected" in status.lower() else C_RED
@@ -2167,8 +2183,11 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
         agenda_html += f'<li><b>Field assessments filed: {rep_assess_count} (target: {rep_assess_target})</b>{assess_warn}</li>'
 
         if rep_findings:
-            finding_briefs = [_h(f.get("finding", "")[:80]) for f in rep_findings[:5]]
-            findings_str = "; ".join(finding_briefs)
+            finding_briefs = []
+            for af in rep_findings[:5]:
+                for ft in af.get("findings", [])[:2]:
+                    finding_briefs.append(_h(str(ft)[:80]))
+            findings_str = "; ".join(finding_briefs) if finding_briefs else "None"
             agenda_html += f'<li style="color:{C_RED};">Findings to address: {findings_str}</li>'
         else:
             agenda_html += f'<li style="color:{C_GREEN};">Findings to address: None &mdash; all clean</li>'

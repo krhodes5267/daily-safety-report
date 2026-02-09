@@ -680,38 +680,22 @@ def enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
     )
     formatted_time = _utc_to_central(timestamp)
 
-    # --- Video URL (API uses 'camera_media' field) ---
-    video_url = ""
+    # --- Video (Motive API does not expose video download URLs; camera_media
+    #     contains metadata only. Build a dashboard link when video exists.) ---
+    event_id = event.get("id")
     camera_media = event.get("camera_media")
+    video_url = ""
+    video_status = ""  # "available", "processing", or "" (no video)
     if camera_media:
-        if isinstance(camera_media, str):
-            video_url = camera_media
-        elif isinstance(camera_media, dict):
-            video_url = (
-                camera_media.get("url", "")
-                or camera_media.get("video_url", "")
-                or camera_media.get("s3_url", "")
-                or camera_media.get("media_url", "")
-                or camera_media.get("recording_url", "")
-            )
-            # Check nested 'video' or 'media' sub-objects
-            if not video_url:
-                for sub_key in ("video", "media", "recording"):
-                    sub = camera_media.get(sub_key)
-                    if sub and isinstance(sub, dict):
-                        video_url = sub.get("url", "") or sub.get("video_url", "")
-                        if video_url:
-                            break
-        elif isinstance(camera_media, list) and camera_media:
-            first = camera_media[0]
-            if isinstance(first, dict):
-                video_url = (
-                    first.get("url", "")
-                    or first.get("video_url", "")
-                    or first.get("s3_url", "")
-                )
-            elif isinstance(first, str):
-                video_url = first
+        available = True  # default assume available
+        if isinstance(camera_media, dict):
+            available = camera_media.get("available", True)
+        if available:
+            video_status = "available"
+            if event_id:
+                video_url = f"https://app.gomotive.com/en/safety-analytics/events/{event_id}"
+        else:
+            video_status = "processing"
 
     # --- Location (API uses 'lat'/'lon') ---
     lat = event.get("lat") or event.get("start_lat") or event.get("latitude")
@@ -729,6 +713,7 @@ def enrich_camera_event(event, vehicle_drivers, vehicle_yards, raw_type):
         "duration": duration_str,
         "time": formatted_time,
         "video_url": video_url,
+        "video_status": video_status,
         "location": location,
         "yard": yard,
     }
@@ -875,7 +860,14 @@ def _add_event_table(doc, events):
         cells[4].text = f"{evt['speed']} mph" if evt["speed"] else "N/A"
         cells[5].text = evt["duration"]
         cells[6].text = evt["time"]
-        cells[7].text = "Video" if evt["video_url"] else ""
+
+        # Video column: "View" link / "Processing" / empty
+        if evt["video_status"] == "available" and evt["video_url"]:
+            cells[7].text = "View"
+        elif evt["video_status"] == "processing":
+            cells[7].text = "Processing"
+        else:
+            cells[7].text = ""
 
         for c in cells[1:]:
             for p in c.paragraphs:
@@ -1043,7 +1035,12 @@ def create_word_document(events, grouped, yesterday_date):
             cells[3].text = f"{evt['speed']} mph" if evt["speed"] else "N/A"
             cells[4].text = evt["time"]
             cells[5].text = evt["yard"] if evt["yard"] else "\u2014"
-            cells[6].text = "Video" if evt["video_url"] else ""
+            if evt["video_status"] == "available" and evt["video_url"]:
+                cells[6].text = "View"
+            elif evt["video_status"] == "processing":
+                cells[6].text = "Processing"
+            else:
+                cells[6].text = ""
 
             for c in cells:
                 for para in c.paragraphs:
@@ -1107,6 +1104,11 @@ def create_word_document(events, grouped, yesterday_date):
 
     # --- Footer ---
     doc.add_paragraph()
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("Video links open in Motive dashboard. Login required.")
+    _set_run_font(run, 9, italic=True, color=RGBColor(128, 128, 128))
+
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = p.add_run("END OF REPORT")
@@ -1216,8 +1218,10 @@ def build_html_report(events, grouped, yesterday_date):
             if e["yard"]:
                 top5_html += f' | <b>Yard:</b> {_h(e["yard"])}'
             top5_html += f' | <b>Time:</b> {_h(e["time"])}'
-            if e["video_url"]:
-                top5_html += f' | <a href="{_h(e["video_url"])}">Video</a>'
+            if e["video_status"] == "available" and e["video_url"]:
+                top5_html += f' | <a href="{_h(e["video_url"])}" style="color:{tc};">View Video</a>'
+            elif e["video_status"] == "processing":
+                top5_html += ' | <i style="color:#999;">Processing</i>'
             top5_html += "</div>"
 
         parts.append(f"""
@@ -1268,7 +1272,12 @@ def build_html_report(events, grouped, yesterday_date):
         table_rows = ""
         for e in yard_events:
             tc, bg = _tier_colors(e["tier"])
-            video_cell = f'<a href="{_h(e["video_url"])}" style="font-size:11px;">Video</a>' if e["video_url"] else ""
+            if e["video_status"] == "available" and e["video_url"]:
+                video_cell = f'<a href="{_h(e["video_url"])}" style="font-size:11px;">View</a>'
+            elif e["video_status"] == "processing":
+                video_cell = '<i style="font-size:10px;color:#999;">Processing</i>'
+            else:
+                video_cell = ""
             table_rows += f"""<tr style="background:{bg};">
   <td style="padding:5px 6px;border:1px solid #ddd;"><b style="color:{tc};">{e["tier"]}</b></td>
   <td style="padding:5px 6px;border:1px solid #ddd;">{_h(e["driver"])}</td>
@@ -1299,6 +1308,9 @@ def build_html_report(events, grouped, yesterday_date):
 
     # --- Footer ---
     parts.append(f"""
+<tr><td style="padding:15px 40px;text-align:center;">
+  <div style="font-size:10px;font-style:italic;color:#999;">Video links open in Motive dashboard. Login required.</div>
+</td></tr>
 <tr><td style="background:{C_DARK};padding:20px 40px;text-align:center;">
   <div style="color:#ffffff;font-size:11px;font-style:italic;">END OF REPORT</div>
   <div style="color:#ffcccc;font-size:10px;margin-top:4px;">Butch's Rat Hole &amp; Anchor Service Inc. | Casing Division | HSE Department</div>

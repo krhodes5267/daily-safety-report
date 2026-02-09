@@ -2,10 +2,10 @@ name: Daily KPA Safety Report
 
 on:
   schedule:
-    # 5:00 AM Central = 11:00 UTC (CST is UTC-6)
-    # Note: During CDT (March-November), this runs at 6:00 AM Central.
-    # Change to "0 10 * * *" during CDT if you need exactly 5:00 AM year-round.
-    - cron: '0 11 * * *'
+    # 5:15 AM Central = 11:15 UTC (CST is UTC-6)
+    # Offset 15 minutes after Speeding report to avoid overlap.
+    # Note: During CDT (March-November), this runs at 6:15 AM Central.
+    - cron: '15 11 * * *'
   workflow_dispatch: # Manual trigger for testing
 
 jobs:

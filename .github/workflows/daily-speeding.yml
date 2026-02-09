@@ -2,10 +2,9 @@ name: Daily Speeding Report
 
 on:
   schedule:
-    # 5:05 AM Central = 11:05 UTC (CST is UTC-6)
-    # Offset 5 minutes after KPA report to avoid overlap.
-    # Note: During CDT (March-November), this runs at 6:05 AM Central.
-    - cron: '5 11 * * *'
+    # 5:00 AM Central = 11:00 UTC (CST is UTC-6)
+    # Note: During CDT (March-November), this runs at 6:00 AM Central.
+    - cron: '0 11 * * *'
   workflow_dispatch: # Manual trigger for testing
 
 jobs:

@@ -2,10 +2,10 @@ name: Daily Casing Camera Report
 
 on:
   schedule:
-    # 5:15 AM Central = 11:15 UTC (CST is UTC-6)
-    # Offset 10 minutes after speeding report to avoid overlap.
-    # Note: During CDT (March-November), this runs at 6:15 AM Central.
-    - cron: '15 11 * * *'
+    # 5:20 AM Central = 11:20 UTC (CST is UTC-6)
+    # Offset 5 minutes after KPA report to avoid overlap.
+    # Note: During CDT (March-November), this runs at 6:20 AM Central.
+    - cron: '20 11 * * *'
   workflow_dispatch: # Manual trigger for testing
 
 jobs:

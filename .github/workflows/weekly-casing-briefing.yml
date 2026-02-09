@@ -2,10 +2,10 @@ name: Weekly Casing Safety Briefing
 
 on:
   schedule:
-    # 6:00 AM Central = 12:00 UTC (CST is UTC-6)
-    # Runs Monday mornings to prep for 2 PM CT safety meeting.
-    # Note: During CDT (March-November), this runs at 7:00 AM Central.
-    - cron: '0 12 * * 1'
+    # 4:30 AM Central = 10:30 UTC (CST is UTC-6)
+    # Runs Monday mornings to prep for safety meeting.
+    # Note: During CDT (March-November), this runs at 5:30 AM Central.
+    - cron: '30 10 * * 1'
   workflow_dispatch: # Manual trigger for testing
 
 jobs:

@@ -741,10 +741,19 @@ _POSITIVE_PHRASES = [
     'safe practices', 'following procedure', 'good practice',
     'proper hand placement', 'no members placing',
     'keeping hands out of hazardous', 'maintaining proper body positioning',
+    'not placing their hands in a hazardous', 'not placing hands',
+]
+
+# Patterns where "not/no" + hazard word = POSITIVE (thing wasn't hazardous)
+_NEGATED_HAZARD_PATTERNS = [
+    ('not ', 'hazardous position'),
+    ('not ', 'hazardous'),
+    ('no ', 'hazardous position'),
+    ('not placing', 'hazard'),
 ]
 
 # Prefixes that indicate a purely positive observation (skip if no corrective keyword)
-_POSITIVE_PREFIXES = ['proper ', 'no members ', 'no unsafe ']
+_POSITIVE_PREFIXES = ['proper ', 'no members ', 'no unsafe ', 'not placing ']
 
 # Words that confirm something was actually WRONG or CORRECTED (not just positive)
 _CORRECTIVE_KEYWORDS = [
@@ -1027,6 +1036,10 @@ def _extract_findings(row):
 
         # Skip positive observations (exact phrase match)
         if any(phrase in val_lower for phrase in _POSITIVE_PHRASES):
+            continue
+
+        # Skip negated hazard patterns ("not" + "hazardous position" = positive)
+        if any(neg in val_lower and haz in val_lower for neg, haz in _NEGATED_HAZARD_PATTERNS):
             continue
 
         # Skip text that starts with positive prefixes unless it also

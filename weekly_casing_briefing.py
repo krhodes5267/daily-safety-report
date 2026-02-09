@@ -729,6 +729,20 @@ _POSITIVE_PHRASES = [
     'good housekeeping', 'well maintained', 'good condition',
     'no hazards', 'no violations', 'no corrective',
     'safe practices', 'following procedure', 'good practice',
+    'proper hand placement', 'no members placing',
+    'keeping hands out of hazardous', 'maintaining proper body positioning',
+]
+
+# Prefixes that indicate a purely positive observation (skip if no corrective keyword)
+_POSITIVE_PREFIXES = ['proper ', 'no members ', 'no unsafe ']
+
+# Words that confirm something was actually WRONG or CORRECTED (not just positive)
+_CORRECTIVE_KEYWORDS = [
+    'corrected', 'found', 'issue', 'should not', 'replaced', 'reminded',
+    'had to', 'violated', 'failed', 'missing', 'damaged', 'broken',
+    'not worn', 'not completed', 'not following', 'not in compliance',
+    'improper', 'unsafe', 'need to', 'needs', 'disappointed',
+    'hazard', 'deficien', 'violation', 'incomplete', 'expired',
 ]
 
 # Keywords that indicate a finding vs. a clean pass
@@ -965,18 +979,25 @@ def _extract_findings(row):
                          'casing', 'csg', 'brhas', 'butch'):
             continue
 
-        # Skip positive observations
+        # Skip positive observations (exact phrase match)
         if any(phrase in val_lower for phrase in _POSITIVE_PHRASES):
             continue
+
+        # Skip text that starts with positive prefixes unless it also
+        # contains a corrective keyword (e.g. "proper" alone = positive,
+        # but "proper PPE was not worn" = finding)
+        if any(val_lower.startswith(pfx) for pfx in _POSITIVE_PREFIXES):
+            if not any(ck in val_lower for ck in _CORRECTIVE_KEYWORDS):
+                continue
 
         # Skip short company/operator name fields (operator, company, division fields)
         if key_lower in ('operator', 'company', 'division', 'department', 'location',
                          'site', 'yard', 'area', 'unit', 'rig', 'crew', 'shift'):
             continue
 
-        # ONLY include if it has a finding keyword — no more "long text = finding"
-        has_keyword = any(kw in val_lower for kw in _FINDING_KEYWORDS)
-        if has_keyword:
+        # ONLY include if it has a corrective keyword — something was WRONG or CORRECTED
+        has_corrective = any(ck in val_lower for ck in _CORRECTIVE_KEYWORDS)
+        if has_corrective:
             findings.append(val_stripped)
 
     return findings
@@ -1801,8 +1822,8 @@ def create_word_document(camera_events, speeding_events, kpa_data, yard_vehicle_
         if rep_findings:
             finding_briefs = []
             for af in rep_findings[:5]:
-                for ft in af.get("findings", [])[:2]:
-                    finding_briefs.append(str(ft)[:80])
+                for ft in af.get("findings", []):
+                    finding_briefs.append(str(ft))
             findings_str = "; ".join(finding_briefs) if finding_briefs else "None"
             p = doc.add_paragraph()
             run = p.add_run(f"  Findings to address: {findings_str}")
@@ -2243,8 +2264,8 @@ def build_html_report(camera_events, speeding_events, kpa_data, yard_vehicle_cou
         if rep_findings:
             finding_briefs = []
             for af in rep_findings[:5]:
-                for ft in af.get("findings", [])[:2]:
-                    finding_briefs.append(_h(str(ft)[:80]))
+                for ft in af.get("findings", []):
+                    finding_briefs.append(_h(str(ft)))
             findings_str = "; ".join(finding_briefs) if finding_briefs else "None"
             agenda_html += f'<li style="color:{C_RED};">Findings to address: {findings_str}</li>'
         else:

@@ -23,6 +23,7 @@ import smtplib
 import os
 import re
 import sys
+import json
 from datetime import datetime, timedelta, timezone
 from html import escape as html_escape
 from email.mime.multipart import MIMEMultipart
@@ -1191,6 +1192,12 @@ def main():
     output_file = f"DailySpeedingReport_{date_str}.docx"
     doc.save(output_file)
     print(f"    Saved: {output_file}")
+
+    # Save events as JSON for safety rep distribution script
+    json_file = f"speeding_events_{date_str}.json"
+    with open(json_file, "w") as jf:
+        json.dump(events, jf)
+    print(f"    Saved events JSON: {json_file}")
 
     print("\n[5] Building HTML email...")
     html_body = build_html_report(events, grouped, yesterday)

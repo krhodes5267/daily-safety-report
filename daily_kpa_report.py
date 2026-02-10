@@ -17,6 +17,8 @@ Structure: Critical items first, only shows sections with data
 - Data Quality Alerts
 - Hotspot Analysis
 - Timing Analysis
+- Assessment & Audit Analysis (NEW - assessor details, compliance by yard,
+  critical findings, corrective actions, trends, leadership recommendations)
 - Conditions (Top 10)
 - Recognition Stars
 - Other Forms
@@ -91,6 +93,29 @@ COLORS = {
 # Logos are optional - they exist on local machines but not on CI runners
 LOGOS_PATH = os.path.expanduser("~/Downloads")
 LOGOS = ['Butchs.jpg', 'ButchTrucking.jpg', 'Permian.jpg', 'Hutchs.png', 'Transcend.jpg', 'Valor.jpg']
+
+# Assessment/Audit forms with metadata for deep analysis
+ASSESSMENT_FORMS = {
+    381707: {"name": "CSG - Safety Casing Field Assessment", "type": "Field Assessment", "division": "Casing"},
+    152018: {"name": "Vehicle Inspection Checklist", "type": "Inspection", "division": "All"},
+    385365: {"name": "TD - Rig Inspection", "type": "Rig Inspection", "division": "Transcend"},
+    484193: {"name": "TD - Observation Card", "type": "Observation", "division": "Transcend"},
+    226217: {"name": "WS - Poly Pipe Field Assessment", "type": "Field Assessment", "division": "Poly Pipe"},
+    386087: {"name": "WS - Pit Lining Field Assessment", "type": "Field Assessment", "division": "Pit Lining"},
+    172295: {"name": "Construction - Site Safety Review", "type": "Site Review", "division": "Construction"},
+    153181: {"name": "RH - Rathole Field Assessment", "type": "Field Assessment", "division": "Rathole"},
+    152034: {"name": "HSE - Workplace Inspection Checklist", "type": "Inspection", "division": "HSE"},
+}
+
+KPA_RESPONSE_URL = "https://brhas-ees.kpaehs.com/forms/responses/view"
+
+# Keywords for smart field detection in assessment CSV headers
+COMPLIANCE_KEYWORDS = ['compliance', 'rating', 'satisfactory', 'pass', 'fail', 'acceptable',
+                       'result', 'score', 'compliant', 'conformance']
+FINDING_KEYWORDS = ['issue', 'finding', 'non-conformance', 'corrective', 'deficiency',
+                    'violation', 'hazard', 'concern', 'recommendation', 'comment',
+                    'note', 'detail']
+YARD_KEYWORDS = ['yard', 'location', 'site', 'field office', 'facility', 'area']
 
 # ==============================================================================
 # API CALL
@@ -260,6 +285,596 @@ def analyze_observations(obs_data):
     }
 
 
+# ==============================================================================
+# ASSESSMENT & AUDIT ANALYSIS FUNCTIONS
+# ==============================================================================
+
+def detect_field_columns(headers):
+    """Detect key columns from assessment CSV headers using keyword matching"""
+    fields = {
+        'compliance': [],
+        'findings': [],
+        'yard': [],
+        'severity': [],
+        'assessor': [],
+        'corrective_action': [],
+    }
+
+    if not headers:
+        return fields
+
+    for header in headers:
+        h_lower = header.lower()
+
+        # Skip standard metadata fields
+        if h_lower in ['report number', 'date', 'link', 'observer', 'name']:
+            continue
+
+        if any(kw in h_lower for kw in COMPLIANCE_KEYWORDS):
+            fields['compliance'].append(header)
+        if any(kw in h_lower for kw in FINDING_KEYWORDS):
+            fields['findings'].append(header)
+        if any(kw in h_lower for kw in YARD_KEYWORDS):
+            fields['yard'].append(header)
+        if any(kw in h_lower for kw in ['severity', 'priority', 'risk level', 'critical']):
+            fields['severity'].append(header)
+        if any(kw in h_lower for kw in ['assessor', 'inspector', 'auditor', 'reviewer', 'conducted by']):
+            fields['assessor'].append(header)
+        if any(kw in h_lower for kw in ['corrective', 'action required', 'action taken', 'follow up', 'follow-up']):
+            fields['corrective_action'].append(header)
+
+    return fields
+
+
+def classify_compliance_value(value):
+    """Classify a field value as compliant, non-compliant, or unknown"""
+    if not value:
+        return 'unknown'
+    v = value.strip().lower()
+
+    non_compliant_terms = ['fail', 'unsatisfactory', 'non-compliant', 'unacceptable',
+                           'poor', 'deficient', 'inadequate', 'needs improvement', 'not met']
+    compliant_terms = ['pass', 'yes', 'satisfactory', 'compliant', 'acceptable', 'good',
+                       'meets', 'adequate', 'ok', 'n/a', 'not applicable']
+
+    for term in non_compliant_terms:
+        if term in v:
+            return 'non_compliant'
+    for term in compliant_terms:
+        if term in v:
+            return 'compliant'
+    return 'unknown'
+
+
+def classify_severity(text):
+    """Classify the severity level of a finding based on its text"""
+    if not text:
+        return 'low'
+    t = text.lower()
+
+    critical_terms = ['critical', 'immediate', 'danger', 'life-threatening', 'fatal',
+                      'imminent', 'emergency', 'severe', 'death']
+    high_terms = ['high', 'serious', 'major', 'significant', 'injury potential',
+                  'non-compliant', 'violation', 'failed']
+    medium_terms = ['medium', 'moderate', 'minor damage', 'needs repair', 'worn', 'missing']
+
+    for term in critical_terms:
+        if term in t:
+            return 'critical'
+    for term in high_terms:
+        if term in t:
+            return 'high'
+    for term in medium_terms:
+        if term in t:
+            return 'medium'
+
+    return 'low'
+
+
+def get_assessor_name(row):
+    """Get assessor/observer name from assessment form row"""
+    for field_name, value in row.items():
+        if any(kw in field_name.lower() for kw in ['assessor', 'inspector', 'auditor', 'conducted by', 'reviewer']):
+            if value and value.strip() and value.strip().lower() not in ['none', 'unknown', '']:
+                return value.strip()
+
+    return get_actual_observer_name(row)
+
+
+def get_yard_from_row(row, detected_fields):
+    """Extract yard/location from a row using detected fields"""
+    for field in detected_fields.get('yard', []):
+        val = row.get(field, '').strip()
+        if val and val.lower() not in ['n/a', 'none', 'unknown', '']:
+            return val
+
+    for key in ['7vj2l992y7fwqhwz', 'lg5pnj4chjadnv46']:
+        val = row.get(key, '').strip()
+        if val and val.lower() not in ['n/a', 'none', 'unknown', '']:
+            return val
+
+    for field_name, value in row.items():
+        if ('yard' in field_name.lower() or 'location' in field_name.lower()):
+            if value and value.strip() and value.strip().lower() not in ['n/a', 'none', 'unknown', '']:
+                return value.strip()
+
+    return 'Unknown'
+
+
+def get_kpa_link(report_num):
+    """Build clickable KPA link from report number"""
+    if report_num and report_num not in ['Report Number', '']:
+        return f"{KPA_RESPONSE_URL}/{report_num}"
+    return ''
+
+
+def analyze_assessments(all_data):
+    """Analyze all assessment/audit form data for the daily report"""
+    analysis = {
+        'activity_summary': [],
+        'findings_by_severity': {'critical': [], 'high': [], 'medium': [], 'low': []},
+        'compliance_by_yard': {},
+        'assessor_stats': {},
+        'corrective_actions': [],
+        'all_findings': [],
+        'trends': [],
+        'recommendations': {'immediate': [], 'this_week': [], 'monthly': []},
+        'total_assessments': 0,
+        'total_findings': 0,
+        'has_data': False,
+    }
+
+    for form_id, form_info in ASSESSMENT_FORMS.items():
+        data = all_data.get(f"form_{form_id}")
+        if not data or data['count'] == 0:
+            continue
+
+        analysis['has_data'] = True
+        analysis['total_assessments'] += data['count']
+
+        detected = detect_field_columns(data['headers'])
+
+        form_assessors = set()
+        form_findings = []
+        form_compliant = 0
+        form_non_compliant = 0
+
+        for row in data['rows']:
+            assessor = get_assessor_name(row)
+            form_assessors.add(assessor)
+
+            if assessor not in analysis['assessor_stats']:
+                analysis['assessor_stats'][assessor] = {
+                    'total': 0, 'forms': set(), 'divisions': set(), 'findings_found': 0
+                }
+            analysis['assessor_stats'][assessor]['total'] += 1
+            analysis['assessor_stats'][assessor]['forms'].add(form_info['name'])
+            analysis['assessor_stats'][assessor]['divisions'].add(form_info['division'])
+
+            yard = get_yard_from_row(row, detected)
+
+            if yard not in analysis['compliance_by_yard']:
+                analysis['compliance_by_yard'][yard] = {
+                    'total': 0, 'compliant': 0, 'non_compliant': 0,
+                    'findings': [], 'forms_used': set()
+                }
+            analysis['compliance_by_yard'][yard]['total'] += 1
+            analysis['compliance_by_yard'][yard]['forms_used'].add(form_info['name'])
+
+            # Check compliance fields
+            row_compliant = True
+            for comp_field in detected['compliance']:
+                val = row.get(comp_field, '')
+                result = classify_compliance_value(val)
+                if result == 'non_compliant':
+                    row_compliant = False
+                    break
+
+            if row_compliant:
+                form_compliant += 1
+                analysis['compliance_by_yard'][yard]['compliant'] += 1
+            else:
+                form_non_compliant += 1
+                analysis['compliance_by_yard'][yard]['non_compliant'] += 1
+
+            # Extract findings
+            for finding_field in detected['findings']:
+                finding_text = row.get(finding_field, '').strip()
+                if finding_text and len(finding_text) > 3 and finding_text.lower() not in ['n/a', 'none', 'no', 'na']:
+                    severity = classify_severity(finding_text)
+
+                    for sev_field in detected['severity']:
+                        sev_val = row.get(sev_field, '').strip()
+                        if sev_val:
+                            severity = classify_severity(sev_val)
+                            break
+
+                    finding = {
+                        'form_name': form_info['name'],
+                        'division': form_info['division'],
+                        'assessor': assessor,
+                        'yard': yard,
+                        'description': finding_text[:200],
+                        'severity': severity,
+                        'report_num': row.get('report number', ''),
+                        'date': row.get('date', ''),
+                        'link': get_kpa_link(row.get('report number', '')),
+                    }
+
+                    form_findings.append(finding)
+                    analysis['findings_by_severity'][severity].append(finding)
+                    analysis['compliance_by_yard'][yard]['findings'].append(finding)
+                    analysis['all_findings'].append(finding)
+                    analysis['total_findings'] += 1
+                    analysis['assessor_stats'][assessor]['findings_found'] += 1
+
+            # Extract corrective actions
+            for ca_field in detected['corrective_action']:
+                ca_text = row.get(ca_field, '').strip()
+                if ca_text and len(ca_text) > 3 and ca_text.lower() not in ['n/a', 'none', 'no', 'na']:
+                    analysis['corrective_actions'].append({
+                        'form_name': form_info['name'],
+                        'description': ca_text[:200],
+                        'assessor': assessor,
+                        'yard': yard,
+                        'date': row.get('date', ''),
+                        'report_num': row.get('report number', ''),
+                        'link': get_kpa_link(row.get('report number', '')),
+                        'status': 'Open',
+                    })
+
+        # Activity summary for this form
+        compliance_rate = (form_compliant / data['count'] * 100) if data['count'] > 0 else 0
+
+        assessment_analysis_item = {
+            'form_name': form_info['name'],
+            'form_type': form_info['type'],
+            'division': form_info['division'],
+            'count': data['count'],
+            'assessors': sorted(form_assessors - {'Unknown'}),
+            'findings_count': len(form_findings),
+            'compliance_rate': compliance_rate,
+            'compliant': form_compliant,
+            'non_compliant': form_non_compliant,
+        }
+        # Only add assessors list if "Unknown" was the only one
+        if not assessment_analysis_item['assessors'] and 'Unknown' in form_assessors:
+            assessment_analysis_item['assessors'] = ['Unknown']
+
+        analysis['activity_summary'].append(assessment_analysis_item)
+
+    if analysis['has_data']:
+        _generate_assessment_trends(analysis)
+        _generate_assessment_recommendations(analysis)
+
+    return analysis
+
+
+def _generate_assessment_trends(analysis):
+    """Generate trend observations from assessment data"""
+    trends = []
+
+    # Yards with multiple findings
+    problem_yards = {yard: info for yard, info in analysis['compliance_by_yard'].items()
+                     if len(info['findings']) >= 2}
+    if problem_yards:
+        for yard, info in sorted(problem_yards.items(), key=lambda x: len(x[1]['findings']), reverse=True):
+            trends.append(f"{yard}: {len(info['findings'])} findings across {info['total']} assessments")
+
+    # Common safety terms across findings
+    finding_words = Counter()
+    safety_terms = ['ppe', 'housekeeping', 'guarding', 'electrical', 'fall', 'fire',
+                    'chemical', 'ergonomic', 'noise', 'ventilation', 'lighting',
+                    'signage', 'barricade', 'grounding', 'lockout', 'tagout',
+                    'harness', 'helmet', 'goggles', 'gloves', 'boots']
+    for finding in analysis['all_findings']:
+        words = finding['description'].lower().split()
+        for word in words:
+            if word in safety_terms:
+                finding_words[word] += 1
+
+    for term, count in finding_words.most_common(3):
+        if count >= 2:
+            trends.append(f"{term.upper()} issues noted in {count} assessments")
+
+    # Division activity
+    division_counts = Counter()
+    for summary in analysis['activity_summary']:
+        division_counts[summary['division']] += summary['count']
+
+    if division_counts:
+        most_active = division_counts.most_common(1)[0]
+        trends.append(f"Most active division: {most_active[0]} ({most_active[1]} assessments)")
+
+    # Clean assessments (positive trend)
+    clean_count = sum(1 for s in analysis['activity_summary'] if s['findings_count'] == 0 and s['count'] > 0)
+    if clean_count > 0:
+        trends.append(f"{clean_count} form type(s) had zero findings - strong compliance")
+
+    analysis['trends'] = trends
+
+
+def _generate_assessment_recommendations(analysis):
+    """Generate leadership recommendations based on assessment analysis"""
+    recs = analysis['recommendations']
+
+    # IMMEDIATE: Critical and high findings
+    critical = analysis['findings_by_severity']['critical']
+    if critical:
+        yards = set(f['yard'] for f in critical)
+        recs['immediate'].append(f"Address {len(critical)} critical finding(s) in: {', '.join(yards)}")
+
+    high = analysis['findings_by_severity']['high']
+    if high:
+        recs['immediate'].append(f"Review {len(high)} high-severity finding(s) requiring prompt attention")
+
+    # THIS WEEK: Non-compliant yards and corrective actions
+    non_compliant_yards = [yard for yard, info in analysis['compliance_by_yard'].items()
+                           if info['non_compliant'] > 0]
+    if non_compliant_yards:
+        recs['this_week'].append(f"Follow up on non-compliant assessments at: {', '.join(non_compliant_yards[:5])}")
+
+    open_cas = [ca for ca in analysis['corrective_actions'] if ca['status'] == 'Open']
+    if open_cas:
+        recs['this_week'].append(f"Track {len(open_cas)} open corrective action(s) to closure")
+
+    # MONTHLY: Recognition and coverage
+    if analysis['assessor_stats']:
+        top_assessors = sorted(analysis['assessor_stats'].items(),
+                               key=lambda x: x[1]['total'], reverse=True)[:3]
+        names = [a[0] for a in top_assessors if a[0] != 'Unknown']
+        if names:
+            recs['monthly'].append(f"Recognize top assessors: {', '.join(names)}")
+
+    active_divisions = set(s['division'] for s in analysis['activity_summary'])
+    all_divisions = set(info['division'] for info in ASSESSMENT_FORMS.values())
+    missing = all_divisions - active_divisions
+    if missing:
+        recs['monthly'].append(f"No assessments from: {', '.join(missing)} - consider scheduling")
+
+    recs['monthly'].append("Review assessment frequency targets vs. actual completion rates")
+
+
+# ==============================================================================
+# ASSESSMENT AUDIT SUMMARY (replaces old "OTHER SAFETY FORMS SUMMARY")
+# ==============================================================================
+
+def _get_customer_from_row(row):
+    """Extract customer/client name from a form row"""
+    for field_name, value in row.items():
+        if any(kw in field_name.lower() for kw in ['customer', 'client', 'company', 'operator', 'contractor']):
+            if value and value.strip() and value.strip().lower() not in ['n/a', 'none', 'unknown', '']:
+                return value.strip()
+    return ''
+
+
+def _get_issue_from_row(row, detected_fields):
+    """Extract the primary issue/finding text from a form row"""
+    # Try detected finding fields first
+    for field in detected_fields.get('findings', []):
+        val = row.get(field, '').strip()
+        if val and len(val) > 3 and val.lower() not in ['n/a', 'none', 'no', 'na', 'no issues']:
+            return val[:120]
+
+    # Try corrective action fields (often contain the issue description)
+    for field in detected_fields.get('corrective_action', []):
+        val = row.get(field, '').strip()
+        if val and len(val) > 3 and val.lower() not in ['n/a', 'none', 'no', 'na']:
+            return val[:120]
+
+    # Try observation description field used by observation cards
+    for key in ['uncbcge9x8vow9pn']:
+        val = row.get(key, '').strip()
+        if val and len(val) > 3 and val.lower() not in ['n/a', 'none', 'no', 'na']:
+            return val[:120]
+
+    return 'None noted'
+
+
+def extract_assessment_details(all_data):
+    """Extract assessor, location, customer, form_id, and issues from each assessment row.
+
+    Returns a list of dicts, one per form type in OTHER_FORMS.
+    Each dict has: form_name, form_id, count, rows (list of detail dicts).
+    Forms with 0 assessments still appear with count=0 and empty rows.
+    """
+    results = []
+
+    for form_id, form_name in OTHER_FORMS:
+        data = all_data.get(f"form_{form_id}")
+        entry = {
+            'form_name': form_name,
+            'form_id': form_id,
+            'count': data['count'] if data else 0,
+            'rows': [],
+        }
+
+        if data and data['count'] > 0:
+            detected = detect_field_columns(data['headers'])
+
+            for row in data['rows']:
+                report_num = row.get('report number', '')
+                entry['rows'].append({
+                    'assessor': get_assessor_name(row),
+                    'location': get_yard_from_row(row, detected),
+                    'customer': _get_customer_from_row(row),
+                    'form_id': report_num,
+                    'link': get_kpa_link(report_num),
+                    'issue': _get_issue_from_row(row, detected),
+                })
+
+        results.append(entry)
+
+    return results
+
+
+def add_assessment_audit_summary(doc, assessment_details):
+    """Create a Word table summarizing all assessment/audit forms.
+
+    Replaces the old 'OTHER SAFETY FORMS SUMMARY' with a 6-column table:
+    Form Type | Assessor | Location | Customer | Form ID | Issue Found
+    """
+    doc.add_page_break()
+    add_heading(doc, "ASSESSMENT & AUDIT SUMMARY", 1)
+    doc.add_paragraph()
+
+    from docx.oxml.ns import qn as _qn
+    from docx.oxml import OxmlElement as _OE
+
+    # Check if there are any rows at all
+    total_rows = sum(entry['count'] for entry in assessment_details)
+
+    if total_rows == 0:
+        p = doc.add_paragraph()
+        p.add_run("No assessment or audit forms were completed yesterday.").font.italic = True
+
+        # Still show the form list with counts
+        doc.add_paragraph()
+        for entry in assessment_details:
+            p = doc.add_paragraph()
+            run = p.add_run(f"{entry['form_name']}: ")
+            run.font.bold = True
+            p.add_run("0")
+        return
+
+    table = doc.add_table(rows=1, cols=6)
+    table.style = 'Table Grid'
+
+    # Dark header row
+    headers = ['Form Type', 'Assessor', 'Location', 'Customer', 'Form ID', 'Issue Found']
+    hdr_cells = table.rows[0].cells
+    for i, txt in enumerate(headers):
+        hdr_cells[i].text = txt
+        for paragraph in hdr_cells[i].paragraphs:
+            for run in paragraph.runs:
+                run.font.bold = True
+                run.font.size = Pt(8)
+                run.font.color.rgb = RGBColor(255, 255, 255)
+        shading = _OE('w:shd')
+        shading.set(_qn('w:fill'), '800000')
+        hdr_cells[i]._tc.get_or_add_tcPr().append(shading)
+
+    for entry in assessment_details:
+        if entry['count'] == 0:
+            # Show a single row with 0 count
+            row_cells = table.add_row().cells
+            row_cells[0].text = entry['form_name']
+            row_cells[1].text = '-'
+            row_cells[2].text = '-'
+            row_cells[3].text = '-'
+            row_cells[4].text = '-'
+            row_cells[5].text = '0 assessments'
+            for cell in row_cells:
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        run.font.size = Pt(8)
+                        run.font.color.rgb = RGBColor(128, 128, 128)
+        else:
+            for detail in entry['rows']:
+                row_cells = table.add_row().cells
+                row_cells[0].text = entry['form_name']
+                row_cells[1].text = detail['assessor']
+                row_cells[2].text = detail['location']
+                row_cells[3].text = detail['customer'] or '-'
+                row_cells[4].text = str(detail['form_id'])
+                row_cells[5].text = detail['issue']
+
+                for cell in row_cells:
+                    for paragraph in cell.paragraphs:
+                        for run in paragraph.runs:
+                            run.font.size = Pt(8)
+
+                # Color-code the issue cell
+                issue_text = detail['issue'].lower()
+                if issue_text != 'none noted':
+                    for paragraph in row_cells[5].paragraphs:
+                        for run in paragraph.runs:
+                            run.font.color.rgb = COLORS['warning']
+
+                # Make Form ID a clickable link if available
+                if detail['link']:
+                    for paragraph in row_cells[4].paragraphs:
+                        paragraph.clear()
+                    p = row_cells[4].paragraphs[0]
+                    add_hyperlink(p, detail['link'], str(detail['form_id']))
+
+    # Summary line
+    doc.add_paragraph()
+    p = doc.add_paragraph()
+    p.add_run(f"Total: {total_rows} assessments/audits completed").font.bold = True
+
+
+def build_assessment_html(assessment_details):
+    """Build an HTML table for the assessment/audit summary in email.
+
+    Returns an HTML string with a styled table matching BRHAS color scheme.
+    """
+    total_rows = sum(entry['count'] for entry in assessment_details)
+
+    if total_rows == 0:
+        html = '<p style="font-style:italic;">No assessment or audit forms were completed yesterday.</p>'
+        html += '<ul style="margin:5px 0;color:#888;">'
+        for entry in assessment_details:
+            html += f'<li><b>{_h(entry["form_name"])}:</b> 0</li>'
+        html += '</ul>'
+        return html
+
+    html = '<table width="100%" cellpadding="5" cellspacing="0" '
+    html += 'style="border-collapse:collapse;font-size:12px;margin-bottom:10px;">'
+
+    # Header
+    html += f'<tr style="background:{HTML_COLORS["secondary"]};color:#ffffff;">'
+    for hdr in ['Form Type', 'Assessor', 'Location', 'Customer', 'Form ID', 'Issue Found']:
+        html += f'<th style="text-align:left;padding:8px;border:1px solid #600000;">{hdr}</th>'
+    html += '</tr>'
+
+    row_idx = 0
+    for entry in assessment_details:
+        if entry['count'] == 0:
+            bg = '#f9f9f9' if row_idx % 2 == 0 else '#ffffff'
+            html += f'<tr style="background:{bg};color:#999;">'
+            html += f'<td style="border:1px solid #ddd;padding:6px;">{_h(entry["form_name"])}</td>'
+            for _ in range(4):
+                html += '<td style="border:1px solid #ddd;padding:6px;text-align:center;">-</td>'
+            html += '<td style="border:1px solid #ddd;padding:6px;">0 assessments</td>'
+            html += '</tr>'
+            row_idx += 1
+        else:
+            for detail in entry['rows']:
+                bg = '#f9f9f9' if row_idx % 2 == 0 else '#ffffff'
+                html += f'<tr style="background:{bg};">'
+                html += f'<td style="border:1px solid #ddd;padding:6px;">{_h(entry["form_name"])}</td>'
+                html += f'<td style="border:1px solid #ddd;padding:6px;">{_h(detail["assessor"])}</td>'
+                html += f'<td style="border:1px solid #ddd;padding:6px;">{_h(detail["location"])}</td>'
+                html += f'<td style="border:1px solid #ddd;padding:6px;">{_h(detail["customer"]) or "-"}</td>'
+
+                # Form ID with link
+                if detail['link']:
+                    html += f'<td style="border:1px solid #ddd;padding:6px;">'
+                    html += f'<a href="{_h(detail["link"])}" style="color:#0563C1;">{_h(detail["form_id"])}</a></td>'
+                else:
+                    html += f'<td style="border:1px solid #ddd;padding:6px;">{_h(detail["form_id"])}</td>'
+
+                # Issue with color
+                issue = detail['issue']
+                if issue.lower() != 'none noted':
+                    html += f'<td style="border:1px solid #ddd;padding:6px;color:{HTML_COLORS["warning"]};">{_h(issue)}</td>'
+                else:
+                    html += f'<td style="border:1px solid #ddd;padding:6px;color:{HTML_COLORS["safe"]};">{_h(issue)}</td>'
+
+                html += '</tr>'
+                row_idx += 1
+
+    html += '</table>'
+    html += f'<p><b>Total: {total_rows} assessments/audits completed</b></p>'
+
+    return html
+
+
+# ==============================================================================
+# DOCUMENT HELPERS
+# ==============================================================================
+
 def add_heading(doc, text, level=1, color=None):
     """Add formatted heading"""
     p = doc.add_paragraph()
@@ -279,6 +894,343 @@ def add_heading(doc, text, level=1, color=None):
         run.font.color.rgb = color or COLORS['accent']
 
     return p
+
+
+# ==============================================================================
+# ASSESSMENT & AUDIT ANALYSIS - WORD DOCUMENT SECTION
+# ==============================================================================
+
+def add_hyperlink(paragraph, url, text):
+    """Add a clickable hyperlink to a Word document paragraph"""
+    from docx.oxml.ns import qn
+    from docx.oxml import OxmlElement
+
+    part = paragraph.part
+    r_id = part.relate_to(
+        url,
+        'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+        is_external=True
+    )
+
+    hyperlink = OxmlElement('w:hyperlink')
+    hyperlink.set(qn('r:id'), r_id)
+
+    new_run = OxmlElement('w:r')
+    rPr = OxmlElement('w:rPr')
+
+    color = OxmlElement('w:color')
+    color.set(qn('w:val'), '0563C1')
+    rPr.append(color)
+
+    u = OxmlElement('w:u')
+    u.set(qn('w:val'), 'single')
+    rPr.append(u)
+
+    sz = OxmlElement('w:sz')
+    sz.set(qn('w:val'), '18')
+    rPr.append(sz)
+
+    new_run.append(rPr)
+
+    t = OxmlElement('w:t')
+    t.text = text
+    new_run.append(t)
+
+    hyperlink.append(new_run)
+    paragraph._p.append(hyperlink)
+
+    return hyperlink
+
+
+def add_assessment_analysis_section(doc, assessment_data):
+    """Add Assessment & Audit Analysis section to the Word document.
+
+    Inserts after Incident Timing Analysis, before At-Risk Conditions.
+    Shows assessor activity, compliance by yard, critical findings,
+    corrective actions, trends, and leadership recommendations.
+    """
+    if not assessment_data or not assessment_data.get('has_data'):
+        return
+
+    doc.add_page_break()
+    add_heading(doc, "ASSESSMENT & AUDIT ANALYSIS", 1, COLORS['primary'])
+
+    p = doc.add_paragraph()
+    p.add_run(f"Total Assessments Completed: ").font.bold = True
+    p.add_run(f"{assessment_data['total_assessments']}")
+    p.add_run(f"  |  ")
+    p.add_run(f"Total Findings: ").font.bold = True
+    p.add_run(f"{assessment_data['total_findings']}")
+    doc.add_paragraph()
+
+    # --- 1. Activity Summary Table ---
+    add_heading(doc, "Assessment Activity Summary", 2)
+
+    if assessment_data['activity_summary']:
+        table = doc.add_table(rows=1, cols=5)
+        table.style = 'Table Grid'
+
+        hdr_cells = table.rows[0].cells
+        for i, txt in enumerate(['Form', 'Count', 'Assessor(s)', 'Findings', 'Compliance']):
+            hdr_cells[i].text = txt
+            for paragraph in hdr_cells[i].paragraphs:
+                for run in paragraph.runs:
+                    run.font.bold = True
+                    run.font.size = Pt(9)
+                    run.font.color.rgb = RGBColor(255, 255, 255)
+            # Dark header background
+            from docx.oxml.ns import qn as _qn
+            from docx.oxml import OxmlElement as _OE
+            shading = _OE('w:shd')
+            shading.set(_qn('w:fill'), '800000')
+            hdr_cells[i]._tc.get_or_add_tcPr().append(shading)
+
+        for summary in assessment_data['activity_summary']:
+            row_cells = table.add_row().cells
+            row_cells[0].text = summary['form_name']
+            row_cells[1].text = str(summary['count'])
+
+            assessor_text = ', '.join(summary['assessors'][:3])
+            if len(summary['assessors']) > 3:
+                assessor_text += f" +{len(summary['assessors']) - 3} more"
+            row_cells[2].text = assessor_text
+
+            row_cells[3].text = str(summary['findings_count'])
+
+            if summary['count'] > 0:
+                rate = summary['compliance_rate']
+                if rate >= 90:
+                    row_cells[4].text = f"\u2705 {rate:.0f}%"
+                elif rate >= 70:
+                    row_cells[4].text = f"\U0001f7e1 {rate:.0f}%"
+                else:
+                    row_cells[4].text = f"\U0001f534 {rate:.0f}%"
+            else:
+                row_cells[4].text = "N/A"
+
+            for cell in row_cells:
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        run.font.size = Pt(9)
+
+    doc.add_paragraph()
+
+    # --- 2. Compliance Dashboard by Yard ---
+    if assessment_data['compliance_by_yard']:
+        add_heading(doc, "Compliance by Yard", 2)
+
+        table = doc.add_table(rows=1, cols=5)
+        table.style = 'Table Grid'
+
+        hdr_cells = table.rows[0].cells
+        for i, txt in enumerate(['Yard/Location', 'Assessments', 'Compliant', 'Non-Compliant', 'Status']):
+            hdr_cells[i].text = txt
+            for paragraph in hdr_cells[i].paragraphs:
+                for run in paragraph.runs:
+                    run.font.bold = True
+                    run.font.size = Pt(9)
+                    run.font.color.rgb = RGBColor(255, 255, 255)
+            from docx.oxml.ns import qn as _qn
+            from docx.oxml import OxmlElement as _OE
+            shading = _OE('w:shd')
+            shading.set(_qn('w:fill'), '800000')
+            hdr_cells[i]._tc.get_or_add_tcPr().append(shading)
+
+        for yard, info in sorted(assessment_data['compliance_by_yard'].items(),
+                                  key=lambda x: x[1]['non_compliant'], reverse=True):
+            row_cells = table.add_row().cells
+            row_cells[0].text = yard
+            row_cells[1].text = str(info['total'])
+            row_cells[2].text = str(info['compliant'])
+            row_cells[3].text = str(info['non_compliant'])
+
+            if info['total'] > 0:
+                rate = info['compliant'] / info['total'] * 100
+                if rate >= 90:
+                    row_cells[4].text = f"\u2705 {rate:.0f}%"
+                elif rate >= 70:
+                    row_cells[4].text = f"\U0001f7e1 {rate:.0f}%"
+                else:
+                    row_cells[4].text = f"\U0001f534 {rate:.0f}%"
+            else:
+                row_cells[4].text = "N/A"
+
+            for cell in row_cells:
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        run.font.size = Pt(9)
+
+        doc.add_paragraph()
+
+    # --- 3. Critical Findings ---
+    critical = assessment_data['findings_by_severity']['critical']
+    high = assessment_data['findings_by_severity']['high']
+
+    if critical or high:
+        add_heading(doc, "Critical Findings - Immediate Attention Required", 2, COLORS['critical'])
+
+        for finding in critical:
+            p = doc.add_paragraph()
+            run = p.add_run("\U0001f534 CRITICAL: ")
+            run.font.bold = True
+            run.font.color.rgb = COLORS['critical']
+            p.add_run(finding['description'])
+
+            doc.add_paragraph(
+                f"Form: {finding['form_name']} | Assessor: {finding['assessor']}",
+                style='List Bullet'
+            )
+            doc.add_paragraph(
+                f"Yard: {finding['yard']} | Date: {finding['date']}",
+                style='List Bullet'
+            )
+
+            if finding['link']:
+                p = doc.add_paragraph(style='List Bullet')
+                p.add_run("View in KPA: ")
+                add_hyperlink(p, finding['link'], finding['link'])
+
+            doc.add_paragraph()
+
+        for finding in high[:5]:
+            p = doc.add_paragraph()
+            run = p.add_run("\U0001f7e1 HIGH: ")
+            run.font.bold = True
+            run.font.color.rgb = COLORS['warning']
+            p.add_run(finding['description'])
+
+            doc.add_paragraph(
+                f"Form: {finding['form_name']} | Yard: {finding['yard']}",
+                style='List Bullet'
+            )
+
+            if finding['link']:
+                p = doc.add_paragraph(style='List Bullet')
+                p.add_run("View in KPA: ")
+                add_hyperlink(p, finding['link'], finding['link'])
+
+            doc.add_paragraph()
+
+        if len(high) > 5:
+            p = doc.add_paragraph()
+            run = p.add_run(f"... and {len(high) - 5} more high-severity findings")
+            run.font.italic = True
+    else:
+        add_heading(doc, "Findings Summary", 2)
+        medium = assessment_data['findings_by_severity']['medium']
+        low = assessment_data['findings_by_severity']['low']
+
+        if medium or low:
+            p = doc.add_paragraph()
+            p.add_run("No critical or high-severity findings. ").font.bold = True
+            p.add_run(f"{len(medium)} medium, {len(low)} low-severity items noted.")
+        else:
+            p = doc.add_paragraph("\u2705 No findings - All assessments passed!")
+            p.runs[0].font.color.rgb = COLORS['safe']
+            p.runs[0].font.bold = True
+
+    doc.add_paragraph()
+
+    # --- 4. Top Performing Assessors ---
+    if assessment_data['assessor_stats']:
+        add_heading(doc, "Top Performing Assessors", 2, COLORS['safe'])
+
+        sorted_assessors = sorted(
+            assessment_data['assessor_stats'].items(),
+            key=lambda x: x[1]['total'], reverse=True
+        )
+
+        rank = 0
+        for name, stats in sorted_assessors[:10]:
+            if name == 'Unknown':
+                continue
+            rank += 1
+
+            p = doc.add_paragraph()
+            prefix = "\u2B50 " if rank <= 3 else "   "
+            run = p.add_run(f"{prefix}{rank}. {name}")
+            run.font.bold = True
+
+            divisions = ', '.join(stats['divisions']) if stats['divisions'] else 'N/A'
+            detail = f" - {stats['total']} assessment(s) | Divisions: {divisions}"
+            if stats['findings_found'] > 0:
+                detail += f" | {stats['findings_found']} finding(s) identified"
+            p.add_run(detail)
+
+        doc.add_paragraph()
+
+    # --- 5. Corrective Actions Tracker ---
+    if assessment_data['corrective_actions']:
+        add_heading(doc, "Corrective Actions Tracker", 2, COLORS['warning'])
+
+        p = doc.add_paragraph()
+        p.add_run(f"Open Corrective Actions: {len(assessment_data['corrective_actions'])}").font.bold = True
+        doc.add_paragraph()
+
+        for i, ca in enumerate(assessment_data['corrective_actions'][:10], 1):
+            p = doc.add_paragraph()
+            run = p.add_run(f"{i}. {ca['description']}")
+            run.font.bold = True
+
+            doc.add_paragraph(
+                f"Form: {ca['form_name']} | Yard: {ca['yard']}",
+                style='List Bullet'
+            )
+            doc.add_paragraph(
+                f"Identified by: {ca['assessor']} on {ca['date']}",
+                style='List Bullet'
+            )
+
+            if ca['link']:
+                p = doc.add_paragraph(style='List Bullet')
+                p.add_run("View: ")
+                add_hyperlink(p, ca['link'], ca['link'])
+
+        if len(assessment_data['corrective_actions']) > 10:
+            p = doc.add_paragraph()
+            run = p.add_run(
+                f"... and {len(assessment_data['corrective_actions']) - 10} more corrective actions"
+            )
+            run.font.italic = True
+
+        doc.add_paragraph()
+
+    # --- 6. Trends & Patterns ---
+    if assessment_data['trends']:
+        add_heading(doc, "Trends & Patterns", 2)
+
+        for trend in assessment_data['trends']:
+            doc.add_paragraph(f"\U0001F4CA {trend}", style='List Bullet')
+
+        doc.add_paragraph()
+
+    # --- 7. Recommended Actions for Leadership ---
+    recs = assessment_data['recommendations']
+    if any([recs['immediate'], recs['this_week'], recs['monthly']]):
+        add_heading(doc, "Recommended Actions for Leadership", 2, COLORS['primary'])
+
+        if recs['immediate']:
+            p = doc.add_paragraph()
+            run = p.add_run("\U0001f534 IMMEDIATE:")
+            run.font.bold = True
+            run.font.color.rgb = COLORS['critical']
+            for rec in recs['immediate']:
+                doc.add_paragraph(rec, style='List Bullet')
+
+        if recs['this_week']:
+            p = doc.add_paragraph()
+            run = p.add_run("\U0001f7e1 THIS WEEK:")
+            run.font.bold = True
+            run.font.color.rgb = COLORS['warning']
+            for rec in recs['this_week']:
+                doc.add_paragraph(rec, style='List Bullet')
+
+        if recs['monthly']:
+            p = doc.add_paragraph()
+            run = p.add_run("\U0001F4CA MONTH-OVER-MONTH:")
+            run.font.bold = True
+            for rec in recs['monthly']:
+                doc.add_paragraph(rec, style='List Bullet')
 
 
 # ==============================================================================
@@ -754,6 +1706,17 @@ def build_word_document(all_data, yesterday_date):
     doc.add_paragraph()
 
     # ========================================================================
+    # ASSESSMENT & AUDIT ANALYSIS (after Timing, before At-Risk Conditions)
+    # ========================================================================
+
+    if 'assessment_analysis' in all_data and all_data['assessment_analysis']:
+        try:
+            add_assessment_analysis_section(doc, all_data['assessment_analysis'])
+        except Exception as e:
+            print(f"Warning: Assessment analysis section error: {e}")
+            # Continue building report even if this section fails
+
+    # ========================================================================
     # AT-RISK CONDITIONS
     # ========================================================================
 
@@ -843,21 +1806,37 @@ def build_word_document(all_data, yesterday_date):
                             break
 
     # ========================================================================
-    # OTHER FORMS
+    # ASSESSMENT & AUDIT SUMMARY (detailed table replacing old "Other Forms")
     # ========================================================================
 
-    doc.add_page_break()
-    add_heading(doc, "OTHER SAFETY FORMS SUMMARY", 1)
-    doc.add_paragraph()
-
-    for form_id, form_name in OTHER_FORMS:
-        data = all_data.get(f"form_{form_id}")
-        count = data['count'] if data else 0
-
-        p = doc.add_paragraph()
-        run = p.add_run(f"{form_name}: ")
-        run.font.bold = True
-        run = p.add_run(f"{count}")
+    if 'assessment_details' in all_data:
+        try:
+            add_assessment_audit_summary(doc, all_data['assessment_details'])
+        except Exception as e:
+            print(f"Warning: Assessment audit summary table error: {e}")
+            # Fallback to simple count list
+            doc.add_page_break()
+            add_heading(doc, "OTHER SAFETY FORMS SUMMARY", 1)
+            doc.add_paragraph()
+            for form_id, form_name in OTHER_FORMS:
+                data = all_data.get(f"form_{form_id}")
+                count = data['count'] if data else 0
+                p = doc.add_paragraph()
+                run = p.add_run(f"{form_name}: ")
+                run.font.bold = True
+                p.add_run(f"{count}")
+    else:
+        # Fallback if assessment_details not generated
+        doc.add_page_break()
+        add_heading(doc, "OTHER SAFETY FORMS SUMMARY", 1)
+        doc.add_paragraph()
+        for form_id, form_name in OTHER_FORMS:
+            data = all_data.get(f"form_{form_id}")
+            count = data['count'] if data else 0
+            p = doc.add_paragraph()
+            run = p.add_run(f"{form_name}: ")
+            run.font.bold = True
+            p.add_run(f"{count}")
 
     doc.add_paragraph()
 
@@ -1207,6 +2186,187 @@ def build_html_report(all_data, yesterday_date):
   {timing_html}
 </td></tr>""")
 
+    # --- ASSESSMENT & AUDIT ANALYSIS ---
+    if 'assessment_analysis' in all_data and all_data['assessment_analysis']:
+        try:
+            aa = all_data['assessment_analysis']
+            if aa.get('has_data'):
+                aa_html = ''
+
+                # Header stats
+                aa_html += f'<b>Total Assessments:</b> {aa["total_assessments"]} | '
+                aa_html += f'<b>Total Findings:</b> {aa["total_findings"]}<br><br>'
+
+                # Activity Summary Table
+                if aa['activity_summary']:
+                    aa_html += f'<h3 style="color:{HTML_COLORS["secondary"]};margin:10px 0 8px 0;font-size:15px;">Assessment Activity Summary</h3>'
+                    aa_html += '<table width="100%" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-size:13px;margin-bottom:15px;">'
+                    aa_html += f'<tr style="background:{HTML_COLORS["secondary"]};color:#ffffff;">'
+                    aa_html += '<th style="text-align:left;padding:8px;">Form</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Count</th>'
+                    aa_html += '<th style="text-align:left;padding:8px;">Assessor(s)</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Findings</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Compliance</th></tr>'
+
+                    for i, s in enumerate(aa['activity_summary']):
+                        bg = '#f9f9f9' if i % 2 == 0 else '#ffffff'
+                        assessor_text = _h(', '.join(s['assessors'][:3]))
+                        if len(s['assessors']) > 3:
+                            assessor_text += f' +{len(s["assessors"]) - 3}'
+
+                        rate = s['compliance_rate']
+                        if rate >= 90:
+                            comp_text = f'<span style="color:{HTML_COLORS["safe"]};">&#9989; {rate:.0f}%</span>'
+                        elif rate >= 70:
+                            comp_text = f'<span style="color:{HTML_COLORS["warning"]};">&#128993; {rate:.0f}%</span>'
+                        else:
+                            comp_text = f'<span style="color:{HTML_COLORS["critical"]};">&#128308; {rate:.0f}%</span>'
+
+                        aa_html += f'<tr style="background:{bg};">'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;">{_h(s["form_name"])}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{s["count"]}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;">{assessor_text}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{s["findings_count"]}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{comp_text}</td></tr>'
+
+                    aa_html += '</table>'
+
+                # Compliance by Yard Table
+                if aa['compliance_by_yard']:
+                    aa_html += f'<h3 style="color:{HTML_COLORS["secondary"]};margin:15px 0 8px 0;font-size:15px;">Compliance by Yard</h3>'
+                    aa_html += '<table width="100%" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-size:13px;margin-bottom:15px;">'
+                    aa_html += f'<tr style="background:{HTML_COLORS["secondary"]};color:#ffffff;">'
+                    aa_html += '<th style="text-align:left;padding:8px;">Yard</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Total</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Compliant</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Non-Compliant</th>'
+                    aa_html += '<th style="text-align:center;padding:8px;">Status</th></tr>'
+
+                    sorted_yards = sorted(aa['compliance_by_yard'].items(),
+                                          key=lambda x: x[1]['non_compliant'], reverse=True)
+                    for i, (yard, info) in enumerate(sorted_yards):
+                        bg = '#f9f9f9' if i % 2 == 0 else '#ffffff'
+                        if info['total'] > 0:
+                            rate = info['compliant'] / info['total'] * 100
+                            if rate >= 90:
+                                status = f'<span style="color:{HTML_COLORS["safe"]};">&#9989; {rate:.0f}%</span>'
+                            elif rate >= 70:
+                                status = f'<span style="color:{HTML_COLORS["warning"]};">&#128993; {rate:.0f}%</span>'
+                            else:
+                                status = f'<span style="color:{HTML_COLORS["critical"]};">&#128308; {rate:.0f}%</span>'
+                        else:
+                            status = 'N/A'
+
+                        aa_html += f'<tr style="background:{bg};">'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;">{_h(yard)}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{info["total"]}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{info["compliant"]}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{info["non_compliant"]}</td>'
+                        aa_html += f'<td style="border-bottom:1px solid #eee;padding:6px;text-align:center;">{status}</td></tr>'
+
+                    aa_html += '</table>'
+
+                # Critical Findings
+                critical = aa['findings_by_severity']['critical']
+                high = aa['findings_by_severity']['high']
+                if critical or high:
+                    aa_html += f'<h3 style="color:{HTML_COLORS["critical"]};margin:15px 0 8px 0;font-size:15px;">Critical Findings - Immediate Attention</h3>'
+
+                    for f in critical:
+                        aa_html += f'<div style="background:#fff5f5;border-left:4px solid {HTML_COLORS["critical"]};padding:12px 15px;margin:8px 0;">'
+                        aa_html += f'<b style="color:{HTML_COLORS["critical"]};">&#128308; CRITICAL:</b> {_h(f["description"])}<br>'
+                        aa_html += f'Form: {_h(f["form_name"])} | Assessor: {_h(f["assessor"])} | Yard: {_h(f["yard"])}<br>'
+                        if f['link']:
+                            aa_html += f'<a href="{_h(f["link"])}">View in KPA</a>'
+                        aa_html += '</div>'
+
+                    for f in high[:5]:
+                        aa_html += f'<div style="background:#fffbf0;border-left:4px solid {HTML_COLORS["warning"]};padding:12px 15px;margin:8px 0;">'
+                        aa_html += f'<b style="color:{HTML_COLORS["warning"]};">&#128993; HIGH:</b> {_h(f["description"])}<br>'
+                        aa_html += f'Form: {_h(f["form_name"])} | Yard: {_h(f["yard"])}<br>'
+                        if f['link']:
+                            aa_html += f'<a href="{_h(f["link"])}">View in KPA</a>'
+                        aa_html += '</div>'
+
+                    if len(high) > 5:
+                        aa_html += f'<p style="font-style:italic;">... and {len(high) - 5} more high-severity findings</p>'
+                else:
+                    medium = aa['findings_by_severity']['medium']
+                    low = aa['findings_by_severity']['low']
+                    if medium or low:
+                        aa_html += f'<p><b>No critical or high-severity findings.</b> {len(medium)} medium, {len(low)} low-severity items noted.</p>'
+                    else:
+                        aa_html += f'<p style="color:{HTML_COLORS["safe"]};"><b>&#9989; No findings - All assessments passed!</b></p>'
+
+                # Top Assessors
+                if aa['assessor_stats']:
+                    aa_html += f'<h3 style="color:{HTML_COLORS["safe"]};margin:15px 0 8px 0;font-size:15px;">Top Performing Assessors</h3>'
+                    sorted_a = sorted(aa['assessor_stats'].items(), key=lambda x: x[1]['total'], reverse=True)
+                    rank = 0
+                    for name, stats in sorted_a[:10]:
+                        if name == 'Unknown':
+                            continue
+                        rank += 1
+                        star = '&#11088; ' if rank <= 3 else ''
+                        divs = ', '.join(stats['divisions']) if stats['divisions'] else 'N/A'
+                        finding_note = f' | {stats["findings_found"]} finding(s)' if stats['findings_found'] > 0 else ''
+                        aa_html += f'<div style="margin:4px 0 4px 15px;">{star}<b>{_h(name)}</b> - {stats["total"]} assessment(s) | {_h(divs)}{finding_note}</div>'
+
+                # Corrective Actions
+                if aa['corrective_actions']:
+                    aa_html += f'<h3 style="color:{HTML_COLORS["warning"]};margin:15px 0 8px 0;font-size:15px;">Corrective Actions ({len(aa["corrective_actions"])} open)</h3>'
+                    for i, ca in enumerate(aa['corrective_actions'][:5], 1):
+                        aa_html += f'<div style="background:#fffbf0;border-left:4px solid {HTML_COLORS["warning"]};padding:10px 15px;margin:6px 0;">'
+                        aa_html += f'<b>{i}. {_h(ca["description"])}</b><br>'
+                        aa_html += f'{_h(ca["form_name"])} | {_h(ca["yard"])} | By: {_h(ca["assessor"])}<br>'
+                        if ca['link']:
+                            aa_html += f'<a href="{_h(ca["link"])}">View in KPA</a>'
+                        aa_html += '</div>'
+                    if len(aa['corrective_actions']) > 5:
+                        aa_html += f'<p style="font-style:italic;">... and {len(aa["corrective_actions"]) - 5} more</p>'
+
+                # Trends
+                if aa['trends']:
+                    aa_html += f'<h3 style="color:{HTML_COLORS["primary"]};margin:15px 0 8px 0;font-size:15px;">Trends &amp; Patterns</h3>'
+                    aa_html += '<ul style="margin:5px 0;">'
+                    for trend in aa['trends']:
+                        aa_html += f'<li>&#128202; {_h(trend)}</li>'
+                    aa_html += '</ul>'
+
+                # Recommendations
+                recs = aa['recommendations']
+                if any([recs['immediate'], recs['this_week'], recs['monthly']]):
+                    aa_html += f'<h3 style="color:{HTML_COLORS["primary"]};margin:15px 0 8px 0;font-size:15px;">Recommended Actions for Leadership</h3>'
+
+                    if recs['immediate']:
+                        aa_html += f'<div style="margin:5px 0;"><b style="color:{HTML_COLORS["critical"]};">&#128308; IMMEDIATE:</b></div>'
+                        aa_html += '<ul style="margin:3px 0;">'
+                        for r in recs['immediate']:
+                            aa_html += f'<li>{_h(r)}</li>'
+                        aa_html += '</ul>'
+
+                    if recs['this_week']:
+                        aa_html += f'<div style="margin:5px 0;"><b style="color:{HTML_COLORS["warning"]};">&#128993; THIS WEEK:</b></div>'
+                        aa_html += '<ul style="margin:3px 0;">'
+                        for r in recs['this_week']:
+                            aa_html += f'<li>{_h(r)}</li>'
+                        aa_html += '</ul>'
+
+                    if recs['monthly']:
+                        aa_html += '<div style="margin:5px 0;"><b>&#128202; MONTH-OVER-MONTH:</b></div>'
+                        aa_html += '<ul style="margin:3px 0;">'
+                        for r in recs['monthly']:
+                            aa_html += f'<li>{_h(r)}</li>'
+                        aa_html += '</ul>'
+
+                sections.append(f"""
+<tr><td style="padding:25px 40px;border-top:3px solid {HTML_COLORS['primary']};">
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">ASSESSMENT &amp; AUDIT ANALYSIS</h2>
+  {aa_html}
+</td></tr>""")
+        except Exception as e:
+            print(f"Warning: HTML assessment analysis error: {e}")
+
     # --- AT-RISK CONDITIONS (top 10) ---
     if 'observation_analysis' in all_data and all_data['observation_analysis']:
         conditions = all_data['observation_analysis']['by_type'].get('At-Risk Condition', [])
@@ -1264,17 +2424,28 @@ def build_html_report(all_data, yesterday_date):
   {rec_html}
 </td></tr>""")
 
-    # --- OTHER FORMS SUMMARY ---
-    other_html = ''
-    for form_id, form_name in OTHER_FORMS:
-        data = all_data.get(f"form_{form_id}")
-        count = data['count'] if data else 0
-        other_html += f'<b>{_h(form_name)}:</b> {count}<br>'
+    # --- ASSESSMENT & AUDIT SUMMARY (replaces old "Other Forms Summary") ---
+    if 'assessment_details' in all_data:
+        try:
+            audit_table_html = build_assessment_html(all_data['assessment_details'])
+        except Exception as e:
+            print(f"Warning: HTML assessment summary table error: {e}")
+            audit_table_html = ''
+            for form_id, form_name in OTHER_FORMS:
+                data = all_data.get(f"form_{form_id}")
+                count = data['count'] if data else 0
+                audit_table_html += f'<b>{_h(form_name)}:</b> {count}<br>'
+    else:
+        audit_table_html = ''
+        for form_id, form_name in OTHER_FORMS:
+            data = all_data.get(f"form_{form_id}")
+            count = data['count'] if data else 0
+            audit_table_html += f'<b>{_h(form_name)}:</b> {count}<br>'
 
     sections.append(f"""
 <tr><td style="padding:25px 40px;border-top:2px solid #ddd;">
-  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">OTHER SAFETY FORMS SUMMARY</h2>
-  {other_html}
+  <h2 style="color:{HTML_COLORS['primary']};margin:0 0 15px 0;font-size:18px;border-bottom:2px solid {HTML_COLORS['primary']};padding-bottom:5px;">ASSESSMENT &amp; AUDIT SUMMARY</h2>
+  {audit_table_html}
 </td></tr>""")
 
     # --- FOOTER ---
@@ -1354,6 +2525,7 @@ def main():
     print("✓ No blank sections - only shows data that exists")
     print("✓ Open Items excludes Near Misses (they have own section)")
     print("✓ Data quality alerts for miscategorization")
+    print("✓ Assessment & Audit Analysis with compliance, findings, trends")
     print("✓ Dated filename\n")
 
     all_data = {}
@@ -1388,6 +2560,30 @@ def main():
                 print(f"✓ {form_name}: {data['count']}")
             else:
                 print(f"✓ {form_name}: 0")
+
+    # Analyze assessment/audit forms for the deep-analysis section
+    print("\nAnalyzing assessment & audit data...")
+    try:
+        assessment_analysis = analyze_assessments(all_data)
+        all_data['assessment_analysis'] = assessment_analysis
+        if assessment_analysis['has_data']:
+            print(f"✓ Assessment Analysis: {assessment_analysis['total_assessments']} assessments, "
+                  f"{assessment_analysis['total_findings']} findings")
+        else:
+            print("✓ Assessment Analysis: No assessment data for yesterday")
+    except Exception as e:
+        print(f"⚠️  Assessment analysis failed (non-fatal): {e}")
+        all_data['assessment_analysis'] = None
+
+    # Extract per-row assessment details for the summary table
+    try:
+        assessment_details = extract_assessment_details(all_data)
+        all_data['assessment_details'] = assessment_details
+        detail_count = sum(entry['count'] for entry in assessment_details)
+        print(f"✓ Assessment Details: {detail_count} form rows extracted for summary table")
+    except Exception as e:
+        print(f"⚠️  Assessment details extraction failed (non-fatal): {e}")
+        all_data['assessment_details'] = None
 
     print("\nGenerating report...")
     doc = build_word_document(all_data, yesterday)

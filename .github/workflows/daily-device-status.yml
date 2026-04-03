@@ -1,0 +1,38 @@
+name: Daily Casing Device Status Report
+
+on:
+  schedule:
+    # 6:00 AM Central = 12:00 UTC (CST is UTC-6)
+    # During CDT (March-November), this runs at 7:00 AM Central.
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Manual trigger for testing
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate device status report
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python daily_device_status_report.py
+
+      - name: Upload report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-device-status-report
+          path: Casing_Device_Status_Report_*.xlsx
+          retention-days: 30

@@ -1126,6 +1126,222 @@ def create_word_document(events, grouped, yesterday_date):
     return doc
 
 
+def _init_landscape_doc(divisions=None):
+    """Create a new landscape Word document with logos and BRHAS header.
+
+    divisions: list of division names (for logo selection).
+    If None, shows all logos.
+    """
+    doc = Document()
+    for section in doc.sections:
+        new_width, new_height = section.page_height, section.page_width
+        section.page_width = new_width
+        section.page_height = new_height
+        section.orientation = WD_ORIENT.LANDSCAPE
+        section.top_margin = Inches(0.5)
+        section.bottom_margin = Inches(0.5)
+        section.left_margin = Inches(0.6)
+        section.right_margin = Inches(0.6)
+
+    # Logos — show main + subsidiary if applicable
+    if divisions:
+        # Determine which logo files to show
+        logo_files = ["Butchs.jpg"]
+        added = set()
+        for div in divisions:
+            lf = DIVISION_LOGO_MAP.get(div)
+            if lf and lf not in added:
+                logo_files.append(lf)
+                added.add(lf)
+    else:
+        logo_files = ["Butchs.jpg", "ButchTrucking.jpg", "Permian.jpg",
+                      "Hutchs.png", "Transcend.jpg", "Valor.jpg"]
+
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    logo_added = 0
+    for lf in logo_files:
+        path = os.path.join(LOGOS_DIR, lf)
+        if os.path.exists(path):
+            try:
+                para.add_run().add_picture(path, width=Inches(1.3))
+                para.add_run("  ")
+                logo_added += 1
+            except Exception:
+                pass
+    if logo_added == 0:
+        run = para.add_run("BRHAS Safety Companies")
+        _set_run_font(run, 16, bold=True, color=RGBColor(192, 0, 0))
+
+    return doc
+
+
+def _add_doc_footer(doc):
+    """Add standard footer to a Word document."""
+    doc.add_paragraph()
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("END OF REPORT")
+    _set_run_font(run, 10, italic=True, color=RGBColor(192, 0, 0))
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("Butch's Rat Hole & Anchor Service Inc. | HSE Department")
+    _set_run_font(run, 9, color=RGBColor(128, 0, 0))
+
+
+def create_rep_word_document(sections, yesterday_date, rep_name, divisions=None):
+    """Build a Word doc for a safety rep with only their division/yard data.
+
+    sections: list of (label, events_list) tuples
+    """
+    doc = _init_landscape_doc(divisions=divisions)
+    now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
+    total_events = sum(len(evts) for _, evts in sections)
+
+    # Title
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("BRHAS SAFETY COMPANIES")
+    _set_run_font(run, 18, bold=True, color=RGBColor(192, 0, 0))
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("DAILY SPEEDING REPORT")
+    _set_run_font(run, 18, bold=True, color=RGBColor(192, 0, 0))
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(yesterday_date.strftime("%A, %B %d, %Y"))
+    _set_run_font(run, 11, italic=True)
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(f"Prepared for: {rep_name}")
+    _set_run_font(run, 11, color=RGBColor(128, 0, 0))
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(f"Generated: {now_central.strftime('%B %d, %Y at %I:%M %p CT')}")
+    _set_run_font(run, 10, color=RGBColor(128, 0, 0))
+
+    doc.add_paragraph()
+
+    # Summary
+    p = doc.add_paragraph()
+    run = p.add_run(f"Total Speeding Events: {total_events}")
+    _set_run_font(run, 11, bold=True)
+
+    all_events = [e for _, evts in sections for e in evts]
+    red_count = sum(1 for e in all_events if e["tier"] == "RED")
+    orange_count = sum(1 for e in all_events if e["tier"] == "ORANGE")
+    yellow_count = sum(1 for e in all_events if e["tier"] == "YELLOW")
+
+    if red_count:
+        p = doc.add_paragraph()
+        run = p.add_run(f"  RED -- Immediate Action: {red_count}")
+        _set_run_font(run, 11, bold=True, color=RGBColor(255, 0, 0))
+    if orange_count:
+        p = doc.add_paragraph()
+        run = p.add_run(f"  ORANGE -- Coaching Required: {orange_count}")
+        _set_run_font(run, 11, bold=True, color=RGBColor(255, 140, 0))
+    if yellow_count:
+        p = doc.add_paragraph()
+        run = p.add_run(f"  YELLOW -- Monitoring: {yellow_count}")
+        _set_run_font(run, 11, bold=True, color=RGBColor(204, 153, 0))
+
+    doc.add_paragraph()
+
+    # Sections
+    for label, events_list in sections:
+        _add_horizontal_rule(doc)
+        sorted_events = sorted(events_list, key=lambda x: x["overspeed"], reverse=True)
+
+        p = doc.add_paragraph()
+        run = p.add_run(f"{label.upper()} -- {len(sorted_events)} event{'s' if len(sorted_events) != 1 else ''}")
+        _set_run_font(run, 14, bold=True, color=RGBColor(192, 0, 0))
+
+        doc.add_paragraph()
+        _add_event_table(doc, sorted_events)
+        doc.add_paragraph()
+
+    _add_doc_footer(doc)
+    return doc
+
+
+def create_escalation_word_document(division, yard, red_events, repeat_events, yesterday_date):
+    """Build a Word doc for manager escalation with RED events and repeat offenders.
+
+    red_events: list of RED-tier events
+    repeat_events: list of (driver_name, count, worst_event) tuples
+    """
+    doc = _init_landscape_doc(divisions=[division])
+    now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
+
+    if division in YARD_DIVISIONS and yard:
+        area_label = f"{division} - {yard} Yard"
+    else:
+        area_label = division
+
+    # Title
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("BRHAS SAFETY COMPANIES")
+    _set_run_font(run, 18, bold=True, color=RGBColor(192, 0, 0))
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("SPEEDING ESCALATION - ACTION REQUIRED")
+    _set_run_font(run, 16, bold=True, color=RGBColor(255, 0, 0))
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(yesterday_date.strftime("%A, %B %d, %Y"))
+    _set_run_font(run, 11, italic=True)
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(area_label)
+    _set_run_font(run, 14, bold=True, color=RGBColor(255, 0, 0))
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(f"Generated: {now_central.strftime('%B %d, %Y at %I:%M %p CT')}")
+    _set_run_font(run, 10, color=RGBColor(128, 0, 0))
+
+    doc.add_paragraph()
+
+    # RED violations
+    if red_events:
+        _add_horizontal_rule(doc)
+        sorted_red = sorted(red_events, key=lambda x: x["overspeed"], reverse=True)
+        p = doc.add_paragraph()
+        run = p.add_run(f"RED VIOLATIONS ({len(sorted_red)}) -- 20+ mph over or 90+ mph")
+        _set_run_font(run, 14, bold=True, color=RGBColor(255, 0, 0))
+
+        doc.add_paragraph()
+        _add_event_table(doc, sorted_red)
+        doc.add_paragraph()
+
+    # Repeat offenders
+    if repeat_events:
+        _add_horizontal_rule(doc)
+        p = doc.add_paragraph()
+        run = p.add_run("REPEAT OFFENDERS -- 3+ EVENTS YESTERDAY")
+        _set_run_font(run, 14, bold=True, color=RGBColor(192, 0, 0))
+
+        for name, count, worst in repeat_events:
+            p = doc.add_paragraph()
+            run = p.add_run(f"  {name}: {count} events")
+            _set_run_font(run, 10, bold=True, color=RGBColor(192, 0, 0))
+            run2 = p.add_run(f" (worst: +{worst['overspeed']} over at {worst['speed']} mph)")
+            _set_run_font(run2, 10)
+
+        doc.add_paragraph()
+
+    _add_doc_footer(doc)
+    return doc
+
+
 # ==============================================================================
 # BUILD HTML EMAIL
 # ==============================================================================
@@ -1779,14 +1995,27 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
             rep_divs = list(set(div for div, _ in rep_divisions))
             rep_html = _build_rep_email_html(sections, yesterday_date, divisions=rep_divs)
 
+            # Generate custom Word doc for this rep
+            rep_doc = create_rep_word_document(sections, yesterday_date, rep_name, divisions=rep_divs)
+            safe_name = rep_name.replace(" ", "_").replace("&", "and")
+            date_str = yesterday_date.strftime("%Y-%m-%d")
+            rep_docx_path = f"SpeedingReport_{safe_name}_{date_str}.docx"
+            rep_doc.save(rep_docx_path)
+
             to = test_to or rep_emails
-            if _send_email(gmail_address, gmail_app_password, to, subject_base, rep_html, attachment_path=docx_path):
+            if _send_email(gmail_address, gmail_app_password, to, subject_base, rep_html, attachment_path=rep_docx_path):
                 section_labels = [label for label, _ in sections]
                 print(f"    SENT: {rep_name} ({', '.join(to)}) -- {total_events} events across {', '.join(section_labels)}")
                 sent += 1
             else:
                 print(f"    FAIL: {rep_name}")
                 failed += 1
+
+            # Clean up temp file
+            try:
+                os.remove(rep_docx_path)
+            except OSError:
+                pass
     else:
         print(f"\n  [Tier 3] Safety rep distribution -- SKIPPED (no events)")
 
@@ -1833,6 +2062,15 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
                     div, yard, data["red"], data["repeats"], yesterday_date
                 )
 
+                # Generate custom Word doc for this escalation
+                esc_doc = create_escalation_word_document(
+                    div, yard, data["red"], data["repeats"], yesterday_date
+                )
+                safe_area = f"{div}_{yard}".replace(" ", "_").replace("'", "")
+                date_str = yesterday_date.strftime("%Y-%m-%d")
+                esc_docx_path = f"SpeedingEscalation_{safe_area}_{date_str}.docx"
+                esc_doc.save(esc_docx_path)
+
                 to = test_to or manager_info["emails"]
                 cc = None
                 if not TEST_MODE:
@@ -1841,13 +2079,19 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
 
                 area_label = f"{div} - {yard}" if yard else div
                 escalation_subject = f"SPEEDING ESCALATION: {area_label} - {report_date_str}"
-                if _send_email(gmail_address, gmail_app_password, to, escalation_subject, escalation_html, cc_list=cc, attachment_path=docx_path):
+                if _send_email(gmail_address, gmail_app_password, to, escalation_subject, escalation_html, cc_list=cc, attachment_path=esc_docx_path):
                     cc_note = f" (CC: {', '.join(cc)})" if cc else ""
                     print(f"    SENT: {area_label} -> {', '.join(to)}{cc_note} -- {len(data['red'])} RED, {len(data['repeats'])} repeat offenders")
                     sent += 1
                 else:
                     print(f"    FAIL: {area_label}")
                     failed += 1
+
+                # Clean up temp file
+                try:
+                    os.remove(esc_docx_path)
+                except OSError:
+                    pass
     else:
         print(f"\n  [Tier 4] Manager escalation -- SKIPPED (no events)")
 

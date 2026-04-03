@@ -1780,7 +1780,7 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
             rep_html = _build_rep_email_html(sections, yesterday_date, divisions=rep_divs)
 
             to = test_to or rep_emails
-            if _send_email(gmail_address, gmail_app_password, to, subject_base, rep_html):
+            if _send_email(gmail_address, gmail_app_password, to, subject_base, rep_html, attachment_path=docx_path):
                 section_labels = [label for label, _ in sections]
                 print(f"    SENT: {rep_name} ({', '.join(to)}) -- {total_events} events across {', '.join(section_labels)}")
                 sent += 1
@@ -1841,7 +1841,7 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
 
                 area_label = f"{div} - {yard}" if yard else div
                 escalation_subject = f"SPEEDING ESCALATION: {area_label} - {report_date_str}"
-                if _send_email(gmail_address, gmail_app_password, to, escalation_subject, escalation_html, cc_list=cc):
+                if _send_email(gmail_address, gmail_app_password, to, escalation_subject, escalation_html, cc_list=cc, attachment_path=docx_path):
                     cc_note = f" (CC: {', '.join(cc)})" if cc else ""
                     print(f"    SENT: {area_label} -> {', '.join(to)}{cc_note} -- {len(data['red'])} RED, {len(data['repeats'])} repeat offenders")
                     sent += 1

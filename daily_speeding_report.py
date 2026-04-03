@@ -24,6 +24,7 @@ import os
 import re
 import sys
 import json
+import base64
 from datetime import datetime, timedelta, timezone
 from html import escape as html_escape
 from email.mime.multipart import MIMEMultipart
@@ -57,6 +58,61 @@ MOTIVE_BASE_URL = "https://api.gomotive.com/v1"
 KMH_TO_MPH = 0.621371
 LOGOS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logos")
 CALIBRI = "Calibri"
+
+# Division -> subsidiary logo file (shown alongside main Butch's logo)
+# Divisions not listed here get only the main Butch's logo
+DIVISION_LOGO_MAP = {
+    "Valor Energy Services": "Valor.jpg",
+    "Transcend Drilling":    "Transcend.jpg",
+    "Butch's Trucking":      "ButchTrucking.jpg",
+}
+
+# Cache for base64-encoded logos (loaded once at runtime)
+_LOGO_CACHE = {}
+
+
+def _get_logo_b64(filename):
+    """Load a logo file and return base64-encoded data URI string. Cached."""
+    if filename in _LOGO_CACHE:
+        return _LOGO_CACHE[filename]
+    path = os.path.join(LOGOS_DIR, filename)
+    if not os.path.exists(path):
+        _LOGO_CACHE[filename] = ""
+        return ""
+    with open(path, "rb") as f:
+        data = base64.b64encode(f.read()).decode("ascii")
+    ext = filename.rsplit(".", 1)[-1].lower()
+    mime = "image/png" if ext == "png" else "image/jpeg"
+    uri = f"data:{mime};base64,{data}"
+    _LOGO_CACHE[filename] = uri
+    return uri
+
+
+def _build_logo_html(divisions=None, max_height="60px"):
+    """Build an HTML logo bar for email headers.
+
+    Always includes the main Butch's logo. If divisions is provided,
+    also includes the subsidiary logo for Valor/Transcend/BTI.
+    If divisions is None (director/full report), shows only main logo.
+    """
+    main_logo = _get_logo_b64("Butchs.jpg")
+    if not main_logo:
+        return ""
+
+    imgs = [f'<img src="{main_logo}" alt="BRHAS" style="height:{max_height};margin:0 10px;">']
+
+    # Add subsidiary logo if any division matches
+    if divisions:
+        added = set()
+        for div in divisions:
+            logo_file = DIVISION_LOGO_MAP.get(div)
+            if logo_file and logo_file not in added:
+                sub_logo = _get_logo_b64(logo_file)
+                if sub_logo:
+                    imgs.append(f'<img src="{sub_logo}" alt="{_h(div)}" style="height:{max_height};margin:0 10px;">')
+                    added.add(logo_file)
+
+    return f'<div style="text-align:center;padding:10px 0;">{"".join(imgs)}</div>'
 
 # ==============================================================================
 # GROUP ID -> (DIVISION, YARD) MAPPING
@@ -1113,6 +1169,9 @@ def build_html_report(events, grouped, yesterday_date):
 <tr><td align="center">
 <table width="700" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
 
+<tr><td style="background:#ffffff;padding:15px 30px;text-align:center;">
+  {_build_logo_html(max_height="55px")}
+</td></tr>
 <tr><td style="background:{C_RED};padding:30px 40px;text-align:center;">
   <div style="font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
   <div style="font-size:28px;font-weight:bold;color:#ffffff;margin:10px 0;">DAILY SPEEDING REPORT</div>
@@ -1286,6 +1345,9 @@ def _build_director_email(events, grouped, yesterday_date):
 <tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
 
+<tr><td style="background:#ffffff;padding:15px 20px;text-align:center;">
+  {_build_logo_html(max_height="50px")}
+</td></tr>
 <tr><td style="background:{C_RED};padding:20px 30px;text-align:center;">
   <div style="font-size:14px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
   <div style="font-size:22px;font-weight:bold;color:#ffffff;margin:6px 0;">SPEEDING REPORT - DIRECTOR SUMMARY</div>
@@ -1446,10 +1508,11 @@ def _build_rep_event_table_html(events_list):
 </table>"""
 
 
-def _build_rep_email_html(sections, yesterday_date):
+def _build_rep_email_html(sections, yesterday_date, divisions=None):
     """Build a BRHAS-branded HTML email body for a safety rep.
 
     sections: list of (label, events_list) tuples
+    divisions: list of division names (for logo selection)
     """
     now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
     total_events = sum(len(evts) for _, evts in sections)
@@ -1463,6 +1526,9 @@ def _build_rep_email_html(sections, yesterday_date):
 <tr><td align="center">
 <table width="700" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
 
+<tr><td style="background:#ffffff;padding:15px 20px;text-align:center;">
+  {_build_logo_html(divisions=divisions, max_height="50px")}
+</td></tr>
 <tr><td style="background:{C_RED};padding:20px 30px;text-align:center;">
   <div style="font-size:14px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
   <div style="font-size:20px;font-weight:bold;color:#ffffff;margin:6px 0;">DAILY SPEEDING REPORT</div>
@@ -1531,6 +1597,9 @@ def _build_manager_escalation_html(division, yard, red_events, repeat_events, ye
 <tr><td align="center">
 <table width="700" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
 
+<tr><td style="background:#ffffff;padding:15px 20px;text-align:center;">
+  {_build_logo_html(divisions=[division], max_height="50px")}
+</td></tr>
 <tr><td style="background:#FF0000;padding:20px 30px;text-align:center;">
   <div style="font-size:14px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
   <div style="font-size:20px;font-weight:bold;color:#ffffff;margin:6px 0;">SPEEDING ESCALATION - ACTION REQUIRED</div>
@@ -1707,7 +1776,8 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
                 continue
 
             total_events = sum(len(evts) for _, evts in sections)
-            rep_html = _build_rep_email_html(sections, yesterday_date)
+            rep_divs = list(set(div for div, _ in rep_divisions))
+            rep_html = _build_rep_email_html(sections, yesterday_date, divisions=rep_divs)
 
             to = test_to or rep_emails
             if _send_email(gmail_address, gmail_app_password, to, subject_base, rep_html):

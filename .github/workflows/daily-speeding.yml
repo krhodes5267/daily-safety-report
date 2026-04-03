@@ -23,19 +23,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Generate speeding report
+      - name: Generate and distribute speeding report
         env:
           MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
         run: python daily_speeding_report.py
-
-      - name: Distribute individual safety rep emails
-        env:
-          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python distribute_safety_rep_emails.py
 
       - name: Upload report as artifact
         uses: actions/upload-artifact@v4

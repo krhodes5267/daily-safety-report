@@ -230,6 +230,174 @@ DIVISION_NOTES = {
 }
 
 # ==============================================================================
+# TIERED EMAIL RECIPIENTS
+# ==============================================================================
+
+# Set TEST_MODE=true env var to route ALL emails to director only (for testing)
+TEST_MODE = os.environ.get("TEST_MODE", "").lower() in ("true", "1", "yes")
+
+# Director gets 30-second summary
+DIRECTOR_RECIPIENTS = "krhodes@brhas.com"
+
+# Safety reps get per-division/yard breakdown (from distribute_safety_rep_emails.py)
+SAFETY_REP_MAP = [
+    {
+        "name": "John Snodgrass",
+        "emails": ["jsnodgrass@texasrigmove.com"],
+        "divisions": [
+            ("Rathole", "Midland"),
+            ("Rathole", "Levelland"),
+            ("Rathole", "Barstow"),
+            ("Transcend Drilling", ""),
+            ("Fencing", ""),
+            ("Anchors", ""),
+            ("Environmental", ""),
+            ("Valor Energy Services", ""),
+        ],
+    },
+    {
+        "name": "Hancock & Salazar",
+        "emails": ["mhancock@brhas.com", "msalazar@brhas.com"],
+        "divisions": [
+            ("Casing", "Midland"),
+            ("Casing", "San Angelo"),
+        ],
+    },
+    {
+        "name": "Justin Conrad",
+        "emails": ["jconrad@brhas.com"],
+        "divisions": [
+            ("Casing", "Bryan"),
+        ],
+    },
+    {
+        "name": "James Barnett",
+        "emails": ["jbarnett@brhas.com"],
+        "divisions": [
+            ("Casing", "Kilgore"),
+        ],
+    },
+    {
+        "name": "Allen Batts",
+        "emails": ["abatts@brhas.com"],
+        "divisions": [
+            ("Casing", "Hobbs"),
+        ],
+    },
+    {
+        "name": "Joey Speyrer",
+        "emails": ["jspeyrer@brhas.com"],
+        "divisions": [
+            ("Casing", "Jourdanton"),
+            ("Casing", "Laredo"),
+        ],
+    },
+    {
+        "name": "Jose Romero",
+        "emails": ["jose.romero@brhas.com"],
+        "divisions": [
+            ("Poly Pipe", ""),
+            ("Pit Lining", ""),
+            ("Construction", ""),
+        ],
+    },
+    {
+        "name": "Sean Fry",
+        "emails": ["sean.fry@brhas.com"],
+        "divisions": [
+            ("Rathole", "Ohio"),
+            ("Rathole", "Pennsylvania"),
+        ],
+    },
+    {
+        "name": "Wes Franklin",
+        "emails": ["wes@texasrigmove.com"],
+        "divisions": [
+            ("Rathole", "Midland"),
+            ("Rathole", "Levelland"),
+            ("Rathole", "Barstow"),
+            ("Rathole", "Oklahoma"),
+            ("Rathole", "North Dakota"),
+            ("Fencing", ""),
+            ("Anchors", ""),
+            ("Environmental", ""),
+            ("Valor Energy Services", ""),
+        ],
+    },
+    {
+        "name": "Leean Benevides",
+        "emails": ["leean.benavides@brhas.com"],
+        "divisions": [
+            ("Rathole", "Jourdanton"),
+        ],
+    },
+    {
+        "name": "Bernard Bradley",
+        "emails": ["bbradley@brhas.com"],
+        "divisions": [
+            ("Butch's Trucking", ""),
+        ],
+    },
+    {
+        "name": "Charley Langwell",
+        "emails": ["clangwell@brhas.com"],
+        "divisions": [
+            ("Transcend Drilling", ""),
+        ],
+    },
+    {
+        "name": "Kelly Rhodes",
+        "emails": ["krhodes@brhas.com"],
+        "divisions": [
+            ("Downhole Tools", ""),
+        ],
+    },
+]
+
+# Divisions that use yard breakdown in rep email headers
+YARD_DIVISIONS = {"Rathole", "Casing"}
+
+# Manager map: (division, yard) -> {emails, cc (optional)}
+# CC Buffington on casing divisions ONLY
+MANAGER_MAP = {
+    # Casing yards
+    ("Casing", "Midland"):    {"emails": ["dustin.fry@brhas.com"], "cc": "mbuffington@brhas.com"},
+    ("Casing", "Bryan"):      {"emails": ["eddie.lohse@brhas.com"], "cc": "mbuffington@brhas.com"},
+    ("Casing", "Kilgore"):    {"emails": ["fbalderas@brhas.com"], "cc": "mbuffington@brhas.com"},
+    ("Casing", "Hobbs"):      {"emails": ["ceaves@brhas.com"], "cc": "mbuffington@brhas.com"},
+    ("Casing", "Jourdanton"): {"emails": ["esflores@brhas.com"], "cc": "mbuffington@brhas.com"},
+    ("Casing", "Laredo"):     {"emails": ["cjacobo@brhas.com"], "cc": "mbuffington@brhas.com"},
+    ("Casing", "San Angelo"): {"emails": ["dustin.fry@brhas.com"], "cc": "mbuffington@brhas.com"},
+    # Anchors
+    ("Anchors", ""):          {"emails": ["kmagana@brhas.com"]},
+    # Construction
+    ("Construction", ""):     {"emails": ["btravis@brhas.com"]},
+    # Environmental
+    ("Environmental", ""):    {"emails": ["jarp@brhas.com"]},
+    # Valor
+    ("Valor Energy Services", ""): {"emails": ["bob.morris@valorenergyservices.com"]},
+    # Poly Pipe
+    ("Poly Pipe", ""):        {"emails": ["jjacobs@brhas.com", "mathew.garcia@brhas.com"]},
+    # Pit Lining
+    ("Pit Lining", ""):       {"emails": ["jjacobs@brhas.com", "jtovar@brhas.com"]},
+    # Fencing
+    ("Fencing", ""):          {"emails": ["jjacobs@brhas.com"]},
+    # BTI
+    ("Butch's Trucking", ""): {"emails": ["hmoreno@brhas.com"]},
+    # Transcend
+    ("Transcend Drilling", ""): {"emails": ["cgipson@transcendrig.com", "tclark@transcendrig.com"]},
+    # Rathole yards
+    ("Rathole", "Midland"):      {"emails": ["mcrum@brhas.com"]},
+    ("Rathole", "Levelland"):    {"emails": ["tyson@ratholeservice.com", "mhamersley@brhas.com"]},
+    ("Rathole", "Barstow"):      {"emails": ["ggrant@brhas.com"]},
+    ("Rathole", "Jourdanton"):   {"emails": ["ljames@brhas.com"]},
+    ("Rathole", "North Dakota"): {"emails": ["foster@ratholeservice.com"]},
+    ("Rathole", "Oklahoma"):     {"emails": ["bgrant@ratholeservice.com"]},
+    ("Rathole", "Ohio"):         {"emails": ["mikeg@ratholeservice.com"]},
+    ("Rathole", "Pennsylvania"): {"emails": ["steven.hostetler@brhas.com"]},
+}
+
+# ==============================================================================
 # MOTIVE API — VEHICLE + DRIVER LOOKUP
 # ==============================================================================
 
@@ -1094,7 +1262,530 @@ def build_html_report(events, grouped, yesterday_date):
 
 
 # ==============================================================================
-# SEND EMAIL
+# DIRECTOR SUMMARY EMAIL (30-second scan)
+# ==============================================================================
+
+def _build_director_email(events, grouped, yesterday_date):
+    """Build a concise director summary email for Kelly.
+
+    Dashboard tiles + RED events + repeat offenders + per-division counts.
+    Designed for a 30-second scan on mobile.
+    """
+    now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
+    red_events = [e for e in events if e["tier"] == "RED"]
+    orange_events = [e for e in events if e["tier"] == "ORANGE"]
+    yellow_events = [e for e in events if e["tier"] == "YELLOW"]
+    repeats = get_repeat_offenders(events)
+
+    parts = []
+
+    # Header
+    parts.append(f"""<html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
+
+<tr><td style="background:{C_RED};padding:20px 30px;text-align:center;">
+  <div style="font-size:14px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
+  <div style="font-size:22px;font-weight:bold;color:#ffffff;margin:6px 0;">SPEEDING REPORT - DIRECTOR SUMMARY</div>
+  <div style="font-size:12px;color:#ffffff;">{yesterday_date.strftime('%A, %B %d, %Y')}</div>
+</td></tr>""")
+
+    # Dashboard tiles
+    tile_style = "display:inline-block;width:120px;text-align:center;padding:15px 10px;margin:5px;border-radius:6px;"
+    parts.append(f"""
+<tr><td style="padding:20px 30px;text-align:center;">
+  <div style="{tile_style}background:#f8f0f0;border:2px solid {C_RED};">
+    <div style="font-size:28px;font-weight:bold;color:{C_RED};">{len(events)}</div>
+    <div style="font-size:11px;color:#666;">TOTAL EVENTS</div>
+  </div>
+  <div style="{tile_style}background:#FFE0E0;border:2px solid #FF0000;">
+    <div style="font-size:28px;font-weight:bold;color:#FF0000;">{len(red_events)}</div>
+    <div style="font-size:11px;color:#666;">RED (20+ over)</div>
+  </div>
+  <div style="{tile_style}background:#FFF0E0;border:2px solid {C_AMBER};">
+    <div style="font-size:28px;font-weight:bold;color:{C_AMBER};">{len(orange_events)}</div>
+    <div style="font-size:11px;color:#666;">ORANGE</div>
+  </div>
+  <div style="{tile_style}background:#FFFFF0;border:2px solid {C_YELLOW_DARK};">
+    <div style="font-size:28px;font-weight:bold;color:{C_YELLOW_DARK};">{len(yellow_events)}</div>
+    <div style="font-size:11px;color:#666;">YELLOW</div>
+  </div>
+</td></tr>""")
+
+    # RED events - immediate action
+    if red_events:
+        red_sorted = sorted(red_events, key=lambda x: x["overspeed"], reverse=True)
+        red_html = ""
+        for e in red_sorted:
+            map_link = f' | <a href="{_h(e["maps_link"])}">Map</a>' if e["maps_link"] else ""
+            red_html += f"""<div style="background:#FFE0E0;border-left:4px solid #FF0000;padding:8px 12px;margin:6px 0;font-size:12px;">
+  <b style="color:#FF0000;">+{e['overspeed']} over</b> ({e['speed']} in a {e['posted_speed']} zone)<br>
+  <b>{_h(e['driver'])}</b> | {_h(e['vehicle'])} | {_h(e['division'])}{' / ' + _h(e['yard']) if e['yard'] else ''}{map_link}
+</div>"""
+
+        parts.append(f"""
+<tr><td style="padding:15px 30px;">
+  <h3 style="color:#FF0000;margin:0 0 10px 0;font-size:16px;border-bottom:2px solid #FF0000;padding-bottom:4px;">
+    RED EVENTS - IMMEDIATE ACTION ({len(red_events)})
+  </h3>
+  {red_html}
+</td></tr>""")
+
+    # Repeat offenders
+    if repeats:
+        repeat_html = ""
+        for name, count in repeats.items():
+            driver_evts = [e for e in events if e["driver"] == name]
+            worst = max(driver_evts, key=lambda x: x["overspeed"])
+            div_yard = f"{worst['division']}{' / ' + worst['yard'] if worst['yard'] else ''}"
+            repeat_html += f"""<div style="background:#fff5f5;border-left:4px solid {C_RED};padding:8px 12px;margin:6px 0;font-size:12px;">
+  <b style="color:{C_RED};">{_h(name)}: {count} events</b> (worst: +{worst['overspeed']} over) | {_h(div_yard)}
+</div>"""
+
+        parts.append(f"""
+<tr><td style="padding:15px 30px;">
+  <h3 style="color:{C_RED};margin:0 0 10px 0;font-size:16px;border-bottom:2px solid {C_RED};padding-bottom:4px;">
+    REPEAT OFFENDERS - 3+ EVENTS ({len(repeats)})
+  </h3>
+  {repeat_html}
+</td></tr>""")
+
+    # Per-division summary (just counts, no tables)
+    if grouped:
+        div_rows = ""
+        for div, yards_data in grouped.items():
+            div_total = sum(len(evts) for evts in yards_data.values())
+            div_red = sum(1 for evts in yards_data.values() for e in evts if e["tier"] == "RED")
+            red_badge = f' <span style="background:#FF0000;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;">{div_red} RED</span>' if div_red else ""
+            div_rows += f"""<tr>
+  <td style="padding:6px 10px;border-bottom:1px solid #eee;font-weight:bold;">{_h(div)}</td>
+  <td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:center;">{div_total}</td>
+  <td style="padding:6px 10px;border-bottom:1px solid #eee;">{red_badge}</td>
+</tr>"""
+
+        parts.append(f"""
+<tr><td style="padding:15px 30px;">
+  <h3 style="color:{C_RED};margin:0 0 10px 0;font-size:16px;border-bottom:2px solid {C_RED};padding-bottom:4px;">
+    DIVISION BREAKDOWN
+  </h3>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13px;">
+    <tr style="background:#f0f0f0;">
+      <th style="padding:6px 10px;text-align:left;">Division</th>
+      <th style="padding:6px 10px;text-align:center;">Events</th>
+      <th style="padding:6px 10px;text-align:left;"></th>
+    </tr>
+    {div_rows}
+  </table>
+</td></tr>""")
+
+    # No events message
+    if not events:
+        parts.append(f"""
+<tr><td style="padding:30px;text-align:center;">
+  <div style="font-size:18px;font-weight:bold;color:{C_GREEN};">No speeding events yesterday!</div>
+</td></tr>""")
+
+    # Footer
+    parts.append(f"""
+<tr><td style="background:{C_DARK};padding:15px 30px;text-align:center;">
+  <div style="color:#ffcccc;font-size:10px;">Full report with Word doc sent to REPORT_RECIPIENT | Safety rep & manager emails distributed automatically</div>
+  <div style="color:#ffffff;font-size:10px;margin-top:4px;">Generated {now_central.strftime('%I:%M %p CT')} | BRHAS HSE Department</div>
+</td></tr>
+
+</table>
+</td></tr></table>
+</body></html>""")
+
+    return "\n".join(parts)
+
+
+# ==============================================================================
+# BRANDED SAFETY REP EMAIL
+# ==============================================================================
+
+def _build_rep_section_label(division, yard):
+    """Build the section header text for a division/yard."""
+    if division in YARD_DIVISIONS and yard:
+        return f"{division} - {yard} Yard"
+    return division
+
+
+def _build_rep_event_table_html(events_list):
+    """Build an HTML table for a list of events (used in rep emails)."""
+    rows = ""
+    for e in sorted(events_list, key=lambda x: x["overspeed"], reverse=True):
+        tc, bg = _tier_colors(e["tier"])
+        map_cell = f'<a href="{_h(e["maps_link"])}" style="font-size:11px;">Map</a>' if e.get("maps_link") else ""
+        rows += f"""<tr style="background:{bg};">
+  <td style="padding:5px 6px;border:1px solid #ddd;"><b style="color:{tc};">{e["tier"]}</b></td>
+  <td style="padding:5px 6px;border:1px solid #ddd;">{_h(e["driver"])}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;">{_h(e["vehicle"])}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-weight:bold;">{e["speed"]}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;text-align:center;">{e["posted_speed"]}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-weight:bold;color:{tc};">+{e["overspeed"]}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;text-align:center;">{_h(e["duration"])}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;font-size:11px;">{_h(e["time"])}</td>
+  <td style="padding:5px 6px;border:1px solid #ddd;">{map_cell}</td>
+</tr>"""
+
+    return f"""<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;font-family:Calibri,Arial,Helvetica,sans-serif;">
+  <tr style="background:{C_RED};">
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Tier</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Driver</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Vehicle</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Speed</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Limit</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Over</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Dur.</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Time</th>
+    <th style="padding:6px;color:#fff;border:1px solid #ddd;">Map</th>
+  </tr>
+  {rows}
+</table>"""
+
+
+def _build_rep_email_html(sections, yesterday_date):
+    """Build a BRHAS-branded HTML email body for a safety rep.
+
+    sections: list of (label, events_list) tuples
+    """
+    now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
+    total_events = sum(len(evts) for _, evts in sections)
+
+    parts = []
+
+    # Header
+    parts.append(f"""<html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
+<tr><td align="center">
+<table width="700" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
+
+<tr><td style="background:{C_RED};padding:20px 30px;text-align:center;">
+  <div style="font-size:14px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
+  <div style="font-size:20px;font-weight:bold;color:#ffffff;margin:6px 0;">DAILY SPEEDING REPORT</div>
+  <div style="font-size:12px;color:#ffffff;">{yesterday_date.strftime('%A, %B %d, %Y')}</div>
+</td></tr>
+
+<tr><td style="padding:15px 30px;">
+  <div style="background:#f8f0f0;border-left:4px solid {C_RED};padding:10px 15px;font-size:13px;">
+    <b>{total_events}</b> speeding event{"s" if total_events != 1 else ""} in your area{"s" if len(sections) > 1 else ""}
+  </div>
+</td></tr>""")
+
+    # Per-section tables
+    for label, events_list in sections:
+        count = len(events_list)
+        red_count = sum(1 for e in events_list if e["tier"] == "RED")
+        red_badge = f' <span style="background:#FF0000;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;">{red_count} RED</span>' if red_count else ""
+
+        parts.append(f"""
+<tr><td style="padding:10px 30px 5px 30px;">
+  <h3 style="color:{C_RED};margin:0;font-size:16px;">
+    {_h(label)} &mdash; {count} event{"s" if count != 1 else ""}{red_badge}
+  </h3>
+</td></tr>
+<tr><td style="padding:5px 30px 15px 30px;">
+  {_build_rep_event_table_html(events_list)}
+</td></tr>""")
+
+    # Footer
+    parts.append(f"""
+<tr><td style="background:{C_DARK};padding:15px 30px;text-align:center;">
+  <div style="color:#ffffff;font-size:10px;font-style:italic;">Butch's Rat Hole &amp; Anchor Service Inc. | HSE Department</div>
+  <div style="color:#ffcccc;font-size:10px;margin-top:4px;">Generated {now_central.strftime('%I:%M %p CT')}</div>
+</td></tr>
+
+</table>
+</td></tr></table>
+</body></html>""")
+
+    return "\n".join(parts)
+
+
+# ==============================================================================
+# MANAGER ESCALATION EMAIL (RED events + repeat offenders)
+# ==============================================================================
+
+def _build_manager_escalation_html(division, yard, red_events, repeat_events, yesterday_date):
+    """Build escalation email for a manager showing RED events and/or repeat offenders.
+
+    red_events: list of RED-tier events in their division/yard
+    repeat_events: list of (driver_name, count, worst_event) tuples for repeat offenders
+    """
+    now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
+
+    if division in YARD_DIVISIONS and yard:
+        area_label = f"{division} - {yard} Yard"
+    else:
+        area_label = division
+
+    parts = []
+
+    # Header
+    parts.append(f"""<html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
+<tr><td align="center">
+<table width="700" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;margin:20px auto;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
+
+<tr><td style="background:#FF0000;padding:20px 30px;text-align:center;">
+  <div style="font-size:14px;font-weight:bold;color:#ffffff;letter-spacing:1px;">BRHAS SAFETY COMPANIES</div>
+  <div style="font-size:20px;font-weight:bold;color:#ffffff;margin:6px 0;">SPEEDING ESCALATION - ACTION REQUIRED</div>
+  <div style="font-size:12px;color:#ffffff;">{yesterday_date.strftime('%A, %B %d, %Y')}</div>
+</td></tr>
+
+<tr><td style="padding:15px 30px;">
+  <div style="background:#FFE0E0;border-left:4px solid #FF0000;padding:12px 15px;font-size:14px;font-weight:bold;color:#FF0000;">
+    {_h(area_label)} - Immediate attention required
+  </div>
+</td></tr>""")
+
+    # RED events
+    if red_events:
+        parts.append(f"""
+<tr><td style="padding:10px 30px 5px 30px;">
+  <h3 style="color:#FF0000;margin:0 0 10px 0;font-size:16px;border-bottom:2px solid #FF0000;padding-bottom:4px;">
+    RED VIOLATIONS ({len(red_events)}) - 20+ mph over or 90+ mph
+  </h3>
+</td></tr>
+<tr><td style="padding:5px 30px 15px 30px;">
+  {_build_rep_event_table_html(red_events)}
+</td></tr>""")
+
+    # Repeat offenders
+    if repeat_events:
+        repeat_html = ""
+        for name, count, worst in repeat_events:
+            repeat_html += f"""<div style="background:#fff5f5;border-left:4px solid {C_RED};padding:8px 12px;margin:6px 0;font-size:12px;">
+  <b style="color:{C_RED};">{_h(name)}: {count} events</b> (worst: +{worst['overspeed']} over at {worst['speed']} mph in a {worst['posted_speed']} zone)
+</div>"""
+
+        parts.append(f"""
+<tr><td style="padding:10px 30px;">
+  <h3 style="color:{C_RED};margin:0 0 10px 0;font-size:16px;border-bottom:2px solid {C_RED};padding-bottom:4px;">
+    REPEAT OFFENDERS - 3+ EVENTS YESTERDAY
+  </h3>
+  {repeat_html}
+</td></tr>""")
+
+    # Footer
+    parts.append(f"""
+<tr><td style="padding:15px 30px;font-size:12px;color:#666;">
+  <p>This escalation is sent automatically when RED-tier violations (20+ mph over posted limit or 90+ mph) or repeat offenders (3+ events in a single day) are detected in your area.</p>
+</td></tr>
+<tr><td style="background:{C_DARK};padding:15px 30px;text-align:center;">
+  <div style="color:#ffffff;font-size:10px;font-style:italic;">Butch's Rat Hole &amp; Anchor Service Inc. | HSE Department</div>
+  <div style="color:#ffcccc;font-size:10px;margin-top:4px;">Generated {now_central.strftime('%I:%M %p CT')}</div>
+</td></tr>
+
+</table>
+</td></tr></table>
+</body></html>""")
+
+    return "\n".join(parts)
+
+
+# ==============================================================================
+# SEND EMAIL (GENERIC)
+# ==============================================================================
+
+def _send_email(gmail_address, gmail_app_password, to_list, subject, html_body, cc_list=None, attachment_path=None):
+    """Send an HTML email via Gmail SMTP. Returns True on success."""
+    try:
+        msg = MIMEMultipart("mixed")
+        msg["From"] = gmail_address
+        msg["To"] = ", ".join(to_list)
+        if cc_list:
+            msg["Cc"] = ", ".join(cc_list)
+        msg["Subject"] = subject
+
+        msg.attach(MIMEText(html_body, "html"))
+
+        if attachment_path and os.path.exists(attachment_path):
+            with open(attachment_path, "rb") as f:
+                part = MIMEBase(
+                    "application",
+                    "vnd.openxmlformats-officedocument.wordprocessingml.document",
+                )
+                part.set_payload(f.read())
+            encoders.encode_base64(part)
+            part.add_header(
+                "Content-Disposition",
+                f'attachment; filename="{os.path.basename(attachment_path)}"',
+            )
+            msg.attach(part)
+
+        all_recipients = list(to_list) + (list(cc_list) if cc_list else [])
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(gmail_address, gmail_app_password)
+            server.sendmail(gmail_address, all_recipients, msg.as_string())
+
+        return True
+    except Exception as e:
+        print(f"    Email send failed: {e}")
+        return False
+
+
+# ==============================================================================
+# TIERED EMAIL DISTRIBUTION
+# ==============================================================================
+
+def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_report):
+    """Orchestrate all tiered email distribution.
+
+    Tier 1: Full report to REPORT_RECIPIENT (existing behavior, with Word doc)
+    Tier 2: Director summary to Kelly
+    Tier 3: Per-rep branded emails to safety reps
+    Tier 4: RED + repeat offender escalation to managers
+    """
+    gmail_address = os.environ.get("GMAIL_ADDRESS", "")
+    gmail_app_password = os.environ.get("GMAIL_APP_PASSWORD", "")
+
+    if not gmail_address or not gmail_app_password:
+        print("  Email skipped -- GMAIL_ADDRESS or GMAIL_APP_PASSWORD not set.")
+        return
+
+    report_date_str = yesterday_date.strftime("%B %d, %Y")
+    subject_base = f"Daily Speeding Report - {report_date_str}"
+
+    sent = 0
+    skipped = 0
+    failed = 0
+
+    # In test mode, ALL emails go to director only
+    test_to = [DIRECTOR_RECIPIENTS] if TEST_MODE else None
+    if TEST_MODE:
+        print("  *** TEST MODE: All emails routed to director only ***")
+
+    # --- Tier 1: Full report to REPORT_RECIPIENT ---
+    report_recipient = os.environ.get("REPORT_RECIPIENT", "")
+    if report_recipient:
+        to = test_to or [report_recipient]
+        print(f"\n  [Tier 1] Full report -> {', '.join(to)}")
+        if _send_email(gmail_address, gmail_app_password, to, subject_base, html_full_report, attachment_path=docx_path):
+            print(f"    SENT")
+            sent += 1
+        else:
+            failed += 1
+    else:
+        print("\n  [Tier 1] Full report -- SKIPPED (REPORT_RECIPIENT not set)")
+
+    # --- Tier 2: Director summary ---
+    director_html = _build_director_email(events, grouped, yesterday_date)
+    to = test_to or [DIRECTOR_RECIPIENTS]
+    print(f"\n  [Tier 2] Director summary -> {', '.join(to)}")
+    if _send_email(gmail_address, gmail_app_password, to, f"Speeding Summary - {report_date_str}", director_html):
+        print(f"    SENT")
+        sent += 1
+    else:
+        failed += 1
+
+    # --- Tier 3: Safety rep emails ---
+    if events:
+        print(f"\n  [Tier 3] Safety rep distribution...")
+        for rep in SAFETY_REP_MAP:
+            rep_name = rep["name"]
+            rep_emails = rep["emails"]
+            rep_divisions = rep["divisions"]
+
+            # Collect events for this rep's divisions
+            sections = []
+            for div, yard in rep_divisions:
+                matching = [e for e in events if e["division"] == div and e["yard"] == yard]
+                if matching:
+                    label = _build_rep_section_label(div, yard)
+                    sections.append((label, matching))
+
+            if not sections:
+                print(f"    SKIP: {rep_name} -- no violations")
+                skipped += 1
+                continue
+
+            total_events = sum(len(evts) for _, evts in sections)
+            rep_html = _build_rep_email_html(sections, yesterday_date)
+
+            to = test_to or rep_emails
+            if _send_email(gmail_address, gmail_app_password, to, subject_base, rep_html):
+                section_labels = [label for label, _ in sections]
+                print(f"    SENT: {rep_name} ({', '.join(to)}) -- {total_events} events across {', '.join(section_labels)}")
+                sent += 1
+            else:
+                print(f"    FAIL: {rep_name}")
+                failed += 1
+    else:
+        print(f"\n  [Tier 3] Safety rep distribution -- SKIPPED (no events)")
+
+    # --- Tier 4: Manager escalation (RED events + repeat offenders) ---
+    if events:
+        print(f"\n  [Tier 4] Manager escalation (RED + repeat offenders)...")
+        red_events = [e for e in events if e["tier"] == "RED"]
+
+        # Build repeat offender lookup by (division, yard)
+        driver_counts = Counter(e["driver"] for e in events if e["driver"] != "Unknown")
+        repeat_drivers = {n for n, c in driver_counts.items() if c >= 3}
+
+        # Group RED events and repeat offenders by (division, yard)
+        escalation_data = {}  # (div, yard) -> {"red": [...], "repeats": [...]}
+        for e in red_events:
+            key = (e["division"], e["yard"])
+            escalation_data.setdefault(key, {"red": [], "repeats": []})
+            escalation_data[key]["red"].append(e)
+
+        for driver_name in repeat_drivers:
+            driver_evts = [e for e in events if e["driver"] == driver_name]
+            worst = max(driver_evts, key=lambda x: x["overspeed"])
+            key = (worst["division"], worst["yard"])
+            escalation_data.setdefault(key, {"red": [], "repeats": []})
+            escalation_data[key]["repeats"].append(
+                (driver_name, driver_counts[driver_name], worst)
+            )
+
+        if not escalation_data:
+            print(f"    No RED events or repeat offenders -- no escalations needed")
+        else:
+            for (div, yard), data in escalation_data.items():
+                manager_info = MANAGER_MAP.get((div, yard))
+                if not manager_info:
+                    # Try parent division (empty yard) for non-yard divisions
+                    if yard:
+                        manager_info = MANAGER_MAP.get((div, ""))
+                    if not manager_info:
+                        print(f"    SKIP: {div}/{yard or '(all)'} -- no manager configured")
+                        skipped += 1
+                        continue
+
+                escalation_html = _build_manager_escalation_html(
+                    div, yard, data["red"], data["repeats"], yesterday_date
+                )
+
+                to = test_to or manager_info["emails"]
+                cc = None
+                if not TEST_MODE:
+                    cc_addr = manager_info.get("cc")
+                    cc = [cc_addr] if cc_addr else None
+
+                area_label = f"{div} - {yard}" if yard else div
+                escalation_subject = f"SPEEDING ESCALATION: {area_label} - {report_date_str}"
+                if _send_email(gmail_address, gmail_app_password, to, escalation_subject, escalation_html, cc_list=cc):
+                    cc_note = f" (CC: {', '.join(cc)})" if cc else ""
+                    print(f"    SENT: {area_label} -> {', '.join(to)}{cc_note} -- {len(data['red'])} RED, {len(data['repeats'])} repeat offenders")
+                    sent += 1
+                else:
+                    print(f"    FAIL: {area_label}")
+                    failed += 1
+    else:
+        print(f"\n  [Tier 4] Manager escalation -- SKIPPED (no events)")
+
+    print(f"\n  Distribution complete: {sent} sent, {skipped} skipped, {failed} failed")
+
+
+# ==============================================================================
+# SEND EMAIL (LEGACY - kept for backward compatibility)
 # ==============================================================================
 
 def send_email_report(html_body, docx_path, yesterday_date):
@@ -1193,17 +1884,11 @@ def main():
     doc.save(output_file)
     print(f"    Saved: {output_file}")
 
-    # Save events as JSON for safety rep distribution script
-    json_file = f"speeding_events_{date_str}.json"
-    with open(json_file, "w") as jf:
-        json.dump(events, jf)
-    print(f"    Saved events JSON: {json_file}")
-
     print("\n[5] Building HTML email...")
     html_body = build_html_report(events, grouped, yesterday)
 
-    print("[6] Sending email...")
-    send_email_report(html_body, output_file, yesterday)
+    print("\n[6] Sending tiered emails...")
+    send_tiered_emails(events, grouped, yesterday, output_file, html_body)
 
     print("\n" + "=" * 80)
     print("COMPLETE")

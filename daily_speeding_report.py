@@ -1272,7 +1272,7 @@ def create_escalation_word_document(division, yard, red_events, repeat_events, y
     """Build a Word doc for manager escalation with RED events and repeat offenders.
 
     red_events: list of RED-tier events
-    repeat_events: list of (driver_name, count, worst_event) tuples
+    repeat_events: list of (driver_name, count, worst_event, all_events) tuples
     """
     doc = _init_landscape_doc(divisions=[division])
     now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
@@ -1329,12 +1329,20 @@ def create_escalation_word_document(division, yard, red_events, repeat_events, y
         run = p.add_run("REPEAT OFFENDERS -- 3+ EVENTS YESTERDAY")
         _set_run_font(run, 14, bold=True, color=RGBColor(192, 0, 0))
 
-        for name, count, worst in repeat_events:
+        for entry in repeat_events:
+            name, count, worst = entry[0], entry[1], entry[2]
+            all_evts = entry[3] if len(entry) > 3 else []
+
             p = doc.add_paragraph()
             run = p.add_run(f"  {name}: {count} events")
             _set_run_font(run, 10, bold=True, color=RGBColor(192, 0, 0))
             run2 = p.add_run(f" (worst: +{worst['overspeed']} over at {worst['speed']} mph)")
             _set_run_font(run2, 10)
+
+            if all_evts:
+                sorted_evts = sorted(all_evts, key=lambda x: x["overspeed"], reverse=True)
+                _add_event_table(doc, sorted_evts)
+                doc.add_paragraph()
 
         doc.add_paragraph()
 
@@ -1795,7 +1803,7 @@ def _build_manager_escalation_html(division, yard, red_events, repeat_events, ye
     """Build escalation email for a manager showing RED events and/or repeat offenders.
 
     red_events: list of RED-tier events in their division/yard
-    repeat_events: list of (driver_name, count, worst_event) tuples for repeat offenders
+    repeat_events: list of (driver_name, count, worst_event, all_events) tuples for repeat offenders
     """
     now_central = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
 
@@ -1843,10 +1851,16 @@ def _build_manager_escalation_html(division, yard, red_events, repeat_events, ye
     # Repeat offenders
     if repeat_events:
         repeat_html = ""
-        for name, count, worst in repeat_events:
-            repeat_html += f"""<div style="background:#fff5f5;border-left:4px solid {C_RED};padding:8px 12px;margin:6px 0;font-size:12px;">
+        for entry in repeat_events:
+            name, count, worst = entry[0], entry[1], entry[2]
+            all_evts = entry[3] if len(entry) > 3 else []
+
+            repeat_html += f"""<div style="background:#fff5f5;border-left:4px solid {C_RED};padding:8px 12px;margin:6px 0 2px 0;font-size:12px;">
   <b style="color:{C_RED};">{_h(name)}: {count} events</b> (worst: +{worst['overspeed']} over at {worst['speed']} mph in a {worst['posted_speed']} zone)
 </div>"""
+            if all_evts:
+                sorted_evts = sorted(all_evts, key=lambda x: x["overspeed"], reverse=True)
+                repeat_html += f"""<div style="margin:0 0 12px 0;">{_build_rep_event_table_html(sorted_evts)}</div>"""
 
         parts.append(f"""
 <tr><td style="padding:10px 30px;">
@@ -2041,7 +2055,7 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
             key = (worst["division"], worst["yard"])
             escalation_data.setdefault(key, {"red": [], "repeats": []})
             escalation_data[key]["repeats"].append(
-                (driver_name, driver_counts[driver_name], worst)
+                (driver_name, driver_counts[driver_name], worst, driver_evts)
             )
 
         if not escalation_data:

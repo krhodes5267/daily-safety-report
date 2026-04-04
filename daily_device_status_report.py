@@ -525,12 +525,12 @@ def parse_device_csv(csv_source):
 # IFTA MILEAGE (for OOS anomaly detection)
 # ==============================================================================
 
-def fetch_oos_mileage(oos_vehicle_numbers, days=7):
-    """Fetch recent IFTA trip miles for OOS-active vehicles.
+def fetch_recent_mileage(vehicle_numbers, days=7):
+    """Fetch recent IFTA trip miles for a set of vehicles.
 
     Returns dict: vehicle_number -> total miles in the last N days.
     """
-    if not oos_vehicle_numbers:
+    if not vehicle_numbers:
         return {}
 
     headers = {"X-Api-Key": MOTIVE_API_KEY}
@@ -563,7 +563,7 @@ def fetch_oos_mileage(oos_vehicle_numbers, days=7):
                 trip = wrapper.get("ifta_trip", wrapper)
                 vehicle = trip.get("vehicle", {})
                 vnum = vehicle.get("number", "") if isinstance(vehicle, dict) else str(vehicle)
-                if vnum in oos_vehicle_numbers:
+                if vnum in vehicle_numbers:
                     miles = trip.get("distance", 0) or 0
                     vehicle_miles[vnum] = vehicle_miles.get(vnum, 0) + miles
 
@@ -940,10 +940,10 @@ def create_excel_report(issues, grouped, report_date):
     # ---- PER-YARD SHEETS ----
     detail_headers = [
         "Vehicle ID", "Availability", "Last Known Location",
-        "Last Active", "Days\nDisconnected", "Status",
+        "Last Active", "Days\nDisconnected", "Miles\n(7 days)", "Status",
         "Issue Type", "Device(s) Affected", "Recommended Action",
     ]
-    detail_widths = [30, 16, 35, 22, 12, 10, 18, 20, 40]
+    detail_widths = [30, 16, 35, 22, 12, 10, 10, 18, 20, 40]
 
     for yard in YARD_ORDER:
         yard_issues = grouped.get(yard, [])
@@ -1000,12 +1000,14 @@ def create_excel_report(issues, grouped, report_date):
             if issue["oos_active"]:
                 avail_text = "OOS - Active"
 
+            miles_val = issue.get("recent_miles", 0)
             values = [
                 issue["vehicle_number"],
                 avail_text,
                 issue["location"],
                 issue["last_active"],
                 issue["days_disconnected"],
+                miles_val,
                 status_label,
                 issue["issue_type"],
                 issue["devices_affected"],
@@ -1037,7 +1039,17 @@ def create_excel_report(issues, grouped, report_date):
                     cell.font = FONT_RED_BOLD if issue["is_escalation"] else FONT_BLACK_BOLD
                     if row_fill:
                         cell.fill = row_fill
-                elif col == 6:  # Status (NEW / ESCALATION)
+                elif col == 6:  # Miles (7 days)
+                    cell.alignment = ALIGN_CENTER
+                    if miles_val > 50:
+                        cell.font = FONT_RED_BOLD
+                    elif miles_val > 0:
+                        cell.font = Font(name="Calibri", size=10, bold=True, color=ORANGE)
+                    else:
+                        cell.font = Font(name="Calibri", size=10, color="999999")
+                    if row_fill:
+                        cell.fill = row_fill
+                elif col == 7:  # Status (NEW / ESCALATION)
                     cell.alignment = ALIGN_CENTER
                     if val == "NEW":
                         cell.font = Font(name="Calibri", size=10, bold=True, color="00B050")
@@ -1047,7 +1059,7 @@ def create_excel_report(issues, grouped, report_date):
                         cell.font = FONT_BLACK
                     if row_fill:
                         cell.fill = row_fill
-                elif col == 7:  # Issue Type -- color-coded
+                elif col == 8:  # Issue Type -- color-coded
                     cell.fill = _issue_type_fill(val) or (row_fill if row_fill else PatternFill())
                     cell.font = _issue_type_font(val)
                     cell.alignment = ALIGN_CENTER
@@ -1066,9 +1078,10 @@ def create_excel_report(issues, grouped, report_date):
 
         esc_headers = [
             "Vehicle ID", "Yard", "Availability", "Days\nDisconnected",
-            "Issue Type", "Device(s) Affected", "Last Active", "Recommended Action",
+            "Miles\n(7 days)", "Issue Type", "Device(s) Affected", "Last Active",
+            "Recommended Action",
         ]
-        esc_widths = [30, 16, 16, 12, 18, 20, 22, 40]
+        esc_widths = [30, 16, 16, 12, 10, 18, 20, 22, 40]
         for i, w in enumerate(esc_widths, 1):
             ws.column_dimensions[get_column_letter(i)].width = w
 
@@ -1076,14 +1089,14 @@ def create_excel_report(issues, grouped, report_date):
             ws, 1,
             f"ESCALATION -- Devices Disconnected 7+ Days  (as of {date_str})",
             PatternFill(start_color=RED, end_color=RED, fill_type="solid"),
-            FONT_WHITE_BOLD_14, max_col=8,
+            FONT_WHITE_BOLD_14, max_col=9,
         )
         ws.row_dimensions[1].height = 30
 
         _apply_header_row(
             ws, 2,
             f"{len(escalation_issues)} vehicle(s) have been disconnected for 7 or more days and require management attention",
-            FILL_MED_BLUE, Font(name="Calibri", size=10, bold=True, color=WHITE), max_col=8,
+            FILL_MED_BLUE, Font(name="Calibri", size=10, bold=True, color=WHITE), max_col=9,
         )
         ws.row_dimensions[2].height = 22
 
@@ -1095,9 +1108,10 @@ def create_excel_report(issues, grouped, report_date):
             is_alt = idx % 2 == 1
             row_fill = FILL_ALT_ROW if is_alt else None
 
+            esc_miles = issue.get("recent_miles", 0)
             values = [
                 issue["vehicle_number"], issue["yard"], issue["availability"],
-                issue["days_disconnected"], issue["issue_type"],
+                issue["days_disconnected"], esc_miles, issue["issue_type"],
                 issue["devices_affected"], issue["last_active"],
                 issue["recommended_action"],
             ]
@@ -1111,11 +1125,19 @@ def create_excel_report(issues, grouped, report_date):
                 elif col == 4:
                     cell.font = FONT_RED_BOLD
                     cell.alignment = ALIGN_CENTER
-                elif col == 5:
+                elif col == 5:  # Miles
+                    cell.alignment = ALIGN_CENTER
+                    if esc_miles > 50:
+                        cell.font = FONT_RED_BOLD
+                    elif esc_miles > 0:
+                        cell.font = Font(name="Calibri", size=10, bold=True, color=ORANGE)
+                    else:
+                        cell.font = Font(name="Calibri", size=10, color="999999")
+                elif col == 6:
                     cell.fill = _issue_type_fill(val) or PatternFill()
                     cell.font = _issue_type_font(val)
                     cell.alignment = ALIGN_CENTER
-                if row_fill and col not in (5,):
+                if row_fill and col not in (6,):
                     cell.fill = row_fill
             data_row += 1
 
@@ -1216,10 +1238,22 @@ def _build_issue_rows_html(issue_list):
         days_val = issue["days_disconnected"]
         days_style = f"color:#{RED};font-weight:bold;" if issue["is_escalation"] else "font-weight:bold;"
 
+        miles = issue.get("recent_miles", 0)
+        if miles > 50:
+            miles_style = f"color:#{RED};font-weight:bold;"
+            miles_text = f"{miles}"
+        elif miles > 0:
+            miles_style = f"color:#{ORANGE};font-weight:bold;"
+            miles_text = f"{miles}"
+        else:
+            miles_style = "color:#999;"
+            miles_text = "0"
+
         rows.append(f"""    <tr style="background:{bg};">
       <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(issue["vehicle_number"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;{avail_style}">{_h(avail_text)}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;{days_style}">{days_val}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;{miles_style}">{miles_text}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;">{status_html}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["location"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["last_active"])}</td>
@@ -1237,6 +1271,7 @@ def _build_issue_table_header_html(header_bg):
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Vehicle ID</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Availability</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Days</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Miles (7d)</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Status</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Location</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Active</th>
@@ -1256,10 +1291,27 @@ def _build_issue_table_html(yard_issues, yard_name):
     in_svc = [i for i in yard_issues if i["availability"] == "In Service"]
     oos = [i for i in yard_issues if i["availability"] != "In Service"]
 
+    # Sort in-service by priority: gateway down first, then by miles descending
+    # (camera-only with miles = safety concern, camera-only without miles = yard sitting)
+    def _in_svc_sort_key(issue):
+        # Priority 0: Gateway down (Powered Off) -- always top
+        if issue["issue_type"] == "Powered Off":
+            return (0, -issue.get("recent_miles", 0))
+        # Priority 1: Camera-only WITH miles -- running without camera
+        if issue.get("recent_miles", 0) > 0:
+            return (1, -issue.get("recent_miles", 0))
+        # Priority 2: Camera-only WITHOUT miles -- sitting in yard
+        return (2, -issue.get("days_disconnected", 0))
+
+    in_svc_sorted = sorted(in_svc, key=_in_svc_sort_key)
+
+    # Count active camera-only issues (has miles, truck is running)
+    cam_only_active = [i for i in in_svc if i["devices_affected"] == "Camera Only" and i.get("recent_miles", 0) > 0]
+    cam_only_yard = [i for i in in_svc if i["devices_affected"] == "Camera Only" and i.get("recent_miles", 0) == 0]
+
     parts = []
     powered = len([i for i in yard_issues if i["issue_type"] == "Powered Off"])
-    cam_disc = len([i for i in yard_issues if i["issue_type"] == "Camera Powered Off"])
-    inact = len([i for i in yard_issues if i["issue_type"] == "Inactive 30+ Days"])
+    cam_disc = len([i for i in yard_issues if i["issue_type"] in ("Camera Powered Off", "Inactive 30+ Days") and i["devices_affected"] == "Camera Only"])
     y_new = len([i for i in yard_issues if i["is_new"]])
 
     parts.append(f"""
@@ -1267,13 +1319,13 @@ def _build_issue_table_html(yard_issues, yard_name):
 <tr><td style="padding:15px 40px;">
   <h2 style="color:#{DARK_BLUE};margin:0;font-size:18px;">{_h(yard_name.upper())} CASING</h2>
   <div style="background:#{MED_BLUE};color:#fff;padding:8px 15px;margin:8px 0;font-size:12px;font-weight:bold;">
-    Total: {len(yard_issues)} | In Service: {len(in_svc)} | Out of Service: {len(oos)} | Powered Off: {powered} | Camera Disconnected: {cam_disc} | Inactive 30+: {inact} | NEW: {y_new}
+    Total: {len(yard_issues)} | In Service: {len(in_svc)} | Out of Service: {len(oos)} | Powered Off: {powered} | Camera Only: {cam_disc}{f" ({len(cam_only_active)} active)" if cam_only_active else ""} | NEW: {y_new}
   </div>""")
 
     # In-service issues (primary section)
-    if in_svc:
+    if in_svc_sorted:
         parts.append(_build_issue_table_header_html(f"#{MED_BLUE}"))
-        parts.append(_build_issue_rows_html(in_svc))
+        parts.append(_build_issue_rows_html(in_svc_sorted))
         parts.append("  </table>")
     else:
         parts.append(f'  <div style="padding:10px 0;color:#666;font-style:italic;">No in-service vehicles with device issues.</div>')
@@ -1967,21 +2019,22 @@ def main():
     if oos_active:
         print(f"    OOS with recent GPS activity: {oos_active} (status update needed)")
 
-    # Step 4b: Fetch recent mileage for OOS-active vehicles
-    oos_active_issues = [i for i in issues if i["oos_active"]]
-    if oos_active_issues:
-        print(f"\n[4b] Fetching recent mileage for {len(oos_active_issues)} OOS-active vehicles...")
-        oos_vnums = {i["vehicle_number"] for i in oos_active_issues}
-        oos_miles = fetch_oos_mileage(oos_vnums, days=7)
+    # Step 4b: Fetch recent mileage for all vehicles with issues
+    if issues:
+        all_vnums = {i["vehicle_number"] for i in issues}
+        print(f"\n[4b] Fetching recent mileage for {len(all_vnums)} vehicles with issues...")
+        all_miles = fetch_recent_mileage(all_vnums, days=7)
         for issue in issues:
-            if issue["oos_active"]:
-                issue["recent_miles"] = oos_miles.get(issue["vehicle_number"], 0)
-        for vnum, miles in sorted(oos_miles.items(), key=lambda x: x[1], reverse=True):
-            if miles > 0:
+            issue["recent_miles"] = all_miles.get(issue["vehicle_number"], 0)
+        miles_found = {v: m for v, m in all_miles.items() if m > 0}
+        if miles_found:
+            print(f"    {len(miles_found)} vehicles with recent miles:")
+            for vnum, miles in sorted(miles_found.items(), key=lambda x: x[1], reverse=True)[:10]:
                 print(f"      {vnum}: {miles} miles (last 7 days)")
-    else:
-        for issue in issues:
-            issue["recent_miles"] = 0
+            if len(miles_found) > 10:
+                print(f"      ... and {len(miles_found) - 10} more")
+        else:
+            print(f"    No IFTA trip miles found for any issue vehicles")
 
     # Step 5: Group by yard
     print("\n[5] Grouping by yard...")

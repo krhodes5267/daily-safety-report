@@ -522,6 +522,65 @@ def parse_device_csv(csv_source):
 
 
 # ==============================================================================
+# IFTA MILEAGE (for OOS anomaly detection)
+# ==============================================================================
+
+def fetch_oos_mileage(oos_vehicle_numbers, days=7):
+    """Fetch recent IFTA trip miles for OOS-active vehicles.
+
+    Returns dict: vehicle_number -> total miles in the last N days.
+    """
+    if not oos_vehicle_numbers:
+        return {}
+
+    headers = {"X-Api-Key": MOTIVE_API_KEY}
+    now = datetime.now(timezone.utc).astimezone(CENTRAL_TZ)
+    start_date = (now - timedelta(days=days)).strftime("%Y-%m-%d")
+    end_date = now.strftime("%Y-%m-%d")
+
+    vehicle_miles = {}
+    page = 1
+    while True:
+        try:
+            resp = requests.get(
+                f"{MOTIVE_BASE_URL}/ifta/trips",
+                headers=headers,
+                params={
+                    "per_page": 100,
+                    "page_no": page,
+                    "start_date": start_date,
+                    "end_date": end_date,
+                },
+                timeout=60,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            trips = data.get("ifta_trips", [])
+            if not trips:
+                break
+
+            for wrapper in trips:
+                trip = wrapper.get("ifta_trip", wrapper)
+                vehicle = trip.get("vehicle", {})
+                vnum = vehicle.get("number", "") if isinstance(vehicle, dict) else str(vehicle)
+                if vnum in oos_vehicle_numbers:
+                    miles = trip.get("distance", 0) or 0
+                    vehicle_miles[vnum] = vehicle_miles.get(vnum, 0) + miles
+
+            pag = data.get("pagination", {})
+            total_count = pag.get("total", 0)
+            if page * 100 >= total_count:
+                break
+            page += 1
+
+        except Exception as e:
+            print(f"    Warning: IFTA trips page {page} failed: {e}")
+            break
+
+    return {vnum: round(miles, 1) for vnum, miles in vehicle_miles.items()}
+
+
+# ==============================================================================
 # ISSUE CLASSIFICATION
 # ==============================================================================
 
@@ -616,6 +675,7 @@ def classify_issues(vehicles, locations, csv_devices):
                 "is_new": d < NEW_THRESHOLD_DAYS,
                 "is_escalation": d >= MANAGER_ESCALATION_DAYS,
                 "oos_active": oos_active,
+                "recent_miles": 0,
             }
 
         # ===== CSV-BASED CLASSIFICATION (ground truth) =====
@@ -1262,6 +1322,48 @@ def _build_html_footer(mode, gen_str):
 </body></html>"""
 
 
+def _build_oos_anomaly_html(oos_active_list):
+    """Build the OOS anomalies section with mileage data."""
+    parts = []
+    # Sort by miles descending -- trucks with real miles are the priority
+    sorted_oos = sorted(oos_active_list, key=lambda i: i.get("recent_miles", 0), reverse=True)
+
+    parts.append(f"""
+<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{ORANGE};margin:15px 0 0 0;"></td></tr>
+<tr><td style="padding:15px 40px;">
+  <h2 style="color:#{ORANGE};margin:0 0 10px 0;font-size:16px;">OOS ANOMALIES -- {len(sorted_oos)} Vehicle{"s" if len(sorted_oos) != 1 else ""}</h2>
+  <div style="font-size:12px;color:#666;margin-bottom:8px;">Marked Out Of Service in Motive but showing recent GPS activity. Mileage shown is from IFTA trip data (last 7 days). High mileage = truck is running jobs and needs status updated.</div>
+  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
+    <tr style="background:#{MED_BLUE};">
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Vehicle ID</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Yard</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Last GPS Activity</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Miles (7 days)</th>
+    </tr>""")
+
+    for i in sorted_oos:
+        miles = i.get("recent_miles", 0)
+        if miles > 50:
+            miles_style = f"color:#{RED};font-weight:bold;"
+            miles_text = f"{miles}"
+        elif miles > 0:
+            miles_style = f"color:#{ORANGE};font-weight:bold;"
+            miles_text = f"{miles}"
+        else:
+            miles_style = "color:#999;"
+            miles_text = "0"
+
+        parts.append(f"""    <tr>
+      <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(i["vehicle_number"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(i["yard"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(i["last_active"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;{miles_style}">{miles_text}</td>
+    </tr>""")
+
+    parts.append("  </table>\n</td></tr>")
+    return "\n".join(parts)
+
+
 def _build_html_legend():
     """Build the color legend section."""
     return f"""
@@ -1398,24 +1500,7 @@ def build_html_email(issues, grouped, report_date, csv_available,
     # OOS-Active vehicles callout (full mode only)
     oos_active_list = [i for i in display_issues if i["oos_active"]]
     if oos_active_list and mode == "full":
-        parts.append(f"""
-<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{ORANGE};margin:15px 0 0 0;"></td></tr>
-<tr><td style="padding:15px 40px;">
-  <h2 style="color:#{ORANGE};margin:0 0 10px 0;font-size:16px;">OOS VEHICLES WITH RECENT ACTIVITY -- STATUS UPDATE NEEDED</h2>
-  <div style="font-size:12px;margin-bottom:10px;">These vehicles are marked Out Of Service in Motive but show recent GPS activity (within {OOS_RECHECK_HOURS}h). Someone may have fixed and returned the truck without updating Motive.</div>
-  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
-    <tr style="background:#{MED_BLUE};">
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Vehicle ID</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Yard</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Last GPS Activity</th>
-    </tr>""")
-        for i in oos_active_list:
-            parts.append(f"""    <tr>
-      <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(i["vehicle_number"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(i["yard"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(i["last_active"])}</td>
-    </tr>""")
-        parts.append("  </table>\n</td></tr>")
+        parts.append(_build_oos_anomaly_html(oos_active_list))
 
     # Legend (skip for escalation-only emails)
     if mode != "escalation":
@@ -1639,24 +1724,7 @@ def _build_director_email(issues, grouped, report_date, csv_available,
 
     # ---- SECTION 4: OOS ANOMALIES ----
     if oos_active_list:
-        parts.append(f"""
-<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{ORANGE};margin:15px 0 0 0;"></td></tr>
-<tr><td style="padding:15px 40px;">
-  <h2 style="color:#{ORANGE};margin:0 0 10px 0;font-size:16px;">OOS ANOMALIES -- {len(oos_active_list)} Vehicle{"s" if len(oos_active_list) != 1 else ""}</h2>
-  <div style="font-size:12px;color:#666;margin-bottom:8px;">Marked Out Of Service in Motive but showing recent GPS activity. Somebody fixed the truck but didn't update Motive.</div>
-  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
-    <tr style="background:#{MED_BLUE};">
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Vehicle ID</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Yard</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;">Last GPS Activity</th>
-    </tr>""")
-        for i in oos_active_list:
-            parts.append(f"""    <tr>
-      <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(i["vehicle_number"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(i["yard"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(i["last_active"])}</td>
-    </tr>""")
-        parts.append("  </table>\n</td></tr>")
+        parts.append(_build_oos_anomaly_html(oos_active_list))
 
     # Attachment note
     parts.append(f"""
@@ -1898,6 +1966,22 @@ def main():
     print(f"    ESCALATION (7+ days): {esc_count}")
     if oos_active:
         print(f"    OOS with recent GPS activity: {oos_active} (status update needed)")
+
+    # Step 4b: Fetch recent mileage for OOS-active vehicles
+    oos_active_issues = [i for i in issues if i["oos_active"]]
+    if oos_active_issues:
+        print(f"\n[4b] Fetching recent mileage for {len(oos_active_issues)} OOS-active vehicles...")
+        oos_vnums = {i["vehicle_number"] for i in oos_active_issues}
+        oos_miles = fetch_oos_mileage(oos_vnums, days=7)
+        for issue in issues:
+            if issue["oos_active"]:
+                issue["recent_miles"] = oos_miles.get(issue["vehicle_number"], 0)
+        for vnum, miles in sorted(oos_miles.items(), key=lambda x: x[1], reverse=True):
+            if miles > 0:
+                print(f"      {vnum}: {miles} miles (last 7 days)")
+    else:
+        for issue in issues:
+            issue["recent_miles"] = 0
 
     # Step 5: Group by yard
     print("\n[5] Grouping by yard...")

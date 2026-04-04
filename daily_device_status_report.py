@@ -1291,12 +1291,12 @@ def build_html_email(issues, grouped, report_date, csv_available,
             display_grouped[yard_filter] = grouped[yard_filter]
     elif mode == "escalation":
         if yard_filter:
-            display_issues = [i for i in issues if i["is_escalation"] and i["yard"] == yard_filter]
+            display_issues = [i for i in issues if i["is_escalation"] and i["yard"] == yard_filter and i["availability"] == "In Service"]
         else:
-            display_issues = [i for i in issues if i["is_escalation"]]
+            display_issues = [i for i in issues if i["is_escalation"] and i["availability"] == "In Service"]
         display_grouped = OrderedDict()
         for yard in YARD_ORDER:
-            esc = [i for i in grouped.get(yard, []) if i["is_escalation"]]
+            esc = [i for i in grouped.get(yard, []) if i["is_escalation"] and i["availability"] == "In Service"]
             if yard_filter and yard != yard_filter:
                 continue
             if esc:
@@ -1717,7 +1717,7 @@ def send_tiered_emails(issues, grouped, report_date, xlsx_path, csv_available):
         mgr_emails = MANAGER_RECIPIENTS.get(yard, "")
         if not mgr_emails.strip():
             continue
-        yard_escalations = [i for i in grouped.get(yard, []) if i["is_escalation"]]
+        yard_escalations = [i for i in grouped.get(yard, []) if i["is_escalation"] and i["availability"] == "In Service"]
         if not yard_escalations:
             continue
         print(f"\n  [Manager - {yard}] Escalation alert ({len(yard_escalations)} issues)...")

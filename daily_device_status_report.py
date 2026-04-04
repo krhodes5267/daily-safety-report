@@ -1131,35 +1131,10 @@ def _issue_html_color(issue_type):
     return "#EEEEEE", f"#{BLACK}"
 
 
-def _build_issue_table_html(yard_issues, yard_name):
-    """Build an HTML table of issues for a yard section (reused across modes)."""
-    parts = []
-    powered = len([i for i in yard_issues if i["issue_type"] == "Powered Off"])
-    cam_disc = len([i for i in yard_issues if i["issue_type"] == "Camera Powered Off"])
-    inact = len([i for i in yard_issues if i["issue_type"] == "Inactive 30+ Days"])
-    y_new = len([i for i in yard_issues if i["is_new"]])
-
-    parts.append(f"""
-<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{DARK_BLUE};margin:15px 0 0 0;"></td></tr>
-<tr><td style="padding:15px 40px;">
-  <h2 style="color:#{DARK_BLUE};margin:0;font-size:18px;">{_h(yard_name.upper())} CASING</h2>
-  <div style="background:#{MED_BLUE};color:#fff;padding:8px 15px;margin:8px 0;font-size:12px;font-weight:bold;">
-    Total: {len(yard_issues)} | Powered Off: {powered} | Camera Disconnected: {cam_disc} | Inactive 30+: {inact} | NEW: {y_new}
-  </div>
-  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
-    <tr style="background:#{MED_BLUE};">
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Vehicle ID</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Availability</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Days</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Status</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Location</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Active</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Issue Type</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Device(s)</th>
-      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Action</th>
-    </tr>""")
-
-    for idx, issue in enumerate(yard_issues):
+def _build_issue_rows_html(issue_list):
+    """Build HTML table rows for a list of issues."""
+    rows = []
+    for idx, issue in enumerate(issue_list):
         bg = f"#{ALT_ROW}" if idx % 2 == 1 else "#ffffff"
         issue_bg, issue_fg = _issue_html_color(issue["issue_type"])
 
@@ -1181,7 +1156,7 @@ def _build_issue_table_html(yard_issues, yard_name):
         days_val = issue["days_disconnected"]
         days_style = f"color:#{RED};font-weight:bold;" if issue["is_escalation"] else "font-weight:bold;"
 
-        parts.append(f"""    <tr style="background:{bg};">
+        rows.append(f"""    <tr style="background:{bg};">
       <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(issue["vehicle_number"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;{avail_style}">{_h(avail_text)}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;{days_style}">{days_val}</td>
@@ -1192,8 +1167,68 @@ def _build_issue_table_html(yard_issues, yard_name):
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["devices_affected"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["recommended_action"])}</td>
     </tr>""")
+    return "\n".join(rows)
 
-    parts.append("  </table>\n</td></tr>")
+
+def _build_issue_table_header_html(header_bg):
+    """Build the column header row for an issue table."""
+    return f"""  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
+    <tr style="background:{header_bg};">
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Vehicle ID</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Availability</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Days</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Status</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Location</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Active</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Issue Type</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Device(s)</th>
+      <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Action</th>
+    </tr>"""
+
+
+def _build_issue_table_html(yard_issues, yard_name):
+    """Build an HTML table of issues for a yard section (reused across modes).
+
+    Splits in-service and out-of-service into separate sections.
+    In-service issues appear first; OOS vehicles appear in a muted
+    'For Awareness' section below.
+    """
+    in_svc = [i for i in yard_issues if i["availability"] == "In Service"]
+    oos = [i for i in yard_issues if i["availability"] != "In Service"]
+
+    parts = []
+    powered = len([i for i in yard_issues if i["issue_type"] == "Powered Off"])
+    cam_disc = len([i for i in yard_issues if i["issue_type"] == "Camera Powered Off"])
+    inact = len([i for i in yard_issues if i["issue_type"] == "Inactive 30+ Days"])
+    y_new = len([i for i in yard_issues if i["is_new"]])
+
+    parts.append(f"""
+<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{DARK_BLUE};margin:15px 0 0 0;"></td></tr>
+<tr><td style="padding:15px 40px;">
+  <h2 style="color:#{DARK_BLUE};margin:0;font-size:18px;">{_h(yard_name.upper())} CASING</h2>
+  <div style="background:#{MED_BLUE};color:#fff;padding:8px 15px;margin:8px 0;font-size:12px;font-weight:bold;">
+    Total: {len(yard_issues)} | In Service: {len(in_svc)} | Out of Service: {len(oos)} | Powered Off: {powered} | Camera Disconnected: {cam_disc} | Inactive 30+: {inact} | NEW: {y_new}
+  </div>""")
+
+    # In-service issues (primary section)
+    if in_svc:
+        parts.append(_build_issue_table_header_html(f"#{MED_BLUE}"))
+        parts.append(_build_issue_rows_html(in_svc))
+        parts.append("  </table>")
+    else:
+        parts.append(f'  <div style="padding:10px 0;color:#666;font-style:italic;">No in-service vehicles with device issues.</div>')
+
+    # OOS issues (awareness section)
+    if oos:
+        parts.append(f"""
+  <div style="background:#999999;color:#fff;padding:6px 15px;margin:15px 0 0 0;font-size:11px;font-weight:bold;">
+    OUT OF SERVICE -- FOR AWARENESS ({len(oos)} vehicle{"s" if len(oos) != 1 else ""})
+  </div>""")
+        parts.append(_build_issue_table_header_html("#999999"))
+        parts.append(_build_issue_rows_html(oos))
+        parts.append("  </table>")
+
+    parts.append("</td></tr>")
     return "\n".join(parts)
 
 
@@ -1468,13 +1503,10 @@ def _build_director_email(issues, grouped, report_date, csv_available,
     parts.append("  </table>\n</td></tr>")
 
     # ---- SECTION 2: WHAT'S NEW TODAY ----
-    if new_issues:
-        parts.append(f"""
-<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #00B050;margin:15px 0 0 0;"></td></tr>
-<tr><td style="padding:15px 40px;">
-  <h2 style="color:#00B050;margin:0 0 10px 0;font-size:16px;">WHAT'S NEW TODAY -- {len(new_issues)} Vehicle{"s" if len(new_issues) != 1 else ""}</h2>
-  <div style="font-size:12px;color:#666;margin-bottom:8px;">Disconnected in the last 2 days. Just appeared on the report.</div>
-  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
+    new_in_svc = [i for i in new_issues if i["availability"] == "In Service"]
+    new_oos = [i for i in new_issues if i["availability"] != "In Service"]
+
+    new_table_header = f"""  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
     <tr style="background:#{MED_BLUE};">
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Vehicle ID</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Yard</th>
@@ -1482,20 +1514,48 @@ def _build_director_email(issues, grouped, report_date, csv_available,
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Device(s)</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Last Location</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Action</th>
-    </tr>""")
+    </tr>"""
 
-        for idx, issue in enumerate(new_issues):
+    def _new_table_rows(issue_list):
+        rows = ""
+        for idx, issue in enumerate(issue_list):
             bg = f"#{ALT_ROW}" if idx % 2 == 1 else "#ffffff"
             issue_bg, issue_fg = _issue_html_color(issue["issue_type"])
-            parts.append(f"""    <tr style="background:{bg};">
+            rows += f"""    <tr style="background:{bg};">
       <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(issue["vehicle_number"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["yard"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;background:{issue_bg};color:{issue_fg};font-weight:bold;text-align:center;">{_h(issue["issue_type"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["devices_affected"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["location"])}</td>
       <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["recommended_action"])}</td>
-    </tr>""")
-        parts.append("  </table>\n</td></tr>")
+    </tr>"""
+        return rows
+
+    if new_issues:
+        parts.append(f"""
+<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #00B050;margin:15px 0 0 0;"></td></tr>
+<tr><td style="padding:15px 40px;">
+  <h2 style="color:#00B050;margin:0 0 10px 0;font-size:16px;">WHAT'S NEW TODAY -- {len(new_in_svc)} In-Service{f", {len(new_oos)} OOS" if new_oos else ""}</h2>
+  <div style="font-size:12px;color:#666;margin-bottom:8px;">Disconnected in the last 2 days. Just appeared on the report.</div>""")
+
+        if new_in_svc:
+            parts.append(f"""{new_table_header}
+{_new_table_rows(new_in_svc)}
+  </table>""")
+        else:
+            parts.append('  <div style="padding:10px 0;color:#666;font-style:italic;">No new in-service disconnections.</div>')
+
+        if new_oos:
+            new_oos_header = new_table_header.replace(f"#{MED_BLUE}", "#999999")
+            parts.append(f"""
+  <div style="background:#999999;color:#fff;padding:6px 15px;margin:15px 0 0 0;font-size:11px;font-weight:bold;">
+    OUT OF SERVICE -- FOR AWARENESS ({len(new_oos)} new OOS vehicle{"s" if len(new_oos) != 1 else ""})
+  </div>
+{new_oos_header}
+{_new_table_rows(new_oos)}
+  </table>""")
+
+        parts.append("</td></tr>")
     else:
         parts.append(f"""
 <tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #00B050;margin:15px 0 0 0;"></td></tr>
@@ -1505,14 +1565,26 @@ def _build_director_email(issues, grouped, report_date, csv_available,
 </td></tr>""")
 
     # ---- SECTION 3: ESCALATION (7+ DAYS) ----
-    if esc_issues:
-        # Group escalation issues by yard for compact display
-        parts.append(f"""
-<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{RED};margin:15px 0 0 0;"></td></tr>
-<tr><td style="padding:15px 40px;">
-  <h2 style="color:#{RED};margin:0 0 10px 0;font-size:16px;">ESCALATION -- {len(esc_issues)} Vehicle{"s" if len(esc_issues) != 1 else ""} Disconnected 7+ Days</h2>
-  <div style="font-size:12px;color:#666;margin-bottom:8px;">These have been sitting unresolved. Safety reps and dispatch have been notified daily.</div>
-  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
+    esc_in_svc = [i for i in esc_issues if i["availability"] == "In Service"]
+    esc_oos = [i for i in esc_issues if i["availability"] != "In Service"]
+
+    def _esc_table_rows(esc_list):
+        rows = ""
+        for idx, issue in enumerate(esc_list):
+            bg = f"#{ALT_ROW}" if idx % 2 == 1 else "#ffffff"
+            issue_bg, issue_fg = _issue_html_color(issue["issue_type"])
+            avail_style = f"background:#{OOS_BG};color:#{RED};font-weight:bold;" if issue["availability"] == "Out Of Service" else ""
+            rows += f"""    <tr style="background:{bg};">
+      <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(issue["vehicle_number"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["yard"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;color:#{RED};font-weight:bold;">{issue["days_disconnected"]}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;{avail_style}">{_h(issue["availability"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;background:{issue_bg};color:{issue_fg};font-weight:bold;text-align:center;">{_h(issue["issue_type"])}</td>
+      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["recommended_action"])}</td>
+    </tr>"""
+        return rows
+
+    esc_table_header = f"""  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;">
     <tr style="background:#{MED_BLUE};">
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Vehicle ID</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Yard</th>
@@ -1520,21 +1592,43 @@ def _build_director_email(issues, grouped, report_date, csv_available,
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Availability</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:center;">Issue Type</th>
       <th style="padding:6px 8px;color:#fff;border:1px solid #ddd;text-align:left;">Action</th>
-    </tr>""")
+    </tr>"""
 
-        for idx, issue in enumerate(esc_issues):
-            bg = f"#{ALT_ROW}" if idx % 2 == 1 else "#ffffff"
-            issue_bg, issue_fg = _issue_html_color(issue["issue_type"])
-            avail_style = f"background:#{OOS_BG};color:#{RED};font-weight:bold;" if issue["availability"] == "Out Of Service" else ""
-            parts.append(f"""    <tr style="background:{bg};">
-      <td style="padding:5px 8px;border:1px solid #ddd;font-weight:bold;">{_h(issue["vehicle_number"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["yard"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;text-align:center;color:#{RED};font-weight:bold;">{issue["days_disconnected"]}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;{avail_style}">{_h(issue["availability"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;background:{issue_bg};color:{issue_fg};font-weight:bold;text-align:center;">{_h(issue["issue_type"])}</td>
-      <td style="padding:5px 8px;border:1px solid #ddd;">{_h(issue["recommended_action"])}</td>
-    </tr>""")
-        parts.append("  </table>\n</td></tr>")
+    if esc_in_svc:
+        parts.append(f"""
+<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{RED};margin:15px 0 0 0;"></td></tr>
+<tr><td style="padding:15px 40px;">
+  <h2 style="color:#{RED};margin:0 0 10px 0;font-size:16px;">ESCALATION -- {len(esc_in_svc)} In-Service Vehicle{"s" if len(esc_in_svc) != 1 else ""} Disconnected 7+ Days</h2>
+  <div style="font-size:12px;color:#666;margin-bottom:8px;">These have been sitting unresolved. Safety reps and dispatch have been notified daily.</div>
+{esc_table_header}
+{_esc_table_rows(esc_in_svc)}
+  </table>""")
+
+        if esc_oos:
+            esc_oos_header = esc_table_header.replace(f"#{MED_BLUE}", "#999999")
+            parts.append(f"""
+  <div style="background:#999999;color:#fff;padding:6px 15px;margin:15px 0 0 0;font-size:11px;font-weight:bold;">
+    OUT OF SERVICE -- FOR AWARENESS ({len(esc_oos)} vehicle{"s" if len(esc_oos) != 1 else ""} also 7+ days)
+  </div>
+{esc_oos_header}
+{_esc_table_rows(esc_oos)}
+  </table>""")
+
+        parts.append("</td></tr>")
+    elif esc_oos:
+        # No in-service escalations but some OOS
+        parts.append(f"""
+<tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{RED};margin:15px 0 0 0;"></td></tr>
+<tr><td style="padding:15px 40px;">
+  <h2 style="color:#{RED};margin:0 0 10px 0;font-size:16px;">ESCALATION (7+ DAYS)</h2>
+  <div style="font-size:14px;color:#666;padding:10px 0;">No in-service vehicles disconnected 7+ days.</div>
+  <div style="background:#999999;color:#fff;padding:6px 15px;margin:10px 0 0 0;font-size:11px;font-weight:bold;">
+    OUT OF SERVICE -- FOR AWARENESS ({len(esc_oos)} vehicle{"s" if len(esc_oos) != 1 else ""} disconnected 7+ days)
+  </div>
+{esc_table_header.replace(f"#{MED_BLUE}", "#999999")}
+{_esc_table_rows(esc_oos)}
+  </table>
+</td></tr>""")
     else:
         parts.append(f"""
 <tr><td style="padding:0 40px;"><hr style="border:none;border-top:3px solid #{RED};margin:15px 0 0 0;"></td></tr>

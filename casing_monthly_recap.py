@@ -468,7 +468,39 @@ def get_casing_mileage(vehicles, start_ct, end_ct):
             page += 1
         except Exception as e:
             print(f"  Warning: IFTA trips page {page} failed: {e}")
-            break
+            # Retry once after a short pause
+            time.sleep(5)
+            try:
+                resp = requests.get(
+                    f"{MOTIVE_BASE_V1}/ifta/trips",
+                    headers=headers,
+                    params={
+                        "per_page": 100,
+                        "page_no": page,
+                        "start_date": start_ct.strftime("%Y-%m-%d"),
+                        "end_date": end_ct.strftime("%Y-%m-%d"),
+                    },
+                    timeout=60,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                trips = data.get("ifta_trips", [])
+                if not trips:
+                    break
+                for wrapper in trips:
+                    trip = wrapper.get("ifta_trip", wrapper)
+                    vehicle = trip.get("vehicle", {})
+                    vnum = vehicle.get("number", "") if isinstance(vehicle, dict) else str(vehicle)
+                    if vnum in vehicles:
+                        vehicle_miles[vnum] += trip.get("distance", 0) or 0
+                pag = data.get("pagination", {})
+                if page * 100 >= pag.get("total", 0):
+                    break
+                page += 1
+                print(f"  Retry succeeded for page {page - 1}")
+            except Exception as e2:
+                print(f"  Retry also failed: {e2}")
+                break
 
     # Group by yard
     by_yard = defaultdict(lambda: {"miles": 0, "trucks": 0})
@@ -1402,12 +1434,19 @@ def get_casing_training_compliance(end_date_str):
     overdue = sum(1 for e in employees if e["status"] == "Overdue")
     overall_pct = round(compliant / total_emp * 100, 1) if total_emp > 0 else 0
 
+    # Live headcount from KPA active employees
+    headcount_by_yard = dict(yard_dist)
+    headcount_by_yard.pop("Unassigned", None)
+    headcount_total = len(casing_user_ids)
+
     return {
         "employees": employees,
         "overall_pct": overall_pct,
         "total_employees": total_emp,
         "compliant_count": compliant,
         "overdue_count": overdue,
+        "headcount_by_yard": headcount_by_yard,
+        "headcount_total": headcount_total,
     }
 
 
@@ -2488,36 +2527,6 @@ def generate_report(month_str, mileage, speeding, camera, form_activity,
                               "Requires targeted corrective action.",
                               size=10, bold=True, color=DARK_RED)
 
-    # Repeat Findings Tracker (compare to prior month)
-    pm_finding_cats = pm.get("assessment_finding_categories", {})
-    if finding_categories or pm_finding_cats:
-        cur_set = set(finding_categories.keys())
-        prev_set = set(pm_finding_cats.keys())
-        all_findings = cur_set | prev_set
-        if all_findings:
-            add_section_heading(doc, "Repeat Findings Tracker", level=2)
-            repeat_rows = []
-            for finding in sorted(all_findings):
-                cur_count = finding_categories.get(finding, 0)
-                prev_count = pm_finding_cats.get(finding, 0)
-                if finding in cur_set and finding in prev_set:
-                    status = "Recurring"
-                elif finding in cur_set:
-                    status = "New"
-                else:
-                    status = "Resolved"
-                repeat_rows.append([finding, str(cur_count), str(prev_count), status])
-            tbl = add_data_table(doc, ["Finding Category", "This Month", "Last Month", "Status"],
-                                 repeat_rows, font_size=9, col_align=[_L, _R, _R, _C])
-            # Bold recurring findings
-            if tbl:
-                for i, row_data in enumerate(repeat_rows):
-                    if row_data[3] == "Recurring" and i + 1 < len(tbl.rows):
-                        for cell in tbl.rows[i + 1].cells:
-                            for paragraph in cell.paragraphs:
-                                for run in paragraph.runs:
-                                    run.font.bold = True
-
     # Days since last assessment for zero-assessment yards
     zero_assess_yards = []
     if not yard:
@@ -2678,45 +2687,35 @@ def generate_report(month_str, mileage, speeding, camera, form_activity,
                 add_data_table(doc, matrix_headers, matrix_rows, font_size=9,
                                col_align=[_L, _R, _R, _R, _R, _R, _R, _R])
 
-        # --- Top Employees ---
-        add_section_heading(doc, "Top Employees", level=2)
-        top_obs_rows = [[name, str(count)] for name, count in obs_by_employee.most_common(10)]
-        if top_obs_rows:
-            add_data_table(doc, ["Employee", "Cards"], top_obs_rows,
-                           col_align=[_L, _R])
-
-        # --- Observation Detail table ---
-        doc.add_page_break()
-        add_section_heading(doc, "Observation Detail", level=2)
-        obs_detail_rows = []
+        # --- Top Repeat Observations ---
+        add_section_heading(doc, "Top Repeat Observations", level=2)
+        # Count observation descriptions to find recurring issues
+        obs_desc_counter = Counter()
+        obs_desc_type = {}  # track type for each description
         for obs in obs_list:
-            obs_date = _format_display_date(obs.get("date", obs.get("Date", "")))
-            employee = _obs_employee(obs)
-            obs_type = obs.get(OBS_TYPE_HASH, obs.get("type", "")).strip()
             desc = obs.get(OBS_DESC_HASH, obs.get("description", "")).strip()
-            location = obs.get(OBS_LOCATION_HASH, obs.get("location", "")).strip()
-            if len(desc) > 80:
-                desc = desc[:77] + "..."
-            obs_detail_rows.append([
-                obs_date, employee, obs_type or "--",
-                location or "--", desc or "--",
-            ])
-        if obs_detail_rows:
-            cap = 50
-            obs_align = [_C, _L, _L, _L, _L]
-            if len(obs_detail_rows) > cap:
-                add_data_table(doc, ["Date", "Employee", "Type", "Location", "Description"],
-                               obs_detail_rows[:cap], font_size=9, col_align=obs_align)
-                note = doc.add_paragraph(
-                    f"Showing {cap} of {len(obs_detail_rows)} observations. "
-                    "Full detail available upon request."
-                )
-                note.runs[0].font.size = Pt(9)
-                note.runs[0].font.italic = True
-                note.runs[0].font.name = CALIBRI
-            else:
-                add_data_table(doc, ["Date", "Employee", "Type", "Location", "Description"],
-                               obs_detail_rows, font_size=9, col_align=obs_align)
+            if not desc or desc == "--":
+                continue
+            # Normalize: lowercase, strip trailing punctuation
+            desc_key = desc.lower().rstrip(".!,;: ")
+            if len(desc_key) < 5:
+                continue
+            obs_desc_counter[desc_key] += 1
+            if desc_key not in obs_desc_type:
+                obs_desc_type[desc_key] = obs.get(OBS_TYPE_HASH, "").strip() or "--"
+        # Show top 10 repeat issues (count >= 2, or top 10 regardless)
+        top_issues = obs_desc_counter.most_common(10)
+        if top_issues:
+            issue_rows = []
+            for desc_key, count in top_issues:
+                # Capitalize first letter for display
+                display_desc = desc_key[:1].upper() + desc_key[1:]
+                if len(display_desc) > 100:
+                    display_desc = display_desc[:97] + "..."
+                otype = obs_desc_type.get(desc_key, "--")
+                issue_rows.append([display_desc, otype, str(count)])
+            add_data_table(doc, ["Observation", "Type", "Count"], issue_rows,
+                           font_size=9, col_align=[_L, _L, _R])
     else:
         _add_text(doc, "No observations reported this period.", italic=True)
 
@@ -3334,6 +3333,7 @@ def save_month_data(month_str, mileage, speeding, camera, form_activity, assessm
         "rca_avg_turnaround": avg_turn,
         "man_hours": MONTHLY_MAN_HOURS,
         "headcount": EMPLOYEE_COUNT,
+        "headcount_by_yard": dict(HEADCOUNT_BY_YARD),
         "distinct_observers": distinct_observers,
         "distinct_observers_by_yard": distinct_observers_by_yard,
         "speeding_unassigned": speeding_unassigned,
@@ -3464,6 +3464,15 @@ def main():
     print("\n[9/11] Pulling training compliance data...")
     end_date_str = end_ct.strftime("%Y-%m-%d")
     training_compliance = get_casing_training_compliance(end_date_str)
+
+    # Use live headcount from KPA active employees (not hardcoded)
+    global HEADCOUNT_BY_YARD, EMPLOYEE_COUNT
+    live_hc = training_compliance.get("headcount_by_yard", {})
+    live_total = training_compliance.get("headcount_total", 0)
+    if live_hc and live_total > 0:
+        HEADCOUNT_BY_YARD = dict(live_hc)
+        EMPLOYEE_COUNT = live_total
+        print(f"    Live headcount: {EMPLOYEE_COUNT} total")
 
     # ---- PREVIOUS MONTH for MoM + YoY ----
     print("\n[10/11] Loading comparison data (MoM + YoY)...")

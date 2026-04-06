@@ -1,0 +1,95 @@
+name: Casing Monthly HSE Recap Report
+
+on:
+  schedule:
+    # 6:00 AM Central = 12:00 UTC (CST is UTC-6)
+    # Runs on the 1st of each month to generate previous month's briefing.
+    # Note: During CDT (March-November), this runs at 7:00 AM Central.
+    - cron: '0 12 1 * *'
+  workflow_dispatch: # Manual trigger for testing
+
+jobs:
+  generate-casing-recap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Get report month (previous month)
+        id: date
+        run: |
+          date=$(date -d "last month" +%Y-%m)
+          echo "report_month=$date" >> $GITHUB_OUTPUT
+
+      - name: Generate Casing monthly HSE recap (company + 6 yards)
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+        run: |
+          python casing_monthly_recap.py --month "${{ steps.date.outputs.report_month }}"
+
+      - name: Email reports
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
+        run: |
+          python -c "
+          import smtplib, os, glob
+          from email.mime.multipart import MIMEMultipart
+          from email.mime.base import MIMEBase
+          from email.mime.text import MIMEText
+          from email import encoders
+
+          sender = os.environ['GMAIL_ADDRESS']
+          password = os.environ['GMAIL_APP_PASSWORD']
+          recipient = os.environ['REPORT_RECIPIENT']
+          month = '${{ steps.date.outputs.report_month }}'
+
+          msg = MIMEMultipart()
+          msg['From'] = sender
+          msg['To'] = recipient
+          msg['Subject'] = f'Casing Division Monthly HSE Recap -- {month}'
+          msg.attach(MIMEText(
+              f'Attached: Casing Division Monthly HSE Recap for {month}.\n'
+              'Includes company-wide rollup + 6 yard reports.\n\n'
+              'Generated automatically by daily-safety-report.',
+              'plain'))
+
+          for f in sorted(glob.glob('Casing_*Monthly_HSE_Recap_*.docx')):
+              part = MIMEBase('application', 'octet-stream')
+              with open(f, 'rb') as fh:
+                  part.set_payload(fh.read())
+              encoders.encode_base64(part)
+              part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(f)}')
+              msg.attach(part)
+
+          with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+              server.login(sender, password)
+              server.sendmail(sender, recipient, msg.as_string())
+          print(f'Email sent to {recipient}')
+          "
+
+      - name: Commit updated month data for MoM tracking
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add casing_monthly_data/*.json
+          git diff --cached --quiet || git commit -m "Update casing monthly data for ${{ steps.date.outputs.report_month }}"
+          git push
+
+      - name: Upload all reports as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: casing-monthly-hse-recap-${{ steps.date.outputs.report_month }}
+          path: Casing_*Monthly_HSE_Recap_*.docx
+          retention-days: 90

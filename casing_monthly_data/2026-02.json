@@ -1,0 +1,328 @@
+{
+  "month": "2026-02",
+  "mileage": {
+    "total_miles": 295526.1,
+    "active_trucks": 132,
+    "avg_miles": 2238.8,
+    "by_yard": {
+      "Midland": {
+        "miles": 154288.9,
+        "trucks": 54,
+        "avg": 2857.2
+      },
+      "Laredo": {
+        "miles": 23263.7,
+        "trucks": 15,
+        "avg": 1550.9
+      },
+      "Kilgore": {
+        "miles": 51740.2,
+        "trucks": 24,
+        "avg": 2155.8
+      },
+      "Bryan": {
+        "miles": 24217.6,
+        "trucks": 16,
+        "avg": 1513.6
+      },
+      "Hobbs": {
+        "miles": 25282.3,
+        "trucks": 11,
+        "avg": 2298.4
+      },
+      "Jourdanton": {
+        "miles": 16733.4,
+        "trucks": 12,
+        "avg": 1394.5
+      }
+    }
+  },
+  "speeding": {
+    "total": 65,
+    "critical": 9,
+    "by_yard": {
+      "Laredo": 8,
+      "Kilgore": 2,
+      "Hobbs": 17,
+      "Bryan": 10,
+      "Jourdanton": 4,
+      "Midland": 24
+    }
+  },
+  "camera": {
+    "total": 24,
+    "red": 12,
+    "orange": 7,
+    "yellow": 5,
+    "by_yard": {
+      "Midland": {
+        "red": 9,
+        "orange": 4,
+        "yellow": 3,
+        "total": 16
+      },
+      "Bryan": {
+        "red": 0,
+        "orange": 2,
+        "yellow": 1,
+        "total": 3
+      },
+      "Laredo": {
+        "red": 1,
+        "orange": 0,
+        "yellow": 0,
+        "total": 1
+      },
+      "Hobbs": {
+        "red": 1,
+        "orange": 0,
+        "yellow": 1,
+        "total": 2
+      },
+      "Kilgore": {
+        "red": 1,
+        "orange": 1,
+        "yellow": 0,
+        "total": 2
+      }
+    }
+  },
+  "form_activity_total": 487,
+  "assessments_total": 28,
+  "observations_total": 552,
+  "observations_by_type": {
+    "At-Risk Procedure": 41,
+    "Recognition": 225,
+    "At-Risk Condition": 201,
+    "At-Risk Behavior": 27,
+    "Near Miss": 22,
+    "Suggestion": 36
+  },
+  "incidents_total": 2,
+  "incidents_recordable": 0,
+  "incidents_first_aid": 0,
+  "incidents_near_miss": 1,
+  "incidents_vehicle_at_fault": 0,
+  "inspections_total": 284,
+  "training_compliance_pct": 75.1,
+  "trir": 0.0,
+  "dart": 0.0,
+  "fafr": 0,
+  "rca_completion": "0/2",
+  "rca_avg_turnaround": 0,
+  "man_hours": 183990,
+  "headcount": 378,
+  "by_yard": {
+    "Midland": {
+      "mileage": {
+        "total_miles": 154288.9,
+        "active_trucks": 54,
+        "avg_miles": 2857.2
+      },
+      "speeding": {
+        "total": 24,
+        "critical": 0
+      },
+      "camera": {
+        "total": 16,
+        "red": 9,
+        "orange": 4,
+        "yellow": 3
+      },
+      "observations_total": 412,
+      "observations_by_type": {
+        "At-Risk Procedure": 32,
+        "Recognition": 172,
+        "At-Risk Condition": 144,
+        "At-Risk Behavior": 18,
+        "Near Miss": 20,
+        "Suggestion": 26
+      },
+      "assessments_total": 17,
+      "inspections_total": 51,
+      "form_activity_total": 188,
+      "incidents_total": 1,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Bryan": {
+      "mileage": {
+        "total_miles": 24217.6,
+        "active_trucks": 16,
+        "avg_miles": 1513.6
+      },
+      "speeding": {
+        "total": 10,
+        "critical": 0
+      },
+      "camera": {
+        "total": 3,
+        "red": 0,
+        "orange": 2,
+        "yellow": 1
+      },
+      "observations_total": 42,
+      "observations_by_type": {
+        "At-Risk Behavior": 4,
+        "Recognition": 9,
+        "Near Miss": 1,
+        "At-Risk Condition": 22,
+        "Suggestion": 3,
+        "At-Risk Procedure": 3
+      },
+      "assessments_total": 2,
+      "inspections_total": 40,
+      "form_activity_total": 27,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Kilgore": {
+      "mileage": {
+        "total_miles": 51740.2,
+        "active_trucks": 24,
+        "avg_miles": 2155.8
+      },
+      "speeding": {
+        "total": 2,
+        "critical": 0
+      },
+      "camera": {
+        "total": 2,
+        "red": 1,
+        "orange": 1,
+        "yellow": 0
+      },
+      "observations_total": 17,
+      "observations_by_type": {
+        "Recognition": 6,
+        "Suggestion": 1,
+        "At-Risk Condition": 6,
+        "At-Risk Procedure": 4
+      },
+      "assessments_total": 2,
+      "inspections_total": 46,
+      "form_activity_total": 69,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Hobbs": {
+      "mileage": {
+        "total_miles": 25282.3,
+        "active_trucks": 11,
+        "avg_miles": 2298.4
+      },
+      "speeding": {
+        "total": 17,
+        "critical": 0
+      },
+      "camera": {
+        "total": 2,
+        "red": 1,
+        "orange": 0,
+        "yellow": 1
+      },
+      "observations_total": 28,
+      "observations_by_type": {
+        "Suggestion": 2,
+        "At-Risk Condition": 2,
+        "At-Risk Behavior": 3,
+        "Recognition": 21
+      },
+      "assessments_total": 2,
+      "inspections_total": 79,
+      "form_activity_total": 125,
+      "incidents_total": 1,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 1,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Jourdanton": {
+      "mileage": {
+        "total_miles": 16733.4,
+        "active_trucks": 12,
+        "avg_miles": 1394.5
+      },
+      "speeding": {
+        "total": 4,
+        "critical": 0
+      },
+      "camera": {
+        "total": 0,
+        "red": 0,
+        "orange": 0,
+        "yellow": 0
+      },
+      "observations_total": 7,
+      "observations_by_type": {
+        "Recognition": 5,
+        "At-Risk Condition": 2
+      },
+      "assessments_total": 1,
+      "inspections_total": 39,
+      "form_activity_total": 13,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Laredo": {
+      "mileage": {
+        "total_miles": 23263.7,
+        "active_trucks": 15,
+        "avg_miles": 1550.9
+      },
+      "speeding": {
+        "total": 8,
+        "critical": 0
+      },
+      "camera": {
+        "total": 1,
+        "red": 1,
+        "orange": 0,
+        "yellow": 0
+      },
+      "observations_total": 8,
+      "observations_by_type": {
+        "Recognition": 3,
+        "Near Miss": 1,
+        "At-Risk Condition": 4
+      },
+      "assessments_total": 2,
+      "inspections_total": 21,
+      "form_activity_total": 20,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    }
+  }
+}

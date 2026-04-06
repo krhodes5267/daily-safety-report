@@ -1,0 +1,425 @@
+{
+  "month": "2026-03",
+  "mileage": {
+    "total_miles": 388933.8,
+    "active_trucks": 140,
+    "avg_miles": 2778.1,
+    "by_yard": {
+      "Midland": {
+        "miles": 201419.9,
+        "trucks": 56,
+        "avg": 3596.8
+      },
+      "Laredo": {
+        "miles": 34554.6,
+        "trucks": 16,
+        "avg": 2159.7
+      },
+      "Hobbs": {
+        "miles": 27469.3,
+        "trucks": 13,
+        "avg": 2113.0
+      },
+      "Bryan": {
+        "miles": 32865.8,
+        "trucks": 17,
+        "avg": 1933.3
+      },
+      "Kilgore": {
+        "miles": 60513.7,
+        "trucks": 23,
+        "avg": 2631.0
+      },
+      "Jourdanton": {
+        "miles": 32110.5,
+        "trucks": 15,
+        "avg": 2140.7
+      }
+    }
+  },
+  "speeding": {
+    "total": 157,
+    "critical": 20,
+    "by_yard": {
+      "Bryan": 27,
+      "Laredo": 26,
+      "Midland": 80,
+      "Kilgore": 5,
+      "Jourdanton": 15,
+      "Hobbs": 4
+    }
+  },
+  "camera": {
+    "total": 44,
+    "red": 15,
+    "orange": 26,
+    "yellow": 3,
+    "by_yard": {
+      "Laredo": {
+        "red": 3,
+        "orange": 0,
+        "yellow": 0,
+        "total": 3
+      },
+      "Jourdanton": {
+        "red": 1,
+        "orange": 5,
+        "yellow": 0,
+        "total": 6
+      },
+      "Midland": {
+        "red": 8,
+        "orange": 17,
+        "yellow": 2,
+        "total": 27
+      },
+      "Hobbs": {
+        "red": 3,
+        "orange": 2,
+        "yellow": 1,
+        "total": 6
+      },
+      "Kilgore": {
+        "red": 0,
+        "orange": 1,
+        "yellow": 0,
+        "total": 1
+      },
+      "Bryan": {
+        "red": 0,
+        "orange": 1,
+        "yellow": 0,
+        "total": 1
+      }
+    }
+  },
+  "form_activity_total": 483,
+  "assessments_total": 15,
+  "observations_total": 492,
+  "observations_by_type": {
+    "Recognition": 183,
+    "Suggestion": 24,
+    "At-Risk Condition": 189,
+    "At-Risk Behavior": 22,
+    "At-Risk Procedure": 47,
+    "Near Miss": 27
+  },
+  "incidents_total": 1,
+  "incidents_recordable": 0,
+  "incidents_first_aid": 1,
+  "incidents_near_miss": 0,
+  "incidents_vehicle_at_fault": 0,
+  "inspections_total": 466,
+  "training_compliance_pct": 75.1,
+  "trir": 0.0,
+  "dart": 0.0,
+  "fafr": 1.09,
+  "rca_completion": "1/1",
+  "rca_avg_turnaround": 24,
+  "man_hours": 183990,
+  "headcount": 400,
+  "distinct_observers": 105,
+  "distinct_observers_by_yard": {
+    "Midland": 60,
+    "Bryan": 17,
+    "Hobbs": 7,
+    "Jourdanton": 5,
+    "Laredo": 10,
+    "Unassigned": 5,
+    "Kilgore": 2
+  },
+  "speeding_unassigned": 46,
+  "drowsiness_events": [
+    {
+      "driver": "Rafael Zepeda",
+      "vehicle": "2266C",
+      "yard": "Laredo"
+    },
+    {
+      "driver": "Rafael Zepeda",
+      "vehicle": "2266C",
+      "yard": "Laredo"
+    },
+    {
+      "driver": "Dustin Longoria",
+      "vehicle": "E82762",
+      "yard": "Jourdanton"
+    },
+    {
+      "driver": "Roger Callahan",
+      "vehicle": "90596C - EXTRA ",
+      "yard": "Midland"
+    },
+    {
+      "driver": "Angel Rivera",
+      "vehicle": "2352C - CDL A DRIVER ",
+      "yard": "Midland"
+    },
+    {
+      "driver": "Angel Rivera",
+      "vehicle": "2352C - CDL A DRIVER ",
+      "yard": "Midland"
+    }
+  ],
+  "assessment_finding_categories": {
+    "Have the crew members had to use Stop Work Authority during this job?": 15,
+    "Is there an SSE on location?": 5,
+    "Is there a laydown machine on location?": 11,
+    "Is the V Door operator turning his back to the V Door?": 15
+  },
+  "action_items": [
+    {
+      "item": "Zero OSHA recordable incidents documented this period (1 total reports filed).",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    },
+    {
+      "item": "1 first aid incident(s) (FAFR: 1.09). Safety Team to review for trend patterns and escalation risk.",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    },
+    {
+      "item": "RCA completion: 1 of 1 incidents have RCA on file. Division Management accountable for timely RCA completion on all inci",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    },
+    {
+      "item": "157 speeding events (20 critical). Division Management to address driver Billy Mathis Jr (12 events). 46 event(s) from u",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    },
+    {
+      "item": "15 RED-tier camera events require immediate coaching. Repeat offenders: Roger Callahan, David Smith.",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    },
+    {
+      "item": "Training compliance at 75.1% (94 employees non-compliant). Division Management and Safety Team to push outstanding train",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    },
+    {
+      "item": "15 of 15 field assessments had findings (100%). Safety Team to follow up on corrective actions.",
+      "owner": "Division Management",
+      "due_date": "May 05, 2026",
+      "status": "Open"
+    }
+  ],
+  "by_yard": {
+    "Midland": {
+      "mileage": {
+        "total_miles": 201419.9,
+        "active_trucks": 56,
+        "avg_miles": 3596.8
+      },
+      "speeding": {
+        "total": 80,
+        "critical": 0
+      },
+      "camera": {
+        "total": 27,
+        "red": 8,
+        "orange": 17,
+        "yellow": 2
+      },
+      "observations_total": 394,
+      "observations_by_type": {
+        "Recognition": 146,
+        "Suggestion": 19,
+        "At-Risk Condition": 146,
+        "At-Risk Behavior": 15,
+        "At-Risk Procedure": 42,
+        "Near Miss": 26
+      },
+      "assessments_total": 10,
+      "inspections_total": 116,
+      "form_activity_total": 162,
+      "incidents_total": 1,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 1,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 2.57
+    },
+    "Bryan": {
+      "mileage": {
+        "total_miles": 32865.8,
+        "active_trucks": 17,
+        "avg_miles": 1933.3
+      },
+      "speeding": {
+        "total": 27,
+        "critical": 0
+      },
+      "camera": {
+        "total": 1,
+        "red": 0,
+        "orange": 1,
+        "yellow": 0
+      },
+      "observations_total": 38,
+      "observations_by_type": {
+        "At-Risk Condition": 20,
+        "Suggestion": 3,
+        "Recognition": 7,
+        "At-Risk Procedure": 2,
+        "At-Risk Behavior": 5,
+        "Near Miss": 1
+      },
+      "assessments_total": 0,
+      "inspections_total": 45,
+      "form_activity_total": 43,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Kilgore": {
+      "mileage": {
+        "total_miles": 60513.7,
+        "active_trucks": 23,
+        "avg_miles": 2631.0
+      },
+      "speeding": {
+        "total": 5,
+        "critical": 0
+      },
+      "camera": {
+        "total": 1,
+        "red": 0,
+        "orange": 1,
+        "yellow": 0
+      },
+      "observations_total": 2,
+      "observations_by_type": {
+        "At-Risk Condition": 1,
+        "At-Risk Behavior": 1
+      },
+      "assessments_total": 0,
+      "inspections_total": 50,
+      "form_activity_total": 38,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Hobbs": {
+      "mileage": {
+        "total_miles": 27469.3,
+        "active_trucks": 13,
+        "avg_miles": 2113.0
+      },
+      "speeding": {
+        "total": 4,
+        "critical": 0
+      },
+      "camera": {
+        "total": 6,
+        "red": 3,
+        "orange": 2,
+        "yellow": 1
+      },
+      "observations_total": 16,
+      "observations_by_type": {
+        "Recognition": 15,
+        "At-Risk Procedure": 1
+      },
+      "assessments_total": 1,
+      "inspections_total": 94,
+      "form_activity_total": 154,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Jourdanton": {
+      "mileage": {
+        "total_miles": 32110.5,
+        "active_trucks": 15,
+        "avg_miles": 2140.7
+      },
+      "speeding": {
+        "total": 15,
+        "critical": 0
+      },
+      "camera": {
+        "total": 6,
+        "red": 1,
+        "orange": 5,
+        "yellow": 0
+      },
+      "observations_total": 9,
+      "observations_by_type": {
+        "At-Risk Condition": 6,
+        "Recognition": 2,
+        "Suggestion": 1
+      },
+      "assessments_total": 0,
+      "inspections_total": 53,
+      "form_activity_total": 29,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    },
+    "Laredo": {
+      "mileage": {
+        "total_miles": 34554.6,
+        "active_trucks": 16,
+        "avg_miles": 2159.7
+      },
+      "speeding": {
+        "total": 26,
+        "critical": 0
+      },
+      "camera": {
+        "total": 3,
+        "red": 3,
+        "orange": 0,
+        "yellow": 0
+      },
+      "observations_total": 28,
+      "observations_by_type": {
+        "Recognition": 13,
+        "At-Risk Condition": 13,
+        "At-Risk Behavior": 1,
+        "At-Risk Procedure": 1
+      },
+      "assessments_total": 4,
+      "inspections_total": 92,
+      "form_activity_total": 23,
+      "incidents_total": 0,
+      "incidents_recordable": 0,
+      "incidents_first_aid": 0,
+      "incidents_near_miss": 0,
+      "incidents_vehicle_at_fault": 0,
+      "trir": 0.0,
+      "dart": 0.0,
+      "fafr": 0
+    }
+  }
+}

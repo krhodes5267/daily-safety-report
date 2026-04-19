@@ -1,0 +1,3622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Calibri, Arial, Helvetica, sans-serif; background: #f3f0ec; line-height: 1.4; }
+
+        /* ===== FIXED HEADER AREA ===== */
+        .fixed-header-area {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+        }
+        .content-spacer { visibility: hidden; }
+
+        /* Header Strip */
+        .header {
+            background: linear-gradient(135deg, #2C3E50 0%, #1a1a1a 100%);
+            color: white; padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            border-bottom: 3px solid #A73333;
+        }
+        .header.red { background: linear-gradient(135deg, #8B0000 0%, #5a0000 100%); }
+        .header-left { display: flex; align-items: center; gap: 14px; }
+        .header-title { font-size: 14px; color: #b0b0b0; letter-spacing: 0.5px; }
+        .header-company { font-size: 24px; font-weight: bold; letter-spacing: 2px; }
+        .header-date { font-size: 14px; font-weight: bold; }
+        .header-metrics { display: flex; gap: 28px; }
+        .header-metric { text-align: center; }
+        .header-metric .val { font-size: 20px; font-weight: 700; }
+        .header-metric .lbl { font-size: 10px; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .header-metric .trend { font-size: 10px; opacity: 0.8; }
+
+        /* Division Filter Bar */
+        .division-bar {
+            background: #2a2a2a; padding: 8px 24px;
+            display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+        }
+        .division-bar label {
+            color: #ccc; font-size: 12px; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 0.5px; margin-right: 4px;
+        }
+        .division-bar select {
+            font-family: inherit; font-size: 13px; padding: 6px 12px;
+            border: 1px solid #555; border-radius: 4px; background: #3a3a3a;
+            color: white; cursor: pointer; transition: all 0.2s;
+        }
+        .division-bar select:focus { outline: none; border-color: #A73333; box-shadow: 0 0 0 2px rgba(167, 51, 51, 0.35); }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white; padding: 10px 24px;
+            display: flex; gap: 8px; flex-wrap: wrap;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .filter-btn {
+            padding: 8px 16px; background: #f5f5f5; border: 1px solid #ddd;
+            border-radius: 4px; cursor: pointer; font-size: 13px;
+            font-family: inherit; font-weight: 600; transition: all 0.2s;
+        }
+        .filter-btn:hover { background: #efefef; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .filter-btn.active { background: #A73333; color: white; border-color: #A73333; box-shadow: 0 2px 6px rgba(167,51,51,0.25); }
+        .filter-count { font-size: 11px; opacity: 0.7; margin-left: 2px; }
+
+        /* Quick Pulse Row */
+        .quick-pulse {
+            background: #eee9e3; padding: 12px 24px;
+            display: flex; gap: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        .pulse-card {
+            flex: 1; padding: 12px 16px; background: white;
+            border-radius: 6px; border-left: 4px solid #bbb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            display: flex; align-items: center; gap: 12px;
+            transition: all 0.2s;
+        }
+        .pulse-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+        .pulse-card .pulse-num { font-size: 24px; font-weight: 700; color: #333; font-variant-numeric: tabular-nums; }
+        .pulse-card .pulse-lbl { font-size: 11px; color: #555; line-height: 1.3; }
+        .pulse-card .pulse-trend { font-size: 10px; margin-top: 2px; }
+        .pulse-card.green { border-left-color: #2E7D32; background: #f5faf5; }
+        .pulse-card.yellow { border-left-color: #E59C00; background: #fffbf0; }
+        .pulse-card.red { border-left-color: #A73333; background: #fef5f5; }
+        .pulse-card.red .pulse-num { color: #A73333; }
+        .pulse-card.blue { border-left-color: #3D7CBF; }
+
+        /* Tab Bar */
+        .tab-bar {
+            background: white; border-bottom: 3px solid #A73333;
+            display: flex; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .tab {
+            flex: 1; padding: 12px 16px; text-align: center;
+            cursor: pointer; background: #f5f5f5;
+            border-right: 1px solid #ddd; font-weight: 600;
+            font-size: 13px; transition: all 0.2s;
+            font-family: inherit; position: relative;
+        }
+        .tab:last-child { border-right: none; }
+        .tab:hover { background: #eee; }
+        .tab.active { background: #A73333; color: white; }
+        .tab.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+        /* ===== CONTENT AREA ===== */
+        .content { padding: 24px; max-width: 1400px; margin: 0 auto; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        .loading { text-align: center; padding: 60px; font-size: 16px; color: #888; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Chart containers */
+        .chart-container { position: relative; width: 100%; max-width: 900px; margin: 16px auto; }
+        .chart-container.small { max-width: 400px; height: 300px; }
+        .chart-container.medium { max-width: 700px; height: 350px; }
+        .chart-container.wide { max-width: 100%; height: 350px; }
+
+        /* Collapsible detail sections */
+        .detail-collapse { margin: 12px 0; }
+        .detail-collapse summary {
+            padding: 12px 16px; background: #f5f5f5; border: 1px solid #ddd;
+            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;
+            color: #333; transition: background 0.2s;
+        }
+        .detail-collapse summary:hover { background: #eee; }
+        .detail-collapse[open] summary { border-radius: 6px 6px 0 0; border-bottom: none; background: #eee; }
+        .detail-collapse[open] > div { border: 1px solid #ddd; border-top: none; border-radius: 0 0 6px 6px; padding: 8px; }
+
+        /* Leading indicator cards */
+        .li-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0; }
+        .li-card {
+            flex: 1; min-width: 200px; background: white; border-radius: 8px;
+            padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-top: 3px solid #A73333;
+        }
+        .li-card .li-num { font-size: 32px; font-weight: 700; color: #2C3E50; }
+        .li-card .li-lbl { font-size: 12px; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .li-card .li-trend { font-size: 13px; margin-top: 6px; }
+        .li-trend.up { color: #27ae60; }
+        .li-trend.down { color: #e74c3c; }
+        .li-trend.flat { color: #999; }
+
+        /* Sections */
+        .section {
+            background: white; padding: 24px; margin-bottom: 20px;
+            border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .section-title {
+            font-size: 17px; font-weight: 700; color: #8B0000;
+            margin-bottom: 16px; padding-bottom: 10px;
+            border-bottom: 3px solid #8B0000; letter-spacing: 0.3px;
+        }
+        .no-data { color: #767676; font-style: italic; padding: 20px; text-align: center; font-size: 14px; }
+
+        /* Alert Banners */
+        .alert-red {
+            background: #f5dede; border: 1px solid #B30000; border-left: 5px solid #A73333;
+            padding: 14px 18px; margin-bottom: 16px; border-radius: 6px;
+            color: #6b1010; font-weight: 600;
+            box-shadow: 0 1px 4px rgba(167,51,51,0.08);
+        }
+        .alert-green {
+            background: #d8f3d8; border: 1px solid #1B5E20; border-left: 5px solid #2E7D32;
+            padding: 14px 18px; margin-bottom: 16px; border-radius: 6px;
+            color: #1B5E20; font-weight: 600;
+            box-shadow: 0 1px 4px rgba(46,125,50,0.08);
+        }
+        .alert-yellow {
+            background: #fff3cd; border: 1px solid #E59C00; border-left: 5px solid #DAA520;
+            padding: 14px 18px; margin-bottom: 16px; border-radius: 6px;
+            color: #8a6d00; font-weight: 600;
+            box-shadow: 0 1px 4px rgba(218,165,32,0.08);
+        }
+        .info-note {
+            background: #f8f6f3; border-left: 3px solid #aaa;
+            padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #666;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Summary Cards */
+        .card-row { display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+        .card {
+            flex: 1; min-width: 120px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f5f2 100%);
+            padding: 16px 18px; border-radius: 8px;
+            border-left: 5px solid #A73333;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .card .card-num { font-size: 32px; font-weight: 700; color: #A73333; font-variant-numeric: tabular-nums; }
+        .card .card-lbl { font-size: 13px; color: #666; margin-top: 6px; line-height: 1.3; }
+        .card.card-green { border-left-color: #2E7D32; }
+        .card.card-green .card-num { color: #2E7D32; }
+        .card.card-red { border-left-color: #A73333; }
+        .card.card-red .card-num { color: #A73333; }
+
+        /* Badges */
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 3px;
+            font-size: 11px; font-weight: 700; margin: 1px;
+            text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        .badge-red { background: #A73333; color: white; padding: 4px 12px; box-shadow: 0 1px 2px rgba(167,51,51,0.2); }
+        .badge-orange { background: #E67E00; color: white; }
+        .badge-yellow { background: #E59C00; color: white; }
+        .badge-green { background: #2E7D32; color: white; }
+        .badge-gray { background: #777; color: white; font-size: 10px; }
+        .badge-blue { background: #3D7CBF; color: white; }
+
+        /* Tables */
+        .table-wrap { overflow-x: auto; margin-top: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th {
+            background: #8B0000; color: white; padding: 11px 12px;
+            text-align: left; font-weight: 700; white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 0.5px; font-size: 11px;
+        }
+        td { padding: 10px 12px; border-bottom: 1px solid #e8e8e8; overflow-wrap: break-word; word-break: break-word; max-width: 350px; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        tbody tr:hover { background: #f0eae5 !important; }
+        tr.overdue { background: #ffe0e0 !important; }
+        a { color: #A73333; text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; color: #8B0000; }
+
+        /* Repeat Offender / Red Flag Cards */
+        .flag-card {
+            background: #f5dede; padding: 12px 16px; margin: 8px 0;
+            border-radius: 6px; border-left: 5px solid #A73333;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .flag-card.weekend { background: #fff3cd; border-left-color: #E59C00; }
+        .flag-name { font-weight: 700; font-size: 14px; }
+        .flag-detail { font-size: 12px; color: #555; margin-top: 4px; }
+        .flag-sources { font-size: 11px; color: #777; margin-top: 4px; }
+
+        /* Observation Type Bars */
+        .obs-bar-row { display: flex; align-items: center; margin: 8px 0; }
+        .obs-bar-label { width: 160px; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+        .obs-bar {
+            height: 28px; border-radius: 3px; display: flex;
+            align-items: center; padding: 0 12px;
+            color: white; font-weight: 700; font-size: 13px; min-width: 36px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .obs-bar:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .obs-bar.recognition { background: #2E7D32; }
+        .obs-bar.at-risk { background: #A73333; }
+        .obs-bar.near-miss { background: #E67E00; }
+        .obs-bar.suggestion { background: #3D7CBF; }
+
+        /* By-Yard Bar Chart */
+        .yard-bar-row { display: flex; align-items: center; margin: 5px 0; }
+        .yard-bar-label { width: 100px; font-size: 13px; font-weight: 700; }
+        .yard-bar {
+            height: 24px; background: linear-gradient(90deg, #A73333 0%, #c44444 100%);
+            border-radius: 3px; display: flex; align-items: center; padding: 0 10px;
+            color: white; font-size: 12px; font-weight: 700; min-width: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Time-of-day heatmap */
+        .tod-grid { display: flex; gap: 2px; margin: 10px 0; }
+        .tod-cell {
+            flex: 1; text-align: center; padding: 8px 2px;
+            border-radius: 3px; font-size: 11px; font-weight: 700;
+            min-width: 0; border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.15s;
+        }
+        .tod-cell:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.12); transform: scale(1.05); }
+        .tod-labels { display: flex; gap: 2px; margin-bottom: 4px; }
+        .tod-label { flex: 1; text-align: center; font-size: 9px; color: #888; min-width: 0; }
+
+        /* Training compliance bars */
+        .compliance-bar-wrap { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+        .compliance-bar-label { width: 100px; font-size: 13px; font-weight: 700; }
+        .compliance-bar-bg { flex: 1; height: 22px; background: #e8e4e0; border-radius: 4px; overflow: hidden; }
+        .compliance-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; color: white; font-size: 12px; font-weight: 700; }
+        .compliance-pct { width: 50px; font-size: 14px; font-weight: 700; text-align: right; }
+
+        /* Yard Scorecard */
+        .scorecard-good { color: #2E7D32; font-weight: 700; }
+        .scorecard-warn { color: #E67E00; font-weight: 700; }
+        .scorecard-bad { color: #A73333; font-weight: 700; }
+
+        /* Executive Summary */
+        .exec-summary {
+            background: linear-gradient(135deg, #fefdfb 0%, #f5f1ed 100%);
+            border: 1px solid #d4c5b0; border-left: 8px solid #2C3E50;
+            border-radius: 8px; padding: 20px 24px; margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .exec-summary.status-red { background: linear-gradient(135deg, #fef9f8 0%, #fce8e6 100%); border-left-color: #A73333; }
+        .exec-summary.status-yellow { background: linear-gradient(135deg, #fffef5 0%, #fffbeb 100%); border-left-color: #E59C00; }
+        .exec-summary.status-green { background: linear-gradient(135deg, #fafef8 0%, #f0fce8 100%); border-left-color: #2E7D32; }
+        .exec-summary-title {
+            font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #2C3E50; font-weight: 700; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .exec-summary-title::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+        .exec-summary.status-green .exec-summary-title::before { background: #2E7D32; }
+        .exec-summary.status-yellow .exec-summary-title::before { background: #E59C00; }
+        .exec-summary.status-red .exec-summary-title::before { background: #A73333; }
+        .exec-status-sub { font-size: 11px; color: #666; margin-bottom: 10px; }
+        .exec-headline {
+            font-size: 18px; font-weight: 700; color: #1a1a1a;
+            line-height: 1.5; margin-bottom: 12px; letter-spacing: 0.2px;
+        }
+        .exec-actions {
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        .exec-action {
+            font-size: 12px; padding: 6px 14px; border-radius: 4px;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .exec-action.critical { background: #fde8e8; color: #A73333; border: 1px solid #e8b5b5; }
+        .exec-action.warning { background: #fff5e0; color: #7a5000; border: 1px solid #e5cf9e; }
+        .exec-action.info { background: #e8f0fe; color: #2c5ea0; border: 1px solid #b5cde8; }
+
+        /* Yard Health Grid */
+        .yard-health-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px; margin-top: 12px;
+        }
+        .yard-health-card {
+            padding: 10px 12px; border-radius: 6px; text-align: center;
+            font-size: 12px; font-weight: 700; border: 1px solid #e0e0e0;
+            transition: all 0.2s; position: relative;
+        }
+        .yard-health-card:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .yard-health-card .yard-health-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+        .yard-health-card .yard-health-stat { font-size: 10px; font-weight: 400; color: #444; }
+        .yard-health-card.health-green { background: linear-gradient(135deg, #d8f5d8 0%, #c8f0c8 100%); border-color: #66bb6a; border-width: 2px; }
+        .yard-health-card.health-yellow { background: linear-gradient(135deg, #fff8d6 0%, #ffeb99 100%); border-color: #ffa726; border-width: 2px; }
+        .yard-health-card.health-red { background: linear-gradient(135deg, #fce4e4 0%, #f8c6c6 100%); border-color: #d32f2f; border-width: 2px; }
+
+        /* CA Aging Callout */
+        .ca-aging-callout {
+            background: #fff9f5; border: 1px solid #d4b8a8; border-left: 4px solid #E59C00;
+            border-radius: 6px; padding: 14px 18px; margin-top: 16px;
+        }
+        .ca-aging-title { font-size: 12px; font-weight: 700; color: #E59C00; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .ca-aging-item { font-size: 13px; color: #333; padding: 4px 0; border-bottom: 1px solid #f0e6dc; display: flex; justify-content: space-between; }
+        .ca-aging-item:last-child { border-bottom: none; }
+        .ca-aging-days { font-weight: 700; color: #E59C00; }
+
+        /* Footer */
+        .footer {
+            text-align: center; padding: 20px 24px; color: #888;
+            font-size: 12px; border-top: 2px solid #e0dcd6; margin-top: 32px;
+            background: #f8f6f3; line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 8px; padding: 12px 16px; }
+            .header-metrics { width: 100%; justify-content: space-around; flex-wrap: wrap; gap: 16px; }
+            .quick-pulse { flex-wrap: wrap; }
+            .pulse-card { min-width: calc(50% - 8px); }
+            .tab { font-size: 11px; padding: 10px 6px; }
+            .content { padding: 16px; }
+            .section { padding: 16px; }
+            .yard-health-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 6px; }
+            .yard-health-card { padding: 8px 10px; }
+            .yard-health-card .yard-health-name { font-size: 12px; }
+            .exec-headline { font-size: 16px; }
+        }
+        @media (max-width: 480px) {
+            table { font-size: 11px; }
+            th { white-space: normal; word-break: break-word; padding: 8px 6px; }
+            td { padding: 8px 6px; }
+            .yard-health-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
+            .ca-aging-item { flex-direction: column; gap: 2px; }
+            .exec-actions { flex-direction: column; gap: 8px; }
+        }
+
+        @media print {
+            .fixed-header-area { position: static; }
+            .content-spacer { display: none; }
+            .filter-bar, .tab-bar, .division-bar { display: none; }
+            .tab-content { display: block !important; page-break-before: always; }
+            .tab-content:first-of-type { page-break-before: avoid; }
+            .section { box-shadow: none; border: 1px solid #ddd; }
+            .exec-summary { background: white !important; border: 1px solid #ddd; border-left: 5px solid #333; box-shadow: none; page-break-inside: avoid; }
+            .yard-health-grid { page-break-inside: avoid; }
+            .yard-health-card { background: white !important; border: 1px solid #999; }
+            .ca-aging-callout { background: white !important; border: 1px solid #ddd; box-shadow: none; page-break-inside: avoid; }
+            .exec-action { border: 1px solid #999; background: white !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== FIXED HEADER AREA ===== -->
+<div class="fixed-header-area" id="fixedHeader">
+    <div class="header" id="header">
+        <div class="header-left">
+            <div>
+                <div class="header-company" id="headerCompany">BRHAS</div>
+                <div class="header-title" id="headerTitle">Safety Dashboard</div>
+            </div>
+        </div>
+        <div class="header-date" id="headerDate">Loading...</div>
+        <div class="header-metrics">
+            <div class="header-metric"><div class="val" id="hmManHours">--</div><div class="lbl">YTD Man-Hours</div></div>
+            <div class="header-metric"><div class="val" id="hmTRIR">--</div><div class="lbl">YTD TRIR</div></div>
+            <div class="header-metric"><div class="val" id="hmDART">--</div><div class="lbl">YTD DART</div></div>
+            <div class="header-metric"><div class="val" id="hmRecordables">--</div><div class="lbl">Recordables</div></div>
+            <div class="header-metric"><div class="val" id="hmDaysRec">--</div><div class="lbl">Days Since Recordable</div></div>
+            <div class="header-metric"><div class="val" id="hmDaysLTI">--</div><div class="lbl">Days Since LTI</div></div>
+            <div class="header-metric"><div class="val" id="hmTraining">--</div><div class="lbl">Training %</div></div>
+        </div>
+    </div>
+    <div class="division-bar" id="divisionBar">
+        <label for="companySelect">Company:</label>
+        <select id="companySelect">
+            <option value="All">All Companies</option>
+            <option value="BRHAS" selected>BRHAS</option>
+            <option value="Valor">Valor</option>
+            <option value="BTI">BTI</option>
+            <option value="Transcend">Transcend</option>
+            <option value="Permian">Permian</option>
+        </select>
+        <label for="divisionSelect" style="margin-left:12px">Division:</label>
+        <select id="divisionSelect">
+            <option value="All Divisions" selected>All Divisions</option>
+            <option value="Casing">Casing</option>
+            <option value="Rathole">Rathole</option>
+            <option value="Pit Lining">Pit Lining</option>
+            <option value="Poly Pipe">Poly Pipe</option>
+            <option value="Anchors">Anchors</option>
+            <option value="Construction">Construction</option>
+            <option value="Drilling Tools">Drilling Tools</option>
+            <option value="Environmental">Environmental</option>
+            <option value="Fencing">Fencing</option>
+        </select>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+            <label for="dateRangeSelect">Date:</label>
+            <select id="dateRangeSelect">
+                <option value="today" selected>Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="thisWeek">This Week</option>
+                <option value="lastWeek">Last Week</option>
+                <option value="thisMonth">This Month</option>
+                <option value="lastMonth">Last Month</option>
+                <option value="custom">Custom...</option>
+            </select>
+            <span id="customDateInputs" style="display:none;">
+                <input type="date" id="dateStart" style="font-family:inherit;font-size:12px;padding:4px 6px;background:#3a3a3a;color:white;border:1px solid #555;border-radius:4px;">
+                <span style="color:#ccc;">-</span>
+                <input type="date" id="dateEnd" style="font-family:inherit;font-size:12px;padding:4px 6px;background:#3a3a3a;color:white;border:1px solid #555;border-radius:4px;">
+                <button id="dateApply" style="font-family:inherit;font-size:12px;padding:4px 10px;background:#A73333;color:white;border:none;border-radius:4px;cursor:pointer;">Go</button>
+            </span>
+            <span id="dateRangeLabel" style="color:#aaa;font-size:11px;"></span>
+        </span>
+    </div>
+    <div id="apiBanner" style="display:none;background:#FFF3CD;color:#856404;padding:6px 24px;font-size:12px;border-bottom:1px solid #ffc107;"></div>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="quick-pulse" id="quickPulse"></div>
+    <div class="tab-bar" id="tabBar" role="tablist">
+        <div class="tab active" id="tab-overview-tab" data-tab="overview" role="tab" aria-selected="true" aria-controls="tab-overview" tabindex="0">Executive Overview</div>
+        <div class="tab" id="tab-fleet-tab" data-tab="fleet" role="tab" aria-selected="false" aria-controls="tab-fleet" tabindex="-1">Fleet Safety</div>
+        <div class="tab" id="tab-field-tab" data-tab="field" role="tab" aria-selected="false" aria-controls="tab-field" tabindex="-1">Field & Compliance</div>
+        <div class="tab" id="tab-detail-tab" data-tab="detail" role="tab" aria-selected="false" aria-controls="tab-detail" tabindex="-1">Daily Detail</div>
+    </div>
+</div>
+
+<!-- Spacer mirrors fixed header height -->
+<div class="content-spacer" id="contentSpacer"></div>
+
+<!-- ===== CONTENT ===== -->
+<div class="content">
+    <div class="loading" id="loading">Loading dashboard data...</div>
+
+    <!-- Tab 1: Executive Overview -->
+    <div class="tab-content" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview-tab">
+        <div id="execSummarySection"></div>
+        <div id="portfolioScorecardSection"></div>
+        <div id="leadingIndicatorsSection"></div>
+        <div id="trirTrendSection"></div>
+        <div id="weeklyEventTrendSection"></div>
+        <div id="redFlagSection"></div>
+        <div id="caAgingSection"></div>
+    </div>
+
+    <!-- Tab 2: Fleet Safety (Camera + Speeding + Devices) -->
+    <div class="tab-content" id="tab-fleet" role="tabpanel" aria-labelledby="tab-fleet-tab">
+        <div id="fleetKPISection"></div>
+        <div id="cameraTypeDistSection"></div>
+        <div id="cameraSummarySection"></div>
+        <div id="cameraByYardSection"></div>
+        <div id="cameraTODSection"></div>
+        <div id="speedingSummarySection"></div>
+        <div id="speedingTODSection"></div>
+        <div id="repeatOffendersSection"></div>
+        <details class="detail-collapse"><summary>Camera Events Detail</summary>
+            <div id="cameraDetailSection"></div>
+        </details>
+        <details class="detail-collapse"><summary>Speeding Events Detail</summary>
+            <div id="speedingDetailSection"></div>
+        </details>
+        <details class="detail-collapse"><summary>Device Issues Detail</summary>
+            <div id="deviceSummarySection"></div>
+            <div id="deviceByYardSection"></div>
+            <div id="deviceDetailSection"></div>
+        </details>
+    </div>
+
+    <!-- Tab 3: Field & Compliance (KPA + Training + CAs) -->
+    <div class="tab-content" id="tab-field" role="tabpanel" aria-labelledby="tab-field-tab">
+        <div id="obsCultureSection"></div>
+        <div id="obsTypesSection"></div>
+        <div id="trainingOverviewSection"></div>
+        <div id="trainingByYardSection"></div>
+        <div id="safetyCAsSection"></div>
+        <div id="assessAccountSection"></div>
+        <details class="detail-collapse"><summary>All Observations</summary>
+            <div id="allObsSection"></div>
+        </details>
+        <details class="detail-collapse"><summary>Near Misses</summary>
+            <div id="kpaNearMissSection"></div>
+        </details>
+        <details class="detail-collapse"><summary>Flagged Inspections</summary>
+            <div id="inspFlaggedSection"></div>
+        </details>
+        <details class="detail-collapse"><summary>Non-Compliant Employees</summary>
+            <div id="trainingDetailSection"></div>
+        </details>
+    </div>
+
+    <!-- Tab 4: Daily Detail (Drill-Down) -->
+    <div class="tab-content" id="tab-detail" role="tabpanel" aria-labelledby="tab-detail-tab">
+        <div id="incidentsSection"></div>
+        <div id="weekendSpotlightSection"></div>
+        <div id="nearMissSection"></div>
+        <div id="obsAnalysisSection"></div>
+        <div id="assessmentsSection"></div>
+    </div>
+
+    <!-- Yard Scorecard (shows at bottom when All Yards + Casing) -->
+    <div id="yardScorecardSection"></div>
+
+    <div class="footer" id="footer"></div>
+</div>
+
+<script>
+// ===== GLOBALS =====
+var D = { ytd: null, kpa: null, camera: null, speeding: null, devices: null, training: null, cas: null };
+var D_today = { camera: null, devices: null, training: null }; // Static snapshots kept for non-API sources
+var CHARTS = {};
+var currentYard = 'All Yards';
+var currentCompany = 'BRHAS';
+var currentDivision = 'All Divisions';
+var currentDateRange = 'today';
+var API_BASE = 'http://localhost:5000'; // TODO: Change to Render URL after deployment
+var API_AVAILABLE = false;
+function getPeriodLabel() {
+    if (currentDateRange === 'today') return 'today';
+    var lbl = document.getElementById('dateRangeLabel');
+    return lbl && lbl.textContent ? lbl.textContent : 'the selected period';
+}
+function snapshotBadge() {
+    if (currentDateRange === 'today') return '';
+    return '<div style="background:#FFF3CD;color:#856404;padding:4px 10px;border-radius:4px;font-size:11px;margin-bottom:8px;display:inline-block;">Current snapshot -- not filtered by date range</div>';
+}
+var YARDS = ['Midland', 'Bryan', 'Kilgore', 'Hobbs', 'Jourdanton', 'Laredo',
+             'Levelland', 'Barstow', 'Ohio', 'Pennsylvania', 'Oklahoma', 'North Dakota'];
+
+// Yards per division (for filtering yard dropdown)
+var DIVISION_YARDS = {
+    'Casing': ['All Yards', 'Midland', 'Bryan', 'Kilgore', 'Hobbs', 'Jourdanton', 'Laredo'],
+    'Rathole': ['All Yards', 'Midland', 'Levelland', 'Barstow', 'Jourdanton', 'Ohio', 'Pennsylvania', 'Oklahoma', 'North Dakota'],
+    'Poly Pipe': ['All Yards', 'Midland', 'Jourdanton'],
+    'Pit Lining': ['All Yards', 'Midland', 'Jourdanton'],
+    'Anchors': ['All Yards', 'Midland'],
+    'Construction': ['All Yards', 'Midland'],
+    'Environmental': ['All Yards', 'Midland'],
+    'Fencing': ['All Yards', 'Midland'],
+    'Drilling Tools': ['All Yards', 'Midland'],
+    'All Divisions': ['All Yards', 'Midland', 'Bryan', 'Kilgore', 'Hobbs', 'Jourdanton', 'Laredo',
+                      'Levelland', 'Barstow', 'Ohio', 'Pennsylvania', 'Oklahoma', 'North Dakota']
+};
+
+// Company -> division hierarchy
+var COMPANY_DIVISIONS = {
+    'BRHAS': ['All Divisions', 'Casing', 'Rathole', 'Pit Lining', 'Poly Pipe', 'Anchors', 'Construction', 'Drilling Tools', 'Environmental', 'Fencing'],
+    'Valor': [],
+    'BTI': [],
+    'Transcend': [],
+    'Permian': []
+};
+
+// Map speeding division names (from Motive) to company/division
+var SPEEDING_TO_COMPANY = {
+    'Casing': 'BRHAS', 'Rathole': 'BRHAS', 'Fencing': 'BRHAS',
+    'Pit Lining': 'BRHAS', 'Poly Pipe': 'BRHAS', 'Anchors': 'BRHAS',
+    'Construction': 'BRHAS', 'Drilling Tools': 'BRHAS', 'Environmental': 'BRHAS',
+    'Valor Energy Services': 'Valor', 'Downhole Tools': 'Valor', "Butch's Trucking": 'BTI',
+    'Transcend': 'Transcend', 'Transcend Drilling': 'Transcend',
+    'Rentals': 'Permian', 'Permian': 'Permian', 'PER': 'Permian',
+    'Sales/Admin': 'BRHAS', 'Unassigned': 'BRHAS'
+};
+var SPEEDING_TO_DIVISION = {
+    'Casing': 'Casing', 'Rathole': 'Rathole', 'Fencing': 'Fencing',
+    'Pit Lining': 'Pit Lining', 'Poly Pipe': 'Poly Pipe', 'Anchors': 'Anchors',
+    'Construction': 'Construction', 'Drilling Tools': 'Drilling Tools', 'Environmental': 'Environmental',
+    'Valor Energy Services': 'Valor', 'Downhole Tools': 'Valor', "Butch's Trucking": 'BTI',
+    'Transcend': 'Transcend', 'Transcend Drilling': 'Transcend',
+    'Rentals': 'Permian', 'Permian': 'Permian', 'PER': 'Permian',
+    'Sales/Admin': 'All Divisions', 'Unassigned': 'All Divisions'
+};
+
+// Map KPA observation service_line to company/division
+var KPA_SL_TO_COMPANY = {
+    'Casing': 'BRHAS', 'Rat Hole': 'BRHAS', 'Rathole': 'BRHAS',
+    'Anchor': 'BRHAS', 'Anchors': 'BRHAS',
+    'Poly Pipe': 'BRHAS', 'Pit Lining': 'BRHAS',
+    'Construction': 'BRHAS', 'Drilling Tools': 'BRHAS', 'Environmental': 'BRHAS', 'Fencing': 'BRHAS',
+    'Downhole Tools': 'BRHAS', 'Fabrication': 'BRHAS', 'Shop': 'BRHAS',
+    'Corporate': 'BRHAS', 'Containment': 'BRHAS', 'Civil': 'BRHAS',
+    'Valor': 'Valor', 'Valor Energy': 'Valor', 'Valor Energy Services': 'Valor',
+    'BTI': 'BTI', "Butch's Trucking": 'BTI', 'Trucking': 'BTI',
+    'Drilling': 'Transcend', 'Transcend': 'Transcend',
+    'Rentals': 'Permian', 'PER': 'Permian', 'Permian': 'Permian'
+};
+var KPA_SL_TO_DIVISION = {
+    'Casing': 'Casing', 'Rat Hole': 'Rathole', 'Rathole': 'Rathole',
+    'Anchor': 'Anchors', 'Anchors': 'Anchors',
+    'Poly Pipe': 'Poly Pipe', 'Pit Lining': 'Pit Lining',
+    'Construction': 'Construction', 'Drilling Tools': 'Drilling Tools', 'Environmental': 'Environmental', 'Fencing': 'Fencing',
+    'Downhole Tools': 'Drilling Tools', 'Fabrication': 'Fabrication', 'Shop': 'Shop',
+    'Corporate': 'Corporate', 'Containment': 'Environmental', 'Civil': 'Construction',
+    'Drilling': 'Transcend',
+    'Valor': 'Valor', 'Valor Energy': 'Valor', 'Valor Energy Services': 'Valor',
+    'BTI': 'BTI', "Butch's Trucking": 'BTI', 'Trucking': 'BTI',
+    'Rentals': 'Permian', 'PER': 'Permian', 'Permian': 'Permian'
+};
+
+// Assessment form ID -> division mapping (division-specific forms)
+var FORM_DIVISION = {
+    381707: 'Casing',        // CSG - Safety Casing Field Assessment
+    385365: 'Transcend',     // TD - Rig Inspection
+    226217: 'Poly Pipe',     // WS - Poly Pipe Field Assessment
+    386087: 'Pit Lining',    // WS - Pit Lining Field Assessment
+    172295: 'Construction',  // Construction - Site Safety Review
+    153181: 'Rathole'        // RH - Rathole Field Assessment
+};
+// Shared forms (152018, 152034, 151213, 229645) filtered by assessor instead
+
+// Assessor -> company/division for shared form filtering
+var ASSESSOR_COMPANY = {
+    'Michael Salazar': 'BRHAS', 'Michael Hancock': 'BRHAS',
+    'Joey Speyrer': 'BRHAS', 'Joseph Speyrer': 'BRHAS', 'James Barnett': 'BRHAS',
+    'Allen Batts': 'BRHAS',
+    'John Snodgrass': 'BRHAS', 'Jose Romero': 'BRHAS',
+    'Wes Franklin': 'BRHAS', 'Sean Fry': 'BRHAS',
+    'Kelly Rhodes': 'BRHAS',
+    'Bernard Bradley': 'BTI',
+    'Nicholas Sanchez': 'Transcend', 'Charlie Langwell': 'Transcend',
+    'Geronimo Fuentes': 'Transcend'
+};
+var ASSESSOR_DIVISION = {
+    'Michael Salazar': 'Casing', 'Michael Hancock': 'Casing',
+    'Joey Speyrer': 'Casing', 'Joseph Speyrer': 'Casing', 'James Barnett': 'Casing',
+    'Allen Batts': 'Casing',
+    'John Snodgrass': 'Rathole', 'Jose Romero': 'Pit Lining',
+    'Wes Franklin': 'Rathole', 'Sean Fry': 'Rathole',
+    'Kelly Rhodes': 'Environmental',
+    'Bernard Bradley': 'BTI',
+    'Nicholas Sanchez': 'Transcend', 'Charlie Langwell': 'Transcend',
+    'Geronimo Fuentes': 'Transcend'
+};
+
+// Map form division -> company
+var FORM_DIV_TO_COMPANY = {
+    'Casing': 'BRHAS', 'Rathole': 'BRHAS', 'Poly Pipe': 'BRHAS',
+    'Pit Lining': 'BRHAS', 'Construction': 'BRHAS',
+    'Environmental': 'BRHAS', 'Fencing': 'BRHAS', 'Anchors': 'BRHAS',
+    'Transcend': 'Transcend', 'BTI': 'BTI',
+    'Valor': 'Valor', 'Permian': 'Permian'
+};
+
+// Casing safety rep to yard mapping (only Casing reps shown in Casing accountability)
+var REP_YARD = {
+    'Michael Salazar': 'Midland',
+    'Michael Hancock': 'Midland',
+    'Joey Speyrer': 'Jourdanton / Laredo',
+    'Joseph Speyrer': 'Jourdanton / Laredo',
+    'James Barnett': 'Kilgore',
+    'Allen Batts': 'Hobbs'
+};
+
+// Monthly field visit target per rep = number of crews they cover
+// 1 quality field assessment per crew per month
+var REP_MONTHLY_TARGET = {
+    'Michael Salazar': 8,
+    'Michael Hancock': 8,
+    'Joey Speyrer': 6,    // Jourdanton 3 + Laredo 3
+    'Joseph Speyrer': 6,  // Jourdanton 3 + Laredo 3
+    'James Barnett': 6,
+    'Allen Batts': 7
+};
+
+// Approximate vehicle counts per yard (update monthly from Motive)
+var YARD_VEHICLES = {
+    'Midland': 185, 'Kilgore': 45, 'Laredo': 55, 'Hobbs': 40,
+    'Jourdanton': 50, 'Bryan': 30,
+    'Levelland': 10, 'Barstow': 5
+};
+var TOTAL_VEHICLES = 435;
+
+// Yard-location keyword map for KPA filtering
+var YARD_KEYWORDS = {
+    'Midland': ['midland', 'odessa', 'yukon', '479', '404', 'cactus', 'lasso', 'gato', '475', 'magnolia', 'hp 4', 'permian'],
+    'Kilgore': ['kilgore', 'tyler', 'longview', 'east texas', 'gregg', 'hallsville'],
+    'Laredo': ['laredo', 'webb', 'eagle pass'],
+    'Hobbs': ['hobbs', 'lovington', 'artesia', 'lea county', 'carlsbad', 'new mexico', ', nm', 'jal'],
+    'Jourdanton': ['jourdanton', 'pleasanton', 'atascosa', 'karnes', 'poteet'],
+    'Bryan': ['bryan', 'college station', 'hearne', 'navasota', 'dime box'],
+    'Levelland': ['levelland'],
+    'Barstow': ['barstow', 'wink'],
+    'Ohio': ['ohio', 'wintersville'],
+    'Pennsylvania': ['pennsylvania', 'towanda'],
+    'Oklahoma': ['oklahoma', 'shawnee'],
+    'North Dakota': ['north dakota', 'dickinson']
+};
+
+// ===== UTILITIES =====
+function esc(t) {
+    if (!t) return '';
+    var d = document.createElement('div');
+    d.textContent = String(t);
+    return d.innerHTML;
+}
+
+function fmtDate(s) {
+    if (!s) return '';
+    try {
+        var d = new Date(s);
+        return d.toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch(e) { return s; }
+}
+
+function kpaLink(id) {
+    return 'https://brhas-ees.kpaehs.com/forms/responses/view/' + encodeURIComponent(id);
+}
+
+function safeHref(url) {
+    if (!url) return '#';
+    var s = String(url);
+    if (s.indexOf('http://') === 0 || s.indexOf('https://') === 0) {
+        // Use encodeURI for URL context (preserves :/? etc) then escape HTML entities for attribute
+        return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    return '#';
+}
+
+function matchesCompanyDivision(company, division) {
+    // Check if a company/division combo matches current filter
+    if (currentCompany === 'All') return true;
+    if (company && company !== currentCompany && company !== 'All') return false;
+    if (currentDivision !== 'All Divisions' && currentDivision !== 'All' && division) {
+        return division === currentDivision;
+    }
+    return true;
+}
+
+function matchYardByLocation(loc, yard) {
+    if (yard === 'All Yards') return true;
+    if (!loc) return false;
+    var l = loc.toLowerCase();
+    var kw = YARD_KEYWORDS[yard];
+    if (!kw) return false;
+    for (var i = 0; i < kw.length; i++) {
+        if (l.indexOf(kw[i]) !== -1) return true;
+    }
+    return false;
+}
+
+// MoM arrow helper (localStorage-based previous day cache)
+function getTrendArrow(key, currentVal) {
+    var prev = null;
+    try {
+        var cache = JSON.parse(localStorage.getItem('brhas_prev_day') || '{}');
+        prev = cache[key];
+    } catch(e) {}
+    if (prev === null || prev === undefined) return '';
+    if (currentVal > prev) return '<span style="color:#A73333">&#9650; ' + (currentVal - prev) + '</span>';
+    if (currentVal < prev) return '<span style="color:#008000">&#9660; ' + (prev - currentVal) + '</span>';
+    return '<span style="color:#999">&#8212;</span>';
+}
+
+function saveTodayAsBaseline() {
+    try {
+        var baseline = {
+            camera: getYardFilteredCamera().length,
+            speeding: getYardFilteredSpeeding().length,
+            observations: getFilteredObservations().length,
+            nearMisses: getFilteredNearMisses().length,
+            deviceIssues: getYardFilteredDevices().length,
+            date: D.ytd ? D.ytd.report_date : ''
+        };
+        var existing = JSON.parse(localStorage.getItem('brhas_prev_day') || '{}');
+        if (existing.date !== baseline.date) {
+            localStorage.setItem('brhas_prev_day', JSON.stringify(baseline));
+        }
+    } catch(e) {}
+}
+
+// Parse hour from various time formats
+function parseHour(timeStr) {
+    if (!timeStr) return -1;
+    // "04/12/2026 11:02 AM CT" format
+    var m = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (m) {
+        var h = parseInt(m[1]);
+        var ampm = m[3].toUpperCase();
+        if (ampm === 'PM' && h < 12) h += 12;
+        if (ampm === 'AM' && h === 12) h = 0;
+        return h;
+    }
+    // ISO format
+    try {
+        var d = new Date(timeStr);
+        if (!isNaN(d)) return d.getHours();
+    } catch(e) {}
+    return -1;
+}
+
+// Check if a date string falls on Saturday or Sunday
+function isWeekend(timeStr) {
+    if (!timeStr) return false;
+    // "04/12/2026 ..." format
+    var m = timeStr.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+    if (m) {
+        var d = new Date(parseInt(m[3]), parseInt(m[1])-1, parseInt(m[2]));
+        var day = d.getDay();
+        return day === 0 || day === 6;
+    }
+    // ISO format
+    try {
+        var d = new Date(timeStr);
+        if (!isNaN(d)) { var day = d.getDay(); return day === 0 || day === 6; }
+    } catch(e) {}
+    return false;
+}
+
+// Filtered data helpers
+function getFilteredSpeedingEvents() {
+    if (!D.speeding || !D.speeding.events) return [];
+    return D.speeding.events.filter(function(e) {
+        var co = SPEEDING_TO_COMPANY[e.division] || '';
+        var div = SPEEDING_TO_DIVISION[e.division] || e.division;
+        return matchesCompanyDivision(co, div);
+    });
+}
+// Backward compat alias
+function getCasingSpeedingEvents() { return getFilteredSpeedingEvents(); }
+
+function getYardFilteredCamera() {
+    if (!D.camera || !D.camera.events) return [];
+    var ev = D.camera.events;
+    if (currentYard !== 'All Yards') ev = ev.filter(function(e) { return e.yard === currentYard; });
+    return ev;
+}
+
+function getYardFilteredSpeeding() {
+    var ev = getFilteredSpeedingEvents();
+    if (currentYard !== 'All Yards') ev = ev.filter(function(e) { return e.yard === currentYard; });
+    return ev;
+}
+
+function getYardFilteredDevices() {
+    if (!D.devices || !D.devices.issues) return [];
+    var iss = D.devices.issues;
+    if (currentYard !== 'All Yards') iss = iss.filter(function(i) { return i.yard === currentYard; });
+    return iss;
+}
+
+function getFilteredObservations() {
+    if (!D.kpa || !D.kpa.observations || !D.kpa.observations.details) return [];
+    if (currentCompany === 'All') return D.kpa.observations.details;
+    return D.kpa.observations.details.filter(function(o) {
+        var sl = o.service_line || '';
+        if (!sl) return true; // No service line = show for all (cannot determine source)
+        var co = KPA_SL_TO_COMPANY[sl];
+        var div = KPA_SL_TO_DIVISION[sl] || sl;
+        // Handle Drilling -> Transcend mapping (prefix match)
+        if (!co && sl.indexOf('Drilling') === 0) { co = 'Transcend'; div = 'Transcend'; }
+        return matchesCompanyDivision(co || '', div);
+    });
+}
+
+function getFilteredNearMisses() {
+    if (!D.kpa || !D.kpa.near_misses) return [];
+    if (currentCompany === 'All') return D.kpa.near_misses;
+    return D.kpa.near_misses.filter(function(nm) {
+        var sl = nm.service_line || '';
+        if (!sl) return true; // No service line = show for all
+        var co = KPA_SL_TO_COMPANY[sl];
+        var div = KPA_SL_TO_DIVISION[sl] || sl;
+        if (!co && sl.indexOf('Drilling') === 0) { co = 'Transcend'; div = 'Transcend'; }
+        return matchesCompanyDivision(co || '', div);
+    });
+}
+
+function getFilteredIncidents() {
+    if (!D.kpa || !D.kpa.incidents) return [];
+    if (currentCompany === 'All') return D.kpa.incidents;
+    return D.kpa.incidents.filter(function(inc) {
+        var sl = inc.service_line || '';
+        if (!sl) return true; // Incidents without service line show for all
+        var co = KPA_SL_TO_COMPANY[sl];
+        var div = KPA_SL_TO_DIVISION[sl] || sl;
+        if (!co && sl.indexOf('Drilling') === 0) { co = 'Transcend'; div = 'Transcend'; }
+        return matchesCompanyDivision(co || '', div);
+    });
+}
+
+function includesCasing() {
+    // True when Casing data should be shown (BRHAS > All Divisions, BRHAS > Casing, or All Companies)
+    return currentCompany === 'All' || (currentCompany === 'BRHAS' &&
+        (currentDivision === 'Casing' || currentDivision === 'All Divisions' || currentDivision === 'All'));
+}
+
+function isTabAvailable(tabName) {
+    // All 4 tabs always available
+    return true;
+}
+
+function updateTabAvailability() {
+    var tabs = document.querySelectorAll('#tabBar .tab');
+    var activeTab = document.querySelector('#tabBar .tab.active');
+    var activeDisabled = false;
+    Array.prototype.forEach.call(tabs, function(tab) {
+        var name = tab.dataset.tab;
+        if (!isTabAvailable(name)) {
+            tab.classList.add('disabled');
+            if (tab === activeTab) activeDisabled = true;
+        } else {
+            tab.classList.remove('disabled');
+        }
+    });
+    if (activeDisabled) switchTab('overview');
+}
+
+// ===== DATA LOADING =====
+function loadData() {
+    var cacheBust = '?t=' + Date.now();
+    Promise.all([
+        fetch('output/ytd_stats.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/kpa_data.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/camera_events.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/speeding_events.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/device_status.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/training_compliance.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/corrective_actions.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(results) {
+        D.ytd = results[0]; D.kpa = results[1]; D.camera = results[2];
+        D.speeding = results[3]; D.devices = results[4];
+        D.training = results[5]; D.cas = results[6];
+        // Save today's static snapshots for camera/devices/training
+        D_today.camera = D.camera;
+        D_today.devices = D.devices;
+        D_today.training = D.training;
+
+        setupDivisionFilter();
+        setupDateRangePicker();
+        checkAPIAvailability();
+        renderHeader();
+        buildFilterBar();
+        buildSpacer();
+        updateTabAvailability();
+        renderAll();
+        saveTodayAsBaseline();
+        document.getElementById('loading').style.display = 'none';
+        switchTab('overview');
+    }).catch(function(e) {
+        document.getElementById('loading').innerHTML = '<div class="alert-red">Error loading data: ' + esc(e.message) + '</div>';
+    });
+}
+
+// ===== DATE RANGE PICKER =====
+function getDateRange(rangeKey) {
+    var today = new Date();
+    var y = today.getFullYear(), m = today.getMonth(), d = today.getDate();
+    var dow = today.getDay(); // 0=Sun
+    var fmt = function(dt) { return dt.toISOString().slice(0, 10); };
+    switch(rangeKey) {
+        case 'today': return { start: fmt(today), end: fmt(today) };
+        case 'yesterday':
+            var yd = new Date(y, m, d - 1);
+            return { start: fmt(yd), end: fmt(yd) };
+        case 'thisWeek':
+            var ws = new Date(y, m, d - (dow === 0 ? 6 : dow - 1)); // Monday
+            return { start: fmt(ws), end: fmt(today) };
+        case 'lastWeek':
+            var lws = new Date(y, m, d - (dow === 0 ? 6 : dow - 1) - 7);
+            var lwe = new Date(lws.getFullYear(), lws.getMonth(), lws.getDate() + 6);
+            return { start: fmt(lws), end: fmt(lwe) };
+        case 'thisMonth':
+            return { start: y + '-' + (m+1 < 10 ? '0' : '') + (m+1) + '-01', end: fmt(today) };
+        case 'lastMonth':
+            var lm = new Date(y, m - 1, 1);
+            var lme = new Date(y, m, 0);
+            return { start: fmt(lm), end: fmt(lme) };
+        default: return { start: fmt(today), end: fmt(today) };
+    }
+}
+
+function setupDateRangePicker() {
+    var sel = document.getElementById('dateRangeSelect');
+    var customInputs = document.getElementById('customDateInputs');
+    var applyBtn = document.getElementById('dateApply');
+    var label = document.getElementById('dateRangeLabel');
+
+    sel.addEventListener('change', function() {
+        var val = this.value;
+        if (val === 'custom') {
+            customInputs.style.display = 'inline';
+            return;
+        }
+        customInputs.style.display = 'none';
+        currentDateRange = val;
+        if (val === 'today') {
+            restoreTodayData();
+            label.textContent = '';
+        } else {
+            var range = getDateRange(val);
+            label.textContent = range.start + ' to ' + range.end;
+            fetchAPIData(range.start, range.end);
+        }
+    });
+
+    applyBtn.addEventListener('click', function() {
+        var s = document.getElementById('dateStart').value;
+        var e = document.getElementById('dateEnd').value;
+        if (!s || !e) return;
+        currentDateRange = 'custom';
+        label.textContent = s + ' to ' + e;
+        fetchAPIData(s, e);
+    });
+}
+
+function restoreTodayData() {
+    // Restore static JSON data for "Today"
+    var cacheBust = '?t=' + Date.now();
+    Promise.all([
+        fetch('output/ytd_stats.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/kpa_data.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/speeding_events.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/corrective_actions.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(results) {
+        D.ytd = results[0]; D.kpa = results[1]; D.speeding = results[2]; D.cas = results[3];
+        D.camera = D_today.camera;
+        D.devices = D_today.devices;
+        D.training = D_today.training;
+        var banner = document.getElementById('apiBanner');
+        banner.style.display = 'none';
+        renderHeader();
+        buildFilterBar();
+        updateTabAvailability();
+        renderAll();
+    });
+}
+
+function fetchAPIData(startDate, endDate) {
+    var banner = document.getElementById('apiBanner');
+    if (!API_AVAILABLE) {
+        banner.textContent = 'Historical data API is unavailable. Showing today\'s data only. Date range filtering requires the cloud API to be deployed.';
+        banner.style.display = 'block';
+        console.warn('[DateRange] API not available, cannot fetch ' + startDate + ' to ' + endDate);
+        return;
+    }
+    // Check sessionStorage cache
+    var cacheKey = 'api_' + startDate + '_' + endDate;
+    var cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+        try {
+            console.log('[DateRange] Using cached data for ' + startDate + ' to ' + endDate);
+            applyAPIData(JSON.parse(cached), startDate, endDate);
+            return;
+        } catch(e) { console.warn('[DateRange] Cache parse error, fetching fresh'); }
+    }
+
+    // Show loading
+    document.getElementById('loading').style.display = 'flex';
+    banner.textContent = 'Loading historical data from API...';
+    banner.style.display = 'block';
+    console.log('[DateRange] Fetching API data: ' + startDate + ' to ' + endDate);
+
+    fetch(API_BASE + '/api/data?start=' + startDate + '&end=' + endDate)
+        .then(function(r) {
+            if (!r.ok) {
+                throw new Error('API returned ' + r.status + ' ' + r.statusText);
+            }
+            return r.json();
+        })
+        .then(function(data) {
+            console.log('[DateRange] API response received:', {
+                speeding: data.speeding ? (data.speeding.events || []).length + ' events' : 'null',
+                kpa_obs: data.kpa ? (data.kpa.observations.details || []).length + ' obs' : 'null',
+                ytd: data.ytd ? 'present' : 'null',
+                cas: data.cas ? (data.cas.corrective_actions || []).length + ' CAs' : 'null',
+                errors: data._errors || 'none'
+            });
+            // Cache in sessionStorage
+            try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch(e) {}
+            applyAPIData(data, startDate, endDate);
+        })
+        .catch(function(err) {
+            console.error('[DateRange] API fetch failed:', err);
+            banner.textContent = 'API request failed: ' + err.message + '. Showing today\'s data.';
+            banner.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        });
+}
+
+function applyAPIData(data, startDate, endDate) {
+    console.log('[DateRange] Applying API data for ' + startDate + ' to ' + endDate);
+    // Replace D with API data, keeping static snapshots for camera/devices/training
+    if (data.ytd) {
+        D.ytd = data.ytd;
+        console.log('[DateRange] Updated D.ytd (man_hours=' + data.ytd.ytd_man_hours + ', trir=' + data.ytd.ytd_trir + ')');
+    }
+    if (data.kpa) {
+        D.kpa = data.kpa;
+        console.log('[DateRange] Updated D.kpa (' + (data.kpa.observations ? data.kpa.observations.details.length : 0) + ' obs)');
+    }
+    if (data.speeding) {
+        D.speeding = data.speeding;
+        console.log('[DateRange] Updated D.speeding (' + data.speeding.events.length + ' events)');
+    }
+    if (data.cas) {
+        D.cas = data.cas;
+        console.log('[DateRange] Updated D.cas (' + (data.cas.corrective_actions || []).length + ' CAs)');
+    }
+    // Camera, devices, training stay from today's static files
+    D.camera = D_today.camera;
+    D.devices = D_today.devices;
+    D.training = D_today.training;
+
+    var banner = document.getElementById('apiBanner');
+    var noteItems = [];
+    if (!data.kpa) noteItems.push('KPA');
+    if (!data.speeding) noteItems.push('Speeding');
+    if (!data.ytd) noteItems.push('YTD Stats');
+    if (!data.cas) noteItems.push('Corrective Actions');
+    if (data._errors && data._errors.length > 0) noteItems.push(data._errors.join(', '));
+    if (noteItems.length > 0) {
+        banner.textContent = 'Showing data for ' + startDate + ' to ' + endDate + '. Some sources unavailable: ' + noteItems.join(', ') + '. Camera/devices/training show current snapshot.';
+    } else {
+        banner.textContent = 'Showing data for ' + startDate + ' to ' + endDate + '. Camera, devices, and training show current snapshot.';
+    }
+    banner.style.display = 'block';
+    document.getElementById('loading').style.display = 'none';
+
+    try {
+        renderHeader();
+        buildFilterBar();
+        updateTabAvailability();
+        renderAll();
+        console.log('[DateRange] All render functions completed successfully');
+    } catch(e) {
+        console.error('[DateRange] Render error:', e);
+    }
+}
+
+function checkAPIAvailability() {
+    console.log('[API] Checking availability at ' + API_BASE + '/api/health');
+    fetch(API_BASE + '/api/health', { mode: 'cors' })
+        .then(function(r) {
+            if (!r.ok) throw new Error('Health check returned ' + r.status);
+            return r.json();
+        })
+        .then(function(data) {
+            if (data.status === 'ok') {
+                API_AVAILABLE = true;
+                console.log('[API] API is available and healthy');
+            }
+        })
+        .catch(function(err) {
+            API_AVAILABLE = false;
+            console.warn('[API] API unavailable:', err.message || err);
+            // Disable non-Today options with note
+            var sel = document.getElementById('dateRangeSelect');
+            for (var i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value !== 'today') {
+                    sel.options[i].disabled = true;
+                    sel.options[i].textContent += ' (API offline)';
+                }
+            }
+        });
+}
+
+// ===== DIVISION FILTER SETUP =====
+function setupDivisionFilter() {
+    var compSel = document.getElementById('companySelect');
+    var divSel = document.getElementById('divisionSelect');
+
+    compSel.addEventListener('change', function() {
+        currentCompany = this.value;
+        // Update division dropdown
+        var divs = COMPANY_DIVISIONS[currentCompany] || [];
+        divSel.innerHTML = '';
+        if (currentCompany === 'All') {
+            divSel.innerHTML = '<option value="All">All Divisions</option>';
+            divSel.disabled = true;
+            currentDivision = 'All';
+        } else if (divs.length > 0) {
+            divs.forEach(function(d) {
+                var opt = document.createElement('option');
+                opt.value = d; opt.textContent = d;
+                divSel.appendChild(opt);
+            });
+            divSel.disabled = false;
+            currentDivision = divs[0] || 'All Divisions';
+        } else {
+            divSel.innerHTML = '<option value="All">N/A</option>';
+            divSel.disabled = true;
+            currentDivision = 'All';
+        }
+        updateScopeBadge();
+        renderHeader();
+        buildFilterBar();
+        buildSpacer();
+        updateTabAvailability();
+        renderAll();
+    });
+
+    divSel.addEventListener('change', function() {
+        currentDivision = this.value;
+        updateScopeBadge();
+        renderHeader();
+        buildFilterBar();
+        buildSpacer();
+        updateTabAvailability();
+        renderAll();
+    });
+}
+
+function updateScopeBadge() {
+    // Update header title
+    var title = 'Safety Dashboard';
+    if (currentCompany !== 'All') {
+        title = currentCompany + ' Safety Dashboard';
+        if (currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+            title = currentDivision + ' Division Safety Dashboard';
+        }
+    }
+    document.getElementById('headerTitle').textContent = title;
+
+    // Always show yard/location filter bar
+    var filterBar = document.getElementById('filterBar');
+    filterBar.style.display = 'flex';
+}
+
+// ===== HEADER =====
+function getCompanyStats() {
+    // Get stats for the current company/division filter from stats_by_company
+    var y = D.ytd;
+    if (!y || !y.stats_by_company) return null;
+    if (currentCompany === 'All') {
+        return {man_hours: y.ytd_man_hours, trir: y.ytd_trir, dart: y.ytd_dart,
+                recordables: y.ytd_recordables, days_rec: y.days_since_recordable,
+                days_lti: y.days_since_lti};
+    }
+    var cs = y.stats_by_company[currentCompany];
+    if (!cs) return null;
+    // If a specific division is selected, use division hours + service_lines for TRIR
+    if (currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+        var divHours = cs.by_division ? cs.by_division[currentDivision] : null;
+        var divRec = 0;
+        var divDays = null;
+        // service_lines keys are already normalized to dashboard division names
+        if (cs.service_lines && cs.service_lines[currentDivision]) {
+            var slData = cs.service_lines[currentDivision];
+            divRec = slData.ytd_count || 0;
+            divDays = slData.days_since != null ? slData.days_since : null;
+        }
+        if (divHours) {
+            var divTrir = divHours > 0 ? Math.round(divRec * 200000 / divHours * 100) / 100 : 0;
+            return {man_hours: divHours, trir: divTrir, dart: divTrir,
+                    recordables: divRec, days_rec: divDays, days_lti: divDays};
+        }
+    }
+    return {man_hours: cs.man_hours, trir: cs.trir, dart: cs.dart,
+            recordables: cs.recordables, days_rec: cs.days_since_recordable,
+            days_lti: cs.days_since_recordable};
+}
+
+function getTrirColor(val) {
+    if (val === null || val === undefined) return '';
+    if (val < 1.0) return '#27ae60';
+    if (val <= 1.5) return '#f39c12';
+    return '#e74c3c';
+}
+
+function renderHeader() {
+    var y = D.ytd;
+    // Update header company name based on current filter
+    var companyNames = { 'All': 'All Companies', 'BRHAS': 'BRHAS', 'Valor': 'Valor', 'BTI': "Butch's Trucking", 'Transcend': 'Transcend', 'Permian': 'Permian' };
+    document.getElementById('headerCompany').textContent = companyNames[currentCompany] || currentCompany;
+    if (!y) { document.getElementById('headerDate').textContent = 'Data unavailable'; return; }
+    document.getElementById('headerDate').textContent = 'Report Date: ' + y.report_date;
+
+    // Get company-filtered stats
+    var st = getCompanyStats();
+    if (st) {
+        document.getElementById('hmManHours').textContent = st.man_hours ? st.man_hours.toLocaleString() : '--';
+        var trirEl = document.getElementById('hmTRIR');
+        trirEl.textContent = st.trir != null ? st.trir.toFixed(1) : '--';
+        trirEl.style.color = getTrirColor(st.trir);
+        var dartEl = document.getElementById('hmDART');
+        dartEl.textContent = st.dart != null ? st.dart.toFixed(1) : '--';
+        dartEl.style.color = getTrirColor(st.dart);
+        document.getElementById('hmRecordables').textContent = st.recordables != null ? st.recordables : '--';
+        document.getElementById('hmDaysRec').textContent = st.days_rec != null ? st.days_rec : '--';
+        document.getElementById('hmDaysLTI').textContent = st.days_lti != null ? st.days_lti : '--';
+    } else {
+        ['hmManHours','hmTRIR','hmDART','hmRecordables','hmDaysRec','hmDaysLTI'].forEach(function(id) {
+            document.getElementById(id).textContent = '--';
+            if (id === 'hmTRIR' || id === 'hmDART') document.getElementById(id).style.color = '';
+        });
+    }
+
+    // Training % -- company/division/location-aware
+    var trSt = getFilteredTrainingStats();
+    if (trSt && trSt.pct != null) {
+        document.getElementById('hmTraining').textContent = trSt.pct + '%';
+        document.getElementById('hmTraining').style.color = trSt.pct < 90 ? '#FFD700' : '';
+    } else {
+        document.getElementById('hmTraining').textContent = '--';
+        document.getElementById('hmTraining').style.color = '';
+    }
+
+    if (st && st.trir > 0) document.getElementById('header').classList.add('red');
+    else document.getElementById('header').classList.remove('red');
+
+    // Footer
+    var scope = currentCompany === 'All' ? 'All Companies' :
+        currentDivision !== 'All Divisions' && currentDivision !== 'All' ?
+        currentDivision + ' Division' : currentCompany;
+    if (currentYard && currentYard !== 'All Yards') scope += ' - ' + currentYard;
+    var sources = currentCompany === 'Permian' ? 'KPA EHS' : 'Motive API + KPA EHS';
+    document.getElementById('footer').innerHTML =
+        'Generated ' + esc(y.generated_at || y.report_date) +
+        ' &nbsp;|&nbsp; Data: ' + sources + ' &nbsp;|&nbsp; ' + scope;
+
+    updateScopeBadge();
+}
+
+// ===== FILTER BAR =====
+function getAvailableLocations() {
+    // Get locations for current company/division from training data
+    var t = D.training;
+    var locs = ['All Yards'];
+    if (!t) return locs;
+
+    if (currentCompany === 'All') {
+        // All companies -- gather all unique locations
+        var seen = {};
+        if (t.by_company_location) {
+            for (var co in t.by_company_location) {
+                for (var loc in t.by_company_location[co]) {
+                    if (loc !== 'Unassigned' && !seen[loc]) { seen[loc] = true; locs.push(loc); }
+                }
+            }
+        }
+    } else if (currentCompany === 'BRHAS' && currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+        // Specific BRHAS division
+        if (t.by_division_location && t.by_division_location[currentDivision]) {
+            for (var loc in t.by_division_location[currentDivision]) {
+                if (loc !== 'Unassigned') locs.push(loc);
+            }
+        }
+    } else {
+        // Company level (or BRHAS All Divisions)
+        var co = currentCompany;
+        if (t.by_company_location && t.by_company_location[co]) {
+            for (var loc in t.by_company_location[co]) {
+                if (loc !== 'Unassigned') locs.push(loc);
+            }
+        }
+    }
+    // Also include DIVISION_YARDS entries for Motive data coverage (BRHAS only)
+    if (currentCompany === 'BRHAS') {
+        var divYards = DIVISION_YARDS[currentDivision];
+        if (divYards) {
+            divYards.forEach(function(y) {
+                if (y !== 'All Yards' && locs.indexOf(y) === -1) locs.push(y);
+            });
+        }
+    }
+    return locs;
+}
+
+function buildFilterBar() {
+    var bar = document.getElementById('filterBar');
+    var allYards = getAvailableLocations();
+    // Reset yard if current yard not in available list
+    if (allYards.indexOf(currentYard) === -1) currentYard = 'All Yards';
+    var html = '';
+    allYards.forEach(function(yard) {
+        var count = getYardEventCount(yard);
+        var countStr = yard === 'All Yards' ? '' : ' <span class="filter-count">(' + count + ')</span>';
+        var active = yard === currentYard ? ' active' : '';
+        html += '<button class="filter-btn' + active + '" data-yard="' + yard + '">' + yard + countStr + '</button>';
+    });
+    bar.innerHTML = html;
+
+    Array.prototype.forEach.call(bar.querySelectorAll('.filter-btn'), function(btn) {
+        btn.addEventListener('click', function() {
+            currentYard = this.dataset.yard;
+            buildFilterBar();
+            renderHeader();
+            renderAll();
+        });
+    });
+}
+
+function getYardEventCount(yard) {
+    var cam = includesCasing() ? (D.camera && D.camera.events ? D.camera.events : []) : [];
+    var spd = getFilteredSpeedingEvents();
+    if (yard === 'All Yards') return cam.length + spd.length;
+    return cam.filter(function(e){return e.yard===yard;}).length +
+           spd.filter(function(e){return e.yard===yard;}).length;
+}
+
+// ===== SPACER =====
+function buildSpacer() {
+    var fixed = document.getElementById('fixedHeader');
+    var spacer = document.getElementById('contentSpacer');
+    spacer.innerHTML = fixed.innerHTML;
+    setTimeout(function() {
+        spacer.style.height = fixed.offsetHeight + 'px';
+        spacer.innerHTML = '';
+    }, 50);
+}
+
+// ===== QUICK PULSE (Item 5: MoM trend arrows) =====
+function renderQuickPulse() {
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    var spdEvents = getYardFilteredSpeeding();
+    var filteredObs = getFilteredObservations();
+    var obsTotal = filteredObs.length;
+    var filteredNM = getFilteredNearMisses();
+    var nearMisses = filteredNM.length;
+    var incidents = getFilteredIncidents().length;
+    var deviceIssues = includesCasing() ? getYardFilteredDevices().length : 0;
+
+    var cards = [
+        { num: camEvents.length, lbl: 'Camera Events', color: camEvents.length === 0 ? 'green' : camEvents.length <= 5 ? 'yellow' : 'red', key: 'camera' },
+        { num: spdEvents.length, lbl: 'Speeding Events', color: spdEvents.length === 0 ? 'green' : spdEvents.length <= 2 ? 'yellow' : 'red', key: 'speeding' },
+        { num: obsTotal, lbl: 'Observations', color: 'blue', key: 'observations' },
+        { num: nearMisses + incidents, lbl: incidents > 0 ? 'Near Misses / Incidents' : 'Near Misses', color: (nearMisses + incidents) === 0 ? 'green' : 'red', key: 'nearMisses' },
+        { num: deviceIssues, lbl: 'Device Issues', color: deviceIssues === 0 ? 'green' : deviceIssues <= 15 ? 'yellow' : 'red', key: 'deviceIssues' }
+    ];
+    if (!includesCasing()) {
+        cards = cards.filter(function(c) { return c.key !== 'camera' && c.key !== 'deviceIssues'; });
+    }
+    if (currentCompany === 'Permian') {
+        cards = cards.filter(function(c) { return c.key !== 'speeding'; });
+    }
+
+    var html = '';
+    cards.forEach(function(c) {
+        var trend = getTrendArrow(c.key, c.num);
+        html += '<div class="pulse-card ' + c.color + '">';
+        html += '<div class="pulse-num">' + c.num + '</div>';
+        html += '<div><div class="pulse-lbl">' + c.lbl + '</div>';
+        if (trend) html += '<div class="pulse-trend">' + trend + '</div>';
+        html += '</div></div>';
+    });
+    document.getElementById('quickPulse').innerHTML = html;
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(name) {
+    Array.prototype.forEach.call(document.querySelectorAll('#tabBar .tab'), function(t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+    });
+    var active = document.querySelector('#tabBar .tab[data-tab="' + name + '"]');
+    if (active) {
+        active.classList.add('active');
+        active.setAttribute('aria-selected', 'true');
+        active.setAttribute('tabindex', '0');
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.tab-content'), function(c) { c.style.display = 'none'; c.classList.remove('active'); });
+    var target = document.getElementById('tab-' + name);
+    if (target) { target.style.display = 'block'; target.classList.add('active'); }
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+    renderQuickPulse();
+    // Tab 1: Executive Overview
+    renderExecutiveSummary();
+    renderPortfolioScorecard();
+    renderLeadingIndicators();
+    renderTRIRTrend();
+    renderWeeklyEventTrend();
+    renderRedFlagDrivers();
+    renderCAAging();
+    // Tab 2: Fleet Safety
+    renderFleetKPIs();
+    renderCameraTypeDist();
+    renderCamera();
+    renderSpeeding();
+    renderRepeatOffenders();
+    renderYardScorecard();
+    // Tab 3: Field & Compliance
+    renderObsCulture();
+    renderTraining();
+    renderSafetyCAs();
+    renderKPA();
+    renderEnhancedAccountability();
+    renderInspectionFlagged();
+    renderNearMisses();
+    renderObservationAnalysis();
+    // Tab 4: Daily Detail
+    renderIncidents();
+    renderWeekendSpotlight();
+    renderDevicesAndCAs();
+}
+
+// Executive Summary - auto-generated daily briefing for directors and C-suite
+function renderExecutiveSummary() {
+    var div = document.getElementById('execSummarySection');
+
+    // Gather all metrics
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    var spdEvents = currentCompany === 'Permian' ? [] : getYardFilteredSpeeding();
+    var incidents = getFilteredIncidents();
+    var nearMisses = getFilteredNearMisses();
+    var deviceIssues = includesCasing() ? getYardFilteredDevices().length : 0;
+    var training = D.training;
+    var ytd = D.ytd;
+
+    // Red camera events
+    var redCam = camEvents.filter(function(e) { return e.tier === 'RED'; }).length;
+    var redSpd = spdEvents.filter(function(e) { return e.tier === 'RED'; }).length;
+
+    // Training pct -- use filtered stats for current company/division/location
+    var filteredTr = getFilteredTrainingStats();
+    var trainingPct = (filteredTr && filteredTr.pct != null) ? filteredTr.pct : null;
+
+    // Determine overall status
+    // camEvents is [] for non-Casing (gated by includesCasing), so redCam=0.
+    // Camera thresholds never trigger for non-Casing companies, which is correct.
+    var status = 'green';
+    if (incidents.length > 0 || redCam >= 3 || redSpd >= 3) {
+        status = 'red';
+    } else if (camEvents.length > 10 || nearMisses.length > 0 || redCam > 0 || redSpd > 0 || (trainingPct !== null && trainingPct < 80)) {
+        status = 'yellow';
+    }
+
+    var statusLabel = status === 'red' ? 'Immediate attention required' :
+                      status === 'yellow' ? 'Monitor and review before EOD' : 'Normal operations';
+
+    // Build headline
+    var headline = '';
+    if (status === 'green') {
+        headline = 'Operations are running within normal safety parameters. ';
+        if (currentCompany === 'Permian') {
+            headline += 'Zero incidents or near misses -- outstanding performance.';
+        } else if (!includesCasing()) {
+            // Non-Casing: reference speeding only, not camera
+            if (spdEvents.length === 0) {
+                headline += 'Zero speeding events recorded -- outstanding performance.';
+            } else {
+                headline += spdEvents.length + ' speeding events recorded -- within acceptable thresholds.';
+            }
+        } else if (camEvents.length === 0 && spdEvents.length === 0) {
+            headline += 'Zero camera and speeding events recorded -- outstanding performance.';
+        } else {
+            headline += camEvents.length + ' camera and ' + spdEvents.length + ' speeding events recorded, all within acceptable thresholds.';
+        }
+        // Add YTD context for green status
+        var filteredSt = getCompanyStats();
+        if (filteredSt && filteredSt.trir != null) {
+            headline += ' YTD TRIR: ' + Number(filteredSt.trir).toFixed(1) + '.';
+        }
+    } else if (status === 'red') {
+        var parts = [];
+        if (incidents.length > 0) parts.push(incidents.length + ' incident(s) reported requiring immediate review');
+        if (redCam >= 3) parts.push(redCam + ' RED camera events flagged');
+        if (redSpd >= 3) parts.push(redSpd + ' RED speeding events flagged');
+        headline = parts.join('. ') + '. Immediate leadership attention required.';
+    } else {
+        var parts = [];
+        if (redCam > 0) parts.push(redCam + ' RED camera event(s)');
+        if (redSpd > 0) parts.push(redSpd + ' RED speeding event(s)');
+        if (nearMisses.length > 0) parts.push(nearMisses.length + ' near miss(es)');
+        if (trainingPct !== null && trainingPct < 80) parts.push('training compliance at ' + trainingPct + '%');
+        headline = 'Elevated activity detected: ' + parts.join(', ') + '. Review recommended before end of day.';
+    }
+
+    // Build action items
+    var actions = [];
+    if (incidents.length > 0) {
+        actions.push({ text: 'Review ' + incidents.length + ' incident(s)', type: 'critical' });
+    }
+    if (redCam > 0 || redSpd > 0) {
+        actions.push({ text: 'Coach ' + (redCam + redSpd) + ' RED event driver(s)', type: 'warning' });
+    }
+    if (trainingPct !== null && trainingPct < 85) {
+        actions.push({ text: 'Training at ' + trainingPct + '% (target: 95%)', type: 'warning' });
+    }
+    if (deviceIssues > 15) {
+        actions.push({ text: deviceIssues + ' device issues to resolve', type: 'info' });
+    }
+
+    // YTD safety streak -- use filtered stats
+    var streakText = '';
+    var filteredSt = getCompanyStats();
+    if (filteredSt) {
+        var daysRec = filteredSt.days_rec;
+        var daysLTI = filteredSt.days_lti;
+        if (daysRec != null && daysRec !== 'N/A') {
+            streakText = daysRec + ' days since last recordable';
+            if (daysLTI != null && daysLTI !== 'N/A') streakText += ', ' + daysLTI + ' days since last LTI';
+        }
+    }
+
+    // Yard health grid
+    var yardHealthHtml = '';
+    if (includesCasing() && currentYard === 'All Yards') {
+        yardHealthHtml = '<div class="yard-health-grid">';
+        YARDS.forEach(function(yard) {
+            var yardCam = camEvents.filter(function(e) { return e.yard === yard; });
+            var yardSpd = spdEvents.filter(function(e) { return e.yard === yard; });
+            var cam = yardCam.length;
+            var spd = yardSpd.length;
+            var redCount = yardCam.filter(function(e) { return e.tier === 'RED'; }).length +
+                           yardSpd.filter(function(e) { return e.tier === 'RED'; }).length;
+            var total = cam + spd;
+            var health = redCount > 0 ? 'health-red' : total === 0 ? 'health-green' : total <= 3 ? 'health-yellow' : 'health-red';
+            yardHealthHtml += '<div class="yard-health-card ' + health + '">';
+            yardHealthHtml += '<div class="yard-health-name">' + esc(yard) + '</div>';
+            yardHealthHtml += '<div class="yard-health-stat">' + cam + ' cam / ' + spd + ' spd</div>';
+            yardHealthHtml += '</div>';
+        });
+        yardHealthHtml += '</div>';
+    }
+
+    // Assemble
+    var html = '<div class="exec-summary status-' + status + '">';
+    var briefTitle = currentDateRange === 'today' ? 'Daily Safety Briefing' : 'Safety Briefing (' + getPeriodLabel() + ')';
+    html += '<div class="exec-summary-title">' + briefTitle + '</div>';
+    html += '<div class="exec-status-sub">' + esc(statusLabel) + '</div>';
+    html += '<div class="exec-headline">' + esc(headline) + '</div>';
+    if (streakText) html += '<div style="font-size:12px;color:#2E7D32;font-weight:600;margin-bottom:10px;">' + esc(streakText) + '</div>';
+    if (actions.length > 0) {
+        html += '<div class="exec-actions">';
+        actions.forEach(function(a) {
+            html += '<div class="exec-action ' + a.type + '">' + esc(a.text) + '</div>';
+        });
+        html += '</div>';
+    }
+    html += yardHealthHtml;
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+// Item 7: Enhanced incident display with classification
+function renderIncidents() {
+    var div = document.getElementById('incidentsSection');
+    var incidents = getFilteredIncidents();
+    if (incidents.length === 0) {
+        div.innerHTML = '';
+        return;
+    }
+    var html = '<div class="alert-red">INCIDENTS REPORTED: ' + incidents.length + ' -- Immediate attention required</div>';
+    html += '<div class="section"><div class="section-title">Incidents</div>';
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th>Report #</th><th>Date</th><th>Classification</th><th>Employee</th><th>Description</th><th>Location</th>';
+    html += '</tr></thead><tbody>';
+    incidents.forEach(function(inc) {
+        var classification = inc.type || 'Pending Classification';
+        var badge = 'badge-red';
+        if (classification === 'First Aid') badge = 'badge-yellow';
+        else if (classification === 'Near Miss') badge = 'badge-orange';
+
+        html += '<tr>';
+        html += '<td><a href="' + kpaLink(inc.report_number) + '" target="_blank" rel="noopener">' + esc(inc.report_number) + '</a></td>';
+        html += '<td>' + fmtDate(inc.date) + '</td>';
+        html += '<td><span class="badge ' + badge + '">' + esc(classification) + '</span></td>';
+        html += '<td>' + esc(inc.employee) + '</td>';
+        html += '<td>' + esc(inc.description) + '</td>';
+        html += '<td>' + esc(inc.location) + '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+    div.innerHTML = html;
+}
+
+// Item 9: Weekend Spotlight
+function renderWeekendSpotlight() {
+    var div = document.getElementById('weekendSpotlightSection');
+    var weekendEvents = [];
+
+    // Camera events from weekend (filtered by yard + Casing gate)
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    camEvents.forEach(function(e) {
+        if (isWeekend(e.time)) {
+            weekendEvents.push({
+                source: 'Camera',
+                driver: e.driver,
+                detail: e.display_name + ' (' + e.tier + ')',
+                time: e.time,
+                yard: e.yard
+            });
+        }
+    });
+
+    // Speeding events from weekend (filtered by company/division + yard, skip for Permian)
+    if (currentCompany !== 'Permian') {
+        getYardFilteredSpeeding().forEach(function(e) {
+            if (isWeekend(e.time)) {
+                weekendEvents.push({
+                    source: 'Speeding',
+                    driver: e.driver,
+                    detail: '+' + (e.overspeed != null ? e.overspeed.toFixed(0) : '?') + ' mph over',
+                    time: e.time,
+                    yard: e.yard
+                });
+            }
+        });
+    }
+
+    if (weekendEvents.length === 0) {
+        div.innerHTML = '';
+        return;
+    }
+
+    var html = '<div class="section"><div class="section-title">Weekend Spotlight (' + weekendEvents.length + ' events)</div>';
+    html += '<div class="alert-yellow">These events occurred on Saturday/Sunday when safety reps were off-site. Follow up with yard managers.</div>';
+    weekendEvents.forEach(function(evt) {
+        html += '<div class="flag-card weekend">';
+        html += '<div class="flag-name">' + esc(evt.driver) + ' <span class="badge badge-gray">' + esc(evt.yard || '--') + '</span></div>';
+        html += '<div class="flag-detail">' + esc(evt.source) + ': ' + esc(evt.detail) + '</div>';
+        html += '<div class="flag-sources">' + esc(evt.time) + '</div>';
+        html += '</div>';
+    });
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+// Item 3: Red Flag Drivers -- Cross-Source Correlation
+function renderRedFlagDrivers() {
+    var div = document.getElementById('redFlagSection');
+
+    // Build driver profile from all sources
+    var drivers = {};
+
+    function addDriver(name, source, detail, yard) {
+        if (!name || name === 'Unknown') return;
+        var key = name.toLowerCase().trim();
+        if (!drivers[key]) drivers[key] = { name: name, camera: [], speeding: [], kpa: [], yards: {} };
+        drivers[key][source].push(detail);
+        if (yard) drivers[key].yards[yard] = true;
+    }
+
+    // Camera events (Casing-only data, gate behind includesCasing)
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    camEvents.forEach(function(e) {
+        addDriver(e.driver, 'camera', e.display_name + ' (' + e.tier + ')', e.yard);
+    });
+
+    // Speeding events (all companies except Permian)
+    var spdEventsRF = currentCompany === 'Permian' ? [] : getYardFilteredSpeeding();
+    spdEventsRF.forEach(function(e) {
+        addDriver(e.driver, 'speeding', '+' + (e.overspeed != null ? e.overspeed.toFixed(0) : '?') + ' mph (' + (e.tier || '?') + ')', e.yard);
+    });
+
+    // KPA at-risk observations -- note: observer is who FILED the report, not the subject
+    // Only include if the observation has a subject/driver name distinct from observer
+    // For now, skip KPA at-risk in red flag drivers since we cannot identify the subject
+    // (Adding observer would incorrectly flag the person who reported the safety concern)
+
+    // Filter to red flags: 3+ total events OR events from 2+ sources
+    var redFlags = [];
+    Object.keys(drivers).forEach(function(key) {
+        var d = drivers[key];
+        var total = d.camera.length + d.speeding.length + d.kpa.length;
+        var sources = (d.camera.length > 0 ? 1 : 0) + (d.speeding.length > 0 ? 1 : 0) + (d.kpa.length > 0 ? 1 : 0);
+        if (total >= 3 || sources >= 2) {
+            d.total = total;
+            d.sources = sources;
+            d.yardList = Object.keys(d.yards).join(', ') || '--';
+            redFlags.push(d);
+        }
+    });
+
+    redFlags.sort(function(a, b) { return b.total - a.total; });
+
+    var html = '<div class="section"><div class="section-title">Red Flag Drivers -- Cross-Source Analysis</div>';
+    if (redFlags.length === 0) {
+        html += '<div class="alert-green">No red flag drivers identified (threshold: 3+ events or 2+ sources)</div>';
+    } else {
+        redFlags.forEach(function(d) {
+            var sourceLabels = [];
+            if (d.camera.length > 0) sourceLabels.push(d.camera.length + ' camera');
+            if (d.speeding.length > 0) sourceLabels.push(d.speeding.length + ' speeding');
+            if (d.kpa.length > 0) sourceLabels.push(d.kpa.length + ' KPA observation');
+
+            html += '<div class="flag-card">';
+            html += '<div class="flag-name">' + esc(d.name) + ' -- ' + d.total + ' events ';
+            if (d.sources >= 2) html += '<span class="badge badge-red">MULTI-SOURCE</span> ';
+            html += '<span class="badge badge-gray">' + esc(d.yardList) + '</span></div>';
+            html += '<div class="flag-detail">' + sourceLabels.join(' + ') + '</div>';
+
+            // Detail breakdown
+            var details = [];
+            d.camera.forEach(function(c) { details.push('Camera: ' + c); });
+            d.speeding.forEach(function(s) { details.push('Speeding: ' + s); });
+            d.kpa.forEach(function(k) { details.push('KPA: ' + k); });
+            html += '<div class="flag-sources">' + details.map(esc).join(' | ') + '</div>';
+            html += '</div>';
+        });
+    }
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+function renderNearMisses() {
+    var div = document.getElementById('nearMissSection');
+    var nms = getFilteredNearMisses();
+    if (nms.length === 0) {
+        div.innerHTML = '<div class="section"><div class="section-title">Near Misses</div><div class="alert-green">No near misses reported</div></div>';
+        return;
+    }
+    if (currentYard !== 'All Yards') {
+        nms = nms.filter(function(nm) { return matchYardByLocation(nm.location, currentYard); });
+    }
+    var html = '<div class="section"><div class="section-title">Near Misses (' + nms.length + ')</div>';
+    if (nms.length === 0) {
+        html += '<div class="no-data">No near misses matching yard filter</div>';
+    } else {
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Report #</th><th>Date</th><th>Observer</th><th>Description</th><th>Location</th>';
+        html += '</tr></thead><tbody>';
+        nms.forEach(function(nm) {
+            html += '<tr>';
+            html += '<td><a href="' + kpaLink(nm.report_number) + '" target="_blank" rel="noopener">' + esc(nm.report_number) + '</a></td>';
+            html += '<td>' + fmtDate(nm.date) + '</td>';
+            html += '<td>' + esc(nm.observer) + '</td>';
+            html += '<td>' + esc(nm.description) + '</td>';
+            html += '<td>' + esc(nm.location) + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+    }
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+function renderObservationAnalysis() {
+    var div = document.getElementById('obsAnalysisSection');
+    var filteredObs = getFilteredObservations();
+    if (currentYard !== 'All Yards') {
+        filteredObs = filteredObs.filter(function(o) { return matchYardByLocation(o.location, currentYard); });
+    }
+    if (filteredObs.length === 0) {
+        div.innerHTML = '<div class="section"><div class="section-title">Observation Analysis</div><div class="no-data">No observations filed ' + getPeriodLabel() + '</div></div>';
+        return;
+    }
+
+    // Count by type
+    var byType = {};
+    var byObserver = {};
+    var byLocation = {};
+    var atRisk = [];
+    filteredObs.forEach(function(o) {
+        var t = o.type || 'Other';
+        byType[t] = (byType[t] || 0) + 1;
+        var obs = o.observer || 'Unknown';
+        byObserver[obs] = (byObserver[obs] || 0) + 1;
+        var loc = o.location || 'Unknown';
+        if (loc.length > 2) byLocation[loc] = (byLocation[loc] || 0) + 1;
+        if (t.indexOf('At-Risk') === 0 || t === 'Suggestion') atRisk.push(o);
+    });
+
+    var recognitions = byType['Recognition'] || 0;
+    var atRiskCount = (byType['At-Risk Condition'] || 0) + (byType['At-Risk Behavior'] || 0) + (byType['At-Risk Procedure'] || 0);
+    var suggestions = byType['Suggestion'] || 0;
+
+    var html = '<div class="section"><div class="section-title">Observation Analysis (' + filteredObs.length + ' total)</div>';
+
+    // Summary cards
+    html += '<div class="card-row">';
+    html += '<div class="card"><div class="card-num">' + filteredObs.length + '</div><div class="card-lbl">Total Observations</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#008000">' + recognitions + '</div><div class="card-lbl">Recognitions</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#A73333">' + atRiskCount + '</div><div class="card-lbl">At-Risk</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#E67E00">' + suggestions + '</div><div class="card-lbl">Suggestions</div></div>';
+    html += '</div>';
+
+    // Type breakdown bar chart
+    var maxC = Math.max.apply(null, Object.keys(byType).map(function(k){return byType[k];}).concat([1]));
+    html += '<div style="margin:12px 0;">';
+    Object.keys(byType).map(function(k){return [k, byType[k]];}).sort(function(a,b){return b[1]-a[1];}).forEach(function(entry) {
+        var type = entry[0], count = entry[1];
+        var pct = (count / maxC) * 100;
+        var cls = 'recognition';
+        if (type.indexOf('At-Risk') === 0) cls = 'at-risk';
+        else if (type.indexOf('Near Miss') === 0) cls = 'near-miss';
+        else if (type.indexOf('Suggestion') === 0) cls = 'suggestion';
+        html += '<div class="obs-bar-row"><div class="obs-bar-label">' + esc(type) + '</div>';
+        html += '<div class="obs-bar ' + cls + '" style="width:' + pct + '%">' + count + '</div></div>';
+    });
+    html += '</div>';
+
+    // Top observers
+    var topObs = Object.keys(byObserver).map(function(k){return [k, byObserver[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0, 5);
+    if (topObs.length > 0) {
+        html += '<div style="margin:12px 0;"><strong style="font-size:13px;">Top Observers:</strong> ';
+        html += topObs.map(function(e) { return esc(e[0]) + ' (' + e[1] + ')'; }).join(', ');
+        html += '</div>';
+    }
+
+    // Location patterns
+    var topLocs = Object.keys(byLocation).map(function(k){return [k, byLocation[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0, 5);
+    if (topLocs.length > 0) {
+        html += '<div style="margin:4px 0 12px;"><strong style="font-size:13px;">Common Locations:</strong> ';
+        html += topLocs.map(function(e) { return esc(e[0]) + ' (' + e[1] + ')'; }).join(', ');
+        html += '</div>';
+    }
+
+    // At-risk and suggestion details (actionable items)
+    if (atRisk.length > 0) {
+        html += '<div style="margin-top:8px;"><strong style="font-size:13px;color:#A73333;">Action Items -- At-Risk & Suggestions (' + atRisk.length + ')</strong></div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Report #</th><th>Date</th><th>Observer</th><th>Type</th><th>Description</th><th>Location</th>';
+        html += '</tr></thead><tbody>';
+        atRisk.forEach(function(o) {
+            html += '<tr>';
+            html += '<td><a href="' + kpaLink(o.report_number) + '" target="_blank" rel="noopener">' + esc(o.report_number) + '</a></td>';
+            html += '<td>' + fmtDate(o.date) + '</td>';
+            html += '<td>' + esc(o.observer) + '</td>';
+            html += '<td>' + esc(o.type) + '</td>';
+            html += '<td>' + esc(o.description) + '</td>';
+            html += '<td>' + esc(o.location) + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+    } else {
+        html += '<div class="alert-green" style="margin-top:8px;">All observations are recognitions -- great safety culture</div>';
+    }
+
+    // Full observations table
+    html += '<details style="margin-top:12px;"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#555;">View All ' + filteredObs.length + ' Observations</summary>';
+    html += '<div class="table-wrap" style="margin-top:6px;"><table><thead><tr>';
+    html += '<th>Report #</th><th>Date</th><th>Observer</th><th>Type</th><th>Description</th><th>Location</th><th>Service Line</th>';
+    html += '</tr></thead><tbody>';
+    filteredObs.forEach(function(o) {
+        html += '<tr>';
+        html += '<td><a href="' + kpaLink(o.report_number) + '" target="_blank" rel="noopener">' + esc(o.report_number) + '</a></td>';
+        html += '<td>' + fmtDate(o.date) + '</td>';
+        html += '<td>' + esc(o.observer) + '</td>';
+        html += '<td>' + esc(o.type) + '</td>';
+        html += '<td>' + esc(o.description) + '</td>';
+        html += '<td>' + esc(o.location) + '</td>';
+        html += '<td>' + esc(o.service_line || '') + '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table></div></details>';
+
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+// ===== TAB 2: CAMERA EVENTS =====
+function renderCamera() {
+    if (!includesCasing()) {
+        var camMsg = currentCompany !== 'BRHAS' && currentCompany !== 'All'
+            ? 'AI dash cameras are installed on BRHAS Casing fleet vehicles only. ' + currentCompany + ' does not currently have camera monitoring.'
+            : 'AI dash cameras are installed on Casing fleet vehicles only. Select BRHAS &gt; Casing to view camera events.';
+        document.getElementById('cameraSummarySection').innerHTML =
+            '<div class="section"><div class="section-title">Camera Events</div>' +
+            '<div class="no-data">' + camMsg + '</div></div>';
+        document.getElementById('cameraByYardSection').innerHTML = '';
+        document.getElementById('cameraTODSection').innerHTML = '';
+        document.getElementById('cameraDetailSection').innerHTML = '';
+        return;
+    }
+    var events = includesCasing() ? getYardFilteredCamera() : [];
+    var red = 0, orange = 0, yellow = 0;
+    events.forEach(function(e) {
+        if (e.tier === 'RED') red++;
+        else if (e.tier === 'ORANGE') orange++;
+        else if (e.tier === 'YELLOW') yellow++;
+    });
+
+    // Summary cards
+    var html = '<div class="section"><div class="section-title">Camera Events Summary</div>' + snapshotBadge();
+    html += '<div class="card-row">';
+    html += '<div class="card"><div class="card-num">' + events.length + '</div><div class="card-lbl">Total Events</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#A73333">' + red + '</div><div class="card-lbl"><span class="badge badge-red">RED</span> Immediate Action</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#E67E00">' + orange + '</div><div class="card-lbl"><span class="badge badge-orange">ORANGE</span> Coaching</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#DAA520">' + yellow + '</div><div class="card-lbl"><span class="badge badge-yellow">YELLOW</span> Monitoring</div></div>';
+    html += '</div></div>';
+    document.getElementById('cameraSummarySection').innerHTML = html;
+
+    // By-yard breakdown (only when All Yards)
+    var byYardDiv = document.getElementById('cameraByYardSection');
+    if (currentYard === 'All Yards' && includesCasing() && D.camera && D.camera.events) {
+        // Compute by-yard counts from filtered events instead of pre-aggregated data
+        var camByYard = {};
+        D.camera.events.forEach(function(e) { camByYard[e.yard] = (camByYard[e.yard] || 0) + 1; });
+        var maxVal = Math.max.apply(null, YARDS.map(function(y){return camByYard[y]||0;}).concat([1]));
+        var byYardHtml = '<div class="section"><div class="section-title">Camera Events by Yard</div>';
+        YARDS.forEach(function(yard) {
+            var count = camByYard[yard] || 0;
+            var pct = (count / maxVal) * 100;
+            byYardHtml += '<div class="yard-bar-row">';
+            byYardHtml += '<div class="yard-bar-label">' + yard + '</div>';
+            byYardHtml += '<div class="yard-bar" style="width:' + Math.max(pct, 5) + '%">' + count + '</div>';
+            byYardHtml += '</div>';
+        });
+        byYardHtml += '</div>';
+        byYardDiv.innerHTML = byYardHtml;
+    } else {
+        byYardDiv.innerHTML = '';
+    }
+
+    // Item 6: Time-of-day heatmap for camera
+    renderTimeOfDay('cameraTODSection', events, 'Camera Events by Hour');
+
+    // Detail table
+    var detailHtml = '<div class="section"><div class="section-title">Camera Events Detail</div>';
+    if (events.length === 0) {
+        detailHtml += '<div class="no-data">No camera events for selected filter</div>';
+    } else {
+        detailHtml += '<div class="table-wrap"><table><thead><tr>';
+        detailHtml += '<th>Driver</th><th>Vehicle</th><th>Event Type</th><th>Tier</th>';
+        detailHtml += '<th>Speed</th><th>Duration</th><th>Time</th><th>Yard</th>';
+        detailHtml += '</tr></thead><tbody>';
+        events.slice().sort(function(a,b) {
+            var tierOrder = {RED:0, ORANGE:1, YELLOW:2};
+            return (tierOrder[a.tier]||3) - (tierOrder[b.tier]||3);
+        }).forEach(function(e) {
+            detailHtml += '<tr>';
+            detailHtml += '<td>' + esc(e.driver) + '</td>';
+            detailHtml += '<td>' + esc(e.vehicle) + '</td>';
+            detailHtml += '<td>' + esc(e.display_name) + '</td>';
+            detailHtml += '<td><span class="badge badge-' + (e.tier || 'gray').toLowerCase() + '">' + (e.tier || 'N/A') + '</span></td>';
+            detailHtml += '<td>' + (e.speed ? e.speed.toFixed(1) + ' mph' : 'N/A') + '</td>';
+            detailHtml += '<td>' + esc(e.duration) + '</td>';
+            detailHtml += '<td>' + esc(e.time) + '</td>';
+            detailHtml += '<td>' + esc(e.yard) + '</td>';
+            detailHtml += '</tr>';
+        });
+        detailHtml += '</tbody></table></div>';
+    }
+    detailHtml += '</div>';
+    document.getElementById('cameraDetailSection').innerHTML = detailHtml;
+}
+
+// Item 6: Time-of-day heatmap (shared for camera + speeding)
+function renderTimeOfDay(divId, events, title) {
+    var div = document.getElementById(divId);
+    if (!events || events.length === 0) { div.innerHTML = ''; return; }
+
+    var hours = []; for (var hi = 0; hi < 24; hi++) hours.push(0);
+    events.forEach(function(e) {
+        var h = parseHour(e.time);
+        if (h >= 0 && h < 24) hours[h]++;
+    });
+
+    var maxH = Math.max.apply(null, hours.concat([1]));
+    var html = '<div class="section"><div class="section-title">' + title + '</div>';
+    html += '<p style="font-size:12px;color:#666;margin-bottom:8px;">Darker = more events. Look for fatigue clusters (2-5 AM, after 10 hrs on shift)</p>';
+
+    // Hour labels
+    html += '<div class="tod-labels">';
+    for (var i = 0; i < 24; i++) {
+        var label = i === 0 ? '12a' : i < 12 ? i + 'a' : i === 12 ? '12p' : (i-12) + 'p';
+        html += '<div class="tod-label">' + label + '</div>';
+    }
+    html += '</div>';
+
+    // Heatmap cells
+    html += '<div class="tod-grid">';
+    for (var i = 0; i < 24; i++) {
+        var intensity = hours[i] / maxH;
+        var bg, fg;
+        if (hours[i] === 0) {
+            bg = '#f0f0f0'; fg = '#ccc';
+        } else if (intensity <= 0.33) {
+            bg = '#FFE0B2'; fg = '#333';
+        } else if (intensity <= 0.66) {
+            bg = '#FF9800'; fg = 'white';
+        } else {
+            bg = '#A73333'; fg = 'white';
+        }
+        html += '<div class="tod-cell" style="background:' + bg + ';color:' + fg + '">' + hours[i] + '</div>';
+    }
+    html += '</div>';
+
+    // Flag fatigue-risk hours
+    var fatigueHours = [];
+    for (var i = 0; i < 6; i++) { if (hours[i] > 0) fatigueHours.push(i); }
+    for (var i = 22; i < 24; i++) { if (hours[i] > 0) fatigueHours.push(i); }
+    if (fatigueHours.length > 0) {
+        var fatigueCount = 0;
+        fatigueHours.forEach(function(h) { fatigueCount += hours[h]; });
+        html += '<div class="alert-yellow" style="margin-top:10px">';
+        html += fatigueCount + ' event(s) during high-fatigue hours (10 PM - 6 AM). Review for fatigue-related patterns.';
+        html += '</div>';
+    }
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+// ===== TAB 3: SPEEDING =====
+function renderSpeeding() {
+    if (currentCompany === 'Permian') {
+        document.getElementById('speedingSummarySection').innerHTML =
+            '<div class="section"><div class="section-title">Speeding Events</div>' +
+            '<div class="no-data">Permian Equipment Rentals fleet is not currently tracked through Motive. Speeding data is not available for this company.</div></div>';
+        document.getElementById('speedingTODSection').innerHTML = '';
+        document.getElementById('speedingDetailSection').innerHTML = '';
+        return;
+    }
+    var events = getYardFilteredSpeeding();
+    var red = 0, orange = 0, yellow = 0;
+    events.forEach(function(e) {
+        if (e.tier === 'RED') red++;
+        else if (e.tier === 'ORANGE') orange++;
+        else if (e.tier === 'YELLOW') yellow++;
+    });
+
+    var spdScope = currentCompany === 'All' ? 'All Companies' :
+        currentDivision !== 'All Divisions' && currentDivision !== 'All' ? currentDivision : currentCompany;
+    var html = '<div class="section"><div class="section-title">Speeding Events Summary (' + spdScope + ')</div>';
+    html += '<div class="card-row">';
+    html += '<div class="card"><div class="card-num">' + events.length + '</div><div class="card-lbl">Total Events</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#A73333">' + red + '</div><div class="card-lbl"><span class="badge badge-red">RED</span> 20+ Over / 90+ mph</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#E67E00">' + orange + '</div><div class="card-lbl"><span class="badge badge-orange">ORANGE</span> 15-19 Over</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#DAA520">' + yellow + '</div><div class="card-lbl"><span class="badge badge-yellow">YELLOW</span> 10-14 Over</div></div>';
+    html += '</div></div>';
+    document.getElementById('speedingSummarySection').innerHTML = html;
+
+    // Item 6: Time-of-day for speeding
+    renderTimeOfDay('speedingTODSection', events, 'Speeding Events by Hour');
+
+    // Detail table
+    var detailHtml = '<div class="section"><div class="section-title">Speeding Events Detail</div>';
+    if (events.length === 0) {
+        detailHtml += '<div class="no-data" style="color:#2E7D32">No speeding events recorded ' + getPeriodLabel() + ' for this filter -- clean driving day.</div>';
+    } else {
+        detailHtml += '<div class="table-wrap"><table><thead><tr>';
+        detailHtml += '<th>Driver</th><th>Vehicle</th><th>Division</th><th>Speed (mph)</th><th>Posted (mph)</th>';
+        detailHtml += '<th>Over (mph)</th><th>Duration</th><th>Time</th><th>Yard</th><th>Tier</th><th>Map</th>';
+        detailHtml += '</tr></thead><tbody>';
+        events.slice().sort(function(a,b) { return b.overspeed - a.overspeed; }).forEach(function(e) {
+            detailHtml += '<tr>';
+            detailHtml += '<td>' + esc(e.driver) + '</td>';
+            detailHtml += '<td>' + esc(e.vehicle) + '</td>';
+            detailHtml += '<td>' + esc(e.division || '--') + '</td>';
+            detailHtml += '<td>' + (e.speed != null ? e.speed.toFixed(1) : 'N/A') + '</td>';
+            detailHtml += '<td>' + (e.posted_speed != null ? e.posted_speed.toFixed(0) : 'N/A') + '</td>';
+            detailHtml += '<td><strong>+' + (e.overspeed != null ? e.overspeed.toFixed(1) : '?') + '</strong></td>';
+            detailHtml += '<td>' + esc(e.duration) + '</td>';
+            detailHtml += '<td>' + esc(e.time) + '</td>';
+            detailHtml += '<td>' + esc(e.yard || '--') + '</td>';
+            detailHtml += '<td><span class="badge badge-' + (e.tier || 'gray').toLowerCase() + '">' + (e.tier || 'N/A') + '</span></td>';
+            detailHtml += '<td>' + (e.maps_link ? '<a href="' + safeHref(e.maps_link) + '" target="_blank" rel="noopener">Map</a>' : 'N/A') + '</td>';
+            detailHtml += '</tr>';
+        });
+        detailHtml += '</tbody></table></div>';
+    }
+    detailHtml += '</div>';
+    document.getElementById('speedingDetailSection').innerHTML = detailHtml;
+}
+
+// ===== TAB 4: KPA & FIELD =====
+function renderKPA() {
+    var kpa = D.kpa;
+    var filteredObs = getFilteredObservations();
+    if (currentYard !== 'All Yards') {
+        filteredObs = filteredObs.filter(function(o) { return matchYardByLocation(o.location, currentYard); });
+    }
+
+    // Observation types bar chart (from filtered data)
+    var obsDiv = document.getElementById('obsTypesSection');
+    if (filteredObs.length > 0) {
+        var bt = {};
+        filteredObs.forEach(function(o) {
+            var t = o.type || 'Other';
+            bt[t] = (bt[t] || 0) + 1;
+        });
+        var maxC = Math.max.apply(null, Object.keys(bt).map(function(k){return bt[k];}).concat([1]));
+        var html = '<div class="section"><div class="section-title">Observations by Type (' + filteredObs.length + ' total)</div>';
+        Object.keys(bt).map(function(k){return [k, bt[k]];}).forEach(function(entry) {
+            var type = entry[0], count = entry[1];
+            var pct = (count / maxC) * 100;
+            var cls = 'recognition';
+            if (type.indexOf('At-Risk') === 0) cls = 'at-risk';
+            else if (type.indexOf('Near Miss') === 0) cls = 'near-miss';
+            else if (type.indexOf('Suggestion') === 0) cls = 'suggestion';
+            html += '<div class="obs-bar-row">';
+            html += '<div class="obs-bar-label">' + esc(type) + '</div>';
+            html += '<div class="obs-bar ' + cls + '" style="width:' + pct + '%">' + count + '</div>';
+            html += '</div>';
+        });
+        html += '</div>';
+        obsDiv.innerHTML = html;
+    } else {
+        var obsNoMsg = currentCompany !== 'All'
+            ? 'No observations submitted ' + getPeriodLabel() + ' for ' + currentCompany + (currentDivision !== 'All Divisions' ? ' &gt; ' + currentDivision : '') + (currentYard !== 'All Yards' ? ' &gt; ' + currentYard : '') + '. Encourage crews to submit daily observation cards.'
+            : 'No observations submitted ' + getPeriodLabel() + '. Verify KPA data feed is running.';
+        obsDiv.innerHTML = '<div class="section"><div class="section-title">Observations by Type</div><div class="no-data">' + obsNoMsg + '</div></div>';
+    }
+
+    // Near Miss details (filtered by company/division + yard)
+    var nmDiv = document.getElementById('kpaNearMissSection');
+    var filteredNM = getFilteredNearMisses();
+    if (currentYard !== 'All Yards') {
+        filteredNM = filteredNM.filter(function(nm) { return matchYardByLocation(nm.location, currentYard); });
+    }
+    if (filteredNM.length > 0) {
+        var html = '<div class="section"><div class="section-title">Near Miss Details (' + filteredNM.length + ')</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Report #</th><th>Date</th><th>Observer</th><th>Description</th><th>Location</th>';
+        html += '</tr></thead><tbody>';
+        filteredNM.forEach(function(nm) {
+            html += '<tr>';
+            html += '<td><a href="' + kpaLink(nm.report_number) + '" target="_blank" rel="noopener">' + esc(nm.report_number) + '</a></td>';
+            html += '<td>' + fmtDate(nm.date) + '</td>';
+            html += '<td>' + esc(nm.observer) + '</td>';
+            html += '<td>' + esc(nm.description) + '</td>';
+            html += '<td>' + esc(nm.location) + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        nmDiv.innerHTML = html;
+    } else {
+        nmDiv.innerHTML = '';
+    }
+
+    // Assessments (filtered by division -- division-specific forms filter by form ID, shared forms filter by assessor)
+    var assDiv = document.getElementById('assessmentsSection');
+    if (kpa && kpa.assessments && kpa.assessments.details) {
+        var filteredTotal = 0;
+        var formSections = [];
+
+        kpa.assessments.details.forEach(function(form) {
+            var formDiv = FORM_DIVISION[form.form_id];
+            if (formDiv) {
+                // Division-specific form: filter entire form by division
+                var formCo = FORM_DIV_TO_COMPANY[formDiv] || '';
+                if (!matchesCompanyDivision(formCo, formDiv)) return;
+                if (form.count > 0) {
+                    filteredTotal += form.count;
+                    formSections.push({ name: form.form_name, rows: form.rows });
+                }
+            } else {
+                // Shared form: filter individual rows by assessor
+                if (!form.rows || form.count === 0) return;
+                var filteredRows = form.rows.filter(function(row) {
+                    if (currentCompany === 'All') return true;
+                    var co = ASSESSOR_COMPANY[row.assessor];
+                    var div = ASSESSOR_DIVISION[row.assessor];
+                    if (!co) return true; // Unknown assessor shows for all
+                    return matchesCompanyDivision(co, div);
+                });
+                if (filteredRows.length > 0) {
+                    filteredTotal += filteredRows.length;
+                    formSections.push({ name: form.form_name, rows: filteredRows });
+                }
+            }
+        });
+
+        var html = '<div class="section"><div class="section-title">Field Assessments (' + filteredTotal + ' total)</div>';
+        if (formSections.length === 0) {
+            // Check if any form is mapped to the selected division
+            var hasMappedForm = false;
+            var formKeys = Object.keys(FORM_DIVISION);
+            for (var fki = 0; fki < formKeys.length; fki++) {
+                var fDiv = FORM_DIVISION[formKeys[fki]];
+                var fCo = FORM_DIV_TO_COMPANY[fDiv] || '';
+                if (matchesCompanyDivision(fCo, fDiv)) { hasMappedForm = true; break; }
+            }
+            if (!hasMappedForm) {
+                assDiv.innerHTML = '';
+            } else {
+                html += '<div class="no-data">No assessments filed ' + getPeriodLabel() + '</div></div>';
+                assDiv.innerHTML = html;
+            }
+        } else {
+            formSections.forEach(function(sec) {
+                html += '<h4 style="margin:12px 0 6px; color:#333;">' + esc(sec.name) + ' (' + sec.rows.length + ')</h4>';
+                html += '<div class="table-wrap"><table><thead><tr>';
+                html += '<th>Assessor</th><th>Location</th><th>Issue</th><th>Link</th>';
+                html += '</tr></thead><tbody>';
+                sec.rows.forEach(function(row) {
+                    var loc = (row.location && row.location !== '0' && row.location !== '1')
+                        ? row.location : (REP_YARD[row.assessor] || '--');
+                    html += '<tr>';
+                    html += '<td>' + esc(row.assessor) + '</td>';
+                    html += '<td>' + esc(loc) + '</td>';
+                    html += '<td>' + esc(row.issue) + '</td>';
+                    html += '<td><a href="' + safeHref(row.link) + '" target="_blank" rel="noopener">View</a></td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+            });
+            html += '</div>';
+            assDiv.innerHTML = html;
+        }
+    } else {
+        assDiv.innerHTML = '<div class="section"><div class="section-title">Field Assessments</div><div class="no-data">No assessment data</div></div>';
+    }
+
+    // All Observations (filtered)
+    var allDiv = document.getElementById('allObsSection');
+    if (filteredObs.length > 0) {
+        var html = '<div class="section"><div class="section-title">All Observations (' + filteredObs.length + ')</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Report #</th><th>Date</th><th>Observer</th><th>Type</th><th>Description</th><th>Location</th><th>Service Line</th>';
+        html += '</tr></thead><tbody>';
+        filteredObs.forEach(function(o) {
+            html += '<tr>';
+            html += '<td><a href="' + kpaLink(o.report_number) + '" target="_blank" rel="noopener">' + esc(o.report_number) + '</a></td>';
+            html += '<td>' + fmtDate(o.date) + '</td>';
+            html += '<td>' + esc(o.observer) + '</td>';
+            html += '<td>' + esc(o.type) + '</td>';
+            html += '<td>' + esc(o.description) + '</td>';
+            html += '<td>' + esc(o.location) + '</td>';
+            html += '<td>' + esc(o.service_line || '') + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        allDiv.innerHTML = html;
+    } else {
+        allDiv.innerHTML = '<div class="section"><div class="section-title">Observations</div><div class="no-data">No observations for selected filter</div></div>';
+    }
+}
+
+// Item 8: Pre/Post Trip Inspection Flagged Items
+function renderInspectionFlagged() {
+    var div = document.getElementById('inspFlaggedSection');
+    var kpa = D.kpa;
+    if (!kpa || !kpa.assessments || !kpa.assessments.details) {
+        div.innerHTML = '';
+        return;
+    }
+
+    // Vehicle Inspection Checklist (152018) and Non-DOT Pre/Post Trip (229645, 151213)
+    var inspForms = [152018, 229645, 151213];
+    var flaggedRows = [];
+
+    kpa.assessments.details.forEach(function(form) {
+        if (inspForms.indexOf(form.form_id) !== -1 && form.rows) {
+            form.rows.forEach(function(row) {
+                // Filter by service_line first, fall back to assessor
+                if (currentCompany !== 'All') {
+                    if (row.service_line) {
+                        var slCo = KPA_SL_TO_COMPANY[row.service_line];
+                        var slDiv = KPA_SL_TO_DIVISION[row.service_line] || row.service_line;
+                        if (!slCo && row.service_line.indexOf('Drilling') === 0) { slCo = 'Transcend'; slDiv = 'Transcend'; }
+                        if (slCo && !matchesCompanyDivision(slCo, slDiv)) return;
+                    } else {
+                        var aCo = ASSESSOR_COMPANY[row.assessor];
+                        var aDiv = ASSESSOR_DIVISION[row.assessor];
+                        if (aCo && !matchesCompanyDivision(aCo, aDiv)) return;
+                    }
+                }
+                if (row.issue && row.issue !== 'None noted' && row.issue !== 'None') {
+                    flaggedRows.push({
+                        form: form.form_name,
+                        assessor: row.assessor,
+                        issue: row.issue,
+                        link: row.link
+                    });
+                }
+            });
+        }
+    });
+
+    if (flaggedRows.length === 0) {
+        // Show total inspections count even if no flags (filtered by assessor)
+        var inspTotal = 0;
+        kpa.assessments.details.forEach(function(form) {
+            if (inspForms.indexOf(form.form_id) !== -1 && form.rows) {
+                form.rows.forEach(function(row) {
+                    if (currentCompany !== 'All') {
+                        if (row.service_line) {
+                            var slCo = KPA_SL_TO_COMPANY[row.service_line];
+                            var slDiv = KPA_SL_TO_DIVISION[row.service_line] || row.service_line;
+                            if (!slCo && row.service_line.indexOf('Drilling') === 0) { slCo = 'Transcend'; slDiv = 'Transcend'; }
+                            if (slCo && !matchesCompanyDivision(slCo, slDiv)) return;
+                        } else {
+                            var co = ASSESSOR_COMPANY[row.assessor];
+                            var adiv = ASSESSOR_DIVISION[row.assessor];
+                            if (co && !matchesCompanyDivision(co, adiv)) return;
+                        }
+                    }
+                    inspTotal++;
+                });
+            }
+        });
+        if (inspTotal > 0) {
+            div.innerHTML = '<div class="section"><div class="section-title">Pre/Post Trip Inspections (' + inspTotal + ' ' + getPeriodLabel() + ')</div>' +
+                '<div class="alert-green">All inspections passed -- no flagged items</div></div>';
+        } else {
+            div.innerHTML = '<div class="section"><div class="section-title">Pre/Post Trip Inspections</div>' +
+                '<div class="no-data">No inspections filed ' + getPeriodLabel() + '</div></div>';
+        }
+        return;
+    }
+
+    var html = '<div class="section"><div class="section-title">Pre/Post Trip Inspections -- Flagged Items (' + flaggedRows.length + ')</div>';
+    html += '<div class="alert-yellow">' + flaggedRows.length + ' vehicle deficiency item(s) flagged during pre/post trip inspections</div>';
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th>Inspection Form</th><th>Inspector</th><th>Flagged Issue</th><th>Link</th>';
+    html += '</tr></thead><tbody>';
+    flaggedRows.forEach(function(r) {
+        html += '<tr>';
+        html += '<td>' + esc(r.form) + '</td>';
+        html += '<td>' + esc(r.assessor) + '</td>';
+        html += '<td>' + esc(r.issue) + '</td>';
+        html += '<td><a href="' + safeHref(r.link) + '" target="_blank" rel="noopener">View</a></td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+    div.innerHTML = html;
+}
+
+// Item 10: Enhanced Safety Rep Accountability (Casing only)
+function renderEnhancedAccountability() {
+    var accDiv = document.getElementById('assessAccountSection');
+    if (!includesCasing()) { accDiv.innerHTML = ''; return; }
+    var kpa = D.kpa;
+    if (!kpa || !kpa.assessments || !kpa.assessments.details) { accDiv.innerHTML = ''; return; }
+
+    var casingForm = null;
+    for (var fi = 0; fi < kpa.assessments.details.length; fi++) {
+        if (kpa.assessments.details[fi].form_id === 381707) { casingForm = kpa.assessments.details[fi]; break; }
+    }
+    var casingCount = casingForm ? casingForm.count : 0;
+
+    var scopeLabel = currentDivision !== 'All Divisions' && currentDivision !== 'All' ? currentDivision : 'Casing';
+    var html = '<div class="section"><div class="section-title">' + esc(scopeLabel) + ' Safety Rep Accountability</div>';
+
+    // Status banner
+    // Total monthly target for scope
+    var totalTarget = 0;
+    Object.keys(REP_MONTHLY_TARGET).forEach(function(k) { totalTarget += REP_MONTHLY_TARGET[k]; });
+
+    if (casingCount === 0) {
+        html += '<div class="alert-red">0 ' + esc(scopeLabel) + ' Field Assessments filed ' + getPeriodLabel() + ' (monthly target: ' + totalTarget + ' quality audits)</div>';
+    } else {
+        html += '<div class="alert-green">' + casingCount + ' ' + esc(scopeLabel) + ' Field Assessments filed ' + getPeriodLabel() + '</div>';
+    }
+
+    // Per-rep table with monthly crew-based targets
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th>Safety Rep</th><th>Assigned Yards</th><th>Assessments (' + getPeriodLabel() + ')</th><th>Monthly Target (1 per crew)</th>';
+    html += '</tr></thead><tbody>';
+
+    // Count assessments per rep
+    var repCounts = {};
+    if (casingForm && casingForm.rows) {
+        casingForm.rows.forEach(function(r) {
+            repCounts[r.assessor] = (repCounts[r.assessor] || 0) + 1;
+        });
+    }
+
+    Object.keys(REP_YARD).forEach(function(rep) {
+        var yards = REP_YARD[rep];
+        var count = repCounts[rep] || 0;
+        var target = REP_MONTHLY_TARGET[rep] || 0;
+        html += '<tr>';
+        html += '<td>' + esc(rep) + '</td>';
+        html += '<td>' + esc(yards) + '</td>';
+        html += '<td>' + (count > 0 ? '<strong style="color:#008000">' + count + '</strong>' : '<span style="color:#A73333">0</span>') + '</td>';
+        html += '<td>' + target + ' crews</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+
+    // Other forms filed today (clean card layout)
+    var otherForms = [];
+    kpa.assessments.details.forEach(function(f) {
+        if (f.count === 0 || f.form_id === 381707 || !f.rows) return;
+        var filteredRows = f.rows.filter(function(r) {
+            if (currentCompany === 'All') return true;
+            var co = ASSESSOR_COMPANY[r.assessor];
+            var adiv = ASSESSOR_DIVISION[r.assessor];
+            if (co && !matchesCompanyDivision(co, adiv)) return false;
+            return true;
+        });
+        if (filteredRows.length > 0) {
+            var assessors = [];
+            filteredRows.forEach(function(r) { if (assessors.indexOf(r.assessor)===-1) assessors.push(r.assessor); });
+            otherForms.push({ name: f.form_name, count: filteredRows.length, assessors: assessors });
+        }
+    });
+    if (otherForms.length > 0) {
+        html += '<div style="margin-top:12px;"><div style="font-size:13px;font-weight:600;color:#555;margin-bottom:6px;">Other Forms Filed (' + getPeriodLabel() + ')</div>';
+        html += '<div class="table-wrap"><table><thead><tr><th>Form</th><th>Count</th><th>Filed By</th></tr></thead><tbody>';
+        otherForms.forEach(function(f) {
+            html += '<tr><td>' + esc(f.name) + '</td><td>' + f.count + '</td><td>' + f.assessors.map(esc).join(', ') + '</td></tr>';
+        });
+        html += '</tbody></table></div></div>';
+    }
+    html += '</div>';
+    accDiv.innerHTML = html;
+}
+
+// ===== TAB 5: DEVICES & CAs =====
+function renderDevicesAndCAs() {
+    if (!includesCasing()) {
+        var devMsg = currentCompany !== 'BRHAS' && currentCompany !== 'All'
+            ? 'ELD/GPS device tracking is managed through Motive for BRHAS Casing fleet. ' + currentCompany + ' does not currently have device monitoring on this dashboard.'
+            : 'ELD/GPS device tracking covers Casing fleet vehicles. Select BRHAS &gt; Casing to view device status.';
+        document.getElementById('deviceSummarySection').innerHTML =
+            '<div class="section"><div class="section-title">Device Status</div>' +
+            '<div class="no-data">' + devMsg + '</div></div>';
+        document.getElementById('deviceByYardSection').innerHTML = '';
+        document.getElementById('deviceDetailSection').innerHTML = '';
+        return;
+    }
+    var devices = D.devices;
+    var issues = includesCasing() ? getYardFilteredDevices() : [];
+
+    // Device summary cards
+    var sumDiv = document.getElementById('deviceSummarySection');
+    if (devices || issues.length > 0) {
+        var powered = issues.filter(function(i){return i.issue_type==='Powered Off';}).length;
+        var escalations = issues.filter(function(i){return i.is_escalation;}).length;
+        var newIssues = issues.filter(function(i){return i.is_new;}).length;
+
+        var html = '<div class="section"><div class="section-title">Device Status Overview</div>' + snapshotBadge();
+        html += '<div class="card-row">';
+        html += '<div class="card"><div class="card-num">' + issues.length + '</div><div class="card-lbl">Total Issues</div></div>';
+        html += '<div class="card"><div class="card-num">' + powered + '</div><div class="card-lbl">Powered Off</div></div>';
+        html += '<div class="card"><div class="card-num" style="color:#E67E00">' + escalations + '</div><div class="card-lbl">Escalations (7+ days)</div></div>';
+        html += '<div class="card"><div class="card-num" style="color:#008000">' + newIssues + '</div><div class="card-lbl">New Issues</div></div>';
+        html += '</div></div>';
+        sumDiv.innerHTML = html;
+    } else {
+        sumDiv.innerHTML = '<div class="section"><div class="section-title">Device Status</div><div class="no-data">Data unavailable</div></div>';
+    }
+
+    // Device by-yard table (All Yards only)
+    var byYardDiv = document.getElementById('deviceByYardSection');
+    if (currentYard === 'All Yards' && includesCasing() && devices && devices.issues) {
+        var html = '<div class="section"><div class="section-title">Device Issues by Yard</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Yard</th><th>Total Issues</th><th>In Service</th><th>Out of Service</th>';
+        html += '</tr></thead><tbody>';
+        YARDS.forEach(function(yard) {
+            var yardIssues = devices.issues.filter(function(i){return i.yard === yard;});
+            var inSvc = yardIssues.filter(function(i){return i.availability==='In Service';}).length;
+            var outSvc = yardIssues.filter(function(i){return i.availability!=='In Service';}).length;
+            var total = yardIssues.length;
+            html += '<tr>';
+            html += '<td><strong>' + esc(yard) + '</strong></td>';
+            html += '<td>' + total + '</td>';
+            html += '<td>' + inSvc + '</td>';
+            html += '<td>' + outSvc + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        byYardDiv.innerHTML = html;
+    } else {
+        byYardDiv.innerHTML = '';
+    }
+
+    // Device issues detail (Top 30)
+    var detDiv = document.getElementById('deviceDetailSection');
+    var topIssues = issues.slice().sort(function(a,b){return b.days_disconnected - a.days_disconnected;}).slice(0, 30);
+    if (topIssues.length > 0) {
+        var html = '<div class="section"><div class="section-title">Device Issues Detail (Top 30)</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Vehicle</th><th>Yard</th><th>Availability</th><th>Issue Type</th>';
+        html += '<th>Devices</th><th>Days Disconnected</th><th>Flags</th>';
+        html += '</tr></thead><tbody>';
+        topIssues.forEach(function(i) {
+            html += '<tr>';
+            html += '<td>' + esc(i.vehicle_number) + '</td>';
+            html += '<td>' + esc(i.yard) + '</td>';
+            html += '<td>' + esc(i.availability) + '</td>';
+            html += '<td>' + esc(i.issue_type) + '</td>';
+            html += '<td>' + esc(i.devices_affected) + '</td>';
+            html += '<td>' + (i.days_disconnected === 999 ? 'N/A' : i.days_disconnected) + '</td>';
+            html += '<td>';
+            if (i.is_new) html += '<span class="badge badge-green">NEW</span> ';
+            if (i.is_escalation) html += '<span class="badge badge-orange">ESCALATION</span>';
+            html += '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        detDiv.innerHTML = html;
+    } else {
+        detDiv.innerHTML = '';
+    }
+
+}
+
+// ===== TAB 6: TRAINING (Item 2) =====
+function getFilteredTrainingStats() {
+    // Get training stats for current company/division/location filter
+    var t = D.training;
+    if (!t) return null;
+
+    // If a specific location is selected, use location-level data
+    if (currentYard && currentYard !== 'All Yards') {
+        var locData = null;
+        if (currentCompany === 'All') {
+            // All companies + specific location -- use cross-company by_location
+            locData = t.by_location ? t.by_location[currentYard] : null;
+        } else if (currentCompany === 'BRHAS' && currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+            // BRHAS specific division + location
+            locData = t.by_division_location && t.by_division_location[currentDivision]
+                ? t.by_division_location[currentDivision][currentYard] : null;
+        } else {
+            // Company + location
+            locData = t.by_company_location && t.by_company_location[currentCompany]
+                ? t.by_company_location[currentCompany][currentYard] : null;
+        }
+        if (locData) {
+            return {pct: locData.pct, total: locData.total, compliant: locData.compliant, overdue: locData.total - locData.compliant};
+        }
+        return null;
+    }
+
+    if (currentCompany === 'All') return {pct: t.overall_pct, total: t.total_employees, compliant: t.compliant_count, overdue: t.total_employees - t.compliant_count};
+    if (t.by_company && t.by_company[currentCompany]) {
+        var co = t.by_company[currentCompany];
+        // If BRHAS division selected, use division data
+        if (currentCompany === 'BRHAS' && currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+            if (t.by_division && t.by_division[currentDivision]) {
+                var d = t.by_division[currentDivision];
+                return {pct: d.pct, total: d.total, compliant: d.compliant, overdue: d.total - d.compliant};
+            }
+        }
+        return {pct: co.pct, total: co.total, compliant: co.compliant, overdue: co.total - co.compliant};
+    }
+    return null;
+}
+
+function renderTraining() {
+    var t = D.training;
+    var overDiv = document.getElementById('trainingOverviewSection');
+    var st = getFilteredTrainingStats();
+
+    if (!t || !st) {
+        var trainMsg = !t
+            ? 'Training compliance data is loading or unavailable. Verify daily_training_compliance.py ran successfully.'
+            : 'No training data found for ' + currentCompany + (currentDivision !== 'All Divisions' ? ' &gt; ' + currentDivision : '') + '. This division may not have employees assigned in KPA.';
+        overDiv.innerHTML = '<div class="section"><div class="section-title">Training Compliance</div>' +
+            '<div class="no-data">' + trainMsg + '</div></div>';
+        document.getElementById('trainingByYardSection').innerHTML = '';
+        document.getElementById('trainingDetailSection').innerHTML = '';
+        return;
+    }
+
+    var html = '<div class="section"><div class="section-title">Training Compliance Overview</div>' + snapshotBadge();
+
+    // Status banner
+    if (st.pct >= 95) {
+        html += '<div class="alert-green">Overall compliance: ' + st.pct + '% (' + st.compliant + '/' + st.total + ' employees)</div>';
+    } else if (st.pct >= 85) {
+        html += '<div class="alert-yellow">Overall compliance: ' + st.pct + '% (' + st.compliant + '/' + st.total + ' employees) -- Below 95% target</div>';
+    } else {
+        html += '<div class="alert-red">Overall compliance: ' + st.pct + '% (' + st.compliant + '/' + st.total + ' employees) -- Critical: below 85%</div>';
+    }
+
+    html += '<div class="card-row">';
+    html += '<div class="card card-green"><div class="card-num">' + st.pct + '%</div><div class="card-lbl">Overall Compliance</div></div>';
+    html += '<div class="card"><div class="card-num">' + st.total + '</div><div class="card-lbl">Total Employees</div></div>';
+    html += '<div class="card card-green"><div class="card-num">' + st.compliant + '</div><div class="card-lbl">Fully Compliant</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#A73333">' + st.overdue + '</div><div class="card-lbl">Non-Compliant</div></div>';
+    html += '</div></div>';
+    overDiv.innerHTML = html;
+
+    // Compliance breakdown bars -- by company, division, or location
+    var byYardDiv = document.getElementById('trainingByYardSection');
+    var barsHtml = '';
+
+    function buildComplianceBars(title, dataMap) {
+        var h = '<div class="section"><div class="section-title">' + title + '</div>';
+        var keys = Object.keys(dataMap).sort(function(a,b){return (dataMap[a].pct||0) - (dataMap[b].pct||0);});
+        keys.forEach(function(k) {
+            var dd = dataMap[k];
+            if (!dd || dd.total === 0 || k === 'Unassigned') return;
+            var pct = dd.pct || 0;
+            var color = pct >= 95 ? '#008000' : pct >= 85 ? '#E67E00' : '#A73333';
+            h += '<div class="compliance-bar-wrap">';
+            h += '<div class="compliance-bar-label">' + k + ' (' + dd.compliant + '/' + dd.total + ')</div>';
+            h += '<div class="compliance-bar-bg"><div class="compliance-bar-fill" style="width:' + pct + '%;background:' + color + '">' + (pct >= 15 ? pct + '%' : '') + '</div></div>';
+            h += '<div class="compliance-pct" style="color:' + color + '">' + pct + '%</div>';
+            h += '</div>';
+        });
+        h += '</div>';
+        return h;
+    }
+
+    if (currentYard && currentYard !== 'All Yards') {
+        // Specific location selected -- no sub-bars needed
+        barsHtml = '';
+    } else if (currentCompany === 'All' && t.by_company) {
+        barsHtml = buildComplianceBars('Training Compliance by Company', t.by_company);
+    } else if (currentCompany === 'BRHAS' && (currentDivision === 'All Divisions' || currentDivision === 'All') && t.by_division) {
+        barsHtml = buildComplianceBars('Training Compliance by Division', t.by_division);
+    } else if (currentCompany === 'BRHAS' && currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+        // Specific BRHAS division -- show location bars
+        var divLocs = t.by_division_location ? t.by_division_location[currentDivision] : null;
+        if (divLocs) {
+            barsHtml = buildComplianceBars('Training Compliance by Location - ' + currentDivision, divLocs);
+        }
+    } else if (currentCompany !== 'All') {
+        // Non-BRHAS company -- show location bars
+        var coLocs = t.by_company_location ? t.by_company_location[currentCompany] : null;
+        if (coLocs) {
+            barsHtml = buildComplianceBars('Training Compliance by Location - ' + currentCompany, coLocs);
+        }
+    }
+    byYardDiv.innerHTML = barsHtml;
+
+    // Non-compliant employees detail -- filtered by company/division/yard
+    var detDiv = document.getElementById('trainingDetailSection');
+    var nonComp = t.non_compliant_employees || [];
+    // Filter by company
+    if (currentCompany !== 'All') {
+        nonComp = nonComp.filter(function(e) { return e.company === currentCompany; });
+    }
+    // Filter by division (BRHAS only)
+    if (currentCompany === 'BRHAS' && currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+        nonComp = nonComp.filter(function(e) { return e.division === currentDivision; });
+    }
+    // Filter by yard
+    if (currentYard !== 'All Yards') {
+        nonComp = nonComp.filter(function(e) { return e.yard === currentYard; });
+    }
+    if (nonComp.length > 0) {
+        var html = '<div class="section"><div class="section-title">Non-Compliant Employees (' + nonComp.length + ')</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Employee</th><th>Location</th><th>% Complete</th><th>Status</th><th>Incomplete Programs</th><th>Days Since Assignment</th>';
+        html += '</tr></thead><tbody>';
+        nonComp.forEach(function(e) {
+            var cls = e.status === 'Overdue' ? ' class="overdue"' : '';
+            var loc = e.yard || e.division || e.company || '';
+            html += '<tr' + cls + '>';
+            html += '<td>' + esc(e.employee_name) + '</td>';
+            html += '<td>' + esc(loc) + '</td>';
+            html += '<td>' + e.percent_complete + '%</td>';
+            html += '<td><span class="badge ' + (e.status === 'Overdue' ? 'badge-red' : 'badge-yellow') + '">' + e.status + '</span></td>';
+            html += '<td>' + esc((e.incomplete_training_names || []).join(', ')) + '</td>';
+            html += '<td>' + e.days_since_assignment + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        detDiv.innerHTML = html;
+    } else {
+        detDiv.innerHTML = '<div class="section"><div class="section-title">Non-Compliant Employees</div><div class="alert-green">All employees are fully compliant with assigned training</div></div>';
+    }
+}
+
+// ===== Item 4: Yard Comparison Scorecard with Events-Per-Vehicle =====
+function renderYardScorecard() {
+    var div = document.getElementById('yardScorecardSection');
+    if (currentYard !== 'All Yards' || !includesCasing()) { div.innerHTML = ''; return; }
+
+    var allCam = includesCasing() ? (D.camera && D.camera.events ? D.camera.events : []) : [];
+    var allSpd = getFilteredSpeedingEvents();
+    var allDev = includesCasing() ? (D.devices && D.devices.issues ? D.devices.issues : []) : [];
+
+    var html = '<div class="section"><div class="section-title">Yard Comparison Scorecard</div>';
+    html += '<div class="info-note">Events-per-vehicle normalizes for fleet size. Lower is better. Vehicle counts are approximate and updated monthly.</div>';
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th>Yard</th><th>Vehicles</th><th>Camera Events</th><th>Cam/Vehicle</th>';
+    html += '<th>Speeding Events</th><th>Spd/Vehicle</th>';
+    html += '<th>Device Issues</th><th>Dev/Vehicle</th>';
+    html += '<th>Total Events</th><th>Total/Vehicle</th>';
+    html += '</tr></thead><tbody>';
+
+    var yardData = [];
+    YARDS.forEach(function(yard) {
+        var vehicles = YARD_VEHICLES[yard] || 1;
+        var cam = allCam.filter(function(e){return e.yard === yard;}).length;
+        var spd = allSpd.filter(function(e){return e.yard === yard;}).length;
+        var dev = allDev.filter(function(i){return i.yard === yard;}).length;
+        var total = cam + spd + dev;
+        yardData.push({
+            yard: yard, vehicles: vehicles,
+            cam: cam, spd: spd, dev: dev, total: total,
+            camRate: vehicles > 0 ? cam / vehicles : 0,
+            spdRate: vehicles > 0 ? spd / vehicles : 0,
+            devRate: vehicles > 0 ? dev / vehicles : 0,
+            totalRate: vehicles > 0 ? total / vehicles : 0
+        });
+    });
+
+    // Color coding: compare rates across yards
+    var maxTotalRate = Math.max.apply(null, yardData.map(function(y){return y.totalRate;}).concat([0.01]));
+
+    yardData.forEach(function(y) {
+        var rateClass = y.totalRate === 0 ? 'scorecard-good' :
+            y.totalRate >= maxTotalRate * 0.7 ? 'scorecard-bad' :
+            y.totalRate >= maxTotalRate * 0.3 ? 'scorecard-warn' : 'scorecard-good';
+
+        html += '<tr>';
+        html += '<td><strong>' + esc(y.yard) + '</strong></td>';
+        html += '<td>' + y.vehicles + '</td>';
+        html += '<td>' + y.cam + '</td>';
+        html += '<td>' + y.camRate.toFixed(3) + '</td>';
+        html += '<td>' + y.spd + '</td>';
+        html += '<td>' + y.spdRate.toFixed(3) + '</td>';
+        html += '<td>' + y.dev + '</td>';
+        html += '<td>' + y.devRate.toFixed(3) + '</td>';
+        html += '<td><strong>' + y.total + '</strong></td>';
+        html += '<td class="' + rateClass + '">' + y.totalRate.toFixed(3) + '</td>';
+        html += '</tr>';
+    });
+
+    // Totals row
+    var totCam = allCam.length, totSpd = allSpd.length, totDev = allDev.length;
+    html += '<tr style="background:#f0f0f0;font-weight:bold">';
+    html += '<td>TOTAL</td>';
+    html += '<td>' + TOTAL_VEHICLES + '</td>';
+    html += '<td>' + totCam + '</td>';
+    html += '<td>' + (totCam / TOTAL_VEHICLES).toFixed(3) + '</td>';
+    html += '<td>' + totSpd + '</td>';
+    html += '<td>' + (totSpd / TOTAL_VEHICLES).toFixed(3) + '</td>';
+    html += '<td>' + totDev + '</td>';
+    html += '<td>' + (totDev / TOTAL_VEHICLES).toFixed(3) + '</td>';
+    html += '<td>' + (totCam + totSpd + totDev) + '</td>';
+    html += '<td>' + ((totCam + totSpd + totDev) / TOTAL_VEHICLES).toFixed(3) + '</td>';
+    html += '</tr>';
+
+    html += '</tbody></table></div></div>';
+    div.innerHTML = html;
+}
+
+// ===== SAFETY FORMS WHITELIST (for CA filtering) =====
+var SAFETY_FORMS = [
+    'Observation Card', 'CSG - JSA Review', 'CSG - Safety Casing Field Assessment',
+    'TD - Rig Inspection', 'Incident Report', 'Root Cause Analysis',
+    'HSE - Workplace Inspection Checklist', 'RH - Rathole Field Assessment',
+    'Construction - Site Safety Review', 'CSG - Workplace Inspection',
+    'Tailgate Talk', 'JSA Log', 'TD - Observation Card',
+    'Equipment Inspection', 'Vehicle Inspection Checklist', 'Non-DOT Pre-Trip Inspection',
+    'Unknown (151673)', 'Unknown (161108)', 'Unknown (171710)', 'Unknown (177981)'
+];
+
+function isSafetyCA(ca) {
+    return SAFETY_FORMS.indexOf(ca.origin_form) !== -1;
+}
+
+// Map CA division to company
+var CA_DIV_TO_COMPANY = {
+    'Casing': 'BRHAS', 'Rathole': 'BRHAS', 'Construction': 'BRHAS',
+    'Shared': 'BRHAS', 'Transcend': 'Transcend'
+};
+
+function getFilteredSafetyCAs() {
+    if (!D.cas || !D.cas.corrective_actions) return [];
+    var all = D.cas.corrective_actions.filter(isSafetyCA);
+    if (currentCompany === 'All') return all;
+    return all.filter(function(ca) {
+        var caCo = CA_DIV_TO_COMPANY[ca.division] || 'BRHAS';
+        if (caCo === 'All') return true; // Shared CAs show for all
+        if (caCo !== currentCompany) return false;
+        // Division filter for BRHAS
+        if (currentCompany === 'BRHAS' && currentDivision && currentDivision !== 'All Divisions' && currentDivision !== 'All') {
+            return ca.division === currentDivision;
+        }
+        return true;
+    });
+}
+
+function safeChart(key, ctx, config) {
+    if (CHARTS[key]) { CHARTS[key].destroy(); }
+    CHARTS[key] = new Chart(ctx, config);
+}
+
+// ===== NEW: Portfolio Scorecard (Company or Division comparison) =====
+function renderPortfolioScorecard() {
+    var div = document.getElementById('portfolioScorecardSection');
+    if (!div) return;
+
+    var ytd = D.ytd;
+    var kpa = D.kpa;
+    var t = D.training;
+
+    // Company comparison when "All" selected
+    if (currentCompany === 'All') {
+        var companies = ['BRHAS', 'Valor', 'BTI', 'Transcend', 'Permian'];
+        var html = '<div class="section"><div class="section-title">Company Safety Scorecard</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Company</th><th>Man-Hours</th><th>TRIR</th><th>Recordables</th>';
+        html += '<th>Observations</th><th>Speeding</th><th>Training %</th><th>Open Safety CAs</th><th>Status</th>';
+        html += '</tr></thead><tbody>';
+
+        companies.forEach(function(co) {
+            var st = ytd && ytd.stats_by_company ? ytd.stats_by_company[co] : null;
+            var mh = st ? st.man_hours || 0 : 0;
+            var trir = st ? st.trir || 0 : 0;
+            var rec = st ? st.recordables || 0 : 0;
+
+            // Count obs for this company
+            var obsCount = 0;
+            if (kpa && kpa.observations && kpa.observations.details) {
+                kpa.observations.details.forEach(function(o) {
+                    var sl = o.service_line || '';
+                    var oCo = KPA_SL_TO_COMPANY[sl] || '';
+                    if (!oCo && sl.indexOf('Drilling') === 0) oCo = 'Transcend';
+                    if (oCo === co) obsCount++;
+                });
+            }
+
+            // Count speeding for this company
+            var spdCount = 0;
+            if (D.speeding && D.speeding.events) {
+                D.speeding.events.forEach(function(e) {
+                    var eCo = SPEEDING_TO_COMPANY[e.division] || '';
+                    if (eCo === co) spdCount++;
+                });
+            }
+
+            // Training
+            var trainPct = '--';
+            if (t && t.by_company && t.by_company[co]) {
+                trainPct = t.by_company[co].pct + '%';
+            }
+
+            // CAs
+            var caCnt = 0;
+            if (D.cas && D.cas.corrective_actions) {
+                D.cas.corrective_actions.filter(isSafetyCA).forEach(function(ca) {
+                    var caCo = CA_DIV_TO_COMPANY[ca.division] || 'BRHAS';
+                    if (caCo === co) caCnt++;
+                });
+            }
+
+            // Status
+            var status = 'green';
+            var statusText = 'Normal';
+            if (rec > 0 && st && st.days_since_recordable != null && st.days_since_recordable < 30) { status = 'red'; statusText = 'Recordable <30d'; }
+            else if (trir > 1.0) { status = 'yellow'; statusText = 'TRIR >1.0'; }
+            else if (trainPct !== '--' && parseInt(trainPct) < 80) { status = 'yellow'; statusText = 'Training <80%'; }
+
+            html += '<tr>';
+            html += '<td><strong>' + esc(co) + '</strong></td>';
+            html += '<td>' + (mh > 0 ? mh.toLocaleString() : '--') + '</td>';
+            html += '<td style="color:' + (trir < 1.0 ? '#27ae60' : trir < 1.5 ? '#f39c12' : '#e74c3c') + ';font-weight:bold">' + trir.toFixed(2) + '</td>';
+            html += '<td>' + rec + '</td>';
+            html += '<td>' + obsCount + '</td>';
+            html += '<td>' + spdCount + '</td>';
+            html += '<td style="color:' + (trainPct === '--' ? '#999' : parseInt(trainPct) >= 95 ? '#27ae60' : parseInt(trainPct) >= 80 ? '#f39c12' : '#e74c3c') + '">' + trainPct + '</td>';
+            html += '<td>' + caCnt + '</td>';
+            html += '<td><span class="badge badge-' + status + '">' + statusText + '</span></td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div></div>';
+        div.innerHTML = html;
+        return;
+    }
+
+    // Division comparison when BRHAS + All Divisions selected
+    if (currentCompany === 'BRHAS' && (currentDivision === 'All Divisions' || currentDivision === 'All')) {
+        var divisions = ['Casing', 'Rathole', 'Poly Pipe', 'Pit Lining', 'Anchors', 'Construction', 'Environmental', 'Fencing', 'Drilling Tools'];
+        var html = '<div class="section"><div class="section-title">BRHAS Division Safety Scorecard</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Division</th><th>Man-Hours</th><th>Observations</th>';
+        html += '<th>Speeding</th><th>Training %</th><th>Open Safety CAs</th><th>Status</th>';
+        html += '</tr></thead><tbody>';
+
+        divisions.forEach(function(divName) {
+            // Man-hours from YTD
+            var mh = 0;
+            if (ytd && ytd.stats_by_company && ytd.stats_by_company['BRHAS'] && ytd.stats_by_company['BRHAS'].by_division) {
+                mh = ytd.stats_by_company['BRHAS'].by_division[divName] || 0;
+            }
+
+            // Count obs
+            var obsCount = 0;
+            if (kpa && kpa.observations && kpa.observations.details) {
+                kpa.observations.details.forEach(function(o) {
+                    var sl = o.service_line || '';
+                    var oDiv = KPA_SL_TO_DIVISION[sl] || sl;
+                    if (oDiv === divName) obsCount++;
+                });
+            }
+
+            // Count speeding
+            var spdCount = 0;
+            if (D.speeding && D.speeding.events) {
+                D.speeding.events.forEach(function(e) {
+                    var eDiv = SPEEDING_TO_DIVISION[e.division] || e.division;
+                    if (eDiv === divName) spdCount++;
+                });
+            }
+
+            // Training
+            var trainPct = '--';
+            if (t && t.by_division && t.by_division[divName]) {
+                trainPct = t.by_division[divName].pct + '%';
+            }
+
+            // CAs
+            var caCnt = 0;
+            if (D.cas && D.cas.corrective_actions) {
+                D.cas.corrective_actions.filter(isSafetyCA).forEach(function(ca) {
+                    if (ca.division === divName) caCnt++;
+                });
+            }
+
+            // Status
+            var status = 'green';
+            var statusText = 'Normal';
+            if (trainPct !== '--' && parseInt(trainPct) < 80) { status = 'yellow'; statusText = 'Training <80%'; }
+            if (trainPct !== '--' && parseInt(trainPct) < 60) { status = 'red'; statusText = 'Training Critical'; }
+            if (obsCount === 0 && mh > 10000) { status = status === 'green' ? 'yellow' : status; statusText = statusText === 'Normal' ? 'No observations' : statusText; }
+
+            html += '<tr>';
+            html += '<td><strong>' + esc(divName) + '</strong></td>';
+            html += '<td>' + (mh > 0 ? mh.toLocaleString() : '--') + '</td>';
+            html += '<td>' + (obsCount > 0 ? obsCount : '<span style="color:#e74c3c">0</span>') + '</td>';
+            html += '<td>' + spdCount + '</td>';
+            html += '<td style="color:' + (trainPct === '--' ? '#999' : parseInt(trainPct) >= 95 ? '#27ae60' : parseInt(trainPct) >= 80 ? '#f39c12' : '#e74c3c') + '">' + trainPct + '</td>';
+            html += '<td>' + caCnt + '</td>';
+            html += '<td><span class="badge badge-' + status + '">' + statusText + '</span></td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div></div>';
+        div.innerHTML = html;
+        return;
+    }
+
+    // Single company/division selected -- no comparison needed
+    div.innerHTML = '';
+}
+
+// ===== NEW: Leading Indicators =====
+function renderLeadingIndicators() {
+    var div = document.getElementById('leadingIndicatorsSection');
+    if (!div) return;
+
+    var ytd = D.ytd;
+    var kpa = D.kpa;
+    var cas = D.cas;
+
+    // Obs per 1K man-hours (use filtered data for company/division)
+    var filteredObs = getFilteredObservations();
+    var obsCount = filteredObs.length;
+    var filteredSt = getCompanyStats();
+    var manHours = filteredSt ? filteredSt.man_hours || 0 : (ytd ? ytd.ytd_man_hours || 0 : 0);
+    var obsPer1K = manHours > 0 ? (obsCount / manHours * 1000).toFixed(1) : '--';
+
+    // Proactive ratio (recognitions / (at_risk + near_miss + incidents))
+    // Compute type counts from filtered observations
+    var typeCounts = {};
+    filteredObs.forEach(function(o) {
+        var t = o.type || 'Other';
+        typeCounts[t] = (typeCounts[t] || 0) + 1;
+    });
+    var recognitions = 0;
+    var atRisk = 0;
+    Object.keys(typeCounts).forEach(function(k) {
+        var lower = k.toLowerCase();
+        if (lower.indexOf('recognition') === 0 || lower.indexOf('safe behavior') === 0) recognitions += typeCounts[k];
+        if (lower.indexOf('at-risk') === 0 || lower.indexOf('at risk') === 0) atRisk += typeCounts[k];
+    });
+    var nmCount = getFilteredNearMisses().length;
+    var incCount = getFilteredIncidents().length;
+    var reactive = atRisk + nmCount + incCount;
+    var proactiveRatio = reactive > 0 ? (recognitions / reactive).toFixed(1) : (recognitions > 0 ? 'INF' : '--');
+
+    // Training compliance % (use filtered stats)
+    var trainSt = getFilteredTrainingStats();
+    var trainPct = trainSt ? (trainSt.pct || '--') : '--';
+
+    // Safety CA overdue rate (JSON only contains open CAs) -- filtered by company/division
+    var safetyCAs = getFilteredSafetyCAs();
+    var overdueSafetyCAs = safetyCAs.filter(function(c) { return c.overdue; });
+    var caOnTimeRate = safetyCAs.length > 0 ? Math.round((safetyCAs.length - overdueSafetyCAs.length) / safetyCAs.length * 100) : '--';
+
+    var html = '<div class="section"><div class="section-title">Leading Indicators</div>';
+    html += '<div class="li-row">';
+    html += '<div class="li-card"><div class="li-num">' + obsPer1K + '</div><div class="li-lbl">Obs per 1K Man-Hours</div></div>';
+    html += '<div class="li-card"><div class="li-num">' + proactiveRatio + ':1</div><div class="li-lbl">Proactive Ratio</div></div>';
+    html += '<div class="li-card"><div class="li-num">' + trainPct + '%</div><div class="li-lbl">Training Compliance</div></div>';
+    html += '<div class="li-card"><div class="li-num">' + caOnTimeRate + '%</div><div class="li-lbl">Safety CAs On-Time</div></div>';
+    html += '</div></div>';
+    div.innerHTML = html;
+}
+
+// ===== NEW: TRIR Trend Chart =====
+function renderTRIRTrend() {
+    var div = document.getElementById('trirTrendSection');
+    if (!div) return;
+
+    var ytd = D.ytd;
+    if (!ytd || ytd.ytd_trir == null) {
+        div.innerHTML = '<div class="section"><div class="section-title">YTD TRIR Trend</div><div class="no-data">TRIR data is loading or unavailable. Verify daily_ytd_stats.py ran successfully. Man-hours are sourced from Q1 2026 payroll data.</div></div>';
+        return;
+    }
+
+    var filteredSt = getCompanyStats();
+    var trir = filteredSt && filteredSt.trir != null ? filteredSt.trir : ytd.ytd_trir;
+    var trirColor = trir < 1.0 ? '#27ae60' : trir < 1.5 ? '#f39c12' : '#e74c3c';
+
+    var html = '<div class="section"><div class="section-title">YTD TRIR</div>';
+    html += '<div style="text-align:center;padding:20px;">';
+    html += '<div style="font-size:64px;font-weight:700;color:' + trirColor + '">' + trir.toFixed(2) + '</div>';
+    html += '<div style="font-size:14px;color:#666;margin-top:4px;">Total Recordable Incident Rate</div>';
+    html += '<div style="font-size:12px;color:#999;margin-top:8px;">Industry benchmark: 1.0 | Target: &lt; 1.0</div>';
+    html += '<div class="chart-container medium"><canvas id="trirTrendCanvas"></canvas></div>';
+    html += '</div></div>';
+    div.innerHTML = html;
+
+    // Simple single-point chart for now (API will provide historical data)
+    var ctx = document.getElementById('trirTrendCanvas');
+    if (ctx && typeof Chart !== 'undefined') {
+        var today = ytd.report_date || new Date().toISOString().slice(0, 10);
+        safeChart('trirTrend', ctx, {
+            type: 'bar',
+            data: {
+                labels: [today],
+                datasets: [{
+                    label: 'TRIR',
+                    data: [trir],
+                    backgroundColor: trirColor,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                        annotations: {
+                            benchmark: {
+                                type: 'line', yMin: 1.0, yMax: 1.0,
+                                borderColor: '#999', borderDash: [5, 5], borderWidth: 1,
+                                label: { content: 'Benchmark 1.0', display: true, position: 'end' }
+                            }
+                        }
+                    }
+                },
+                scales: { y: { beginAtZero: true, max: Math.max(trir * 1.5, 2) } }
+            }
+        });
+    }
+}
+
+// ===== NEW: Weekly Event Trend =====
+function renderWeeklyEventTrend() {
+    var div = document.getElementById('weeklyEventTrendSection');
+    if (!div) return;
+
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    var spdEvents = currentCompany === 'Permian' ? [] : getYardFilteredSpeeding();
+    var obsEvents = getFilteredObservations();
+
+    var evtTitle = currentDateRange === 'today' ? "Today's Event Summary" : 'Event Summary (' + getPeriodLabel() + ')';
+    var html = '<div class="section"><div class="section-title">' + evtTitle + '</div>';
+    html += '<div class="chart-container wide"><canvas id="eventSummaryCanvas"></canvas></div>';
+    html += '</div>';
+    div.innerHTML = html;
+
+    var ctx = document.getElementById('eventSummaryCanvas');
+    if (ctx && typeof Chart !== 'undefined') {
+        safeChart('eventSummary', ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Camera', 'Speeding', 'Observations'],
+                datasets: [{
+                    label: 'Events',
+                    data: [camEvents.length, spdEvents.length, obsEvents.length],
+                    backgroundColor: ['#e74c3c', '#f39c12', '#3498db'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    }
+}
+
+// ===== NEW: CA Aging Section =====
+function renderCAAging() {
+    var div = document.getElementById('caAgingSection');
+    if (!div) return;
+
+    var cas = D.cas;
+    if (!cas || !cas.corrective_actions) {
+        div.innerHTML = '';
+        return;
+    }
+
+    var safetyCAs = getFilteredSafetyCAs();
+    if (safetyCAs.length === 0) {
+        div.innerHTML = '';
+        return;
+    }
+    // JSON only contains open CAs -- all entries are open
+    var openCAs = safetyCAs;
+    var overdueCAs = openCAs.filter(function(c) { return c.overdue; });
+
+    // Age buckets
+    var buckets = {'0-7d': 0, '8-30d': 0, '31-60d': 0, '61-90d': 0, '90+d': 0};
+    openCAs.forEach(function(c) {
+        var d = c.days_open || 0;
+        if (d <= 7) buckets['0-7d']++;
+        else if (d <= 30) buckets['8-30d']++;
+        else if (d <= 60) buckets['31-60d']++;
+        else if (d <= 90) buckets['61-90d']++;
+        else buckets['90+d']++;
+    });
+
+    var html = '<div class="section"><div class="section-title">Safety Corrective Action Aging</div>';
+    html += '<div class="card-row">';
+    html += '<div class="card"><div class="card-num">' + openCAs.length + '</div><div class="card-lbl">Open Safety CAs</div></div>';
+    html += '<div class="card"><div class="card-num" style="color:#e74c3c">' + overdueCAs.length + '</div><div class="card-lbl">Overdue</div></div>';
+    var avgDays = openCAs.length > 0 ? Math.round(openCAs.reduce(function(s,c){return s+(c.days_open||0);},0) / openCAs.length) : 0;
+    html += '<div class="card"><div class="card-num">' + avgDays + '</div><div class="card-lbl">Avg Days Open</div></div>';
+    html += '</div>';
+
+    // Doughnut chart
+    html += '<div class="chart-container small"><canvas id="caAgingCanvas"></canvas></div>';
+
+    // Top 10 oldest overdue
+    if (overdueCAs.length > 0) {
+        overdueCAs.sort(function(a,b){ return (b.days_open||0) - (a.days_open||0); });
+        var top10 = overdueCAs.slice(0, 10);
+        html += '<div class="section-title" style="margin-top:16px">Top ' + top10.length + ' Oldest Overdue Safety CAs</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Assigned To</th><th>Description</th><th>Origin</th><th>Days Open</th>';
+        html += '</tr></thead><tbody>';
+        top10.forEach(function(c) {
+            html += '<tr class="overdue">';
+            html += '<td>' + esc(c.assigned_to || 'Unassigned') + '</td>';
+            html += '<td>' + esc((c.description || '').substring(0, 80)) + '</td>';
+            html += '<td>' + esc(c.origin_form || '') + '</td>';
+            html += '<td style="font-weight:bold;color:#e74c3c">' + (c.days_open || 0) + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+    }
+
+    html += '</div>';
+    div.innerHTML = html;
+
+    // Draw doughnut
+    var ctx = document.getElementById('caAgingCanvas');
+    if (ctx && typeof Chart !== 'undefined') {
+        var labels = Object.keys(buckets);
+        var data = labels.map(function(k){ return buckets[k]; });
+        safeChart('caAging', ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#27ae60', '#3498db', '#f39c12', '#e67e22', '#e74c3c']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 11 } } },
+                    title: { display: true, text: 'Open Safety CAs by Age', font: { size: 14 } }
+                }
+            }
+        });
+    }
+}
+
+// ===== NEW: Fleet KPIs =====
+function renderFleetKPIs() {
+    var div = document.getElementById('fleetKPISection');
+    if (!div) return;
+
+    var hasCasing = includesCasing();
+    var camEvents = hasCasing ? getYardFilteredCamera() : [];
+    var spdEvents = currentCompany === 'Permian' ? [] : getYardFilteredSpeeding();
+    var devIssues = hasCasing ? getYardFilteredDevices() : [];
+
+    var redCam = camEvents.filter(function(e){ return e.tier === 'RED'; }).length;
+    var redSpd = spdEvents.filter(function(e){ return e.tier === 'RED'; }).length;
+
+    // Check if this company has ANY fleet data
+    var hasAnyData = camEvents.length > 0 || spdEvents.length > 0 || devIssues.length > 0;
+    var isNonMotiveCompany = currentCompany === 'Permian';
+
+    var html = '<div class="section"><div class="section-title">Fleet Safety KPIs</div>';
+    if (currentDateRange !== 'today') {
+        html += '<div style="background:#FFF3CD;color:#856404;padding:4px 10px;border-radius:4px;font-size:11px;margin-bottom:8px;">Speeding data reflects ' + getPeriodLabel() + '. Camera and device data show current snapshot.</div>';
+    }
+
+    if (isNonMotiveCompany) {
+        html += '<div class="no-data">Permian Equipment Rentals fleet is not currently monitored through Motive. Speeding and camera data are not available for this company.</div>';
+    } else if (!hasAnyData && currentCompany !== 'All') {
+        html += '<div class="no-data">No fleet events recorded ' + getPeriodLabel() + ' for ' + currentCompany + (currentDivision !== 'All Divisions' ? ' &gt; ' + currentDivision : '') + '. This is a good sign -- zero events means clean driving.</div>';
+    } else {
+        html += '<div class="card-row">';
+        if (hasCasing || currentCompany === 'All') {
+            html += '<div class="card"><div class="card-num">' + camEvents.length + '</div><div class="card-lbl">Camera Events' + (!hasCasing ? '<br><span style="font-size:9px;color:#999">(Casing only)</span>' : '') + '</div></div>';
+            html += '<div class="card card-red"><div class="card-num">' + redCam + '</div><div class="card-lbl">RED Camera</div></div>';
+        }
+        html += '<div class="card"><div class="card-num">' + spdEvents.length + '</div><div class="card-lbl">Speeding Events</div></div>';
+        html += '<div class="card card-red"><div class="card-num">' + redSpd + '</div><div class="card-lbl">RED Speeding</div></div>';
+        if (hasCasing || currentCompany === 'All') {
+            html += '<div class="card"><div class="card-num">' + devIssues.length + '</div><div class="card-lbl">Device Issues' + (!hasCasing ? '<br><span style="font-size:9px;color:#999">(Casing only)</span>' : '') + '</div></div>';
+        }
+        html += '</div>';
+    }
+
+    html += '</div>';
+    div.innerHTML = html;
+}
+
+// ===== NEW: Camera Type Distribution =====
+function renderCameraTypeDist() {
+    var div = document.getElementById('cameraTypeDistSection');
+    if (!div) return;
+
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    if (camEvents.length === 0) {
+        if (!includesCasing()) {
+            div.innerHTML = '';
+        } else {
+            div.innerHTML = '<div class="section"><div class="section-title">Camera Events by Type</div>' + snapshotBadge() + '<div class="no-data">No camera events recorded -- clean driving day for Casing fleet.</div></div>';
+        }
+        return;
+    }
+
+    // Count by event type
+    var typeCounts = {};
+    camEvents.forEach(function(e) {
+        var t = e.event_type || e.type || 'Unknown';
+        typeCounts[t] = (typeCounts[t] || 0) + 1;
+    });
+
+    var labels = Object.keys(typeCounts).sort(function(a,b){ return typeCounts[b] - typeCounts[a]; });
+    var data = labels.map(function(k){ return typeCounts[k]; });
+
+    var html = '<div class="section"><div class="section-title">Camera Events by Type</div>';
+    html += '<div class="chart-container wide"><canvas id="camTypeCanvas"></canvas></div>';
+    html += '</div>';
+    div.innerHTML = html;
+
+    var ctx = document.getElementById('camTypeCanvas');
+    if (ctx && typeof Chart !== 'undefined') {
+        safeChart('camType', ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Count',
+                    data: data,
+                    backgroundColor: '#A73333',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    }
+}
+
+// ===== NEW: Repeat Offenders =====
+function renderRepeatOffenders() {
+    var div = document.getElementById('repeatOffendersSection');
+    if (!div) return;
+
+    var camEvents = includesCasing() ? getYardFilteredCamera() : [];
+    var spdEvents = currentCompany === 'Permian' ? [] : getYardFilteredSpeeding();
+
+    // Count by driver
+    var driverMap = {};
+    camEvents.forEach(function(e) {
+        var d = e.driver || e.driver_name || 'Unknown';
+        if (!driverMap[d]) driverMap[d] = { cam: 0, spd: 0, yard: e.yard || '' };
+        driverMap[d].cam++;
+    });
+    spdEvents.forEach(function(e) {
+        var d = e.driver || e.driver_name || 'Unknown';
+        if (!driverMap[d]) driverMap[d] = { cam: 0, spd: 0, yard: e.yard || '' };
+        driverMap[d].spd++;
+        if (!driverMap[d].yard) driverMap[d].yard = e.yard || '';
+    });
+
+    // Filter 3+ total events
+    var repeats = [];
+    Object.keys(driverMap).forEach(function(name) {
+        var dd = driverMap[name];
+        var total = dd.cam + dd.spd;
+        if (total >= 3) {
+            repeats.push({ name: name, cam: dd.cam, spd: dd.spd, total: total, yard: dd.yard });
+        }
+    });
+    repeats.sort(function(a,b){ return b.total - a.total; });
+
+    if (repeats.length === 0) {
+        var totalFleetEvents = camEvents.length + spdEvents.length;
+        if (totalFleetEvents > 0) {
+            div.innerHTML = '<div class="section"><div class="section-title">Repeat Offenders</div><div class="no-data" style="color:#2E7D32">No repeat offenders ' + getPeriodLabel() + ' -- no driver had 3+ combined camera/speeding events.</div></div>';
+        } else {
+            div.innerHTML = '';
+        }
+        return;
+    }
+
+    var html = '<div class="section"><div class="section-title">Repeat Offenders (3+ Events, ' + getPeriodLabel() + ')</div>';
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th>Driver</th><th>Yard</th><th>Camera</th><th>Speeding</th><th>Total</th>';
+    html += '</tr></thead><tbody>';
+    repeats.slice(0, 15).forEach(function(r) {
+        html += '<tr>';
+        html += '<td><strong>' + esc(r.name) + '</strong></td>';
+        html += '<td>' + esc(r.yard) + '</td>';
+        html += '<td>' + r.cam + '</td>';
+        html += '<td>' + r.spd + '</td>';
+        html += '<td style="font-weight:bold;color:#A73333">' + r.total + '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+    div.innerHTML = html;
+}
+
+// ===== NEW: Observation Culture Doughnut =====
+function renderObsCulture() {
+    var div = document.getElementById('obsCultureSection');
+    if (!div) return;
+
+    var obs = getFilteredObservations();
+    if (obs.length === 0) {
+        var obsMsg = currentCompany !== 'All'
+            ? 'No observations submitted ' + getPeriodLabel() + ' for ' + currentCompany + (currentDivision !== 'All Divisions' ? ' &gt; ' + currentDivision : '') + '. Encourage crews to submit daily observation cards through KPA.'
+            : 'No observations submitted ' + getPeriodLabel() + ' across any company. This is unusual -- verify KPA data feed is running.';
+        div.innerHTML = '<div class="section"><div class="section-title">Observation Culture</div><div class="no-data">' + obsMsg + '</div></div>';
+        return;
+    }
+
+    var typeCounts = {};
+    obs.forEach(function(o) {
+        var t = o.type || 'Other';
+        typeCounts[t] = (typeCounts[t] || 0) + 1;
+    });
+
+    var labels = Object.keys(typeCounts);
+    var data = labels.map(function(k){ return typeCounts[k]; });
+    var colors = labels.map(function(k) {
+        if (k === 'Recognition' || k === 'Safe Behavior') return '#27ae60';
+        if (k.indexOf('At-Risk') === 0 || k.indexOf('At Risk') === 0) return '#e74c3c';
+        if (k === 'Near Miss') return '#f39c12';
+        if (k === 'Suggestion') return '#3498db';
+        if (k === 'Good Catch') return '#2ecc71';
+        return '#95a5a6';
+    });
+
+    var html = '<div class="section"><div class="section-title">Observation Culture (' + obs.length + ' total)</div>';
+    html += '<div class="chart-container small"><canvas id="obsCultureCanvas"></canvas></div>';
+    html += '</div>';
+    div.innerHTML = html;
+
+    var ctx = document.getElementById('obsCultureCanvas');
+    if (ctx && typeof Chart !== 'undefined') {
+        safeChart('obsCulture', ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{ data: data, backgroundColor: colors }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 11 } } }
+                }
+            }
+        });
+    }
+}
+
+// ===== NEW: Safety CAs Section =====
+function renderSafetyCAs() {
+    var div = document.getElementById('safetyCAsSection');
+    if (!div) return;
+
+    var cas = D.cas;
+    if (!cas || !cas.corrective_actions) {
+        div.innerHTML = '<div class="section"><div class="section-title">Safety Corrective Actions</div><div class="no-data">Corrective action data is loading or unavailable. Verify the daily_corrective_actions.py script ran successfully in the GitHub Actions workflow.</div></div>';
+        return;
+    }
+
+    var safetyCAs = getFilteredSafetyCAs();
+    if (safetyCAs.length === 0) {
+        var caZeroMsg = currentCompany !== 'All' && currentCompany !== 'BRHAS'
+            ? currentCompany + ' has no open safety corrective actions in KPA. CAs are currently tracked primarily for BRHAS divisions and Transcend.'
+            : 'No open safety corrective actions for this filter. This either means all CAs are closed or this division does not generate safety-related CAs.';
+        div.innerHTML = '<div class="section"><div class="section-title">Safety Corrective Actions</div><div class="no-data" style="color:#2E7D32">' + caZeroMsg + '</div></div>';
+        return;
+    }
+    // JSON only contains open CAs -- all entries are open
+    var openCAs = safetyCAs;
+    var overdueCAs = openCAs.filter(function(c) { return c.overdue; });
+
+    // By origin form
+    var byForm = {};
+    openCAs.forEach(function(c) {
+        var f = c.origin_form || 'Unknown';
+        byForm[f] = (byForm[f] || 0) + 1;
+    });
+
+    var formLabels = Object.keys(byForm).sort(function(a,b){ return byForm[b] - byForm[a]; });
+    var formData = formLabels.map(function(k){ return byForm[k]; });
+
+    var html = '<div class="section"><div class="section-title">Safety Corrective Actions</div>';
+    html += '<div class="card-row">';
+    html += '<div class="card"><div class="card-num">' + safetyCAs.length + '</div><div class="card-lbl">Total Safety CAs</div></div>';
+    html += '<div class="card"><div class="card-num">' + openCAs.length + '</div><div class="card-lbl">Open</div></div>';
+    html += '<div class="card card-red"><div class="card-num">' + overdueCAs.length + '</div><div class="card-lbl">Overdue</div></div>';
+    html += '</div>';
+
+    if (formLabels.length > 0) {
+        html += '<div class="chart-container wide"><canvas id="caByFormCanvas"></canvas></div>';
+    }
+
+    // Aging table - top 15 oldest overdue
+    if (overdueCAs.length > 0) {
+        overdueCAs.sort(function(a,b){ return (b.days_open||0) - (a.days_open||0); });
+        var top15 = overdueCAs.slice(0, 15);
+        html += '<div class="section-title" style="margin-top:16px">Top ' + top15.length + ' Oldest Overdue Safety CAs</div>';
+        html += '<div class="table-wrap"><table><thead><tr>';
+        html += '<th>Assigned To</th><th>Description</th><th>Origin Form</th><th>Created</th><th>Days Open</th>';
+        html += '</tr></thead><tbody>';
+        top15.forEach(function(c) {
+            html += '<tr class="overdue">';
+            html += '<td>' + esc(c.assigned_to || 'Unassigned') + '</td>';
+            html += '<td>' + esc((c.description || '').substring(0, 100)) + '</td>';
+            html += '<td>' + esc(c.origin_form || '') + '</td>';
+            html += '<td>' + esc(c.created_date || '') + '</td>';
+            html += '<td style="font-weight:bold;color:#e74c3c">' + (c.days_open || 0) + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+    }
+
+    html += '</div>';
+    div.innerHTML = html;
+
+    // Draw bar chart
+    if (formLabels.length > 0) {
+        var ctx = document.getElementById('caByFormCanvas');
+        if (ctx && typeof Chart !== 'undefined') {
+            safeChart('caByForm', ctx, {
+                type: 'bar',
+                data: {
+                    labels: formLabels,
+                    datasets: [{
+                        label: 'Open CAs',
+                        data: formData,
+                        backgroundColor: '#A73333',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+    }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching (click + keyboard)
+    var tabBar = document.getElementById('tabBar');
+    tabBar.addEventListener('click', function(e) {
+        var el = e.target;
+        while (el && el !== tabBar && !el.classList.contains('tab')) el = el.parentElement;
+        var tab = (el && el.classList.contains('tab')) ? el : null;
+        if (tab && tab.dataset.tab && !tab.classList.contains('disabled')) { switchTab(tab.dataset.tab); tab.focus(); }
+    });
+    tabBar.addEventListener('keydown', function(e) {
+        var tabs = Array.prototype.slice.call(tabBar.querySelectorAll('.tab'));
+        var enabledTabs = tabs.filter(function(t) { return !t.classList.contains('disabled'); });
+        var idx = enabledTabs.indexOf(document.activeElement);
+        if (idx === -1) return;
+        var newIdx = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { newIdx = (idx + 1) % enabledTabs.length; }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { newIdx = (idx - 1 + enabledTabs.length) % enabledTabs.length; }
+        else if (e.key === 'Home') { newIdx = 0; }
+        else if (e.key === 'End') { newIdx = enabledTabs.length - 1; }
+        if (newIdx >= 0) { e.preventDefault(); switchTab(enabledTabs[newIdx].dataset.tab); enabledTabs[newIdx].focus(); }
+    });
+
+    loadData();
+});
+</script>
+</body>
+</html>

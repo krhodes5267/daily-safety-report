@@ -1,0 +1,148 @@
+name: Daily Casing Dashboard
+
+on:
+  schedule:
+    # 5:00 AM Central = 11:00 UTC (CST is UTC-6)
+    # During CDT (March-November), this runs at 6:00 AM Central.
+    - cron: '0 11 * * *'
+  workflow_dispatch: # Manual trigger for testing
+
+# Required for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only allow one deployment at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create output directory
+        run: mkdir -p output
+
+      # Run all 7 data scripts sequentially (API rate limits)
+      # Speeding and Device Status use --no-director-email to skip director emails
+      # but keep tiered distribution to safety reps, dispatchers, and managers.
+      # Camera and KPA use --no-email since they only emailed the director.
+
+      - name: Run speeding report (tiered emails to reps/managers continue)
+        continue-on-error: true
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
+        run: python daily_speeding_report.py --no-director-email
+
+      - name: Run camera report (data only)
+        continue-on-error: true
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+        run: python daily_casing_camera_report.py --no-email
+
+      - name: Run device status report (tiered emails to reps/dispatchers/managers continue)
+        continue-on-error: true
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python daily_device_status_report.py --no-director-email
+
+      - name: Run KPA report (data only)
+        continue-on-error: true
+        env:
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+        run: python daily_kpa_report.py --no-email
+
+      - name: Run YTD stats
+        continue-on-error: true
+        env:
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+        run: python daily_ytd_stats.py
+
+      - name: Run training compliance
+        continue-on-error: true
+        env:
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+        run: python daily_training_compliance.py
+
+      - name: Corrective Actions
+        continue-on-error: true
+        env:
+          KPA_API_TOKEN: ${{ secrets.KPA_API_TOKEN }}
+        run: python daily_corrective_actions.py
+
+      # Push data to Google Sheets for Looker Studio
+      - name: Install Sheets dependencies
+        run: pip install gspread google-auth
+
+      - name: Push to Google Sheets
+        continue-on-error: true
+        env:
+          GOOGLE_SHEETS_CREDS_JSON: ${{ secrets.GOOGLE_SHEETS_CREDS_JSON }}
+          TRANSACTIONAL_SHEET_ID: ${{ secrets.TRANSACTIONAL_SHEET_ID }}
+          SNAPSHOTS_SHEET_ID: ${{ secrets.SNAPSHOTS_SHEET_ID }}
+        run: python sheets_pusher.py
+
+      # Deploy dashboard to GitHub Pages
+      - name: Prepare Pages deployment
+        run: |
+          mkdir -p _site
+          cp dashboard.html _site/index.html
+          cp -r output _site/output
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # Send single summary email with dashboard link
+      - name: Send dashboard summary email
+        continue-on-error: true
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
+          DASHBOARD_URL: https://krhodes5267.github.io/daily-safety-report/
+        run: python daily_dashboard_email.py
+
+      # Keep artifacts for 30 days
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: daily-casing-reports
+          path: |
+            output/*.json
+            DailySpeedingReport_*.docx
+            DailyCasingCameraReport_*.docx
+            Casing_Device_Status_Report_*.xlsx
+            DailyKPAReport_*.docx
+          retention-days: 30

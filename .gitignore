@@ -1,0 +1,19 @@
+# Credentials -- NEVER commit
+*.json
+!output/*.json
+!*_monthly_data/*.json
+!bti_monthly_data/*.json
+credentials.json
+brhas-safety-*.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Generated reports
+*.docx
+*.xlsx
+
+# Debug/temp
+nul
+*.log

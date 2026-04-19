@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: brhas-safety-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-api.txt
+    startCommand: gunicorn dashboard_api:app --bind 0.0.0.0:$PORT --timeout 120 --workers 2
+    envVars:
+      - key: KPA_API_TOKEN
+        sync: false
+      - key: MOTIVE_API_KEY
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.12.0

@@ -112,27 +112,30 @@ YARD_INFO = {
 # KPA Line-of-Business ID for Casing
 CASING_LOB_ID = "6009f696823a6201bbc9b056"
 
-# Man hours baseline (from 2025 Q1 payroll export -- Jan+Feb avg)
+# Man hours -- March 2026 actual payroll (from 2026 1st Quarter Work Hours Report.xlsx)
+# WARNING: Update these each month with actual payroll hours from the quarterly
+# Work Hours Report. Do NOT reuse a prior month's figure as the default.
+# Q1 2026 actuals: Jan=87,568  Feb=78,304  Mar=96,529
 MONTHLY_MAN_HOURS_BY_YARD = {
-    "Midland": 77_921,
-    "Kilgore": 22_002,
-    "Hobbs": 21_488,
-    "Jourdanton": 18_745,
-    "Bryan": 16_107,
-    "Laredo": 13_896,
+    "Midland": 42_538,
+    "Kilgore": 19_439,
+    "Hobbs": 10_676,
+    "Jourdanton": 4_620,
+    "Bryan": 11_843,
+    "Laredo": 7_412,
 }
-MONTHLY_MAN_HOURS = 183_990  # total across all yards
+MONTHLY_MAN_HOURS = 96_529  # March 2026 actual -- update monthly from payroll export
 
-# KPA headcount by yard (active employees)
+# Headcount -- March 2026 actual payroll (from WorkMonthReport Q1 2026)
 HEADCOUNT_BY_YARD = {
-    "Midland": 143,
-    "Kilgore": 61,
-    "Hobbs": 54,
-    "Jourdanton": 46,
-    "Bryan": 46,
-    "Laredo": 36,
+    "Midland": 146,
+    "Kilgore": 54,
+    "Hobbs": 50,
+    "Jourdanton": 19,
+    "Bryan": 45,
+    "Laredo": 31,
 }
-EMPLOYEE_COUNT = 400  # total active
+EMPLOYEE_COUNT = 345  # total active (hourly with >0 hours)
 
 # Casing-specific Non-DOT Pre/Post Trip form
 VEHICLE_INSPECTION_FORM = 229645
@@ -768,11 +771,16 @@ def process_camera_events(events):
         for d, c in driver_counts.most_common(5) if c >= 2
     ]
 
-    # Extract drowsiness events for life-safety callout
-    drowsiness_events = [
-        {"driver": e["driver"], "vehicle": e["vehicle"], "yard": e["yard"]}
-        for e in events if e.get("event_type") == "drowsiness"
-    ]
+    # Extract drowsiness events for life-safety callout (consolidated by driver)
+    drows_raw = [e for e in events if e.get("event_type") == "drowsiness"]
+    drows_by_driver = {}
+    for e in drows_raw:
+        key = e["driver"]
+        if key not in drows_by_driver:
+            drows_by_driver[key] = {"driver": key, "vehicle": e["vehicle"],
+                                     "yard": e["yard"], "events": 0}
+        drows_by_driver[key]["events"] += 1
+    drowsiness_events = list(drows_by_driver.values())
 
     return {
         "total": total, "red": red, "orange": orange, "yellow": yellow,
@@ -1802,6 +1810,12 @@ def _build_narrative(mileage, speeding, assessments, observations,
     if camera and camera.get("red", 0) > 0:
         red_flag_parts.append(f"{camera['red']} RED-tier camera events require coaching follow-up.")
 
+    # Zero assessments (yard reports only)
+    if yard and assessments["total"] == 0:
+        safety_rep = YARD_INFO.get(yard, {}).get("safety_reps", "Safety Team")
+        red_flag_parts.append(f"Zero field assessments conducted this period -- "
+                     f"REQUIRED: {safety_rep} to schedule minimum 2 field assessments for April.")
+
     # Assessments with findings
     if assessments["total"] > 0 and assessments["with_findings"] > 0:
         pct = round(assessments["with_findings"] / assessments["total"] * 100)
@@ -1834,6 +1848,11 @@ def _build_narrative(mileage, speeding, assessments, observations,
     if obs_count > 0 and headcount > 0:
         obs_rate = round(obs_count / headcount, 2)
         body_parts.append(f"{obs_count} observation cards submitted ({obs_rate} per employee).")
+        # Critically low observation rate for yard reports
+        if yard and obs_rate < 0.1:
+            red_flag_parts.append(f"Observation program critically low at {obs_count} cards "
+                         f"({obs_rate} per employee) for {headcount} employees -- "
+                         "immediate crew participation required.")
 
     # Incidents body (types breakdown)
     ic = incidents if isinstance(incidents, dict) else None
@@ -1989,15 +2008,16 @@ def _generate_takeaways(mileage, speeding, camera, assessments, observations,
                          f"is well below target. {manager} and {safety_rep} to drive crew participation "
                          "in observation program.")
 
-    # 8. Single-employee concentration (yard reports only)
+    # 8. Observer (submitter) concentration (yard reports only)
     if yard and obs_list and obs_count >= 5:
-        obs_by_emp = Counter(_obs_employee(r) for r in obs_list)
-        if obs_by_emp:
-            top_emp, top_count = obs_by_emp.most_common(1)[0]
+        obs_by_sub = Counter(
+            r.get("observer", r.get("_observer", "Unknown")).strip() for r in obs_list)
+        if obs_by_sub:
+            top_sub, top_count = obs_by_sub.most_common(1)[0]
             concentration_pct = round(top_count / obs_count * 100)
             if concentration_pct > 50:
-                items.append(f"OBSERVATION CONCENTRATION: {top_emp} appears in {top_count} of "
-                             f"{obs_count} cards ({concentration_pct}%). {manager} to broaden "
+                items.append(f"OBSERVATION CONCENTRATION: {top_sub} submitted {concentration_pct}% "
+                             f"of cards. {manager} to broaden "
                              "crew participation -- observation programs require diverse input.")
 
     return items[:8]
@@ -2407,10 +2427,11 @@ def generate_report(month_str, mileage, speeding, camera, form_activity,
     if drowsiness_events:
         _add_text(doc, "LIFE-SAFETY ALERT: Drowsiness Events Detected",
                   size=12, bold=True, color=DARK_RED)
-        drows_rows = [[d["driver"], d["vehicle"], d.get("yard", "--")]
+        drows_rows = [[d["driver"], d["vehicle"], d.get("yard", "--"),
+                       str(d.get("events", 1))]
                       for d in drowsiness_events]
-        add_data_table(doc, ["Driver", "Vehicle", "Yard"], drows_rows,
-                       font_size=9, col_align=[_L, _C, _C])
+        add_data_table(doc, ["Driver", "Vehicle", "Yard", "Events"], drows_rows,
+                       font_size=9, col_align=[_L, _C, _C, _C])
         manager_name = (YARD_INFO.get(yard, {}).get("manager", "Division Management")
                         if yard else "Division Management")
         _add_text(doc, f"Action: {manager_name} to conduct fitness-for-duty review "
@@ -2589,14 +2610,19 @@ def generate_report(month_str, mileage, speeding, camera, form_activity,
               f"Rate: {obs_rate} per employee  \u2014  "
               f"Headcount: {headcount:,}", size=11, bold=True)
 
-    # Employee concentration flag
-    if obs_list and obs_by_employee:
-        top_employee, top_count = obs_by_employee.most_common(1)[0]
-        concentration_pct = round(top_count / len(obs_list) * 100)
-        if concentration_pct > 50:
-            _add_text(doc, f"NOTE: {concentration_pct}% of observations involve "
-                      f"{top_employee} -- broaden crew participation.",
-                      size=10, bold=True, color=DARK_RED)
+    # Observer (submitter) concentration flag
+    if obs_list:
+        obs_by_submitter = Counter(
+            r.get("observer", r.get("_observer", "Unknown")).strip() for r in obs_list)
+        if obs_by_submitter:
+            top_submitter, top_sub_count = obs_by_submitter.most_common(1)[0]
+            sub_pct = round(top_sub_count / len(obs_list) * 100)
+            if sub_pct > 50:
+                mgr = YARD_INFO.get(yard, {}).get("manager", "Division Management") if yard else "Division Management"
+                _add_text(doc, f"{top_submitter} submitted {top_sub_count} of "
+                          f"{len(obs_list)} cards ({sub_pct}%). {mgr} to broaden "
+                          "crew participation -- observation programs require diverse input.",
+                          size=10, bold=True, color=DARK_RED)
 
     # Division numbers excluding Midland (company-wide only)
     if not yard and obs_list:
@@ -2689,33 +2715,31 @@ def generate_report(month_str, mileage, speeding, camera, form_activity,
 
         # --- Top Repeat Observations ---
         add_section_heading(doc, "Top Repeat Observations", level=2)
-        # Count observation descriptions to find recurring issues
+        # Count at-risk/near-miss descriptions only (skip Recognition/Suggestion)
+        skip_types = {"recognition", "suggestion"}
         obs_desc_counter = Counter()
-        obs_desc_type = {}  # track type for each description
         for obs in obs_list:
+            otype = obs.get(OBS_TYPE_HASH, "").strip().lower()
+            if otype in skip_types:
+                continue
             desc = obs.get(OBS_DESC_HASH, obs.get("description", "")).strip()
             if not desc or desc == "--":
                 continue
-            # Normalize: lowercase, strip trailing punctuation
             desc_key = desc.lower().rstrip(".!,;: ")
             if len(desc_key) < 5:
                 continue
             obs_desc_counter[desc_key] += 1
-            if desc_key not in obs_desc_type:
-                obs_desc_type[desc_key] = obs.get(OBS_TYPE_HASH, "").strip() or "--"
-        # Show top 10 repeat issues (count >= 2, or top 10 regardless)
-        top_issues = obs_desc_counter.most_common(10)
+        # Show top 10 repeat at-risk issues (must appear 2+ times)
+        top_issues = [(d, c) for d, c in obs_desc_counter.most_common(20) if c >= 2][:10]
         if top_issues:
-            issue_rows = []
-            for desc_key, count in top_issues:
-                # Capitalize first letter for display
+            for desc_key, _count in top_issues:
                 display_desc = desc_key[:1].upper() + desc_key[1:]
-                if len(display_desc) > 100:
-                    display_desc = display_desc[:97] + "..."
-                otype = obs_desc_type.get(desc_key, "--")
-                issue_rows.append([display_desc, otype, str(count)])
-            add_data_table(doc, ["Observation", "Type", "Count"], issue_rows,
-                           font_size=9, col_align=[_L, _L, _R])
+                if len(display_desc) > 120:
+                    display_desc = display_desc[:117] + "..."
+                p = doc.add_paragraph(style="List Bullet")
+                run = p.add_run(display_desc)
+                run.font.size = Pt(9)
+                run.font.name = "Calibri"
     else:
         _add_text(doc, "No observations reported this period.", italic=True)
 
@@ -3021,6 +3045,329 @@ def generate_report(month_str, mileage, speeding, camera, form_activity,
 
     doc.save(output_path)
     print(f"  Report saved: {output_path}")
+
+
+# ==============================================================================
+# DATA-ONLY TEXT SUMMARY
+# ==============================================================================
+
+def _safe(text):
+    """Strip non-ASCII characters for Windows cp1252 console safety."""
+    if not isinstance(text, str):
+        return str(text)
+    return text.encode("ascii", "replace").decode("ascii")
+
+
+def _safe_print(*args, **kwargs):
+    """Print with non-ASCII characters replaced to avoid cp1252 crashes."""
+    parts = []
+    for a in args:
+        s = str(a)
+        parts.append(s.encode("ascii", "replace").decode("ascii"))
+    print(*parts, **kwargs)
+
+
+def print_data_summary(month_str, mileage, speeding, camera, form_activity,
+                       assessments, assessment_analysis, observations, incidents,
+                       inspections, training_compliance, prev_data, field_labels=None,
+                       incident_classification=None, rcas=None, yoy_data=None,
+                       yard=None):
+    """Print structured data extract for Claude HTML report generation."""
+    pm = prev_data or {}
+    aa = assessment_analysis or {}
+    tc = training_compliance or {}
+    ic = incident_classification or {}
+    yd = yoy_data or {}
+
+    # Division or yard context
+    if yard:
+        div_label = f"CASING DIVISION - {yard.upper()} YARD"
+        info = YARD_INFO.get(yard, {})
+        manager = info.get("manager", "N/A")
+        safety_rep = info.get("safety_reps", "N/A")
+        headcount = HEADCOUNT_BY_YARD.get(yard, 0)
+        man_hours = MONTHLY_MAN_HOURS_BY_YARD.get(yard, 0)
+    else:
+        div_label = "CASING DIVISION - ALL YARDS"
+        manager = "Ken Mattern (VP Operations)"
+        safety_rep = "All Yard Safety Reps"
+        headcount = EMPLOYEE_COUNT
+        man_hours = MONTHLY_MAN_HOURS
+
+    recordable = ic.get("recordable", 0)
+    first_aid = ic.get("first_aid", 0)
+    near_miss = ic.get("near_miss", 0)
+    vehicle_at_fault = ic.get("vehicle_at_fault", 0)
+    vehicle_not_at_fault = ic.get("vehicle_not_at_fault", 0)
+    equipment_damage = ic.get("equipment_damage", 0)
+    trir = round(recordable * 200000 / man_hours, 2) if man_hours > 0 else 0
+    dart = trir
+    obs_count = len(observations) if isinstance(observations, list) else observations
+    obs_rate = round(obs_count / headcount, 2) if headcount > 0 else 0
+    speed_rate = round(speeding["total"] / (mileage["total_miles"] / 10000), 1) if mileage.get("total_miles", 0) > 0 else 0
+    train_pct = tc.get("overall_pct", 0) if tc else 0
+
+    print("=" * 70)
+    print(f"{div_label} - MONTHLY HSE DATA EXTRACT")
+    print(f"Period: {month_str}")
+    print("=" * 70)
+
+    print(f"\nDIVISION INFO:")
+    print(f"  Division: Casing{f' - {yard}' if yard else ''}")
+    print(f"  Manager: {manager}")
+    print(f"  Safety Representative(s): {safety_rep}")
+    print(f"  Headcount: {headcount}")
+    print(f"  Monthly Man Hours: {man_hours:,}")
+
+    # MoM helpers
+    def _pm(key, default="N/A"):
+        return pm.get(key, default) if pm else default
+
+    def _yd(key, default="N/A"):
+        return yd.get(key, default) if yd else default
+
+    print(f"\n--- LAGGING INDICATORS ---")
+    print(f"  Total Incidents: {ic.get('total', 0)} (Prev Month: {_pm('incidents_total')}) (Prev Year: {_yd('incidents_total')})")
+    print(f"  Recordable: {recordable} (Prev Month: {_pm('incidents_recordable')}) (Prev Year: {_yd('incidents_recordable')})")
+    print(f"  First Aid: {first_aid} (Prev Month: {_pm('incidents_first_aid')})")
+    print(f"  Near Miss: {near_miss} (Prev Month: {_pm('incidents_near_miss')})")
+    print(f"  Vehicle At-Fault: {vehicle_at_fault}")
+    print(f"  Vehicle Not-At-Fault: {vehicle_not_at_fault}")
+    print(f"  Equipment/Property Damage: {equipment_damage}")
+    print(f"  TRIR: {trir:.2f} (Prev Month: {_pm('trir')}) (Prev Year: {_yd('trir')})")
+    print(f"  DART: {dart:.2f} (Prev Month: {_pm('dart')}) (Prev Year: {_yd('dart')})")
+
+    print(f"\n--- LEADING INDICATORS ---")
+    print(f"  Field Assessments: {aa.get('total', 0)} (Prev Month: {_pm('assessments_total')}) (Prev Year: {_yd('assessments_total')})")
+    print(f"    With Findings: {aa.get('with_findings', 0)}")
+    fr = round(aa.get('with_findings', 0) / aa['total'] * 100, 1) if aa.get('total', 0) > 0 else 0
+    print(f"    Finding Rate: {fr}%")
+    print(f"  Observations: {obs_count} (Prev Month: {_pm('observations_total')}) (Prev Year: {_yd('observations_total')})")
+    print(f"    Rate per Employee: {obs_rate}")
+    distinct = tc.get("distinct_observers", 0) if not yard else 0
+    if distinct:
+        print(f"    Distinct Observers: {distinct}")
+    print(f"  Pre/Post Trip Inspections: {len(inspections) if isinstance(inspections, list) else inspections} (Prev Month: {_pm('inspections_total')})")
+    print(f"  Training Compliance: {train_pct:.1f}% (Prev Month: {_pm('training_compliance_pct')})")
+
+    print(f"\n--- FLEET METRICS ---")
+    pm_miles = pm.get('mileage', {}).get('total_miles', 'N/A') if isinstance(pm.get('mileage'), dict) else 'N/A'
+    pm_speed = pm.get('speeding', {}).get('total', 'N/A') if isinstance(pm.get('speeding'), dict) else 'N/A'
+    print(f"  Total Miles: {mileage.get('total_miles', 0):,.0f} (Prev Month: {pm_miles})")
+    print(f"  Active Trucks: {mileage.get('active_trucks', 0)}")
+    print(f"  Avg Miles/Truck: {mileage.get('avg_miles', mileage.get('avg', 0)):,.0f}")
+    print(f"  Speeding Events: {speeding['total']} (Prev Month: {pm_speed})")
+    print(f"    Critical (20+ mph over): {speeding.get('critical', 0)}")
+    print(f"    High (15-19 mph over): {speeding.get('high', 0)}")
+    print(f"    Medium (<15 mph over): {speeding.get('medium', 0)}")
+    print(f"  Speeding Rate: {speed_rate}/10k mi")
+
+    if not yard:
+        print(f"\n--- FLEET MILEAGE BY YARD ---")
+        for y in YARD_ORDER:
+            ym = mileage.get("by_yard", {}).get(y, {})
+            print(f"  {y}: {ym.get('miles', 0):,.0f} mi | {ym.get('trucks', 0)} trucks | Avg: {ym.get('avg', 0):,.0f} mi/truck")
+
+        print(f"\n--- SPEEDING BY YARD ---")
+        for y in YARD_ORDER:
+            cnt = speeding.get("by_yard", {}).get(y, 0)
+            print(f"  {y}: {cnt} events")
+
+    print(f"\n--- TOP SPEEDING DRIVERS ---")
+    for d in speeding.get("top_drivers", []):
+        print(f"  {d.get('name', 'Unknown')} | Yard: {d.get('yard', '?')} | Events: {d['events']} | Max Over: {d.get('max_over', 'N/A')} mph")
+    if speeding.get("unassigned"):
+        print(f"  [Unassigned vehicles]: {speeding['unassigned']['events']} events | Max Over: {speeding['unassigned'].get('max_over', 'N/A')} mph")
+
+    # Camera events
+    print(f"\n--- CAMERA EVENTS ---")
+    print(f"  Total: {camera.get('total', 0)}")
+    print(f"  RED (high severity): {camera.get('red', 0)}")
+    print(f"  ORANGE (medium): {camera.get('orange', 0)}")
+    print(f"  YELLOW (low): {camera.get('yellow', 0)}")
+
+    if camera.get("by_type"):
+        print(f"\n  Event Type Breakdown:")
+        for etype, cnt in sorted(camera["by_type"].items(), key=lambda x: x[1], reverse=True):
+            print(f"    {etype}: {cnt}")
+
+    if not yard and camera.get("by_yard"):
+        print(f"\n  Camera Events by Yard:")
+        for y in YARD_ORDER:
+            yc = camera["by_yard"].get(y, {})
+            if yc.get("total", 0) > 0:
+                print(f"    {y}: {yc['total']} (R:{yc.get('red',0)} O:{yc.get('orange',0)} Y:{yc.get('yellow',0)})")
+
+    if camera.get("repeat_offenders"):
+        print(f"\n  Repeat Offenders (2+ events):")
+        for ro in camera["repeat_offenders"]:
+            print(f"    {ro['name']} | Yard: {ro.get('yard', '?')} | Events: {ro['events']}")
+
+    if camera.get("drowsiness_events"):
+        print(f"\n  DROWSINESS EVENTS (life-safety):")
+        for de in camera["drowsiness_events"]:
+            print(f"    {de['driver']} | Vehicle: {de['vehicle']} | Yard: {de['yard']} | Events: {de['events']}")
+
+    # Form activity
+    if form_activity:
+        print(f"\n--- KPA FORM ACTIVITY ---")
+        total_subs = sum(f.get("total", 0) for f in form_activity.values())
+        print(f"  Total CSG Form Submissions: {total_subs}")
+        for fid, fdata in sorted(form_activity.items(), key=lambda x: x[1].get("total", 0), reverse=True):
+            if fdata.get("total", 0) > 0:
+                print(f"  {fdata['name']}: {fdata['total']}")
+                if not yard and fdata.get("by_yard"):
+                    for y in YARD_ORDER:
+                        yc = fdata["by_yard"].get(y, 0)
+                        if yc > 0:
+                            print(f"    {y}: {yc}")
+
+    # Field assessments detail
+    if isinstance(assessments, list) and assessments:
+        print(f"\n--- FIELD ASSESSMENT DETAILS ---")
+        print(f"  Total: {aa.get('total', 0)} | With Findings: {aa.get('with_findings', 0)} | Clean: {aa.get('clean', 0)}")
+        if aa.get("by_rep"):
+            print(f"\n  By Assessor:")
+            for rep, cnt in sorted(aa["by_rep"].items(), key=lambda x: x[1], reverse=True):
+                print(f"    {rep}: {cnt}")
+
+        META_FIELDS = {
+            'report number', 'date', 'observer', 'status', 'link', 'kpa_link',
+            'name', 'Name', 'form', 'form_id', 'updated_at', 'created_at',
+            'report', 'id', 'response_id', '_yard', '_observer',
+            '7vj2l992y7fwqhwz', 'yard', 'location',
+            'updated', 'updated_time', 'version', 'observer-emp-num',
+            'duration', 'latitude', 'longitude', 'temperature', 'wind-speed',
+            'weather', 'parentrepnum', 'parentlink', 'surrogate',
+            'select-yes', 'select-no', 'select-n/a', 'select-na',
+        }
+        for a in assessments:
+            date = _format_display_date(a.get("date", "")) or "Unknown"
+            observer = a.get("_observer", "Unknown")
+            ayard = a.get("_yard", "Unknown")
+            print(f"\n  Assessment: {date} by {observer} ({ayard})")
+            for key, val in a.items():
+                if key.lower() in META_FIELDS or not val or not isinstance(val, str):
+                    continue
+                vl = val.strip().lower()
+                if vl in ("", "n/a", "na", "none", "yes", "good", "ok", "pass", "satisfactory"):
+                    continue
+                if vl == "no":
+                    label = field_labels.get(key.lower(), "") if field_labels else ""
+                    nice = label.rstrip("?:. ") if label else key.replace("-", " ").replace("_", " ").strip().title()
+                    print(f"    FINDING: {nice}")
+                elif any(kw in vl for kw in ("unsatisfactory", "fail", "deficien", "corrective", "needs", "issue", "concern", "damage", "broken")):
+                    label = field_labels.get(key.lower(), "") if field_labels else ""
+                    nice = label.rstrip("?:. ") if label else key.replace("-", " ").replace("_", " ").strip().title()
+                    print(f"    FINDING: {nice}: {val}")
+    else:
+        print(f"\n--- FIELD ASSESSMENT DETAILS ---")
+        print("  No field assessments this period.")
+
+    # Observations
+    print(f"\n--- OBSERVATIONS ---")
+    obs_list = observations if isinstance(observations, list) else []
+    if obs_list:
+        for obs in obs_list:
+            date = _format_display_date(obs.get("date", "")) or "Unknown"
+            observer = obs.get("observer", obs.get("_observer", "Unknown"))
+            emp_name = _obs_employee(obs)
+            obs_type = obs.get(OBS_TYPE_HASH, obs.get("type", "")).strip()
+            location = obs.get(OBS_LOCATION_HASH, obs.get("location", "")).strip()
+            desc = obs.get(OBS_DESC_HASH, obs.get("description", "")).strip()
+            obs_yard = obs.get("_yard", "")
+            print(f"  {date} | Observer: {observer} | Employee: {emp_name} | Type: {obs_type or 'N/A'} | Yard: {obs_yard} | Location: {location or 'N/A'}")
+            if desc:
+                print(f"    Description: {desc[:250]}")
+    else:
+        print("  No observations this period.")
+
+    # Incidents
+    print(f"\n--- INCIDENT ANALYSIS ---")
+    if ic.get("detail"):
+        print(f"  Total: {ic['total']} | Recordable: {ic['recordable']} | First Aid: {ic['first_aid']} | Near Miss: {ic['near_miss']}")
+        print(f"  Vehicle At-Fault: {ic.get('vehicle_at_fault', 0)} | Not-At-Fault: {ic.get('vehicle_not_at_fault', 0)} | Equip Damage: {ic.get('equipment_damage', 0)}")
+        if not yard and ic.get("by_yard"):
+            print(f"\n  Incidents by Yard:")
+            for y in YARD_ORDER:
+                cnt = ic["by_yard"].get(y, 0)
+                if cnt > 0:
+                    print(f"    {y}: {cnt}")
+        for d in ic["detail"]:
+            print(f"\n  Incident: {d['date']} | {d['yard']} | Type: {d['type']}")
+            print(f"    Employee: {d['employee']}")
+            print(f"    Description: {d['description']}")
+            if d.get("location"):
+                print(f"    Location: {d['location']}")
+            print(f"    RCA Status: {d.get('rca_status', 'No RCA')}")
+            if d.get("rca_turnaround") is not None:
+                print(f"    RCA Turnaround: {d['rca_turnaround']} days")
+    else:
+        print("  No incidents this period.")
+
+    # RCAs
+    if rcas:
+        print(f"\n--- ROOT CAUSE ANALYSES ---")
+        for rca in rcas:
+            inc_date = _format_display_date(rca.get(RCA_INC_DATE_HASH, "")) or "Unknown"
+            comp_date = _format_display_date(rca.get(RCA_COMPLETE_DATE_HASH, "")) or "Pending"
+            rca_yard = rca.get(RCA_YARD_HASH, rca.get("_yard", "Unknown"))
+            desc = rca.get(RCA_DESC_HASH, "").strip()
+            causes = rca.get(RCA_CAUSES_HASH, "").strip()
+            actions = rca.get(RCA_ACTIONS_HASH, "").strip()
+            print(f"  Incident Date: {inc_date} | Yard: {rca_yard} | Completed: {comp_date}")
+            if desc:
+                print(f"    Description: {desc[:250]}")
+            if causes:
+                print(f"    Root Causes: {causes[:250]}")
+            if actions:
+                print(f"    Corrective Actions: {actions[:250]}")
+
+    # Pre/Post Trip Inspections
+    print(f"\n--- PRE/POST TRIP INSPECTIONS ---")
+    insp_list = inspections if isinstance(inspections, list) else []
+    if insp_list:
+        flagged = 0
+        for insp in insp_list:
+            date = _format_display_date(insp.get("date", "")) or "Unknown"
+            observer = insp.get("_observer", insp.get("observer", "Unknown"))
+            has_flag = False
+            flags = []
+            for k, v in insp.items():
+                if k.startswith("_"):
+                    continue
+                vl = str(v).strip().lower() if v else ""
+                if any(kw in vl for kw in ("fail", "damage", "issue", "concern", "needs", "no")):
+                    label = field_labels.get(k.lower(), k) if field_labels else k
+                    flags.append(f"{label}: {v}")
+                    has_flag = True
+            if has_flag:
+                flagged += 1
+                print(f"  {date} by {observer}")
+                for f in flags:
+                    print(f"    FLAG: {f}")
+        print(f"\n  Total Inspections: {len(insp_list)} | Flagged: {flagged}")
+    else:
+        print("  No pre/post trip inspections this period.")
+
+    # Training compliance
+    print(f"\n--- TRAINING COMPLIANCE ---")
+    print(f"  Overall: {train_pct:.1f}%")
+    print(f"  Headcount: {headcount}")
+    if tc and tc.get("employees"):
+        non_compliant = [e for e in tc["employees"] if e.get("percent_complete", 100) < 100]
+        if non_compliant:
+            print(f"  Non-Compliant Employees ({len(non_compliant)}):")
+            for emp in sorted(non_compliant, key=lambda x: x.get("percent_complete", 0)):
+                name = emp.get("employee_name", "Unknown")
+                pct = emp.get("percent_complete", 0)
+                programs = ", ".join(emp.get("incomplete_training_names", []))
+                emp_yard = emp.get("yard", "")
+                print(f"    {name}{f' ({emp_yard})' if emp_yard else ''}: {pct:.0f}% -- Missing: {programs}")
+
+    print(f"\n{'=' * 70}")
+    print(f"END OF DATA EXTRACT - {div_label}")
+    print(f"{'=' * 70}\n")
 
 
 # ==============================================================================
@@ -3388,6 +3735,8 @@ def main():
                         help="Skip Motive API calls (KPA only)")
     parser.add_argument("--skip-yard-reports", action="store_true",
                         help="Skip per-yard report generation")
+    parser.add_argument("--data-only", action="store_true",
+                        help="Output text data summary (skip DOCX generation)")
     args = parser.parse_args()
 
     # Validate environment
@@ -3488,6 +3837,57 @@ def main():
         print(f"  No cached data for {yoy_m}. YoY columns will show N/A.")
         print(f"  Run this script for {yoy_m} first to generate YoY baseline.")
 
+    # ---- SAVE CURRENT MONTH DATA ----
+    print("\nSaving month data for future MoM comparison...")
+    save_month_data(args.month, mileage_raw, speeding_summary, camera_summary,
+                    form_activity, assessment_analysis, observations, incidents,
+                    inspections, training_compliance,
+                    incident_classification=incident_classification,
+                    field_labels=field_labels,
+                    raw_assessments=assessments)
+
+    # ---- DATA-ONLY MODE ----
+    if args.data_only:
+        # Reconfigure stdout to handle non-ASCII characters (Windows cp1252 safety)
+        sys.stdout.reconfigure(errors="replace")
+        # Print company-wide data extract
+        print_data_summary(
+            args.month, mileage_raw, speeding_summary, camera_summary,
+            form_activity, assessments, assessment_analysis,
+            observations, incidents, inspections, training_compliance,
+            prev_data, field_labels=field_labels,
+            incident_classification=incident_classification, rcas=rcas,
+            yoy_data=yoy_data,
+        )
+        # Print per-yard data extracts
+        for yard in YARD_ORDER:
+            yard_mileage = _filter_mileage_to_yard(mileage_raw, yard)
+            yard_speeding = _filter_speeding_to_yard(speeding_events, yard)
+            yard_camera = _filter_camera_to_yard(camera_events, yard)
+            yard_fa = _filter_form_activity_to_yard(form_activity, yard)
+            yard_assessments = [a for a in assessments if a.get("_yard") == yard]
+            yard_aa = analyze_assessments(yard_assessments)
+            yard_obs = [o for o in observations if o.get("_yard") == yard]
+            yard_inc = [i for i in incidents if i.get("_yard") == yard]
+            yard_insp = [i for i in inspections if i.get("_yard") == yard]
+            yard_tc = _filter_training_to_yard(training_compliance, yard)
+            yard_ic = _filter_incidents_to_yard(incident_classification, yard)
+            yard_rcas = _filter_rcas_to_yard(rcas, yard)
+            cross_reference_rcas(yard_ic, yard_rcas)
+            yard_prev = _extract_yard_data(prev_data, yard)
+            yard_yoy = _extract_yard_data(yoy_data, yard)
+
+            print_data_summary(
+                args.month, yard_mileage, yard_speeding, yard_camera,
+                yard_fa, yard_assessments, yard_aa,
+                yard_obs, yard_inc, yard_insp, yard_tc,
+                yard_prev, field_labels=field_labels,
+                incident_classification=yard_ic, rcas=yard_rcas,
+                yoy_data=yard_yoy, yard=yard,
+            )
+        print("\nDone!")
+        return
+
     # ---- GENERATE COMPANY-WIDE REPORT ----
     print("\n[11/11] Generating company-wide DOCX report...")
     generate_report(
@@ -3498,15 +3898,6 @@ def main():
         incident_classification=incident_classification, rcas=rcas,
         yoy_data=yoy_data,
     )
-
-    # ---- SAVE CURRENT MONTH DATA ----
-    print("\nSaving month data for future MoM comparison...")
-    save_month_data(args.month, mileage_raw, speeding_summary, camera_summary,
-                    form_activity, assessment_analysis, observations, incidents,
-                    inspections, training_compliance,
-                    incident_classification=incident_classification,
-                    field_labels=field_labels,
-                    raw_assessments=assessments)
 
     # ---- GENERATE PER-YARD REPORTS ----
     if not args.skip_yard_reports:

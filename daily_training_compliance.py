@@ -177,7 +177,7 @@ def call_kpa_json_paginated(endpoint, data_key="employees", max_pages=50):
         try:
             r = requests.post(url, json=payload, timeout=120)
             text = r.text.strip()
-            if "rate_limit" in text:
+            if r.status_code == 429 or "rate_limit" in text:
                 rate_limit_retries += 1
                 if rate_limit_retries > 5:
                     print(f"  WARNING: Rate limited {rate_limit_retries} times, stopping.")

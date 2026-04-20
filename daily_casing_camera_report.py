@@ -565,6 +565,7 @@ def get_camera_events_for_date(report_date, vehicle_drivers, vehicle_yards, casi
     filtered = []
     non_casing_count = 0
     outside_window_count = 0
+    false_positive_count = 0
     raw_event_types = Counter()
 
     for wrapper in raw_events:
@@ -605,7 +606,16 @@ def get_camera_events_for_date(report_date, vehicle_drivers, vehicle_yards, casi
             non_casing_count += 1
             continue
 
+        # Coaching status filter: only keep real alerts (coachable/coached/pending_review)
+        # Skip "uncoachable" events - these are false positives / not actionable
+        coaching_status = evt.get("coaching_status", "")
+        if coaching_status == "uncoachable":
+            false_positive_count += 1
+            continue
+
         enriched = enrich_camera_event(evt, vehicle_drivers, vehicle_yards, raw_type)
+        enriched["coaching_status"] = coaching_status or "unknown"
+        enriched["coached_at"] = evt.get("coached_at") or ""
         filtered.append(enriched)
 
     # Print all unique event types found (required for first-run analysis)
@@ -616,7 +626,7 @@ def get_camera_events_for_date(report_date, vehicle_drivers, vehicle_yards, casi
         print(f"    Event types found: (none)")
 
     print(f"    After filtering: {len(filtered)} Casing event{'s' if len(filtered) != 1 else ''}")
-    print(f"    Dropped: {non_casing_count} non-Casing, {outside_window_count} outside time window")
+    print(f"    Dropped: {non_casing_count} non-Casing, {outside_window_count} outside time window, {false_positive_count} false positives (uncoachable)")
 
     # Sort by tier (RED first) then by severity within tier
     return sorted(filtered, key=_event_sort_key)
@@ -1308,7 +1318,7 @@ def send_email_report(html_body, docx_path, yesterday_date):
             )
             msg.attach(part)
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
             server.starttls()
             server.login(gmail_address, gmail_app_password)
             server.sendmail(gmail_address, recipient, msg.as_string())
@@ -1373,11 +1383,34 @@ def main():
     doc.save(output_file)
     print(f"    Saved: {output_file}")
 
+    # --- Write JSON for dashboard ---
+    os.makedirs("output", exist_ok=True)
+    json_data = {
+        "report_date": yesterday.strftime("%Y-%m-%d"),
+        "generated_at": datetime.now(timezone.utc).astimezone(CENTRAL_TZ).strftime("%Y-%m-%d %H:%M:%S"),
+        "total_events": len(events),
+        "summary": {
+            "red": len([e for e in events if e["tier"] == "RED"]),
+            "orange": len([e for e in events if e["tier"] == "ORANGE"]),
+            "yellow": len([e for e in events if e["tier"] == "YELLOW"]),
+        },
+        "repeat_offenders": {name: info["count"] for name, info in get_repeat_offenders(events).items()},
+        "by_yard": {yard: len(evts) for yard, evts in grouped.items()},
+        "events": events,
+    }
+    json_path = os.path.join("output", "camera_events.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(json_data, f, indent=2, default=str)
+    print(f"    JSON: {json_path}")
+
     print("\n[5] Building HTML email...")
     html_body = build_html_report(events, grouped, yesterday)
 
-    print("[6] Sending email...")
-    send_email_report(html_body, output_file, yesterday)
+    if "--no-email" not in sys.argv:
+        print("[6] Sending email...")
+        send_email_report(html_body, output_file, yesterday)
+    else:
+        print("[6] Email skipped (--no-email flag)")
 
     print("\n" + "=" * 80)
     print("COMPLETE")

@@ -110,18 +110,18 @@
   "incidents_near_miss": 0,
   "incidents_vehicle_at_fault": 0,
   "inspections_total": 466,
-  "training_compliance_pct": 75.1,
+  "training_compliance_pct": 74.4,
   "trir": 0.0,
   "dart": 0.0,
-  "fafr": 1.09,
+  "fafr": 2.07,
   "rca_completion": "1/1",
   "rca_avg_turnaround": 24,
-  "man_hours": 183990,
-  "headcount": 378,
+  "man_hours": 96529,
+  "headcount": 386,
   "headcount_by_yard": {
-    "Midland": 159,
+    "Midland": 166,
     "Jourdanton": 21,
-    "Bryan": 46,
+    "Bryan": 47,
     "Hobbs": 54,
     "Kilgore": 61,
     "Laredo": 36
@@ -136,37 +136,31 @@
     "Unassigned": 5,
     "Kilgore": 2
   },
-  "speeding_unassigned": 46,
+  "speeding_unassigned": 15,
   "drowsiness_events": [
     {
       "driver": "Rafael Zepeda",
       "vehicle": "2266C",
-      "yard": "Laredo"
-    },
-    {
-      "driver": "Rafael Zepeda",
-      "vehicle": "2266C",
-      "yard": "Laredo"
+      "yard": "Laredo",
+      "events": 2
     },
     {
       "driver": "Dustin Longoria",
       "vehicle": "E82762",
-      "yard": "Jourdanton"
+      "yard": "Jourdanton",
+      "events": 1
     },
     {
       "driver": "Roger Callahan",
       "vehicle": "90596C - EXTRA ",
-      "yard": "Midland"
+      "yard": "Midland",
+      "events": 1
     },
     {
       "driver": "Angel Rivera",
       "vehicle": "2352C - CDL A DRIVER ",
-      "yard": "Midland"
-    },
-    {
-      "driver": "Angel Rivera",
-      "vehicle": "2352C - CDL A DRIVER ",
-      "yard": "Midland"
+      "yard": "Midland",
+      "events": 2
     }
   ],
   "assessment_finding_categories": {
@@ -179,43 +173,43 @@
     {
       "item": "Zero OSHA recordable incidents documented this period (1 total reports filed).",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     },
     {
-      "item": "1 first aid incident(s) (FAFR: 1.09). Safety Team to review for trend patterns and escalation risk.",
+      "item": "1 first aid incident(s) (FAFR: 2.07). Safety Team to review for trend patterns and escalation risk.",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     },
     {
       "item": "RCA completion: 1 of 1 incidents have RCA on file. Division Management accountable for timely RCA completion on all inci",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     },
     {
-      "item": "157 speeding events (20 critical). Division Management to address driver Billy Mathis Jr (12 events). 46 event(s) from u",
+      "item": "157 speeding events (20 critical). Division Management to address driver John Confer (31 events). 15 event(s) from unass",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     },
     {
-      "item": "15 RED-tier camera events require immediate coaching. Repeat offenders: Roger Callahan, David Smith.",
+      "item": "15 RED-tier camera events require immediate coaching. Repeat offenders: Angel Rivera, Roger Callahan.",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     },
     {
-      "item": "Training compliance at 75.1% (94 employees non-compliant). Division Management and Safety Team to push outstanding train",
+      "item": "Training compliance at 74.4% (99 employees non-compliant). Division Management and Safety Team to push outstanding train",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     },
     {
       "item": "15 of 15 field assessments had findings (100%). Safety Team to follow up on corrective actions.",
       "owner": "Division Management",
-      "due_date": "May 05, 2026",
+      "due_date": "May 06, 2026",
       "status": "Open"
     }
   ],
@@ -255,7 +249,7 @@
       "incidents_vehicle_at_fault": 0,
       "trir": 0.0,
       "dart": 0.0,
-      "fafr": 2.57
+      "fafr": 4.7
     },
     "Bryan": {
       "mileage": {

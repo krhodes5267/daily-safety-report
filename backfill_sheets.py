@@ -67,6 +67,107 @@ RED_CAMERA_TYPES = {
 
 CASING_GIDS = set(CASING_GROUP_IDS.keys())
 
+# Vehicle number prefix -> (yard, division)
+# Patterns: "MID-CSG-1234", "JOU-RAT-2364", "TOW-RAT-2229", "5016C"
+YARD_PREFIXES = {
+    "MID": "Midland", "BRY": "Bryan", "KIL": "Kilgore",
+    "HOB": "Hobbs", "JOU": "Jourdanton", "LAR": "Laredo",
+    "SAN": "San Angelo", "SA": "San Angelo",
+    "TOW": "Pennsylvania", "PA": "Pennsylvania",
+    "OH": "Ohio", "OK": "Oklahoma", "ND": "North Dakota",
+    "LVL": "Levelland", "LL": "Levelland", "BAR": "Barstow",
+    "DS": "Dallas", "WIN": "Winters", "PER": "Perryton",
+}
+DIV_PREFIXES = {
+    "CSG": "Casing", "RAT": "Rathole", "ANC": "Anchors",
+    "PP": "Poly Pipe", "PL": "Pit Lining", "CON": "Construction",
+    "ENV": "Environmental", "FEN": "Fencing", "DT": "Drilling Tools",
+    "VAL": "Valor", "BTI": "BTI", "TD": "Transcend",
+    "WTC": "Water/Construction", "FAB": "Fabrication",
+}
+SOLO_DIV_PREFIXES = {
+    "ENV": "Environmental", "BTI": "BTI", "VAL": "Valor",
+    "POL": "Poly Pipe", "PIT": "Pit Lining", "ANC": "Anchors",
+    "FEN": "Fencing", "TD": "Transcend", "CON": "Construction",
+}
+
+# Assessment form ID -> human-readable name
+FORM_NAMES = {
+    381707: "CSG - Safety Casing Field Assessment",
+    229645: "CSG - Pre/Post Trip Inspection",
+    385365: "TD - Rig Inspection",
+    226217: "WS - Poly Pipe Field Assessment",
+    386087: "WS - Pit Lining Field Assessment",
+    172295: "Construction - Site Safety Review",
+    153181: "RH - Rathole Field Assessment",
+    152018: "Vehicle Inspection Checklist",
+    152034: "HSE - Workplace Inspection Checklist",
+}
+
+
+def parse_vehicle_number(vnum):
+    """Parse vehicle number into (division, yard, company).
+
+    Patterns:
+      YARD-DIV-NUM:  "JOU-RAT-2364"  -> (Rathole, Jourdanton, BRHAS)
+      YARD-DIV-NUM:  "LL-RAT-1821"   -> (Rathole, Levelland, BRHAS)
+      DIV-NUM:       "ENV-2093E"      -> (Environmental, "", BRHAS)
+      DIV-NUM:       "BTI-63138"      -> (BTI, "", BTI)
+      NUMX:          "23111C"         -> (Casing, "", BRHAS)
+      Other:         "Sales 2560..."  -> ("", "", BRHAS)
+    """
+    if not vnum:
+        return ("", "", "BRHAS")
+
+    clean = vnum.strip().upper().split(" ")[0]
+    parts = clean.split("-")
+
+    yard = ""
+    div = ""
+    company = "BRHAS"
+
+    if len(parts) >= 3:
+        yard = YARD_PREFIXES.get(parts[0], "")
+        div = DIV_PREFIXES.get(parts[1], "")
+        if not yard and parts[0] in SOLO_DIV_PREFIXES:
+            div = SOLO_DIV_PREFIXES[parts[0]]
+    elif len(parts) == 2:
+        if parts[0] in YARD_PREFIXES and parts[1] in DIV_PREFIXES:
+            yard = YARD_PREFIXES[parts[0]]
+            div = DIV_PREFIXES[parts[1]]
+        elif parts[0] in SOLO_DIV_PREFIXES:
+            div = SOLO_DIV_PREFIXES[parts[0]]
+        elif parts[0] in YARD_PREFIXES:
+            yard = YARD_PREFIXES[parts[0]]
+        elif parts[1] in DIV_PREFIXES:
+            div = DIV_PREFIXES[parts[1]]
+    elif len(parts) == 1:
+        if re.match(r"^\d+C$", clean):
+            div = "Casing"
+        elif re.match(r"^\d+R$", clean):
+            div = "Rathole"
+        elif re.match(r"^\d+A$", clean):
+            div = "Anchors"
+        elif re.match(r"^\d+V$", clean):
+            div = "Valor"
+        elif re.search(r"\d+PP$", clean):
+            div = "Poly Pipe"
+        elif re.search(r"\d+PL$", clean):
+            div = "Pit Lining"
+        elif re.search(r"\d+E$", clean):
+            div = "Environmental"
+        elif re.search(r"\d+F$", clean):
+            div = "Fencing"
+
+    if div == "Valor":
+        company = "Valor"
+    elif div == "BTI":
+        company = "BTI"
+    elif div == "Transcend":
+        company = "Transcend"
+
+    return (div, yard, company)
+
 
 def svc_to_div(svc):
     if not svc:
@@ -122,7 +223,16 @@ def kpa_fetch_csv(form_id, updated_after_ms):
             "updated_after": updated_after_ms,
             "page": page,
         }
-        resp = requests.post(f"{KPA_API_BASE}/responses.flat", json=payload, timeout=120)
+        for attempt in range(3):
+            try:
+                resp = requests.post(f"{KPA_API_BASE}/responses.flat", json=payload, timeout=180)
+                break
+            except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout):
+                print(f"    KPA timeout/reset on form {form_id} page {page}, retry {attempt+1}/3...")
+                time.sleep(15 * (attempt + 1))
+        else:
+            print(f"    Failed after 3 retries on form {form_id} page {page}, stopping this form")
+            break
         if not resp.ok:
             print(f"    KPA API error {resp.status_code} for form {form_id} page {page}")
             break
@@ -239,14 +349,12 @@ def fetch_kpa_assessments(start_date, end_date):
         form_name = ""
         division = FORM_DIVISION_MAP.get(form_id, "")
 
+        form_name = FORM_NAMES.get(form_id, f"Form {form_id}")
         count = 0
         for row in rows:
             row_date = (row.get("date") or "")[:10]
             if not row_date or row_date < start_date or row_date > end_date:
                 continue
-
-            if not form_name:
-                form_name = row.get("form_name", "") or f"Form {form_id}"
 
             svc = get_svc_line(row)
             company = "BRHAS"
@@ -314,43 +422,44 @@ def fetch_motive_speeding(start_date, end_date):
             break
 
         for item in items:
-            ev = item if "vehicle_name" in item else item.get("speeding_event", item)
+            ev = item.get("speeding_event", item)
 
-            driver = ev.get("driver_name", "") or ""
-            if not driver:
-                drv_obj = ev.get("driver") or {}
-                driver = drv_obj.get("name", "Unknown") if isinstance(drv_obj, dict) else "Unknown"
+            # Driver (often null in speeding API)
+            drv_obj = ev.get("driver") or {}
+            if isinstance(drv_obj, dict) and drv_obj:
+                first = drv_obj.get("first_name", "") or ""
+                last = drv_obj.get("last_name", "") or ""
+                driver = f"{first} {last}".strip() or drv_obj.get("name", "Unknown")
+            else:
+                driver = "Unknown"
 
-            vehicle = ev.get("vehicle_name", "") or ""
+            # Vehicle number (e.g. "JOU-RAT-2364")
             veh_obj = ev.get("vehicle") or {}
-            if not vehicle and isinstance(veh_obj, dict):
-                vehicle = veh_obj.get("name", "")
+            vehicle = veh_obj.get("number", "") if isinstance(veh_obj, dict) else ""
 
-            group_ids = []
-            if isinstance(veh_obj, dict):
-                group_ids = veh_obj.get("group_ids", []) or []
-
-            speed = float(ev.get("speed", 0) or 0)
-            posted = float(ev.get("speed_limit", 0) or 0)
+            # Speed: convert from km/h to mph
+            KPH_TO_MPH = 0.621371
+            max_speed_kph = float(ev.get("max_vehicle_speed", 0) or 0)
+            posted_kph = float(ev.get("min_posted_speed_limit_in_kph", 0) or 0)
+            speed = round(max_speed_kph * KPH_TO_MPH, 1)
+            posted = round(posted_kph * KPH_TO_MPH, 1)
             over = round(speed - posted, 1)
+
             duration = ev.get("duration", 0) or 0
             start_time = ev.get("start_time", "")
+            severity = ""
+            meta = ev.get("metadata") or {}
+            if isinstance(meta, dict):
+                severity = meta.get("severity", "")
 
-            div, yard = group_to_yard_div(group_ids)
-            company = "BRHAS"
-            if div in ("Valor",):
-                company = "Valor"
-            elif div in ("BTI",):
-                company = "BTI"
-            elif div in ("Transcend",):
-                company = "Transcend"
+            # Division/yard from vehicle number prefix (e.g. "JOU-RAT-2364")
+            div, yard, company = parse_vehicle_number(vehicle)
 
             tier = speeding_tier(speed, posted)
-            lat = ev.get("latitude") or ev.get("start_latitude") or ""
-            lon = ev.get("longitude") or ev.get("start_longitude") or ""
+            lat = ev.get("start_lat") or ev.get("latitude") or ""
+            lon = ev.get("start_lon") or ev.get("longitude") or ""
             location = f"{lat}, {lon}" if lat and lon else ""
 
-            # Extract date from start_time
             ev_date = start_time[:10] if start_time else ""
 
             all_events.append({
@@ -364,7 +473,7 @@ def fetch_motive_speeding(start_date, end_date):
                 "posted_speed": posted,
                 "over_by": over,
                 "duration": format_duration(duration),
-                "severity": ev.get("severity", ""),
+                "severity": severity,
                 "tier": tier,
                 "location": location,
                 "maps_link": f"https://www.google.com/maps?q={lat},{lon}" if lat and lon else "",

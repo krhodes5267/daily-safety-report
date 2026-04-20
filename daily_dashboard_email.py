@@ -206,7 +206,7 @@ def build_summary_email(dashboard_url):
       <th style="text-align:center;padding:6px 8px;">Devices</th>
     </tr>"""
 
-    yards = ["Midland", "Bryan", "Kilgore", "Hobbs", "Jourdanton", "Laredo", "San Angelo"]
+    yards = ["Midland", "Bryan", "Kilgore", "Hobbs", "Jourdanton", "Laredo"]
     camera_by_yard = camera.get("by_yard", {})
     casing_speed_by_yard = {}
     for e in casing_speeding:
@@ -304,6 +304,7 @@ def main():
     if "--dry-run" in sys.argv:
         print("\n  Dry run -- email not sent.")
         # Write HTML to file for preview
+        os.makedirs("output", exist_ok=True)
         with open("output/dashboard_email_preview.html", "w", encoding="utf-8") as f:
             f.write(html)
         print("  Preview saved to output/dashboard_email_preview.html")

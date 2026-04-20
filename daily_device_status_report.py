@@ -372,7 +372,7 @@ def fetch_csv_from_gmail():
     camera_csv = None
 
     try:
-        mail = imaplib.IMAP4_SSL("imap.gmail.com")
+        mail = imaplib.IMAP4_SSL("imap.gmail.com", timeout=30)
         mail.login(gmail_address, gmail_app_password)
         mail.select("inbox")
 
@@ -1857,7 +1857,7 @@ def send_email(html_body, subject, recipients_str, xlsx_path=None, cc_str=""):
         return False
 
 
-def send_tiered_emails(issues, grouped, report_date, xlsx_path, csv_available):
+def send_tiered_emails(issues, grouped, report_date, xlsx_path, csv_available, skip_director=False):
     """Send emails to all configured tiers.
 
     Tier 1: Camera Team -- daily full report (all yards) + Excel attachment
@@ -1865,6 +1865,9 @@ def send_tiered_emails(issues, grouped, report_date, xlsx_path, csv_available):
     Tier 3: Safety Reps -- daily per-yard report (their yards only)
     Tier 4: Dispatch -- daily per-yard report (their yards only)
     Tier 5: Managers -- 7+ day escalation only (per-yard), only if there are escalations
+
+    If skip_director=True, skips Tier 2 (Safety Director email only).
+    All other tiers (Camera Team, Reps, Dispatch, Managers) always run.
     """
     date_str = report_date.strftime("%B %d, %Y")
     emails_sent = 0
@@ -1879,22 +1882,25 @@ def send_tiered_emails(issues, grouped, report_date, xlsx_path, csv_available):
             emails_sent += 1
 
     # ---- TIER 2: Safety Director (30-second summary + Excel) ----
-    dir_recipients = SAFETY_DIRECTOR_RECIPIENTS
-    if dir_recipients.strip():
-        print("\n  [Safety Director] Director summary...")
-        html = build_html_email(issues, grouped, report_date, csv_available, mode="director")
-        new_count = len([i for i in issues if i["is_new"]])
-        esc_count = len([i for i in issues if i["is_escalation"]])
-        subject = f"Casing Device Summary - {date_str}"
-        tags = []
-        if new_count > 0:
-            tags.append(f"{new_count} NEW")
-        if esc_count > 0:
-            tags.append(f"{esc_count} ESCALATION")
-        if tags:
-            subject = f"[{' | '.join(tags)}] {subject}"
-        if send_email(html, subject, dir_recipients, xlsx_path):
-            emails_sent += 1
+    if skip_director:
+        print("\n  [Safety Director] Director summary -- SKIPPED (dashboard mode)")
+    else:
+        dir_recipients = SAFETY_DIRECTOR_RECIPIENTS
+        if dir_recipients.strip():
+            print("\n  [Safety Director] Director summary...")
+            html = build_html_email(issues, grouped, report_date, csv_available, mode="director")
+            new_count = len([i for i in issues if i["is_new"]])
+            esc_count = len([i for i in issues if i["is_escalation"]])
+            subject = f"Casing Device Summary - {date_str}"
+            tags = []
+            if new_count > 0:
+                tags.append(f"{new_count} NEW")
+            if esc_count > 0:
+                tags.append(f"{esc_count} ESCALATION")
+            if tags:
+                subject = f"[{' | '.join(tags)}] {subject}"
+            if send_email(html, subject, dir_recipients, xlsx_path):
+                emails_sent += 1
 
     # ---- TIER 3: Safety Reps (per-yard, their yards only) ----
     for yard in YARD_ORDER:
@@ -2057,10 +2063,47 @@ def main():
     wb.save(xlsx_filename)
     print(f"    Saved: {xlsx_filename}")
 
-    # Step 7: Send tiered emails
-    print("\n[7] Sending tiered emails...")
-    emails_sent = send_tiered_emails(issues, grouped, report_date, xlsx_filename, csv_available)
-    print(f"\n    Total emails sent: {emails_sent}")
+    # --- Write JSON for dashboard ---
+    os.makedirs("output", exist_ok=True)
+    json_issues = []
+    for issue in issues:
+        ji = dict(issue)
+        ji.pop("last_active_dt", None)
+        json_issues.append(ji)
+
+    json_data = {
+        "report_date": report_date.strftime("%Y-%m-%d"),
+        "generated_at": datetime.now(timezone.utc).astimezone(CENTRAL_TZ).strftime("%Y-%m-%d %H:%M:%S"),
+        "total_issues": len(issues),
+        "summary": {
+            "powered_off": powered_off,
+            "camera_off": camera_off,
+            "inactive_30_days": inactive,
+            "in_service": in_svc,
+            "out_of_service": oos,
+            "new_issues": new_count,
+            "escalations": esc_count,
+            "oos_with_activity": oos_active,
+        },
+        "by_yard": {yard: len(yard_issues) for yard, yard_issues in grouped.items()},
+        "issues": json_issues,
+    }
+    json_path = os.path.join("output", "device_status.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(json_data, f, indent=2, default=str)
+    print(f"    JSON: {json_path}")
+
+    skip_director = "--no-director-email" in sys.argv
+    no_email = "--no-email" in sys.argv
+    if no_email:
+        print("\n[7] ALL emails skipped (--no-email flag)")
+    else:
+        if skip_director:
+            print("\n[7] Sending tiered emails (director email skipped -- dashboard mode)...")
+        else:
+            print("\n[7] Sending tiered emails...")
+        emails_sent = send_tiered_emails(issues, grouped, report_date, xlsx_filename, csv_available, skip_director=skip_director)
+        print(f"\n    Total emails sent: {emails_sent}")
 
     print("\n" + "=" * 80)
     print("COMPLETE")

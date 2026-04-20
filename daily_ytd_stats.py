@@ -402,7 +402,7 @@ def main():
     os.makedirs("output", exist_ok=True)
     out = os.path.join("output", "ytd_stats.json")
     with open(out, "w", encoding="utf-8") as f:
-        json.dump(json_data, f, indent=2)
+        json.dump(json_data, f, indent=2, default=str)
 
     print(f"\n  YTD TRIR: {ytd_trir}")
     print(f"  YTD DART: {ytd_dart}")

@@ -1919,7 +1919,7 @@ def _send_email(gmail_address, gmail_app_password, to_list, subject, html_body, 
 
         all_recipients = list(to_list) + (list(cc_list) if cc_list else [])
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
             server.starttls()
             server.login(gmail_address, gmail_app_password)
             server.sendmail(gmail_address, all_recipients, msg.as_string())
@@ -1934,13 +1934,16 @@ def _send_email(gmail_address, gmail_app_password, to_list, subject, html_body, 
 # TIERED EMAIL DISTRIBUTION
 # ==============================================================================
 
-def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_report):
+def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_report, skip_director=False):
     """Orchestrate all tiered email distribution.
 
     Tier 1: Full report to REPORT_RECIPIENT (existing behavior, with Word doc)
     Tier 2: Director summary to Kelly
     Tier 3: Per-rep branded emails to safety reps
     Tier 4: RED + repeat offender escalation to managers
+
+    If skip_director=True, skips Tier 1 and Tier 2 (director emails only).
+    Tiers 3 and 4 (rep/manager distribution) always run.
     """
     gmail_address = os.environ.get("GMAIL_ADDRESS", "")
     gmail_app_password = os.environ.get("GMAIL_APP_PASSWORD", "")
@@ -1962,27 +1965,33 @@ def send_tiered_emails(events, grouped, yesterday_date, docx_path, html_full_rep
         print("  *** TEST MODE: All emails routed to director only ***")
 
     # --- Tier 1: Full report to REPORT_RECIPIENT ---
-    report_recipient = os.environ.get("REPORT_RECIPIENT", "")
-    if report_recipient:
-        to = test_to or [report_recipient]
-        print(f"\n  [Tier 1] Full report -> {', '.join(to)}")
-        if _send_email(gmail_address, gmail_app_password, to, subject_base, html_full_report, attachment_path=docx_path):
+    if skip_director:
+        print("\n  [Tier 1] Full report -- SKIPPED (dashboard mode)")
+    else:
+        report_recipient = os.environ.get("REPORT_RECIPIENT", "")
+        if report_recipient:
+            to = test_to or [report_recipient]
+            print(f"\n  [Tier 1] Full report -> {', '.join(to)}")
+            if _send_email(gmail_address, gmail_app_password, to, subject_base, html_full_report, attachment_path=docx_path):
+                print(f"    SENT")
+                sent += 1
+            else:
+                failed += 1
+        else:
+            print("\n  [Tier 1] Full report -- SKIPPED (REPORT_RECIPIENT not set)")
+
+    # --- Tier 2: Director summary ---
+    if skip_director:
+        print(f"\n  [Tier 2] Director summary -- SKIPPED (dashboard mode)")
+    else:
+        director_html = _build_director_email(events, grouped, yesterday_date)
+        to = test_to or [DIRECTOR_RECIPIENTS]
+        print(f"\n  [Tier 2] Director summary -> {', '.join(to)}")
+        if _send_email(gmail_address, gmail_app_password, to, f"Speeding Summary - {report_date_str}", director_html):
             print(f"    SENT")
             sent += 1
         else:
             failed += 1
-    else:
-        print("\n  [Tier 1] Full report -- SKIPPED (REPORT_RECIPIENT not set)")
-
-    # --- Tier 2: Director summary ---
-    director_html = _build_director_email(events, grouped, yesterday_date)
-    to = test_to or [DIRECTOR_RECIPIENTS]
-    print(f"\n  [Tier 2] Director summary -> {', '.join(to)}")
-    if _send_email(gmail_address, gmail_app_password, to, f"Speeding Summary - {report_date_str}", director_html):
-        print(f"    SENT")
-        sent += 1
-    else:
-        failed += 1
 
     # --- Tier 3: Safety rep emails ---
     if events:
@@ -2150,7 +2159,7 @@ def send_email_report(html_body, docx_path, yesterday_date):
             )
             msg.attach(part)
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
             server.starttls()
             server.login(gmail_address, gmail_app_password)
             server.sendmail(gmail_address, recipient, msg.as_string())
@@ -2212,11 +2221,39 @@ def main():
     doc.save(output_file)
     print(f"    Saved: {output_file}")
 
+    # --- Write JSON for dashboard ---
+    os.makedirs("output", exist_ok=True)
+    json_data = {
+        "report_date": yesterday.strftime("%Y-%m-%d"),
+        "generated_at": datetime.now(timezone.utc).astimezone(CENTRAL_TZ).strftime("%Y-%m-%d %H:%M:%S"),
+        "total_events": len(events),
+        "summary": {
+            "red": len([e for e in events if e["tier"] == "RED"]),
+            "orange": len([e for e in events if e["tier"] == "ORANGE"]),
+            "yellow": len([e for e in events if e["tier"] == "YELLOW"]),
+        },
+        "repeat_offenders": {n: c for n, c in get_repeat_offenders(events).items()},
+        "by_division": {div: sum(len(evts) for evts in yards.values()) for div, yards in grouped.items()},
+        "events": events,
+    }
+    json_path = os.path.join("output", "speeding_events.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(json_data, f, indent=2, default=str)
+    print(f"    JSON: {json_path}")
+
     print("\n[5] Building HTML email...")
     html_body = build_html_report(events, grouped, yesterday)
 
-    print("\n[6] Sending tiered emails...")
-    send_tiered_emails(events, grouped, yesterday, output_file, html_body)
+    skip_director = "--no-director-email" in sys.argv
+    no_email = "--no-email" in sys.argv
+    if no_email:
+        print("\n[6] ALL emails skipped (--no-email flag)")
+    else:
+        if skip_director:
+            print("\n[6] Sending tiered emails (director emails skipped -- dashboard mode)...")
+        else:
+            print("\n[6] Sending tiered emails...")
+        send_tiered_emails(events, grouped, yesterday, output_file, html_body, skip_director=skip_director)
 
     print("\n" + "=" * 80)
     print("COMPLETE")

@@ -66,19 +66,20 @@ FORMS = {
     386087: "WS - Pit Lining Field Assessment",
     172295: "Construction - Site Safety Review",
     153181: "RH - Rathole Field Assessment",
-    152034: "HSE - Workplace Inspection Checklist"
+    152034: "HSE - Workplace Inspection Checklist",
+    229645: "CSG - Pre/Post Trip Inspection"
 }
 
 OTHER_FORMS = [
     (381707, "CSG - Safety Casing Field Assessment"),
     (152018, "Vehicle Inspection Checklist"),
     (385365, "TD - Rig Inspection"),
-    (484193, "TD - Observation Card"),
     (226217, "WS - Poly Pipe Field Assessment"),
     (386087, "WS - Pit Lining Field Assessment"),
     (172295, "Construction - Site Safety Review"),
     (153181, "RH - Rathole Field Assessment"),
-    (152034, "HSE - Workplace Inspection Checklist")
+    (152034, "HSE - Workplace Inspection Checklist"),
+    (229645, "CSG - Pre/Post Trip Inspection")
 ]
 
 COLORS = {
@@ -96,18 +97,44 @@ LOGOS = ['Butchs.jpg', 'ButchTrucking.jpg', 'Permian.jpg', 'Hutchs.png', 'Transc
 
 # Assessment/Audit forms with metadata for deep analysis
 ASSESSMENT_FORMS = {
-    381707: {"name": "CSG - Safety Casing Field Assessment", "type": "Field Assessment", "division": "Casing"},
-    152018: {"name": "Vehicle Inspection Checklist", "type": "Inspection", "division": "All"},
-    385365: {"name": "TD - Rig Inspection", "type": "Rig Inspection", "division": "Transcend"},
-    484193: {"name": "TD - Observation Card", "type": "Observation", "division": "Transcend"},
-    226217: {"name": "WS - Poly Pipe Field Assessment", "type": "Field Assessment", "division": "Poly Pipe"},
-    386087: {"name": "WS - Pit Lining Field Assessment", "type": "Field Assessment", "division": "Pit Lining"},
-    172295: {"name": "Construction - Site Safety Review", "type": "Site Review", "division": "Construction"},
-    153181: {"name": "RH - Rathole Field Assessment", "type": "Field Assessment", "division": "Rathole"},
-    152034: {"name": "HSE - Workplace Inspection Checklist", "type": "Inspection", "division": "HSE"},
+    381707: {"name": "CSG - Safety Casing Field Assessment", "type": "Field Assessment", "division": "Casing", "company": "BRHAS"},
+    152018: {"name": "Vehicle Inspection Checklist", "type": "Inspection", "division": "All", "company": "All"},
+    385365: {"name": "TD - Rig Inspection", "type": "Rig Inspection", "division": "Transcend", "company": "Transcend"},
+    206674: {"name": "TD - Transcend Field Assessment", "type": "Field Assessment", "division": "Transcend", "company": "Transcend"},
+    226217: {"name": "WS - Poly Pipe Field Assessment", "type": "Field Assessment", "division": "Poly Pipe", "company": "BRHAS"},
+    386087: {"name": "WS - Pit Lining Field Assessment", "type": "Field Assessment", "division": "Pit Lining", "company": "BRHAS"},
+    172295: {"name": "Construction - Site Safety Review", "type": "Site Review", "division": "Construction", "company": "BRHAS"},
+    153181: {"name": "RH - Rathole Field Assessment", "type": "Field Assessment", "division": "Rathole", "company": "BRHAS"},
+    229645: {"name": "CSG - Pre/Post Trip Inspection", "type": "Inspection", "division": "Casing", "company": "BRHAS"},
+    152034: {"name": "HSE - Workplace Inspection Checklist", "type": "Inspection", "division": "HSE", "company": "BRHAS"},
+}
+
+# Forms that should get deep analytics (compliance, findings, quality scores)
+# For shared forms (152018), analytics are built per-company from the entry's company field.
+ANALYTICS_FORMS = {
+    381707: {"company": "BRHAS", "division": "Casing"},
+    152018: {"company": "All", "division": "All"},     # split by entry company field
+    153181: {"company": "BRHAS", "division": "Rathole"},
+    385365: {"company": "Transcend", "division": "Transcend"},
+    206674: {"company": "Transcend", "division": "Transcend"},
 }
 
 KPA_RESPONSE_URL = "https://brhas-ees.kpaehs.com/forms/responses/view"
+
+# Service line hash fields across different KPA forms
+SERVICE_LINE_HASHES = [
+    "64c7upqkyt79zhh1", "sha7vur5q2l6d6gq", "68jbiriixiurowou",
+    "hxy6pwclvjke1sln", "b5dqbf3qgxga92fi", "7cl5rryw636f6wbx",
+    "service_line", "Service Line", "division", "Division",
+]
+
+def _get_service_line(row):
+    """Extract service line value from a KPA row, trying multiple hash fields."""
+    for key in SERVICE_LINE_HASHES:
+        val = row.get(key, "").strip()
+        if val and val.lower() not in ("", "service line", "division", "n/a", "na"):
+            return val
+    return ""
 
 # Keywords for smart field detection in assessment CSV headers
 COMPLIANCE_KEYWORDS = ['compliance', 'rating', 'satisfactory', 'pass', 'fail', 'acceptable',
@@ -178,7 +205,7 @@ def pull_form_data(form_id, form_name):
 
                 if yesterday_start_ms <= row_date_ms < today_start_ms:
                     filtered_rows.append(row)
-            except:
+            except (ValueError, TypeError, KeyError):
                 continue
 
         if len(filtered_rows) == 0:
@@ -245,7 +272,7 @@ def get_shift(date_str):
             return "Day Shift (8 AM-4 PM)"
         elif 16 <= hour < 24:
             return "Night Shift (4 PM-Midnight)"
-    except:
+    except (ValueError, TypeError):
         return "Unknown"
 
 
@@ -594,6 +621,838 @@ def _generate_assessment_trends(analysis):
     analysis['trends'] = trends
 
 
+# Corrective Action field hashes for form 381707 (from casing_field_assessment_audit.py)
+_381707_CA_FIELDS = {
+    "1hmw2ia3zskyvejc", "5kdjo1sgtqk062kg", "8cjgdcimxgwgey3p",
+    "9plzfzwedqeowmwg", "9y64nqctlfvt8cr9", "b1pn8n8a7q6aeqzw",
+    "duqwjgpgqteg7lyk", "dvildqli27bjrqfy", "dxfoh88ikco1hh7l",
+    "ig57lp6ouclrouhv", "is0fukv57b4jkgeb", "ix4ronsemj7tjfzt",
+    "jujj36vyu4olv7pz", "lxt0mr2nwaad4huo", "n1nkzcisgwshsuuw",
+    "nl1rlpr2zo521daa", "ok6tqh93ihdg8dvk", "p27ejw88a0yl0g3u",
+    "qruw4o2dcqoow49t", "ra1wwm8bg0u78ab1", "rbgep7tnf0crrwy3",
+    "rvx8cq5j48i31q34", "szz5pmdbnuh8a4x2", "t59rttx125h8cxz7",
+    "u11h7t0zy2ta7n9z", "ue7h1hb4l16rlmdf", "vcy9kurjo6s8bybe",
+    "yu9niadtq5rwadsu", "zozn7dzjkajlolso",
+}
+
+# Meta fields to skip when counting narrative depth
+_381707_META_FIELDS = {
+    "report number", "date", "observer", "observer-emp-num", "status",
+    "link", "kpa_link", "parentlink", "parentrepnum",
+    "name", "form", "form_id", "updated_at", "created_at",
+    "report", "id", "response_id", "_yard", "_observer", "_date", "_ca_fields",
+    "7vj2l992y7fwqhwz", "yard", "location",
+    "k6qke9eoh052z0eh", "tm4zqob5uficucju",
+    "tm4zqob5uficucju-lat", "tm4zqob5uficucju-lon",
+    "latitude", "longitude", "temperature", "weather", "wind-speed",
+    "updated", "updated_time", "duration", "version", "surrogate",
+    "select-dot", "select-flush mount spider", "select-hse", "select-n/a",
+    "select-no", "select-quality", "select-safety", "select-slips",
+    "select-spider", "select-yes",
+}
+
+
+_YARD_NAMES = ["Midland", "Bryan", "Kilgore", "Hobbs", "Jourdanton", "Laredo"]
+
+# Standard metadata fields to skip in narrative analysis (generic)
+_GENERIC_META_FIELDS = {
+    "report number", "date", "link", "observer", "name",
+    "select-yes", "select-no", "select-n/a", "select-spider",
+}
+
+
+def _normalize_yard(raw_yard):
+    """Normalize yard names like 'Midland Yukon' to 'Midland'."""
+    for yard in _YARD_NAMES:
+        if yard.lower() in raw_yard.lower():
+            return yard
+    return raw_yard
+
+
+def _extract_generic_analytics(row):
+    """Extract analytics from any form with select-yes/no and -notes fields.
+
+    Works for Vehicle Inspection Checklist, Rathole FA, TD Rig Inspection,
+    TD Transcend Field Assessment, etc.
+    """
+    # Compliance tallies
+    try:
+        sel_yes = int(row.get("select-yes", 0) or 0)
+    except (ValueError, TypeError):
+        sel_yes = 0
+    try:
+        sel_no = int(row.get("select-no", 0) or 0)
+    except (ValueError, TypeError):
+        sel_no = 0
+    try:
+        sel_na = int(row.get("select-n/a", 0) or 0)
+    except (ValueError, TypeError):
+        sel_na = 0
+
+    # CAPAs created (from -followups fields, format "X of Y")
+    capas_created = 0
+    for key, val in row.items():
+        if not key.endswith("-followups"):
+            continue
+        if not val or not isinstance(val, str):
+            continue
+        v = val.strip()
+        if v and v != "0":
+            try:
+                parts = v.split(" of ")
+                if len(parts) == 2 and int(parts[1]) > 0:
+                    capas_created += int(parts[1])
+            except (ValueError, IndexError):
+                if v not in ("0", ""):
+                    capas_created += 1
+
+    # Notes with content (from -notes fields)
+    notes_count = 0
+    for key, val in row.items():
+        if not key.endswith("-notes"):
+            continue
+        if not val or not isinstance(val, str):
+            continue
+        if val.strip():
+            notes_count += 1
+
+    # Finding detection: any select-no > 0 or capas > 0
+    has_finding = sel_no > 0 or capas_created > 0
+
+    return {
+        "select_yes": sel_yes,
+        "select_no": sel_no,
+        "select_na": sel_na,
+        "capas_created": capas_created,
+        "notes_count": notes_count,
+        "has_finding": has_finding,
+    }
+
+
+def _extract_381707_analytics(row):
+    """Extract deep analytics fields from a form 381707 row."""
+    # Compliance tallies
+    try:
+        sel_yes = int(row.get("select-yes", 0) or 0)
+    except (ValueError, TypeError):
+        sel_yes = 0
+    try:
+        sel_no = int(row.get("select-no", 0) or 0)
+    except (ValueError, TypeError):
+        sel_no = 0
+    try:
+        sel_na = int(row.get("select-n/a", 0) or 0)
+    except (ValueError, TypeError):
+        sel_na = 0
+
+    # CAs marked (count of CA_FIELDS with value >= 1)
+    cas_marked = 0
+    for field in _381707_CA_FIELDS:
+        val = row.get(field, "").strip()
+        if val and val != "0":
+            try:
+                if int(val) > 0:
+                    cas_marked += 1
+            except ValueError:
+                pass
+
+    # CAPAs created (from -followups fields, format "X of Y")
+    capas_created = 0
+    for key, val in row.items():
+        if not key.endswith("-followups"):
+            continue
+        if not val or not isinstance(val, str):
+            continue
+        v = val.strip()
+        if v and v != "0":
+            try:
+                parts = v.split(" of ")
+                if len(parts) == 2 and int(parts[1]) > 0:
+                    capas_created += int(parts[1])
+            except (ValueError, IndexError):
+                if v not in ("0", ""):
+                    capas_created += 1
+
+    # Notes with content (from -notes fields)
+    notes_count = 0
+    for key, val in row.items():
+        if not key.endswith("-notes"):
+            continue
+        if not val or not isinstance(val, str):
+            continue
+        v = val.strip()
+        if v and v != "0":
+            notes_count += 1
+
+    # Narrative depth (fields with 20+ char real text)
+    narrative_depth = 0
+    for key, val in row.items():
+        if key.lower() in _381707_META_FIELDS or key in _381707_CA_FIELDS:
+            continue
+        if key.startswith("select-") or key.endswith(("-followup-ids", "-followups", "-notes")):
+            continue
+        if not val or not isinstance(val, str):
+            continue
+        v = val.strip()
+        if len(v) >= 20 and "kpaehs.com" not in v:
+            narrative_depth += 1
+
+    has_finding = cas_marked > 0 or capas_created > 0
+
+    return {
+        "select_yes": sel_yes,
+        "select_no": sel_no,
+        "select_na": sel_na,
+        "cas_marked": cas_marked,
+        "capas_created": capas_created,
+        "notes_count": notes_count,
+        "narrative_depth": narrative_depth,
+        "has_finding": has_finding,
+        "customer": row.get("0kcg8hpjaysw1jx8", "").strip(),
+        "rig": row.get("wgfyefhpyd2x5pyi", "").strip(),
+        "areas_of_concern": row.get("mhmo9hj3tgaad0hw", "").strip()[:300],
+        "positive_obs": row.get("s5alwdtplf5gs9ik", "").strip()[:300],
+    }
+
+
+def pull_assessment_history():
+    """Pull ALL assessment data from 2025-01-01 onward for all assessment forms.
+
+    Returns a dict with month-by-month and assessor-level aggregation for the
+    dashboard's Safety Rep Accountability section. This replaces the yesterday-only
+    view with full historical + YTD data.
+    """
+    from collections import defaultdict
+    import json as _json
+
+    start_date = datetime(2025, 1, 1)
+    start_ms = int(start_date.timestamp() * 1000)
+
+    print("\n  Pulling assessment history (2025-01-01 to present)...")
+
+    all_assessments = []
+    import time as _time
+
+    for form_id, form_info in ASSESSMENT_FORMS.items():
+        base_params = {
+            "form_id": form_id,
+            "format": "csv",
+            "updated_after": start_ms,
+        }
+
+        # Paginated fetch -- KPA returns max 100 responses per page
+        # (each response can have multiple sub-rows for crew/repeating sections)
+        # Pre/Post Trip (229645) is very high volume; cap at 10 pages
+        all_rows = []
+        fieldnames = None
+        page = 1
+        max_pages = 10 if form_id == 229645 else 50
+        while page <= max_pages:
+            params = dict(base_params)
+            params["page"] = page
+            csv_text = call_kpa("responses.flat", params)
+            _time.sleep(0.3)
+            if not csv_text or csv_text.strip() == "":
+                break
+            try:
+                reader = csv.DictReader(StringIO(csv_text))
+                rows = list(reader)
+                data = [r for r in rows if r.get("date", "") != "Date"]
+                if not data:
+                    break
+                if fieldnames is None:
+                    fieldnames = reader.fieldnames
+                # Count unique report numbers to detect pagination boundary
+                page_reports = set()
+                for r in data:
+                    rpt = r.get("report number", "").strip()
+                    if rpt:
+                        page_reports.add(rpt)
+                all_rows.extend(data)
+                # KPA returns 100 responses per page; if fewer, we're done
+                if len(page_reports) < 100:
+                    break
+                page += 1
+            except Exception:
+                break
+
+        if not all_rows:
+            print(f"    {form_info['name']}: 0 rows")
+            continue
+
+        detected = detect_field_columns(fieldnames or [])
+
+        # Deduplicate by report number (sub-rows share same report number)
+        seen_reports = set()
+        form_count = 0
+        for row in all_rows:
+            rpt = row.get("report number", "").strip()
+            if not rpt or rpt == "Report Number":
+                continue
+
+            date_str = row.get("date", "").strip()
+            if not date_str:
+                continue  # sub-row
+
+            if rpt in seen_reports:
+                continue
+            seen_reports.add(rpt)
+
+            # Parse date
+            try:
+                dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            except (ValueError, TypeError):
+                try:
+                    dt = datetime.strptime(date_str[:10], "%Y-%m-%d")
+                except (ValueError, TypeError):
+                    continue
+
+            if dt < start_date:
+                continue
+
+            assessor = get_assessor_name(row)
+            yard = get_yard_from_row(row, detected)
+            service_line = _get_service_line(row)
+
+            # Form 381707 has yard in hash field k6qke9eoh052z0eh
+            # Values like "Midland Yukon" -- normalize to base yard name
+            if form_id == 381707 and yard == "Unknown":
+                raw_yard = row.get("k6qke9eoh052z0eh", "").strip()
+                if raw_yard:
+                    yard = _normalize_yard(raw_yard)
+
+            # Override division/company from form fields for shared forms
+            division = form_info["division"]
+            company = form_info.get("company", "")
+            if form_id == 152018:
+                # Vehicle Inspection Checklist has company/service_line fields
+                raw_co = row.get("ge09m6h1ne6po6x9", "").strip()
+                raw_svc = row.get("hxy6pwclvjke1sln", "").strip()
+                if "trucking" in raw_co.lower() or "trucking" in raw_svc.lower():
+                    company = "BTI"
+                    division = "BTI"
+                elif "rat hole" in raw_co.lower() or "rat hole" in raw_svc.lower() or "rathole" in raw_svc.lower():
+                    company = "BRHAS"
+                    division = "Rathole"
+                elif "casing" in raw_svc.lower():
+                    company = "BRHAS"
+                    division = "Casing"
+                else:
+                    company = "BRHAS"
+                    division = raw_svc or "Unknown"
+
+            entry = {
+                "date": dt.strftime("%Y-%m-%d"),
+                "month": dt.strftime("%Y-%m"),
+                "assessor": assessor,
+                "form_id": form_id,
+                "form_name": form_info["name"],
+                "division": division,
+                "company": company,
+                "yard": yard,
+                "service_line": service_line,
+                "report_number": rpt,
+            }
+
+            # Deep analytics extraction per form
+            if form_id == 381707:
+                entry.update(_extract_381707_analytics(row))
+            elif form_id in ANALYTICS_FORMS:
+                entry.update(_extract_generic_analytics(row))
+
+            all_assessments.append(entry)
+            form_count += 1
+
+        print(f"    {form_info['name']}: {form_count} assessments ({len(all_rows)} raw rows, {page} page(s))")
+
+    print(f"  Total assessments (all forms, 2025+): {len(all_assessments)}")
+
+    # Aggregate
+    now = datetime.now()
+    current_month = now.strftime("%Y-%m")
+    current_year = now.year
+
+    # By assessor -- current month
+    mtd_by_assessor = defaultdict(lambda: {"count": 0, "yards": set(), "forms": set()})
+    # By assessor -- current year
+    ytd_by_assessor = defaultdict(lambda: {"count": 0, "yards": set(), "forms": set()})
+    # By month (for trend)
+    by_month = defaultdict(int)
+    # By form -- current month
+    mtd_by_form = defaultdict(int)
+    # By yard -- current month
+    mtd_by_yard = defaultdict(int)
+    # By form -- all time
+    by_form_all = defaultdict(int)
+
+    for a in all_assessments:
+        by_month[a["month"]] += 1
+        by_form_all[a["form_name"]] += 1
+
+        if a["date"][:4] == str(current_year):
+            ytd_by_assessor[a["assessor"]]["count"] += 1
+            ytd_by_assessor[a["assessor"]]["yards"].add(a["yard"])
+            ytd_by_assessor[a["assessor"]]["forms"].add(a["form_name"])
+
+        if a["month"] == current_month:
+            mtd_by_assessor[a["assessor"]]["count"] += 1
+            mtd_by_assessor[a["assessor"]]["yards"].add(a["yard"])
+            mtd_by_assessor[a["assessor"]]["forms"].add(a["form_name"])
+            mtd_by_form[a["form_name"]] += 1
+            mtd_by_yard[a["yard"]] += 1
+
+    # Convert sets to lists for JSON serialization
+    mtd_assessors = {}
+    for name, data in mtd_by_assessor.items():
+        mtd_assessors[name] = {
+            "count": data["count"],
+            "yards": sorted(data["yards"]),
+            "forms": sorted(data["forms"]),
+        }
+
+    ytd_assessors = {}
+    for name, data in ytd_by_assessor.items():
+        ytd_assessors[name] = {
+            "count": data["count"],
+            "yards": sorted(data["yards"]),
+            "forms": sorted(data["forms"]),
+        }
+
+    # === DEEP ANALYTICS for form 381707 (Casing Field Assessment) ===
+    # Exclude San Angelo (no longer active) and Justin Conrad
+    _EXCLUDED_YARDS = {"San Angelo"}
+    _EXCLUDED_ASSESSORS = {"Justin Conrad", "Ricky Rhine", "David Dudley"}
+    casing_assessments = [
+        a for a in all_assessments
+        if a.get("form_id") == 381707
+        and a.get("yard") not in _EXCLUDED_YARDS
+        and a.get("assessor") not in _EXCLUDED_ASSESSORS
+    ]
+    print(f"  Building analytics for {len(casing_assessments)} casing field assessments...")
+
+    # Junk phrases for recent findings filter
+    _JUNK_CONCERNS = {
+        "n/a", "na", "none", "none observed", "no unsafe practices observed",
+        "no unsafe acts observed", "no unsafe acts were observed",
+    }
+
+    def _is_junk_concern(text):
+        """Return True if concern text is a non-finding placeholder."""
+        if not text:
+            return True
+        low = text.strip().lower().rstrip(".")
+        if low in _JUNK_CONCERNS:
+            return True
+        # Catch all "no unsafe" / "no issues" / "did not" patterns
+        _JUNK_PHRASES = [
+            "no unsafe", "did not note", "did not witness", "did not observe",
+            "no one safe practices", "no issues noted", "no issues observed",
+            "no concerns noted", "no concerns observed", "no issues were",
+            "i did not note", "i did not witness", "i did not observe",
+            "since the crew was only", "no other issues noted",
+            "none were observed", "no issues with", "not observed",
+            "were not observed", "no findings", "nothing noted",
+            "no areas of concern", "no safety concerns",
+        ]
+        for phrase in _JUNK_PHRASES:
+            if phrase in low:
+                return True
+        return False
+
+    # Active rep roster with yard assignments and monthly targets
+    _ACTIVE_REPS = {
+        "Michael Salazar": {"yards": "Midland / Jourdanton", "target": 8},
+        "Michael Hancock": {"yards": "Midland", "target": 8},
+        "Joseph Speyrer": {"yards": "Jourdanton / Laredo", "target": 6},
+        "James Barnett": {"yards": "Kilgore", "target": 6},
+        "Allen Batts": {"yards": "Hobbs", "target": 7},
+    }
+
+    analytics = None
+    if casing_assessments:
+        # YTD assessments only for KPIs and scorecard (consistent time window)
+        ytd_casing = [a for a in casing_assessments if a["date"][:4] == str(current_year)]
+        n_ytd = len(ytd_casing)
+
+        # Overall KPIs (YTD)
+        total_yes = sum(a.get("select_yes", 0) for a in ytd_casing)
+        total_no = sum(a.get("select_no", 0) for a in ytd_casing)
+        total_responses = total_yes + total_no
+        compliance_rate = round(total_yes / total_responses * 100, 1) if total_responses > 0 else 0
+        finding_count = sum(1 for a in ytd_casing if a.get("has_finding"))
+        finding_rate = round(finding_count / n_ytd * 100, 1) if n_ytd > 0 else 0
+        avg_capas = round(sum(a.get("capas_created", 0) for a in ytd_casing) / n_ytd, 2) if n_ytd > 0 else 0
+        avg_notes = round(sum(a.get("notes_count", 0) for a in ytd_casing) / n_ytd, 2) if n_ytd > 0 else 0
+        avg_narrative = round(sum(a.get("narrative_depth", 0) for a in ytd_casing) / n_ytd, 1) if n_ytd > 0 else 0
+
+        # By month (all-time for trend chart)
+        analytics_by_month = defaultdict(lambda: {
+            "count": 0, "yes": 0, "no": 0, "findings": 0,
+            "capas": 0, "notes": 0, "narrative": 0
+        })
+        for a in casing_assessments:
+            m = a["month"]
+            analytics_by_month[m]["count"] += 1
+            analytics_by_month[m]["yes"] += a.get("select_yes", 0)
+            analytics_by_month[m]["no"] += a.get("select_no", 0)
+            analytics_by_month[m]["findings"] += 1 if a.get("has_finding") else 0
+            analytics_by_month[m]["capas"] += a.get("capas_created", 0)
+            analytics_by_month[m]["notes"] += a.get("notes_count", 0)
+            analytics_by_month[m]["narrative"] += a.get("narrative_depth", 0)
+
+        by_month_analytics = {}
+        for m, d in sorted(analytics_by_month.items()):
+            total_resp = d["yes"] + d["no"]
+            by_month_analytics[m] = {
+                "count": d["count"],
+                "compliance_rate": round(d["yes"] / total_resp * 100, 1) if total_resp > 0 else 0,
+                "finding_rate": round(d["findings"] / d["count"] * 100, 1) if d["count"] > 0 else 0,
+                "avg_capas": round(d["capas"] / d["count"], 2) if d["count"] > 0 else 0,
+                "avg_notes": round(d["notes"] / d["count"], 2) if d["count"] > 0 else 0,
+            }
+
+        # By assessor (YTD for quality scoring)
+        assessor_rows = defaultdict(list)
+        for a in ytd_casing:
+            assessor_rows[a["assessor"]].append(a)
+
+        # Compute dataset-wide YTD averages for benchmark (not Kelly Rhodes outlier)
+        bench_capas = avg_capas if avg_capas > 0 else 0.5
+        bench_notes = avg_notes if avg_notes > 0 else 0.5
+        bench_narr = avg_narrative if avg_narrative > 0 else 4.0
+        # Scale benchmarks to 2x dataset avg (top performer target)
+        bench_capas_target = max(bench_capas * 2, 1.0)
+        bench_notes_target = max(bench_notes * 2, 1.0)
+        bench_narr_target = max(bench_narr * 1.5, 4.0)
+
+        analytics_by_assessor = {}
+        for name, rows in assessor_rows.items():
+            n = len(rows)
+            a_yes = sum(r.get("select_yes", 0) for r in rows)
+            a_no = sum(r.get("select_no", 0) for r in rows)
+            a_resp = a_yes + a_no
+            a_findings = sum(1 for r in rows if r.get("has_finding"))
+            a_capas = sum(r.get("capas_created", 0) for r in rows)
+            a_notes = sum(r.get("notes_count", 0) for r in rows)
+            a_narr = sum(r.get("narrative_depth", 0) for r in rows)
+
+            # Quality score (0-85) with dataset-relative benchmarks
+            # CAPAs: 29pts, Notes: 25pts, Narrative: 17pts, CA Rate: 14pts
+            capa_score = min((a_capas / n) / bench_capas_target, 1.0) * 29 if n > 0 else 0
+            notes_score = min((a_notes / n) / bench_notes_target, 1.0) * 25 if n > 0 else 0
+            narr_score = min((a_narr / n) / bench_narr_target, 1.0) * 17 if n > 0 else 0
+            find_score = min((a_findings / n) / 0.5, 1.0) * 14 if n > 0 else 0
+            quality = round(min(capa_score + notes_score + narr_score + find_score, 85))
+
+            # Red flag detection
+            flags = []
+            # Consecutive clean assessments (no findings)
+            sorted_rows = sorted(rows, key=lambda x: x["date"])
+            consecutive_clean = 0
+            max_clean = 0
+            for r in sorted_rows:
+                if not r.get("has_finding"):
+                    consecutive_clean += 1
+                    max_clean = max(max_clean, consecutive_clean)
+                else:
+                    consecutive_clean = 0
+            if max_clean >= 10:
+                flags.append(f"{max_clean} consecutive assessments with no findings")
+
+            if n >= 3 and a_capas == 0:
+                flags.append(f"0 CAPAs created across {n} assessments")
+
+            if n >= 3 and a_notes == 0:
+                flags.append(f"0 observation notes across {n} assessments")
+
+            analytics_by_assessor[name] = {
+                "count": n,
+                "compliance_rate": round(a_yes / a_resp * 100, 1) if a_resp > 0 else 0,
+                "finding_rate": round(a_findings / n * 100, 1) if n > 0 else 0,
+                "avg_capas": round(a_capas / n, 2) if n > 0 else 0,
+                "avg_notes": round(a_notes / n, 2) if n > 0 else 0,
+                "avg_narrative": round(a_narr / n, 1) if n > 0 else 0,
+                "quality_score": quality,
+                "red_flags": flags,
+            }
+
+        # Coverage gap detection -- reps with 0 assessments this month
+        for rep_name, rep_info in _ACTIVE_REPS.items():
+            mtd_count = sum(1 for a in ytd_casing if a["assessor"] == rep_name and a["month"] == current_month)
+            day_of_month = now.day
+            if mtd_count == 0 and day_of_month >= 10:
+                if rep_name not in analytics_by_assessor:
+                    analytics_by_assessor[rep_name] = {
+                        "count": 0, "compliance_rate": 0, "finding_rate": 0,
+                        "avg_capas": 0, "avg_notes": 0, "avg_narrative": 0,
+                        "quality_score": 0, "red_flags": [],
+                    }
+                analytics_by_assessor[rep_name]["red_flags"].append(
+                    f"0 assessments filed in {current_month} ({day_of_month} days in)"
+                )
+            elif mtd_count > 0 and day_of_month >= 15:
+                # Check if on pace for monthly target
+                target = rep_info["target"]
+                pace = round(mtd_count / day_of_month * 30)
+                if pace < target * 0.5:
+                    if rep_name in analytics_by_assessor:
+                        analytics_by_assessor[rep_name]["red_flags"].append(
+                            f"On pace for ~{pace} assessments this month (target: {target})"
+                        )
+
+        # By yard (YTD, with rep attribution)
+        _YARD_TO_REP = {
+            "Midland": "Salazar / Hancock",
+            "Bryan": "",
+            "Kilgore": "Barnett",
+            "Hobbs": "Batts",
+            "Jourdanton": "Speyrer / Salazar",
+            "Laredo": "Speyrer",
+        }
+        yard_data = defaultdict(lambda: {
+            "count": 0, "yes": 0, "no": 0, "findings": 0, "capas": 0,
+            "assessors": set()
+        })
+        for a in ytd_casing:
+            y = a.get("yard", "Unknown")
+            yard_data[y]["count"] += 1
+            yard_data[y]["yes"] += a.get("select_yes", 0)
+            yard_data[y]["no"] += a.get("select_no", 0)
+            yard_data[y]["findings"] += 1 if a.get("has_finding") else 0
+            yard_data[y]["capas"] += a.get("capas_created", 0)
+            yard_data[y]["assessors"].add(a.get("assessor", "Unknown"))
+
+        analytics_by_yard = {}
+        for y, d in yard_data.items():
+            total_resp = d["yes"] + d["no"]
+            analytics_by_yard[y] = {
+                "count": d["count"],
+                "compliance_rate": round(d["yes"] / total_resp * 100, 1) if total_resp > 0 else 0,
+                "finding_rate": round(d["findings"] / d["count"] * 100, 1) if d["count"] > 0 else 0,
+                "avg_capas": round(d["capas"] / d["count"], 2) if d["count"] > 0 else 0,
+                "rep": _YARD_TO_REP.get(y, ""),
+                "assessors": sorted(d["assessors"]),
+            }
+        # Ensure all active yards appear even if 0 assessments
+        for y, rep in _YARD_TO_REP.items():
+            if y not in analytics_by_yard:
+                analytics_by_yard[y] = {
+                    "count": 0, "compliance_rate": 0, "finding_rate": 0,
+                    "avg_capas": 0, "rep": rep or "NO REP ASSIGNED",
+                    "assessors": [],
+                }
+
+        # Recent findings (last 20, filtered to real concerns only)
+        with_findings = [
+            a for a in casing_assessments
+            if a.get("areas_of_concern") and not _is_junk_concern(a.get("areas_of_concern", ""))
+        ]
+        # Also include assessments with CAs or CAPAs even if concern text is junk
+        ca_findings = [
+            a for a in casing_assessments
+            if (a.get("cas_marked", 0) > 0 or a.get("capas_created", 0) > 0)
+            and a not in with_findings
+        ]
+        all_findings_pool = with_findings + ca_findings
+        all_findings_pool.sort(key=lambda x: x["date"], reverse=True)
+        # Deduplicate by report_number
+        seen_rpts = set()
+        recent_findings = []
+        for a in all_findings_pool:
+            rpt = a.get("report_number", "")
+            if rpt in seen_rpts:
+                continue
+            seen_rpts.add(rpt)
+            concern = a.get("areas_of_concern", "")
+            if _is_junk_concern(concern):
+                concern = "(Finding noted via CA/CAPA -- no narrative provided)"
+            recent_findings.append({
+                "date": a["date"],
+                "assessor": a["assessor"],
+                "yard": a.get("yard", "Unknown"),
+                "customer": a.get("customer", ""),
+                "rig": a.get("rig", ""),
+                "concern": concern,
+                "positive": a.get("positive_obs", ""),
+                "cas_marked": a.get("cas_marked", 0),
+                "capas_created": a.get("capas_created", 0),
+            })
+            if len(recent_findings) >= 20:
+                break
+
+        # Collect all red flags
+        all_red_flags = []
+        for name, data in analytics_by_assessor.items():
+            for flag in data.get("red_flags", []):
+                all_red_flags.append({"assessor": name, "detail": flag})
+
+        analytics = {
+            "overall": {
+                "total_ytd": n_ytd,
+                "total_all_time": len(casing_assessments),
+                "compliance_rate": compliance_rate,
+                "finding_rate": finding_rate,
+                "avg_capas": avg_capas,
+                "avg_notes": avg_notes,
+                "avg_narrative": avg_narrative,
+            },
+            "by_month": by_month_analytics,
+            "by_assessor": analytics_by_assessor,
+            "by_yard": analytics_by_yard,
+            "recent_findings": recent_findings,
+            "red_flags": all_red_flags,
+        }
+
+    # === GENERIC ANALYTICS for other forms (BTI, Rathole, Transcend) ===
+    form_analytics = {}
+
+    def _build_form_analytics(key, label, company, division, all_rows, ytd_rows):
+        """Build analytics dict for a set of form rows."""
+        n_ytd = len(ytd_rows)
+        if n_ytd == 0:
+            return
+        f_yes = sum(a.get("select_yes", 0) for a in ytd_rows)
+        f_no = sum(a.get("select_no", 0) for a in ytd_rows)
+        f_resp = f_yes + f_no
+        f_compliance = round(f_yes / f_resp * 100, 1) if f_resp > 0 else 0
+        f_findings = sum(1 for a in ytd_rows if a.get("has_finding"))
+        f_finding_rate = round(f_findings / n_ytd * 100, 1) if n_ytd > 0 else 0
+        f_capas = sum(a.get("capas_created", 0) for a in ytd_rows)
+        f_notes = sum(a.get("notes_count", 0) for a in ytd_rows)
+        f_avg_capas = round(f_capas / n_ytd, 2) if n_ytd > 0 else 0
+        f_avg_notes = round(f_notes / n_ytd, 2) if n_ytd > 0 else 0
+
+        # By month (all-time for trend)
+        f_by_month = defaultdict(lambda: {"count": 0, "yes": 0, "no": 0, "findings": 0})
+        for a in all_rows:
+            m = a["month"]
+            f_by_month[m]["count"] += 1
+            f_by_month[m]["yes"] += a.get("select_yes", 0)
+            f_by_month[m]["no"] += a.get("select_no", 0)
+            f_by_month[m]["findings"] += 1 if a.get("has_finding") else 0
+        f_month_analytics = {}
+        for m, d in sorted(f_by_month.items()):
+            tr = d["yes"] + d["no"]
+            f_month_analytics[m] = {
+                "count": d["count"],
+                "compliance_rate": round(d["yes"] / tr * 100, 1) if tr > 0 else 0,
+                "finding_rate": round(d["findings"] / d["count"] * 100, 1) if d["count"] > 0 else 0,
+            }
+
+        # By assessor (YTD)
+        f_assessor_rows = defaultdict(list)
+        for a in ytd_rows:
+            f_assessor_rows[a["assessor"]].append(a)
+        f_by_assessor = {}
+        for aname, arows in f_assessor_rows.items():
+            an = len(arows)
+            ay = sum(r.get("select_yes", 0) for r in arows)
+            ano = sum(r.get("select_no", 0) for r in arows)
+            aresp = ay + ano
+            af = sum(1 for r in arows if r.get("has_finding"))
+            ac = sum(r.get("capas_created", 0) for r in arows)
+            anotes = sum(r.get("notes_count", 0) for r in arows)
+            flags = []
+            sorted_a = sorted(arows, key=lambda x: x["date"])
+            consec = 0
+            max_consec = 0
+            for r in sorted_a:
+                if not r.get("has_finding"):
+                    consec += 1
+                    max_consec = max(max_consec, consec)
+                else:
+                    consec = 0
+            if max_consec >= 10:
+                flags.append(f"{max_consec} consecutive with no findings")
+            if an >= 3 and ac == 0:
+                flags.append(f"0 CAPAs across {an} assessments")
+            if an >= 3 and anotes == 0:
+                flags.append(f"0 notes across {an} assessments")
+            f_by_assessor[aname] = {
+                "count": an,
+                "compliance_rate": round(ay / aresp * 100, 1) if aresp > 0 else 0,
+                "finding_rate": round(af / an * 100, 1) if an > 0 else 0,
+                "avg_capas": round(ac / an, 2) if an > 0 else 0,
+                "avg_notes": round(anotes / an, 2) if an > 0 else 0,
+                "red_flags": flags,
+            }
+
+        f_red_flags = []
+        for aname, adata in f_by_assessor.items():
+            for flag in adata.get("red_flags", []):
+                f_red_flags.append({"assessor": aname, "detail": flag})
+
+        form_analytics[key] = {
+            "form_name": label,
+            "company": company,
+            "division": division,
+            "overall": {
+                "total_ytd": n_ytd,
+                "total_all_time": len(all_rows),
+                "compliance_rate": f_compliance,
+                "finding_rate": f_finding_rate,
+                "avg_capas": f_avg_capas,
+                "avg_notes": f_avg_notes,
+            },
+            "by_month": f_month_analytics,
+            "by_assessor": f_by_assessor,
+            "red_flags": f_red_flags,
+        }
+        print(f"  {label} ({company}/{division}): {n_ytd} YTD, compliance={f_compliance}%, findings={f_finding_rate}%")
+
+    for af_id, af_info in ANALYTICS_FORMS.items():
+        if af_id == 381707:
+            continue  # Casing handled above with deep analysis
+        form_rows = [a for a in all_assessments if a.get("form_id") == af_id]
+        if not form_rows:
+            continue
+        form_name = ASSESSMENT_FORMS[af_id]["name"]
+
+        if af_info["company"] == "All":
+            # Shared form -- split by company from entry data
+            companies_seen = set(a.get("company", "") for a in form_rows)
+            for co in sorted(companies_seen):
+                if not co or co == "Unknown":
+                    continue
+                co_rows = [a for a in form_rows if a.get("company") == co]
+                co_div = co_rows[0].get("division", co) if co_rows else co
+                co_ytd = [a for a in co_rows if a["date"][:4] == str(current_year)]
+                key = f"{af_id}_{co}"
+                label = f"{form_name} ({co})"
+                _build_form_analytics(key, label, co, co_div, co_rows, co_ytd)
+        else:
+            ytd_rows = [a for a in form_rows if a["date"][:4] == str(current_year)]
+            _build_form_analytics(
+                str(af_id), form_name, af_info["company"], af_info["division"],
+                form_rows, ytd_rows
+            )
+
+    result = {
+        "current_month": current_month,
+        "current_year": current_year,
+        "total_all_time": len(all_assessments),
+        "total_mtd": sum(1 for a in all_assessments if a["month"] == current_month),
+        "total_ytd": sum(1 for a in all_assessments if a["date"][:4] == str(current_year)),
+        "mtd_by_assessor": mtd_assessors,
+        "ytd_by_assessor": ytd_assessors,
+        "mtd_by_form": dict(mtd_by_form),
+        "mtd_by_yard": dict(mtd_by_yard),
+        "by_month": dict(sorted(by_month.items())),
+        "by_form_all": dict(by_form_all),
+        "assessment_analytics": analytics,
+        "form_analytics": form_analytics,
+    }
+
+    print(f"  MTD assessments: {result['total_mtd']}")
+    print(f"  YTD assessments: {result['total_ytd']}")
+    if analytics:
+        print(f"  Casing compliance rate: {analytics['overall']['compliance_rate']}%")
+        print(f"  Casing finding rate: {analytics['overall']['finding_rate']}%")
+        print(f"  Red flags: {len(analytics['red_flags'])}")
+
+    return result
+
+
 def _generate_assessment_recommendations(analysis):
     """Generate leadership recommendations based on assessment analysis"""
     recs = analysis['recommendations']
@@ -701,6 +1560,7 @@ def extract_assessment_details(all_data):
                     'form_id': report_num,
                     'link': get_kpa_link(report_num),
                     'issue': _get_issue_from_row(row, detected),
+                    'service_line': _get_service_line(row),
                 })
 
         results.append(entry)
@@ -1263,7 +2123,7 @@ def build_word_document(all_data, yesterday_date):
                 run = p.add_run()
                 run.add_picture(logo_path, width=Inches(1.0))
                 logos_added += 1
-            except:
+            except Exception:
                 pass
 
     if logos_added == 0:
@@ -2475,7 +3335,7 @@ def send_email_report(html_body, docx_path, yesterday_date):
     recipient = os.environ.get("REPORT_RECIPIENT", "")
 
     if not gmail_address or not gmail_app_password or not recipient:
-        print("⚠️  Email skipped - GMAIL_ADDRESS, GMAIL_APP_PASSWORD, or REPORT_RECIPIENT not set.")
+        print("  Email skipped -- GMAIL_ADDRESS, GMAIL_APP_PASSWORD, or REPORT_RECIPIENT not set.")
         return
 
     subject = f"Daily Safety Report - {yesterday_date.strftime('%B %d, %Y')}"
@@ -2503,9 +3363,9 @@ def send_email_report(html_body, docx_path, yesterday_date):
             server.login(gmail_address, gmail_app_password)
             server.sendmail(gmail_address, recipient, msg.as_string())
 
-        print(f"✅ Email sent to {recipient}")
+        print(f"[OK] Email sent to {recipient}")
     except Exception as e:
-        print(f"❌ Email failed: {e}")
+        print(f"  Email failed: {e}")
 
 
 # ==============================================================================
@@ -2520,13 +3380,13 @@ def main():
     print("KPA DAILY SAFETY REPORT - AUTOMATED")
     print(f"Report for: {yesterday.strftime('%A, %B %d, %Y')}")
     print("="*80)
-    print("\n✓ Name field ONLY (actual observer, NOT James Barnett)")
-    print("✓ Critical items first (Incidents, RCA, Near Misses)")
-    print("✓ No blank sections - only shows data that exists")
-    print("✓ Open Items excludes Near Misses (they have own section)")
-    print("✓ Data quality alerts for miscategorization")
-    print("✓ Assessment & Audit Analysis with compliance, findings, trends")
-    print("✓ Dated filename\n")
+    print("\n[+] Name field ONLY (actual observer, NOT James Barnett)")
+    print("[+] Critical items first (Incidents, RCA, Near Misses)")
+    print("[+] No blank sections - only shows data that exists")
+    print("[+] Open Items excludes Near Misses (they have own section)")
+    print("[+] Data quality alerts for miscategorization")
+    print("[+] Assessment & Audit Analysis with compliance, findings, trends")
+    print("[+] Dated filename\n")
 
     all_data = {}
 
@@ -2539,27 +3399,27 @@ def main():
             obs_analysis = analyze_observations(data)
             all_data['observation_analysis'] = obs_analysis
             if obs_analysis:
-                print(f"✓ Observation Cards: {obs_analysis['total']} total")
+                print(f"[+]Observation Cards: {obs_analysis['total']} total")
             else:
-                print(f"✓ Observation Cards: 0")
+                print(f"[+]Observation Cards: 0")
         elif form_id == 151622:
             all_data['incident_reports'] = data
             if data:
-                print(f"✓ Incident Reports: {data['count']}")
+                print(f"[+]Incident Reports: {data['count']}")
             else:
-                print(f"✓ Incident Reports: 0")
+                print(f"[+]Incident Reports: 0")
         elif form_id == 180243:
             all_data['rca'] = data
             if data:
-                print(f"✓ Root Cause Analysis: {data['count']}")
+                print(f"[+]Root Cause Analysis: {data['count']}")
             else:
-                print(f"✓ Root Cause Analysis: 0")
+                print(f"[+]Root Cause Analysis: 0")
         else:
             all_data[f"form_{form_id}"] = data
             if data:
-                print(f"✓ {form_name}: {data['count']}")
+                print(f"[+]{form_name}: {data['count']}")
             else:
-                print(f"✓ {form_name}: 0")
+                print(f"[+]{form_name}: 0")
 
     # Analyze assessment/audit forms for the deep-analysis section
     print("\nAnalyzing assessment & audit data...")
@@ -2567,12 +3427,12 @@ def main():
         assessment_analysis = analyze_assessments(all_data)
         all_data['assessment_analysis'] = assessment_analysis
         if assessment_analysis['has_data']:
-            print(f"✓ Assessment Analysis: {assessment_analysis['total_assessments']} assessments, "
+            print(f"[+]Assessment Analysis: {assessment_analysis['total_assessments']} assessments, "
                   f"{assessment_analysis['total_findings']} findings")
         else:
-            print("✓ Assessment Analysis: No assessment data for yesterday")
+            print("[+]Assessment Analysis: No assessment data for yesterday")
     except Exception as e:
-        print(f"⚠️  Assessment analysis failed (non-fatal): {e}")
+        print(f"  WARNING: Assessment analysis failed (non-fatal): {e}")
         all_data['assessment_analysis'] = None
 
     # Extract per-row assessment details for the summary table
@@ -2580,10 +3440,19 @@ def main():
         assessment_details = extract_assessment_details(all_data)
         all_data['assessment_details'] = assessment_details
         detail_count = sum(entry['count'] for entry in assessment_details)
-        print(f"✓ Assessment Details: {detail_count} form rows extracted for summary table")
+        print(f"[+]Assessment Details: {detail_count} form rows extracted for summary table")
     except Exception as e:
-        print(f"⚠️  Assessment details extraction failed (non-fatal): {e}")
+        print(f"  WARNING: Assessment details extraction failed (non-fatal): {e}")
         all_data['assessment_details'] = None
+
+    # Pull full assessment history (2025+) for dashboard accountability section
+    print("\nPulling assessment history for dashboard...")
+    try:
+        assessment_history = pull_assessment_history()
+        all_data['assessment_history'] = assessment_history
+    except Exception as e:
+        print(f"  WARNING: Assessment history pull failed (non-fatal): {e}")
+        all_data['assessment_history'] = None
 
     print("\nGenerating report...")
     doc = build_word_document(all_data, yesterday)
@@ -2594,15 +3463,121 @@ def main():
 
     doc.save(output_file)
 
-    print(f"\n✅ Report saved: {output_file}")
+    print(f"\n[OK] Report saved: {output_file}")
     print(f"   Full path: {os.path.abspath(output_file)}")
+
+    # --- Write JSON for dashboard ---
+    import json as _json
+    os.makedirs("output", exist_ok=True)
+    obs = all_data.get('observation_analysis')
+    inc = all_data.get('incident_reports')
+    assess = all_data.get('assessment_analysis')
+    assess_detail = all_data.get('assessment_details')
+
+    # Build near misses list from observations
+    near_misses = []
+    if obs and obs.get('by_type', {}).get('Near Miss'):
+        for nm in obs['by_type']['Near Miss']:
+            near_misses.append({
+                "report_number": nm.get('report number', ''),
+                "date": nm.get('date', ''),
+                "observer": get_actual_observer_name(nm),
+                "description": nm.get('uncbcge9x8vow9pn', ''),
+                "location": nm.get('lg5pnj4chjadnv46', ''),
+                "type": nm.get('bff8m4x6xbc033kg', ''),
+                "service_line": nm.get('64c7upqkyt79zhh1', ''),
+            })
+
+    # Build observations summary
+    obs_summary = []
+    if obs:
+        for obs_type, obs_list in obs.get('by_type', {}).items():
+            for o in obs_list:
+                obs_summary.append({
+                    "report_number": o.get('report number', ''),
+                    "date": o.get('date', ''),
+                    "observer": get_actual_observer_name(o),
+                    "type": obs_type,
+                    "description": o.get('uncbcge9x8vow9pn', ''),
+                    "location": o.get('lg5pnj4chjadnv46', ''),
+                    "service_line": o.get('64c7upqkyt79zhh1', ''),
+                })
+
+    # Merge form 484193 (TD - Observation Card) into observations + near misses
+    td_obs_data = all_data.get('form_484193')
+    if td_obs_data and td_obs_data.get('count', 0) > 0:
+        for row in td_obs_data['rows']:
+            obs_type = row.get('bff8m4x6xbc033kg', '').strip()
+            sl = _get_service_line(row) or 'Drilling'
+            entry = {
+                "report_number": row.get('report number', ''),
+                "date": row.get('date', ''),
+                "observer": get_actual_observer_name(row),
+                "type": obs_type,
+                "description": row.get('uncbcge9x8vow9pn', ''),
+                "location": row.get('lg5pnj4chjadnv46', ''),
+                "service_line": sl,
+            }
+            obs_summary.append(entry)
+            if obs_type == 'Near Miss':
+                near_misses.append(entry)
+        print(f"  Merged {td_obs_data['count']} TD Observation Card(s) into observations")
+
+    # Update observation totals to include merged 484193 entries
+    if obs:
+        obs['total'] = len(obs_summary)
+        type_counts = {}
+        for entry in obs_summary:
+            t = entry.get('type', 'Other') or 'Other'
+            type_counts[t] = type_counts.get(t, 0) + 1
+        obs['type_counts'] = type_counts
+
+    # Build incidents list
+    incidents_list = []
+    if inc:
+        for row in inc.get('rows', []):
+            incidents_list.append({
+                "report_number": row.get('report number', ''),
+                "date": row.get('date', ''),
+                "type": row.get('nojcquy0tfl9hqih', ''),
+                "employee": row.get('55gg4nkoemnnfo2a', ''),
+                "description": row.get('313e9txgrof0uute', ''),
+                "location": row.get('9ohdd2lwvl7p0oc6', ''),
+                "service_line": row.get('sha7vur5q2l6d6gq', ''),
+            })
+
+    json_data = {
+        "report_date": yesterday.strftime("%Y-%m-%d"),
+        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "observations": {
+            "total": obs['total'] if obs else 0,
+            "by_type": obs['type_counts'] if obs else {},
+            "details": obs_summary,
+        },
+        "near_misses": near_misses,
+        "incidents": incidents_list,
+        "assessments": {
+            "total": assess['total_assessments'] if assess and assess.get('has_data') else 0,
+            "findings": assess['total_findings'] if assess and assess.get('has_data') else 0,
+            "by_assessor": assess.get('by_assessor', {}) if assess else {},
+            "details": assess_detail if assess_detail else [],
+        },
+        "assessment_activity": all_data.get('assessment_history'),
+    }
+    json_path = os.path.join("output", "kpa_data.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        _json.dump(json_data, f, indent=2, default=str)
+    print(f"    JSON: {json_path}")
 
     # Build HTML and send email
     print("\nBuilding HTML email...")
     html_body = build_html_report(all_data, yesterday)
 
-    print("Sending email...")
-    send_email_report(html_body, output_file, yesterday)
+    if "--no-email" not in sys.argv:
+        print("Sending email...")
+        send_email_report(html_body, output_file, yesterday)
+    else:
+        print("Email skipped (--no-email flag)")
     print()
 
 if __name__ == "__main__":

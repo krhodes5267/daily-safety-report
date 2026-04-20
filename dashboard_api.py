@@ -132,6 +132,41 @@ def motive_get(url, params=None, timeout=30):
     return http_requests.get(url, headers=headers, params=params, timeout=timeout)
 
 
+# Cache vehicle -> (division, yard) mapping (built from vehicle list)
+_vehicle_map_cache = {"data": None, "ts": 0}
+
+
+def get_vehicle_division_map():
+    """Fetch all vehicles and build number -> (division, yard) map using group IDs."""
+    now = time.time()
+    if _vehicle_map_cache["data"] and (now - _vehicle_map_cache["ts"]) < 3600:
+        return _vehicle_map_cache["data"]
+
+    veh_map = {}
+    page = 1
+    while page <= 50:
+        try:
+            resp = motive_get(MOTIVE_BASE_V1 + "/vehicles",
+                              {"per_page": 100, "page_no": page}, timeout=30)
+            data = resp.json()
+        except Exception:
+            break
+        vehicles = data.get("vehicles", [])
+        if not vehicles:
+            break
+        for v in vehicles:
+            veh = v.get("vehicle", v)
+            num = veh.get("number", "")
+            gids = veh.get("group_ids", []) or []
+            div, yard = resolve_vehicle_division(num, gids)
+            if num:
+                veh_map[num] = (div, yard)
+        page += 1
+    _vehicle_map_cache["data"] = veh_map
+    _vehicle_map_cache["ts"] = now
+    return veh_map
+
+
 def resolve_vehicle_division(vehicle_name, group_ids=None):
     """Resolve a Motive vehicle to (division, yard) tuple."""
     if group_ids:
@@ -140,19 +175,28 @@ def resolve_vehicle_division(vehicle_name, group_ids=None):
                 return GROUP_ID_MAP[gid]
     # Fallback: parse vehicle name prefix
     name = vehicle_name or ""
-    if re.match(r"^\d+C\b", name):
+    if re.match(r"^\d+C\b", name) or re.match(r"^\d+C\s", name):
         return ("Casing", "Unknown")
     prefixes = [
         ("LL-RAT", "Rathole", "Levelland"),
         ("MID-RAT", "Rathole", "Midland"),
         ("BS-RAT", "Rathole", "Barstow"),
         ("JD-RAT", "Rathole", "Jourdanton"),
+        ("DS-RAT", "Rathole", "North Dakota"),
+        ("OH-RAT", "Rathole", "Ohio"),
+        ("PA-RAT", "Rathole", "Pennsylvania"),
+        ("OK-RAT", "Rathole", "Oklahoma"),
+        ("TOW-RAT", "Rathole", "Unknown"),
+        ("RAT-", "Rathole", "Unknown"),
         ("POL-", "Poly Pipe", "Midland"),
         ("PL-", "Pit Lining", "Midland"),
         ("ANC-", "Anchors", "Midland"),
         ("CON-", "Construction", "Midland"),
         ("ENV-", "Environmental", "Midland"),
         ("FEN-", "Fencing", "Midland"),
+        ("BTI-", "BTI", "Midland"),
+        ("TD", "Transcend", "Unknown"),
+        ("VAL-", "Valor", "Levelland"),
     ]
     for prefix, div, yard in prefixes:
         if name.upper().startswith(prefix.upper()):
@@ -168,6 +212,10 @@ def fetch_speeding(start_date, end_date):
     """Fetch speeding events from Motive for date range."""
     if not MOTIVE_KEY:
         return []
+
+    # Pre-fetch vehicle list to resolve division/yard via group IDs
+    veh_map = get_vehicle_division_map()
+
     events = []
     page = 1
     while True:
@@ -187,31 +235,42 @@ def fetch_speeding(start_date, end_date):
             break
         for item in items:
             ev = item if "vehicle_name" in item else item.get("speeding_event", item)
-            speed = ev.get("speed", 0) or 0
-            posted = ev.get("speed_limit", 0) or 0
-            over = speed - posted
-            # Tier
+            # Motive API returns speeds in km/h -- convert to mph
+            speed_kph = ev.get("avg_vehicle_speed", 0) or ev.get("speed", 0) or 0
+            posted_kph = ev.get("min_posted_speed_limit_in_kph", 0) or ev.get("speed_limit", 0) or 0
+            speed = round(speed_kph * 0.621371, 1)
+            posted = round(posted_kph * 0.621371, 0)
+            over = round(speed - posted, 1)
+            # Tier (mph-based)
             if over >= 20 or speed >= 90:
                 tier = "RED"
             elif over >= 15:
                 tier = "ORANGE"
             else:
                 tier = "YELLOW"
-            # Vehicle -> division/yard
-            vname = ev.get("vehicle_name", "") or ev.get("vehicle", {}).get("name", "")
-            gids = []
-            veh_obj = ev.get("vehicle", {})
-            if veh_obj and veh_obj.get("group_ids"):
-                gids = veh_obj["group_ids"]
-            div, yard = resolve_vehicle_division(vname, gids)
-            lat = ev.get("latitude") or ev.get("start_latitude")
-            lon = ev.get("longitude") or ev.get("start_longitude")
+            # Vehicle -> division/yard via pre-fetched map
+            veh_obj = ev.get("vehicle", {}) or {}
+            vname = veh_obj.get("number", "") or ev.get("vehicle_name", "")
+            # Look up from vehicle map first (has group IDs)
+            if vname in veh_map:
+                div, yard = veh_map[vname]
+            else:
+                # Fallback to name-based resolution
+                div, yard = resolve_vehicle_division(vname)
+            lat = ev.get("start_lat") or ev.get("latitude") or ev.get("start_latitude")
+            lon = ev.get("start_lon") or ev.get("longitude") or ev.get("start_longitude")
+            driver = ev.get("driver_name", "")
+            if not driver:
+                drv_obj = ev.get("driver") or {}
+                if isinstance(drv_obj, dict):
+                    driver = drv_obj.get("name", "") or "{} {}".format(
+                        drv_obj.get("first_name", ""), drv_obj.get("last_name", "")).strip()
             events.append({
-                "driver": ev.get("driver_name", "") or (ev.get("driver", {}) or {}).get("name", "Unknown"),
+                "driver": driver or "Unknown",
                 "vehicle": vname,
-                "speed": round(speed, 1),
-                "posted_speed": round(posted, 0),
-                "overspeed": round(over, 1),
+                "speed": speed,
+                "posted_speed": posted,
+                "overspeed": over,
                 "duration": str(ev.get("duration", 0) or 0) + "s",
                 "time": ev.get("start_time", ""),
                 "location": "{}, {}".format(lat, lon) if lat and lon else "",

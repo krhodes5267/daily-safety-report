@@ -1929,6 +1929,9 @@ function matchObsToYard(obs, yard) {
         var div = KPA_SL_TO_DIVISION[obs.service_line] || obs.service_line;
         var inferredYard = SINGLE_YARD_DIVISIONS[div];
         if (inferredYard === yard) return true;
+        // Multi-yard divisions (e.g. Casing, Rathole): KPA observations don't carry yard info,
+        // so include all observations for the division when a specific yard is selected
+        if (!inferredYard && currentDivision && currentDivision !== 'All Divisions' && div === currentDivision) return true;
     }
     return false;
 }

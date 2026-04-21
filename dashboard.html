@@ -2239,14 +2239,117 @@ function restoreTodayData() {
     });
 }
 
+function getDatesBetween(start, end) {
+    var dates = [];
+    var current = new Date(start + 'T12:00:00');
+    var last = new Date(end + 'T12:00:00');
+    while (current <= last) {
+        dates.push(current.toISOString().slice(0, 10));
+        current.setDate(current.getDate() + 1);
+    }
+    return dates;
+}
+
+function mergeArchiveDays(days) {
+    var merged = {
+        speeding: { events: [], total_events: 0, summary: {red:0, orange:0, yellow:0}, by_division: {}, repeat_offenders: {} },
+        camera: { events: [], total_events: 0, summary: {red:0, orange:0, yellow:0}, by_yard: {}, repeat_offenders: {} },
+        kpa: { observations: {total: 0, by_type: {}, details: []}, near_misses: [], incidents: [], assessments: {total: 0, details: []} },
+        ytd: null,
+        cas: null,
+    };
+    for (var i = 0; i < days.length; i++) {
+        var day = days[i];
+        // Speeding
+        if (day.speeding && day.speeding.events) {
+            merged.speeding.events = merged.speeding.events.concat(day.speeding.events);
+        }
+        // Camera
+        if (day.camera && day.camera.events) {
+            merged.camera.events = merged.camera.events.concat(day.camera.events);
+        }
+        // KPA
+        if (day.kpa) {
+            if (day.kpa.observations && day.kpa.observations.details) {
+                merged.kpa.observations.details = merged.kpa.observations.details.concat(day.kpa.observations.details);
+            }
+            if (day.kpa.near_misses) {
+                merged.kpa.near_misses = merged.kpa.near_misses.concat(day.kpa.near_misses);
+            }
+            if (day.kpa.incidents) {
+                merged.kpa.incidents = merged.kpa.incidents.concat(day.kpa.incidents);
+            }
+            if (day.kpa.assessments && day.kpa.assessments.details) {
+                merged.kpa.assessments.details = merged.kpa.assessments.details.concat(day.kpa.assessments.details);
+            }
+        }
+    }
+    // Use last day's YTD and CAs (most recent snapshot)
+    var lastDay = days[days.length - 1];
+    merged.ytd = lastDay.ytd || null;
+    merged.cas = lastDay.cas || null;
+
+    // Recompute speeding summary + by_division from merged events
+    for (var s = 0; s < merged.speeding.events.length; s++) {
+        var se = merged.speeding.events[s];
+        var st = (se.tier || 'YELLOW').toLowerCase();
+        merged.speeding.summary[st] = (merged.speeding.summary[st] || 0) + 1;
+        var sd = se.division || 'Unknown';
+        merged.speeding.by_division[sd] = (merged.speeding.by_division[sd] || 0) + 1;
+    }
+    merged.speeding.total_events = merged.speeding.events.length;
+
+    // Recompute camera summary + by_yard + repeat_offenders
+    var camDriverCounts = {};
+    for (var c = 0; c < merged.camera.events.length; c++) {
+        var ce = merged.camera.events[c];
+        var ct = (ce.tier || 'ORANGE').toLowerCase();
+        merged.camera.summary[ct] = (merged.camera.summary[ct] || 0) + 1;
+        var cy = ce.yard || 'Unknown';
+        merged.camera.by_yard[cy] = (merged.camera.by_yard[cy] || 0) + 1;
+        var cd = ce.driver || 'Unknown';
+        camDriverCounts[cd] = (camDriverCounts[cd] || 0) + 1;
+    }
+    for (var drv in camDriverCounts) {
+        if (camDriverCounts[drv] >= 2 && drv !== 'Unknown') {
+            merged.camera.repeat_offenders[drv] = camDriverCounts[drv];
+        }
+    }
+    merged.camera.total_events = merged.camera.events.length;
+
+    // Recompute KPA observation totals + by_type
+    for (var o = 0; o < merged.kpa.observations.details.length; o++) {
+        var ot = merged.kpa.observations.details[o].type || 'Other';
+        merged.kpa.observations.by_type[ot] = (merged.kpa.observations.by_type[ot] || 0) + 1;
+    }
+    merged.kpa.observations.total = merged.kpa.observations.details.length;
+    merged.kpa.assessments.total = merged.kpa.assessments.details.length;
+
+    return merged;
+}
+
+function fetchFromRenderAPI(startDate, endDate) {
+    var banner = document.getElementById('apiBanner');
+    console.log('[DateRange] Falling back to Render API for ' + startDate + ' to ' + endDate);
+    fetch(API_BASE + '/api/data?start=' + startDate + '&end=' + endDate)
+        .then(function(r) {
+            if (!r.ok) throw new Error('API returned ' + r.status);
+            return r.json();
+        })
+        .then(function(data) {
+            try { sessionStorage.setItem('api_' + startDate + '_' + endDate, JSON.stringify(data)); } catch(e) {}
+            applyAPIData(data, startDate, endDate);
+        })
+        .catch(function(err) {
+            console.error('[DateRange] Render API fallback failed:', err);
+            banner.textContent = 'Historical data unavailable: ' + err.message;
+            banner.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        });
+}
+
 function fetchAPIData(startDate, endDate) {
     var banner = document.getElementById('apiBanner');
-    if (!API_AVAILABLE) {
-        banner.innerHTML = '<button type="button" onclick="this.parentElement.style.display=\'none\'" style="float:right;background:none;border:none;color:inherit;cursor:pointer;font-size:16px;font-weight:bold;padding:0 4px" aria-label="Dismiss notification">\u00d7</button>Historical data API is unavailable. Showing today\'s data only. Date range filtering requires the cloud API to be deployed.';
-        banner.style.display = 'block';
-        console.warn('[DateRange] API not available, cannot fetch ' + startDate + ' to ' + endDate);
-        return;
-    }
     // Check sessionStorage cache
     var cacheKey = 'api_' + startDate + '_' + endDate;
     var cached = sessionStorage.getItem(cacheKey);
@@ -2260,35 +2363,45 @@ function fetchAPIData(startDate, endDate) {
 
     // Show loading
     document.getElementById('loading').style.display = 'flex';
-    banner.textContent = 'Loading historical data from API...';
+    banner.textContent = 'Loading historical data...';
     banner.style.display = 'block';
-    console.log('[DateRange] Fetching API data: ' + startDate + ' to ' + endDate);
 
-    fetch(API_BASE + '/api/data?start=' + startDate + '&end=' + endDate)
-        .then(function(r) {
-            if (!r.ok) {
-                throw new Error('API returned ' + r.status + ' ' + r.statusText);
+    // Archive-first: fetch individual day files from GitHub Pages
+    var dates = getDatesBetween(startDate, endDate);
+    var archiveBase = 'archive/';
+    console.log('[DateRange] Fetching ' + dates.length + ' archive files for ' + startDate + ' to ' + endDate);
+
+    Promise.all(dates.map(function(d) {
+        return fetch(archiveBase + d + '.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .catch(function() { return null; });
+    })).then(function(results) {
+        var valid = results.filter(function(r) { return r !== null; });
+        console.log('[DateRange] Archive: ' + valid.length + '/' + dates.length + ' days loaded');
+
+        if (valid.length === 0) {
+            // No archive data -- fallback to Render API
+            if (API_AVAILABLE) {
+                fetchFromRenderAPI(startDate, endDate);
+            } else {
+                banner.textContent = 'No historical data available for this date range.';
+                banner.style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
             }
-            return r.json();
-        })
-        .then(function(data) {
-            console.log('[DateRange] API response received:', {
-                speeding: data.speeding ? (data.speeding.events || []).length + ' events' : 'null',
-                kpa_obs: data.kpa ? (data.kpa.observations.details || []).length + ' obs' : 'null',
-                ytd: data.ytd ? 'present' : 'null',
-                cas: data.cas ? (data.cas.corrective_actions || []).length + ' CAs' : 'null',
-                errors: data._errors || 'none'
-            });
-            // Cache in sessionStorage
-            try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch(e) {}
-            applyAPIData(data, startDate, endDate);
-        })
-        .catch(function(err) {
-            console.error('[DateRange] API fetch failed:', err);
-            banner.textContent = 'API request failed: ' + err.message + '. Showing today\'s data.';
-            banner.style.display = 'block';
-            document.getElementById('loading').style.display = 'none';
-        });
+            return;
+        }
+
+        var merged = mergeArchiveDays(valid);
+        try { sessionStorage.setItem(cacheKey, JSON.stringify(merged)); } catch(e) {}
+
+        // Note missing days
+        var missing = dates.length - valid.length;
+        if (missing > 0) {
+            console.warn('[DateRange] ' + missing + ' archive days missing');
+        }
+
+        applyAPIData(merged, startDate, endDate);
+    });
 }
 
 function applyAPIData(data, startDate, endDate) {
@@ -2356,15 +2469,7 @@ function checkAPIAvailability() {
         })
         .catch(function(err) {
             API_AVAILABLE = false;
-            console.warn('[API] API unavailable:', err.message || err);
-            // Disable non-Today options with note
-            var sel = document.getElementById('dateRangeSelect');
-            for (var i = 0; i < sel.options.length; i++) {
-                if (sel.options[i].value !== 'today') {
-                    sel.options[i].disabled = true;
-                    sel.options[i].textContent += ' (API offline)';
-                }
-            }
+            console.warn('[API] API unavailable (archive still works):', err.message || err);
         });
 }
 

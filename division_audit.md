@@ -245,11 +245,36 @@ Status: -
 ---
 
 ## Known Systemic Issues (fix before division audits)
-- [ ] Mileage data not in archive — need to add total miles per division/vehicle for KPIs
-- [ ] Assessment form_name field is empty in archive (shows as blank)
-- [ ] 182 observations YTD have empty service_line (can't route to any division)
-- [ ] Camera events only cover ~30 days (Motive v2 API retention limit)
-- [ ] Vehicle Inspection Checklists (form 152018) are "Shared" — need to route to BTI specifically
+
+### MUST FIX (blocks division audits)
+- [ ] **Mileage data not in archive** — Motive IFTA endpoint (`/v1/ifta/trips`) has per-vehicle mileage by date range. Need to add to: `dashboard_api.py` (new `fetch_mileage()` function), `backfill_archive.py` (Phase A bulk fetch), `archive_today.py` (include in daily snapshot), `dashboard.html` (display + KPIs). Pattern to follow: `casing_monthly_recap.py` lines 436-530 (`get_casing_mileage()`). Archive schema addition: `"mileage": {"total_miles": N, "by_division": {...}, "by_vehicle": [...]}`. This enables miles-per-event and miles-per-speeding-event KPIs critical for BTI and all divisions.
+- [ ] **Assessment form_name is empty in archive** — `backfill_archive.py` extracts `form_id` and `division` but not `form_name`. Need to add form name from `FORM_DIVISION_MAP` or direct lookup so audits can show "Rathole Field Assessment" vs "Pre/Post Trip".
+
+### SHOULD FIX
+- [ ] **182 observations YTD have empty service_line** — can't route to any division. Investigate: are these from a form that doesn't have the SL field? Could some be inferred from observer name or location?
+- [ ] **Vehicle Inspection Checklists (form 152018) are "Shared"** — need to determine which are BTI (Bernard's truck audits) vs other divisions. May need to check observer or vehicle field.
+- [ ] **Camera events only cover ~30 days** — Motive v2 API retention limit. Not fixable via API. Document as known limitation.
+
+### NICE TO HAVE
+- [ ] **BTI SAFER score** — look up at https://safer.fmcsa.dot.gov for Butch's Trucking Inc. Manual lookup, add to BTI profile.
+- [ ] **Transcend rig-by-rig obs routing** — service_lines like `Drilling - Rig 4` are all mapping to `Transcend` company but could be split into per-rig views in the dashboard.
+
+## Audit Order
+1. **Fix systemic issues** (mileage, form_name) — these affect ALL divisions
+2. **Casing** — largest, most complex, most data
+3. **Rathole** — second largest, multi-state, heavy speeding
+4. **BTI** — trucking company, completely different KPIs (mileage-centric)
+5. **Transcend** — spudder rigs, rig-by-rig analysis
+6. **Poly Pipe** — new sub-yards to verify
+7. **Valor** — separate company, cross-contamination check
+8. **Remaining BRHAS divisions** (Pit Lining, Anchors, Construction, Environmental, Fencing, Drilling Tools, Shop, Corporate)
+9. **Permian** — smallest, last
+
+## How to Resume
+Open Claude Code in `C:\Users\krhod\daily-safety-report` and say:
+```
+Continue the division audit. Check division_audit.md for current progress and CLAUDE.md for division profiles. Start with the next pending item.
+```
 
 ## Session Log
-- **2026-04-20**: Created CLAUDE.md, division_audit.md. Identified 5 systemic issues to fix first.
+- **2026-04-20**: Created CLAUDE.md with per-division safety profiles. Created division_audit.md tracker. Identified 5 systemic issues (2 must-fix: mileage data + assessment form names). Mileage pattern found in casing_monthly_recap.py lines 436-530 using Motive IFTA endpoint. All archive data re-backfilled with KPA yard field (OBS_YARD_HASH). Filter maps fixed for Water/Construction, Fabrication, Unknown divisions. Filter audit passing 25/25.

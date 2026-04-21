@@ -2266,7 +2266,9 @@ function mergeArchiveDays(days) {
         kpa: { observations: {total: 0, by_type: {}, details: []}, near_misses: [], incidents: [], assessments: {total: 0, details: []} },
         ytd: null,
         cas: null,
+        mileage: { total_miles: 0, by_division: {}, vehicle_count: 0 },
     };
+    var mileageVehicles = {};
     for (var i = 0; i < days.length; i++) {
         var day = days[i];
         // Speeding
@@ -2291,6 +2293,15 @@ function mergeArchiveDays(days) {
             if (day.kpa.assessments && day.kpa.assessments.details) {
                 merged.kpa.assessments.details = merged.kpa.assessments.details.concat(day.kpa.assessments.details);
             }
+        }
+        // Mileage
+        if (day.mileage) {
+            merged.mileage.total_miles += day.mileage.total_miles || 0;
+            var byDiv = day.mileage.by_division || {};
+            for (var div in byDiv) {
+                merged.mileage.by_division[div] = (merged.mileage.by_division[div] || 0) + byDiv[div];
+            }
+            merged.mileage.vehicle_count = Math.max(merged.mileage.vehicle_count, day.mileage.vehicle_count || 0);
         }
     }
     // Use last day's YTD and CAs (most recent snapshot)

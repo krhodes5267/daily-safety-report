@@ -292,6 +292,20 @@ def fetch_all_kpa_incidents(start_date):
     return results
 
 
+FORM_NAME_MAP = {
+    381707: "CSG - Safety Casing Field Assessment",
+    229645: "CSG - Pre/Post Trip Inspection",
+    385365: "TD - Rig Inspection",
+    484193: "TD - Observation Card",
+    226217: "WS - Poly Pipe Field Assessment",
+    386087: "WS - Pit Lining Field Assessment",
+    172295: "Construction - Site Safety Review",
+    153181: "RH - Rathole Field Assessment",
+    152018: "Vehicle Inspection Checklist",
+    152034: "HSE - Workplace Inspection Checklist",
+}
+
+
 def fetch_all_kpa_assessments(start_date):
     """Fetch all assessments across all form types."""
     print(f"  KPA assessments (from {start_date})...")
@@ -303,6 +317,7 @@ def fetch_all_kpa_assessments(start_date):
         time.sleep(1.5)
         rows = kpa_fetch_csv(form_id, updated_after)
         division = FORM_DIVISION_MAP.get(form_id, "")
+        form_name = FORM_NAME_MAP.get(form_id, f"Form {form_id}")
         count = 0
         for row in rows:
             row_date = (row.get("date") or "")[:10]
@@ -313,6 +328,7 @@ def fetch_all_kpa_assessments(start_date):
                 "date": row_date,
                 "assessor": row.get("Name", "") or row.get("observer", "") or "",
                 "form_id": form_id,
+                "form_name": form_name,
                 "division": division or svc_to_div(svc),
                 "location": row.get(OBS_LOCATION_HASH, "") or "",
                 "report_number": row.get("report number", "") or "",
@@ -420,6 +436,81 @@ def fetch_all_motive_speeding(start_date, end_date):
 
     print(f"    Total speeding events: {len(all_events)}")
     return all_events
+
+
+def fetch_all_motive_mileage(start_date, end_date):
+    """Fetch ALL IFTA trip mileage in date range, month by month."""
+    print(f"  Motive mileage (IFTA trips, {start_date} to {end_date})...")
+    headers = {"X-Api-Key": MOTIVE_KEY}
+    all_trips = []
+
+    # Fetch month by month (API may limit large ranges)
+    current = datetime.strptime(start_date, "%Y-%m-%d").date()
+    end_dt = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+    while current <= end_dt:
+        month_end = current.replace(day=28) + timedelta(days=4)
+        month_end = month_end.replace(day=1) - timedelta(days=1)  # last day of month
+        if month_end > end_dt:
+            month_end = end_dt
+
+        page = 1
+        month_count = 0
+        while page <= 200:
+            params = {
+                "per_page": 100,
+                "page_no": page,
+                "start_date": current.isoformat(),
+                "end_date": month_end.isoformat(),
+            }
+            for attempt in range(3):
+                try:
+                    resp = requests.get(
+                        f"{MOTIVE_BASE_V1}/ifta/trips",
+                        headers=headers, params=params, timeout=60,
+                    )
+                    break
+                except requests.exceptions.ConnectionError:
+                    time.sleep(10 * (attempt + 1))
+            else:
+                break
+
+            if not resp.ok:
+                break
+
+            data = resp.json()
+            items = data.get("ifta_trips", [])
+            if not items:
+                break
+
+            for item in items:
+                trip = item.get("ifta_trip", item)
+                veh = trip.get("vehicle") or {}
+                vehicle = veh.get("number", "") if isinstance(veh, dict) else ""
+                distance = float(trip.get("distance", 0) or 0)
+                trip_date = (trip.get("date") or "")[:10]
+                if distance > 0 and trip_date:
+                    div, yard, company = parse_vehicle_number(vehicle)
+                    all_trips.append({
+                        "date": trip_date,
+                        "vehicle": vehicle,
+                        "distance": round(distance, 2),
+                        "division": div or "Unknown",
+                        "yard": yard or "Unknown",
+                    })
+                    month_count += 1
+
+            total = data.get("pagination", {}).get("total", 0)
+            if total and page * 100 >= total:
+                break
+            page += 1
+            time.sleep(1)
+
+        print(f"    {current.strftime('%Y-%m')}: {month_count} trips")
+        current = month_end + timedelta(days=1)
+
+    print(f"    Total mileage trips: {len(all_trips)}")
+    return all_trips
 
 
 def fetch_all_motive_camera():
@@ -682,6 +773,28 @@ def build_camera_day(events):
     }
 
 
+def build_mileage_day(trips):
+    """Build mileage section for one day."""
+    total = 0
+    by_division = defaultdict(float)
+    by_yard = defaultdict(float)
+    vehicles = defaultdict(float)
+    for t in trips:
+        dist = t.get("distance", 0)
+        total += dist
+        div = t.get("division", "Unknown")
+        yard = t.get("yard", "Unknown")
+        by_division[div] += dist
+        by_yard[yard] += dist
+        vehicles[t.get("vehicle", "")] += dist
+    return {
+        "total_miles": round(total, 1),
+        "by_division": {k: round(v, 1) for k, v in sorted(by_division.items(), key=lambda x: -x[1])},
+        "by_yard": {k: round(v, 1) for k, v in sorted(by_yard.items(), key=lambda x: -x[1])},
+        "vehicle_count": len(vehicles),
+    }
+
+
 def build_kpa_day(obs_list, near_misses, inc_list, assess_list):
     """Build KPA section for one day."""
     by_type = {}
@@ -752,8 +865,11 @@ def main():
     motive_start = max(start_date, "2026-01-01")
     all_speeding = []
     all_camera = []
+    all_mileage = []
     if not args.skip_motive and motive_start <= end_date:
         all_speeding = fetch_all_motive_speeding(motive_start, end_date)
+        time.sleep(5)
+        all_mileage = fetch_all_motive_mileage(motive_start, end_date)
         time.sleep(5)
         all_camera = fetch_all_motive_camera()
 
@@ -767,6 +883,7 @@ def main():
     assess_by_date = partition_by_date(all_assessments)
     spd_by_date = partition_by_date(all_speeding)
     cam_by_date = partition_by_date(all_camera)
+    mile_by_date = partition_by_date(all_mileage)
 
     # Separate near misses from observations
     obs_clean = defaultdict(list)
@@ -789,14 +906,17 @@ def main():
     while current <= end_dt:
         d_str = current.isoformat()
 
-        # Speeding + camera only for 2026+
+        # Speeding + camera + mileage only for 2026+
         spd_data = None
         cam_data = None
+        mileage_data = None
         if d_str >= "2026-01-01":
             spd_events = spd_by_date.get(d_str, [])
             spd_data = build_speeding_day(spd_events)
             cam_events = cam_by_date.get(d_str, [])
             cam_data = build_camera_day(cam_events)
+            mile_trips = mile_by_date.get(d_str, [])
+            mileage_data = build_mileage_day(mile_trips) if mile_trips else None
 
         # KPA
         kpa_data = build_kpa_day(
@@ -818,6 +938,7 @@ def main():
             "camera": cam_data,
             "kpa": kpa_data,
             "ytd": ytd_data,
+            "mileage": mileage_data,
             "cas": None,
             "training": None,
             "devices": None,

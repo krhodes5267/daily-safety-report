@@ -6,6 +6,9 @@ writes a combined archive/YYYY-MM-DD.json file. The archive date comes
 from the report_date field in the output JSON, NOT from today's date
 (daily scripts fetch yesterday's data).
 
+Also fetches IFTA mileage from Motive API for the archive date (not
+available from any existing daily script).
+
 Usage:
     python archive_today.py
     python archive_today.py --output-dir archive/
@@ -14,7 +17,101 @@ import json
 import os
 import sys
 import argparse
+from collections import defaultdict
 from datetime import datetime, timezone, timedelta
+
+import requests
+
+from api_config import MOTIVE_BASE_V1, GROUP_ID_MAP
+
+MOTIVE_KEY = os.environ.get("MOTIVE_API_KEY", "")
+
+# Vehicle prefix -> division (same as backfill_archive.py)
+DIV_PREFIXES = {
+    "CSG": "Casing", "RAT": "Rathole", "ANC": "Anchors",
+    "PP": "Poly Pipe", "PL": "Pit Lining", "CON": "Construction",
+    "ENV": "Environmental", "FEN": "Fencing", "DT": "Drilling Tools",
+    "VAL": "Valor", "BTI": "BTI", "TD": "Transcend",
+    "WTC": "Water/Construction", "FAB": "Fabrication",
+    "PER": "Permian", "SS": "Permian",
+}
+YARD_PREFIXES = {
+    "MID": "Midland", "BRY": "Bryan", "KIL": "Kilgore",
+    "HOB": "Hobbs", "JOU": "Jourdanton", "LAR": "Laredo",
+    "LL": "Levelland", "BAR": "Barstow",
+    "TOW": "Pennsylvania", "PA": "Pennsylvania",
+    "OH": "Ohio", "OK": "Oklahoma", "ND": "North Dakota",
+}
+
+
+def parse_vehicle_division(vehicle):
+    """Parse division from vehicle number."""
+    parts = vehicle.replace("-", " ").replace("_", " ").upper().split()
+    div = "Unknown"
+    for p in parts:
+        for prefix, d in DIV_PREFIXES.items():
+            if p.startswith(prefix):
+                return d
+    return div
+
+
+def fetch_daily_mileage(target_date):
+    """Fetch IFTA trip mileage from Motive for a single day."""
+    if not MOTIVE_KEY:
+        print("  Mileage: MOTIVE_API_KEY not set, skipping")
+        return None
+
+    headers = {"X-Api-Key": MOTIVE_KEY}
+    by_division = defaultdict(float)
+    total_miles = 0
+    vehicle_set = set()
+    page = 1
+
+    while page <= 50:
+        try:
+            resp = requests.get(
+                f"{MOTIVE_BASE_V1}/ifta/trips",
+                headers=headers,
+                params={"per_page": 100, "page_no": page,
+                        "start_date": target_date, "end_date": target_date},
+                timeout=60,
+            )
+            if not resp.ok:
+                break
+            data = resp.json()
+        except Exception as e:
+            print(f"  Mileage: API error on page {page}: {e}")
+            break
+
+        items = data.get("ifta_trips", [])
+        if not items:
+            break
+
+        for item in items:
+            trip = item.get("ifta_trip", item)
+            veh = trip.get("vehicle") or {}
+            vehicle = veh.get("number", "") if isinstance(veh, dict) else ""
+            distance = float(trip.get("distance", 0) or 0)
+            if distance > 0:
+                total_miles += distance
+                vehicle_set.add(vehicle)
+                div = parse_vehicle_division(vehicle)
+                by_division[div] += distance
+
+        pag = data.get("pagination", {})
+        if pag.get("total") and page * 100 >= pag["total"]:
+            break
+        page += 1
+
+    if total_miles > 0:
+        print(f"  Mileage: {total_miles:,.1f} miles, {len(vehicle_set)} vehicles")
+        return {
+            "total_miles": round(total_miles, 1),
+            "by_division": {k: round(v, 1) for k, v in
+                            sorted(by_division.items(), key=lambda x: -x[1])},
+            "vehicle_count": len(vehicle_set),
+        }
+    return None
 
 
 def main():
@@ -97,6 +194,9 @@ def main():
         if original_count != filtered_count:
             print(f"  Camera: filtered {original_count - filtered_count} uncoachable events ({original_count} -> {filtered_count})")
 
+    # Fetch mileage for archive date (not in any existing daily script)
+    mileage_data = fetch_daily_mileage(archive_date)
+
     # Build archive object
     archive = {
         "date": archive_date,
@@ -105,6 +205,7 @@ def main():
         "camera": loaded.get("camera"),
         "kpa": loaded.get("kpa"),
         "ytd": loaded.get("ytd"),
+        "mileage": mileage_data,
         "cas": None,       # Point-in-time, not archived
         "training": None,  # Point-in-time, not archived
         "devices": None,   # Point-in-time, not archived

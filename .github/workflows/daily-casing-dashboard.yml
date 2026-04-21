@@ -106,9 +106,11 @@ jobs:
           SNAPSHOTS_SHEET_ID: ${{ secrets.SNAPSHOTS_SHEET_ID }}
         run: python sheets_pusher.py
 
-      # Archive yesterday's data snapshot
+      # Archive yesterday's data snapshot (also fetches IFTA mileage)
       - name: Archive daily snapshot
         continue-on-error: true
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
         run: python archive_today.py
 
       - name: Commit archive to repo

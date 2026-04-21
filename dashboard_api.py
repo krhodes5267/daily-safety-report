@@ -537,6 +537,77 @@ def fetch_assessments(start_date, end_date):
     return {"total": total, "findings": findings, "details": details}
 
 
+def fetch_mileage(start_date, end_date):
+    """Fetch IFTA trip mileage from Motive for date range."""
+    if not MOTIVE_KEY:
+        return None
+    headers = {"X-Api-Key": MOTIVE_KEY}
+    by_division = {}
+    by_yard = {}
+    total_miles = 0
+    vehicle_set = set()
+    page = 1
+
+    while page <= 200:
+        params = {
+            "per_page": 100,
+            "page_no": page,
+            "start_date": start_date,
+            "end_date": end_date,
+        }
+        try:
+            resp = http_requests.get(
+                MOTIVE_BASE_V1 + "/ifta/trips",
+                headers=headers, params=params, timeout=60,
+            )
+            if not resp.ok:
+                break
+            data = resp.json()
+        except Exception:
+            break
+
+        items = data.get("ifta_trips", [])
+        if not items:
+            break
+
+        for item in items:
+            trip = item.get("ifta_trip", item)
+            veh = trip.get("vehicle") or {}
+            vehicle = veh.get("number", "") if isinstance(veh, dict) else ""
+            distance = float(trip.get("distance", 0) or 0)
+            if distance > 0:
+                total_miles += distance
+                vehicle_set.add(vehicle)
+                # Parse division/yard from vehicle number
+                div = "Unknown"
+                yard = "Unknown"
+                for gid, (d, y) in GROUP_ID_MAP.items():
+                    pass  # Can't match by group from IFTA
+                # Use vehicle prefix parsing
+                parts = vehicle.replace("-", " ").split()
+                for prefix, d in [("CSG", "Casing"), ("RAT", "Rathole"), ("PP", "Poly Pipe"),
+                                   ("PL", "Pit Lining"), ("ANC", "Anchors"), ("CON", "Construction"),
+                                   ("ENV", "Environmental"), ("FEN", "Fencing"), ("DT", "Drilling Tools"),
+                                   ("VAL", "Valor"), ("BTI", "BTI"), ("TD", "Transcend"),
+                                   ("WTC", "Water/Construction"), ("FAB", "Fabrication"),
+                                   ("PER", "Permian"), ("SS", "Permian")]:
+                    if any(p.upper().startswith(prefix) for p in parts):
+                        div = d
+                        break
+                by_division[div] = round(by_division.get(div, 0) + distance, 1)
+
+        pag = data.get("pagination", {})
+        if pag.get("total") and page * 100 >= pag["total"]:
+            break
+        page += 1
+
+    return {
+        "total_miles": round(total_miles, 1),
+        "by_division": by_division,
+        "vehicle_count": len(vehicle_set),
+    }
+
+
 def fetch_corrective_actions():
     """Fetch open corrective actions from KPA."""
     if not KPA_TOKEN:
@@ -874,6 +945,12 @@ def get_data():
     except Exception as e:
         errors.append("cas: {}".format(str(e)))
         result["cas"] = None
+
+    try:
+        result["mileage"] = fetch_mileage(start, end)
+    except Exception as e:
+        errors.append("mileage: {}".format(str(e)))
+        result["mileage"] = None
 
     # Training, devices, and camera are point-in-time or require complex cross-refs.
     # Dashboard uses today's static JSON for these.

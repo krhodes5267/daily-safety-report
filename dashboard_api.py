@@ -28,7 +28,7 @@ import requests as http_requests
 from api_config import (
     KPA_API_BASE, MOTIVE_BASE_V1, MOTIVE_BASE_V2,
     OBSERVATION_FORM_ID, INCIDENT_FORM_ID, ASSESSMENT_FORM_IDS,
-    OBS_TYPE_HASH, OBS_DESC_HASH, OBS_LOCATION_HASH,
+    OBS_TYPE_HASH, OBS_DESC_HASH, OBS_LOCATION_HASH, OBS_YARD_HASH,
     INC_TYPE_HASH, INC_EMPLOYEE_HASH, INC_DESC_HASH, INC_LOCATION_HASH,
     SVC_LINE_HASH, COMPANY_HASH,
     SERVICE_LINE_HASHES,
@@ -82,6 +82,22 @@ def kpa_post(endpoint, payload, timeout=60):
         timeout=timeout,
     )
     return resp
+
+
+KNOWN_YARDS = ["Bryan", "Hobbs", "Jourdanton", "Kilgore", "Laredo", "Midland",
+                "Levelland", "Barstow", "Ohio", "Pennsylvania", "Oklahoma",
+                "North Dakota", "Lubbock", "Seminole", "Odessa", "Corporate"]
+
+
+def normalize_yard(raw_yard):
+    """Normalize a raw KPA yard/district field to a known yard name."""
+    if not raw_yard:
+        return ""
+    lower = raw_yard.lower().strip()
+    for y in KNOWN_YARDS:
+        if y.lower() in lower:
+            return y
+    return ""
 
 
 def kpa_csv_rows(form_id, updated_after_ms=None):
@@ -391,6 +407,7 @@ def fetch_observations(start_date, end_date):
         obs_type = row.get(OBS_TYPE_HASH, "Other") or "Other"
         desc = row.get(OBS_DESC_HASH, "") or ""
         location = row.get(OBS_LOCATION_HASH, "") or ""
+        yard = normalize_yard(row.get(OBS_YARD_HASH, ""))
         # Find service line
         svc = ""
         for h in SERVICE_LINE_HASHES:
@@ -407,6 +424,7 @@ def fetch_observations(start_date, end_date):
             "description": desc,
             "location": location,
             "service_line": svc,
+            "yard": yard,
         })
 
     # Near misses are observations with type "Near Miss"

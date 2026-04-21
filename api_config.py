@@ -28,6 +28,7 @@ WORKPLACE_INSPECTION_FORM_ID = 152034
 OBS_TYPE_HASH = "bff8m4x6xbc033kg"
 OBS_DESC_HASH = "uncbcge9x8vow9pn"
 OBS_LOCATION_HASH = "lg5pnj4chjadnv46"
+OBS_YARD_HASH = "7vj2l992y7fwqhwz"
 
 INC_TYPE_HASH = "nojcquy0tfl9hqih"
 INC_EMPLOYEE_HASH = "55gg4nkoemnnfo2a"

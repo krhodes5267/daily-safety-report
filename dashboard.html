@@ -1922,16 +1922,18 @@ function matchYardByLocation(loc, yard) {
 // Match observation/near-miss to yard with service_line -> SINGLE_YARD_DIVISIONS fallback
 function matchObsToYard(obs, yard) {
     if (yard === 'All Yards') return true;
-    // First try location text match
+    // First: use the yard field from KPA district data (most reliable)
+    if (obs.yard && obs.yard === yard) return true;
+    // Second: try location text match
     if (obs.location && matchYardByLocation(obs.location, yard)) return true;
     // Fallback: infer yard from service_line -> division -> SINGLE_YARD_DIVISIONS
     if (obs.service_line) {
         var div = KPA_SL_TO_DIVISION[obs.service_line] || obs.service_line;
         var inferredYard = SINGLE_YARD_DIVISIONS[div];
         if (inferredYard === yard) return true;
-        // Multi-yard divisions (e.g. Casing, Rathole): KPA observations don't carry yard info,
-        // so include all observations for the division when a specific yard is selected
-        if (!inferredYard && currentDivision && currentDivision !== 'All Divisions' && div === currentDivision) return true;
+        // Multi-yard divisions (e.g. Casing, Rathole) where obs has no yard:
+        // include all observations for the division when a specific yard is selected
+        if (!inferredYard && !obs.yard && currentDivision && currentDivision !== 'All Divisions' && div === currentDivision) return true;
     }
     return false;
 }

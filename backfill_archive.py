@@ -30,7 +30,7 @@ import requests
 from api_config import (
     KPA_API_BASE, MOTIVE_BASE_V1, MOTIVE_BASE_V2,
     OBSERVATION_FORM_ID, INCIDENT_FORM_ID, ASSESSMENT_FORM_IDS,
-    OBS_TYPE_HASH, OBS_DESC_HASH, OBS_LOCATION_HASH,
+    OBS_TYPE_HASH, OBS_DESC_HASH, OBS_LOCATION_HASH, OBS_YARD_HASH,
     INC_TYPE_HASH, INC_EMPLOYEE_HASH, INC_DESC_HASH, INC_LOCATION_HASH,
     SVC_LINE_HASH, COMPANY_HASH,
     SERVICE_LINE_HASHES, KPA_COMPANY_MAP, KPA_SVC_TO_DIVISION,
@@ -42,6 +42,21 @@ KPA_TOKEN = os.environ.get("KPA_API_TOKEN", "")
 MOTIVE_KEY = os.environ.get("MOTIVE_API_KEY", "")
 
 KPH_TO_MPH = 0.621371
+
+KNOWN_YARDS = ["Bryan", "Hobbs", "Jourdanton", "Kilgore", "Laredo", "Midland",
+               "Levelland", "Barstow", "Ohio", "Pennsylvania", "Oklahoma",
+               "North Dakota", "Lubbock", "Seminole", "Odessa", "Corporate"]
+
+
+def normalize_yard(raw_yard):
+    """Normalize a raw KPA yard/district field to a known yard name."""
+    if not raw_yard:
+        return ""
+    lower = raw_yard.lower().strip()
+    for y in KNOWN_YARDS:
+        if y.lower() in lower:
+            return y
+    return ""
 
 # Camera event tier classification
 RED_CAMERA_TYPES = {
@@ -242,6 +257,7 @@ def fetch_all_kpa_observations(start_date):
             "location": row.get(OBS_LOCATION_HASH, "") or "",
             "service_line": svc,
             "report_number": row.get("report number", "") or "",
+            "yard": normalize_yard(row.get(OBS_YARD_HASH, "")),
         })
     print(f"    Total observations: {len(results)}")
     return results

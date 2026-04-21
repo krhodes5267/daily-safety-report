@@ -22,7 +22,7 @@ from datetime import datetime, timezone, timedelta
 
 import requests
 
-from api_config import MOTIVE_BASE_V1, GROUP_ID_MAP
+from api_config import MOTIVE_BASE_V1, GROUP_ID_MAP, CASING_GROUP_IDS
 
 MOTIVE_KEY = os.environ.get("MOTIVE_API_KEY", "")
 
@@ -53,6 +53,44 @@ def parse_vehicle_division(vehicle):
             if p.startswith(prefix):
                 return d
     return div
+
+
+def _build_vehicle_yards():
+    """Build vehicle_number -> yard lookup from Motive /v1/vehicles API."""
+    headers = {"X-Api-Key": MOTIVE_KEY}
+    vehicle_yards = {}
+    page = 1
+    while True:
+        try:
+            resp = requests.get(
+                f"{MOTIVE_BASE_V1}/vehicles",
+                headers=headers, params={"per_page": 100, "page_no": page}, timeout=30,
+            )
+            if not resp.ok:
+                break
+            data = resp.json()
+        except Exception:
+            break
+        vehicles = data.get("vehicles", [])
+        if not vehicles:
+            break
+        for wrapper in vehicles:
+            v = wrapper.get("vehicle", wrapper)
+            num = v.get("number", "")
+            if not num:
+                continue
+            for gid in v.get("group_ids", []):
+                if gid in CASING_GROUP_IDS:
+                    yard = CASING_GROUP_IDS[gid]
+                    vehicle_yards[num] = yard
+                    short_num = num.split(" ")[0].strip()
+                    vehicle_yards[short_num] = yard
+                    break
+        pag = data.get("pagination", {})
+        if page * 100 >= pag.get("total", 0):
+            break
+        page += 1
+    return vehicle_yards
 
 
 def fetch_daily_mileage(target_date):
@@ -193,6 +231,22 @@ def main():
         camera["total_events"] = filtered_count
         if original_count != filtered_count:
             print(f"  Camera: filtered {original_count - filtered_count} uncoachable events ({original_count} -> {filtered_count})")
+
+    # Enrich speeding yard data using Motive vehicle lookup
+    speeding = loaded.get("speeding")
+    if speeding and isinstance(speeding.get("events"), list) and MOTIVE_KEY:
+        vehicle_yards = _build_vehicle_yards()
+        fixed = 0
+        for e in speeding["events"]:
+            if e.get("yard", "Unknown") == "Unknown":
+                veh_full = e.get("vehicle", "")
+                veh_short = veh_full.split(" ")[0].strip()
+                yard = vehicle_yards.get(veh_full) or vehicle_yards.get(veh_short)
+                if yard:
+                    e["yard"] = yard
+                    fixed += 1
+        if fixed:
+            print(f"  Speeding: enriched {fixed} events with yard from vehicle lookup")
 
     # Fetch mileage for archive date (not in any existing daily script)
     mileage_data = fetch_daily_mileage(archive_date)

@@ -11,7 +11,7 @@
 
 | # | Division | Company | Status | Issues | Notes |
 |---|----------|---------|--------|--------|-------|
-| 1 | Casing | BRHAS | PENDING | - | 6 yards, heavy KPA + Motive |
+| 1 | Casing | BRHAS | COMPLETE | 4 issues | 6 yards, all have data, yard enrichment fixed |
 | 2 | Rathole | BRHAS | PENDING | - | 8 yards across states, heavy speeding |
 | 3 | Poly Pipe | BRHAS | PENDING | - | New sub-yards (Bryan/Hobbs/Jourdanton) |
 | 4 | Pit Lining | BRHAS | PENDING | - | Single yard, small crew |
@@ -32,17 +32,34 @@
 ## Division Summaries
 
 ### 1. Casing (BRHAS)
-**Status:** PENDING
-**Audited:** -
+**Status:** COMPLETE
+**Audited:** 2026-04-20
 ```
-Yards: Bryan, Hobbs, Jourdanton, Kilgore, Laredo, Midland
+Yards: Bryan, Hobbs, Jourdanton, Kilgore, Laredo, Midland (all 6 have data -- PASS)
 Motive Groups: 7 mapped (167175, 169090, 169092, 186740, 169091, 186739, 186741)
 KPA Service Lines: Casing
-Assessment Forms: 381707 (Field Assessment), 229645 (Pre/Post Trip)
-YTD Data: ~274 speeding, ~107 camera, ~2009 obs, ~6 incidents, ~1507 assessments
-Issues Found: -
-Issues Fixed: -
-Status: -
+Assessment Forms: 381707 (Field Assessment=93), 229645 (Pre/Post Trip=1414)
+YTD Data: 274 speeding, 105 camera, 2011 obs, 15 incidents, 1507 assessments, 899K miles
+
+Speeding by Yard: Midland 134, Laredo 50, Kilgore 36, Hobbs 25, Bryan 22, Jourdanton 7
+Speeding by Tier: RED 45, ORANGE 103, YELLOW 126
+Camera by Yard: Midland 60, Laredo 19, Kilgore 12, Hobbs 6, Bryan 3, San Angelo 3, Jourdanton 2
+Obs by Yard: Midland 1531, Bryan 178, Hobbs 91, Unknown 74, Jourdanton 73, Laredo 41, Kilgore 21
+KPIs: 3,284 mi/speeding, 8,569 mi/camera, 18.6 obs/day
+
+Issues Found:
+  1. FIXED: Speeding yard=Unknown for all Casing vehicles (numeric+C names have no yard prefix)
+     -> Built vehicle-to-yard lookup from Motive /v1/vehicles API using CASING_GROUP_IDS
+     -> Added build_vehicle_lookup() + enrich_speeding_yards() to backfill_archive.py
+     -> Added _build_vehicle_yards() to archive_today.py for daily pipeline
+     -> 346 of 4502 total speeding events enriched (all Casing)
+  2. FIXED: Camera audit showed 0 events (audit script checked for CSG prefix, but Casing
+     vehicles use {number}C format). All camera events in archive are already Casing-only.
+  3. WARN: Hobbs obs quality -- 85.7% Recognition type (78/91), possibly padding
+  4. WARN: 3 San Angelo camera events (yard should be closed)
+  5. WARN: 73 speeding events with Unknown driver (26.6%)
+  6. WARN: Obs declining monthly: Jan 594 -> Feb 529 -> Mar 465 -> Apr 423
+  7. WARN: 74 observations with empty yard field (3.7%)
 ```
 
 ### 2. Rathole (BRHAS)
@@ -247,8 +264,8 @@ Status: -
 ## Known Systemic Issues (fix before division audits)
 
 ### MUST FIX (blocks division audits)
-- [ ] **Mileage data not in archive** — Motive IFTA endpoint (`/v1/ifta/trips`) has per-vehicle mileage by date range. Need to add to: `dashboard_api.py` (new `fetch_mileage()` function), `backfill_archive.py` (Phase A bulk fetch), `archive_today.py` (include in daily snapshot), `dashboard.html` (display + KPIs). Pattern to follow: `casing_monthly_recap.py` lines 436-530 (`get_casing_mileage()`). Archive schema addition: `"mileage": {"total_miles": N, "by_division": {...}, "by_vehicle": [...]}`. This enables miles-per-event and miles-per-speeding-event KPIs critical for BTI and all divisions.
-- [ ] **Assessment form_name is empty in archive** — `backfill_archive.py` extracts `form_id` and `division` but not `form_name`. Need to add form name from `FORM_DIVISION_MAP` or direct lookup so audits can show "Rathole Field Assessment" vs "Pre/Post Trip".
+- [x] **Mileage data not in archive** — FIXED 2026-04-20. Added to backfill_archive.py (bulk IFTA fetch, 48,482 trips), archive_today.py (daily fetch), dashboard_api.py (fetch_mileage()), dashboard.html (mergeArchiveDays). YTD: 5.2M miles, 350 vehicles. Schema: `"mileage": {"total_miles": N, "by_division": {...}, "vehicle_count": N}`.
+- [x] **Assessment form_name is empty in archive** — FIXED 2026-04-20. Added FORM_NAME_MAP to backfill_archive.py mapping all 10 form IDs to human-readable names. Re-backfilled 110 archive files.
 
 ### SHOULD FIX
 - [ ] **182 observations YTD have empty service_line** — can't route to any division. Investigate: are these from a form that doesn't have the SL field? Could some be inferred from observer name or location?
@@ -278,3 +295,4 @@ Continue the division audit. Check division_audit.md for current progress and CL
 
 ## Session Log
 - **2026-04-20**: Created CLAUDE.md with per-division safety profiles. Created division_audit.md tracker. Identified 5 systemic issues (2 must-fix: mileage data + assessment form names). Mileage pattern found in casing_monthly_recap.py lines 436-530 using Motive IFTA endpoint. All archive data re-backfilled with KPA yard field (OBS_YARD_HASH). Filter maps fixed for Water/Construction, Fabrication, Unknown divisions. Filter audit passing 25/25.
+- **2026-04-20 (session 2)**: Fixed systemic issues (mileage + form_name). Started Casing audit. Discovered speeding yard=Unknown for all Casing vehicles (numeric+C names). Built vehicle-to-yard lookup from Motive /v1/vehicles API (build_vehicle_lookup + enrich_speeding_yards in backfill_archive.py, _build_vehicle_yards in archive_today.py). Also normalized vehicle number matching (short-form + full-form keys). Re-backfilled 110 archive files. Casing audit COMPLETE: all 6 yards have data, 4 issues found (2 fixed, 5 warnings documented).

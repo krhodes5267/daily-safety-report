@@ -513,12 +513,15 @@ def fetch_all_motive_mileage(start_date, end_date):
     return all_trips
 
 
-def fetch_all_motive_camera():
-    """Fetch ALL camera events (no date filter -- API ignores it)."""
-    print(f"  Motive camera events (all pages, no date filter)...")
+def build_vehicle_lookup():
+    """Build vehicle -> (yard, driver) lookup from Motive /v1/vehicles API.
 
-    # Build Casing vehicle lookup first
-    print("    Building Casing vehicle lookup...")
+    Returns (vehicle_drivers, vehicle_yards, casing_vehicles) where:
+    - vehicle_drivers: {vehicle_number: driver_name}
+    - vehicle_yards: {vehicle_number: yard_name}
+    - casing_vehicles: set of vehicle numbers in Casing groups
+    """
+    print("  Building vehicle lookup from Motive API...")
     headers = {"X-Api-Key": MOTIVE_KEY}
     vehicle_drivers = {}
     vehicle_yards = {}
@@ -549,8 +552,11 @@ def fetch_all_motive_camera():
                     break
             if yard is None:
                 continue
+            short_num = num.split(" ")[0].strip()
             casing_vehicles.add(num)
+            casing_vehicles.add(short_num)  # also match by short form
             vehicle_yards[num] = yard
+            vehicle_yards[short_num] = yard  # also index by short form
             for field in ("current_driver", "permanent_driver"):
                 d = v.get(field)
                 if d and isinstance(d, dict):
@@ -564,6 +570,37 @@ def fetch_all_motive_camera():
         page += 1
 
     print(f"    Found {len(casing_vehicles)} Casing vehicles")
+    return vehicle_drivers, vehicle_yards, casing_vehicles
+
+
+def enrich_speeding_yards(events, vehicle_yards):
+    """Fix 'Unknown' yards on speeding events using vehicle lookup."""
+    # Build a normalized lookup: strip driver info from vehicle numbers
+    # e.g., "2317C - TT TECH" -> "2317C"
+    norm_yards = {}
+    for vnum, yard in vehicle_yards.items():
+        short = vnum.split(" ")[0].split("-")[0].strip() if " " in vnum else vnum
+        norm_yards[short] = yard
+        norm_yards[vnum] = yard  # also keep full match
+
+    fixed = 0
+    for e in events:
+        if e.get("yard", "Unknown") == "Unknown":
+            veh_full = e.get("vehicle", "")
+            veh_short = veh_full.split(" ")[0].strip()
+            yard = norm_yards.get(veh_full) or norm_yards.get(veh_short)
+            if yard:
+                e["yard"] = yard
+                fixed += 1
+    if fixed:
+        print(f"    Enriched {fixed} speeding events with yard from vehicle lookup")
+    return events
+
+
+def fetch_all_motive_camera(vehicle_drivers, vehicle_yards, casing_vehicles):
+    """Fetch ALL camera events (no date filter -- API ignores it)."""
+    print(f"  Motive camera events (all pages, no date filter)...")
+    headers = {"X-Api-Key": MOTIVE_KEY}
 
     # Fetch all camera events
     all_events = []
@@ -867,11 +904,15 @@ def main():
     all_camera = []
     all_mileage = []
     if not args.skip_motive and motive_start <= end_date:
+        # Build vehicle lookup first (needed for speeding yard + camera filtering)
+        vehicle_drivers, vehicle_yards, casing_vehicles = build_vehicle_lookup()
+        time.sleep(2)
         all_speeding = fetch_all_motive_speeding(motive_start, end_date)
+        all_speeding = enrich_speeding_yards(all_speeding, vehicle_yards)
         time.sleep(5)
         all_mileage = fetch_all_motive_mileage(motive_start, end_date)
         time.sleep(5)
-        all_camera = fetch_all_motive_camera()
+        all_camera = fetch_all_motive_camera(vehicle_drivers, vehicle_yards, casing_vehicles)
 
     # ------------------------------------------------------------------
     # PHASE B: Partition by date + write archive files

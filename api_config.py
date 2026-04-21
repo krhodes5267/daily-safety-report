@@ -158,6 +158,36 @@ GROUP_ID_MAP = {
     167178: ("Valor", "Midland"),
     186743: ("BTI", "Midland"),
     247035: ("Transcend", "Midland"),
+    # --- New Motive groups (discovered 2026-04-20) ---
+    # BRHAS divisions
+    265982: ("Anchors", "Midland"),
+    265983: ("Construction", "Midland"),
+    265984: ("Permian", "Midland"),
+    265985: ("Valor", "Levelland"),
+    265986: ("Transcend", "Midland"),
+    265987: ("Environmental", "Midland"),
+    265988: ("Corporate", "Midland"),      # WTC / admin vehicles
+    265989: ("BTI", "Midland"),
+    265991: ("Fencing", "Midland"),
+    265992: ("Pit Lining", "Midland"),
+    265993: ("Poly Pipe", "Midland"),
+    # Rathole sub-yards
+    265996: ("Rathole", "Jourdanton"),
+    265997: ("Rathole", "North Dakota"),
+    265998: ("Rathole", "Oklahoma"),
+    266024: ("Rathole", "Barstow"),
+    266025: ("Rathole", "Levelland"),
+    266026: ("Rathole", "Midland"),
+    266027: ("Rathole", "Unknown"),         # TOW vehicles
+    266028: ("Rathole", "Unknown"),         # WIN vehicles
+    290471: ("Rathole", "Jourdanton"),
+    # Poly Pipe sub-yards
+    296017: ("Poly Pipe", "Bryan"),
+    296020: ("Poly Pipe", "Hobbs"),
+    296036: ("Poly Pipe", "Jourdanton"),
+    296040: ("Poly Pipe", "Midland"),
+    # Previously unmapped
+    186746: ("Casing", "Unknown"),          # Vehicle 21356
 }
 
 # ==============================================================================

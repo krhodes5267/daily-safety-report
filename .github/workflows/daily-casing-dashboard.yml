@@ -5,7 +5,7 @@ on:
     # 5:00 AM Central (CDT) = 10:00 UTC
     # During CST (November-March), this runs at 4:00 AM Central.
     - cron: '0 10 * * *'
-  workflow_dispatch: # Manual trigger for testing
+  workflow_dispatch: # Manual trigger — no emails sent
 
 # Required for GitHub Pages deployment
 permissions:
@@ -47,14 +47,19 @@ jobs:
       # but keep tiered distribution to safety reps, dispatchers, and managers.
       # Camera and KPA use --no-email since they only emailed the director.
 
-      - name: Run speeding report (tiered emails to reps/managers continue)
+      - name: Run speeding report (tiered emails to reps/managers on schedule only)
         continue-on-error: true
         env:
           MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
-        run: python daily_speeding_report.py --no-director-email
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            python daily_speeding_report.py --no-director-email
+          else
+            python daily_speeding_report.py --no-email
+          fi
 
       - name: Run camera report (data only)
         continue-on-error: true
@@ -62,13 +67,18 @@ jobs:
           MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
         run: python daily_casing_camera_report.py --no-email
 
-      - name: Run device status report (tiered emails to reps/dispatchers/managers continue)
+      - name: Run device status report (tiered emails to reps/dispatchers/managers on schedule only)
         continue-on-error: true
         env:
           MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python daily_device_status_report.py --no-director-email
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            python daily_device_status_report.py --no-director-email
+          else
+            python daily_device_status_report.py --no-email
+          fi
 
       - name: Run KPA report (data only)
         continue-on-error: true
@@ -144,8 +154,9 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      # Send single summary email with dashboard link
+      # Send single summary email with dashboard link (automatic morning run only)
       - name: Send dashboard summary email
+        if: github.event_name == 'schedule'
         continue-on-error: true
         env:
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}

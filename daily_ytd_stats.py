@@ -233,38 +233,37 @@ def normalize_company(raw_company):
     return raw
 
 
-def compute_days_since(incidents, today):
-    """Compute days-since-recordable at company and service-line level.
+def _filter_incidents_by_type(incidents, today, match_fn):
+    """Generic incident filter: extract matching incidents by type, grouped by company/service-line.
+
+    Args:
+        incidents: list of KPA row dicts
+        today: date object
+        match_fn: callable(inc_type_str) -> bool
 
     Returns:
-        overall_last_date: date of most recent recordable across all data
-        by_company: {company: {last_date, days_since, ytd_count, service_lines: {svc: {last_date, days_since}}}}
-        ytd_count: number of recordables in current year
+        overall_last_date, by_company dict, ytd_count
     """
-    recordables = []
+    matches = []
     for row in incidents:
         inc_type = row.get(INC_TYPE_HASH, "")
-        if "Recordable" not in inc_type:
+        if not match_fn(inc_type):
             continue
         d = parse_incident_date(row.get("date", ""))
         if not d:
             continue
         raw_co = row.get(COMPANY_HASH, "").strip() or "Unknown"
-        recordables.append({
+        matches.append({
             "date": d,
             "company": normalize_company(raw_co),
             "service_line": row.get(SVC_LINE_HASH, "").strip() or "Unknown",
         })
 
-    # YTD count (current year only)
-    ytd_count = sum(1 for r in recordables if r["date"].year == today.year)
+    ytd_count = sum(1 for r in matches if r["date"].year == today.year)
+    overall_last = max((r["date"] for r in matches), default=None)
 
-    # Overall last recordable
-    overall_last = max((r["date"] for r in recordables), default=None)
-
-    # By company -> by service line
     by_company = {}
-    for r in recordables:
+    for r in matches:
         co = r["company"]
         sl = r["service_line"]
         is_ytd = r["date"].year == today.year
@@ -287,7 +286,6 @@ def compute_days_since(incidents, today):
         if is_ytd:
             by_company[co]["service_lines"][sl]["ytd_count"] += 1
 
-    # Compute days_since for each level
     for co, co_data in by_company.items():
         co_data["days_since"] = (today - co_data["last_date"]).days
         co_data["last_date"] = co_data["last_date"].isoformat()
@@ -296,6 +294,27 @@ def compute_days_since(incidents, today):
             sl_data["last_date"] = sl_data["last_date"].isoformat()
 
     return overall_last, by_company, ytd_count
+
+
+def compute_days_since(incidents, today):
+    """Compute days-since-recordable at company and service-line level."""
+    return _filter_incidents_by_type(
+        incidents, today,
+        lambda t: "Recordable" in t
+    )
+
+
+def compute_lti_stats(incidents, today):
+    """Compute days-since-LTI (Lost Time Injury) at company level.
+
+    LTI = incidents with 'Days Away', 'Restricted', or 'Lost Time' in type.
+    These are a subset of recordables (DART cases).
+    """
+    LTI_KEYWORDS = ["days away", "restricted", "lost time"]
+    return _filter_incidents_by_type(
+        incidents, today,
+        lambda t: any(kw in t.lower() for kw in LTI_KEYWORDS)
+    )
 
 
 # ==============================================================================
@@ -324,25 +343,35 @@ def main():
         overall_last = None
         by_company = {}
         ytd_rec = 0
+        lti_last = None
+        lti_by_company = {}
+        ytd_lti = 0
     else:
         overall_last, by_company, ytd_rec = compute_days_since(incidents, today)
+        lti_last, lti_by_company, ytd_lti = compute_lti_stats(incidents, today)
         print(f"  Total incidents pulled: {len(incidents)}")
         print(f"  YTD recordables (live): {ytd_rec}")
+        print(f"  YTD LTI/DART cases (live): {ytd_lti}")
 
         if overall_last:
             print(f"  Last recordable (all companies): {overall_last.isoformat()} ({(today - overall_last).days} days ago)")
+        if lti_last:
+            print(f"  Last LTI (all companies): {lti_last.isoformat()} ({(today - lti_last).days} days ago)")
         for co, co_data in sorted(by_company.items()):
-            print(f"    {co}: {co_data['last_date']} ({co_data['days_since']} days, {co_data['ytd_count']} YTD)")
+            print(f"    {co}: rec={co_data['last_date']} ({co_data['days_since']} days, {co_data['ytd_count']} YTD)")
             for sl, sl_data in sorted(co_data["service_lines"].items()):
                 print(f"      {sl}: {sl_data['last_date']} ({sl_data['days_since']} days)")
 
     print(f"\n[3/3] Computing YTD stats...")
 
+    # Zero-recordable fallback: days since Jan 1 = "clean all year"
+    jan1_days = (today - date(today.year, 1, 1)).days
+
     # Overall stats
     ytd_trir = round(ytd_rec * 200_000 / ytd_hours, 2) if ytd_hours > 0 else None
-    days_rec = (today - overall_last).days if overall_last else None
-    days_lti = days_rec  # All recordables treated as DART for now
-    ytd_dart_cases = ytd_rec
+    days_rec = (today - overall_last).days if overall_last else jan1_days
+    days_lti = (today - lti_last).days if lti_last else jan1_days
+    ytd_dart_cases = ytd_lti  # DART = LTI cases (Days Away/Restricted/Transferred)
     ytd_dart = round(ytd_dart_cases * 200_000 / ytd_hours, 2) if ytd_hours > 0 else None
 
     # Per-company stats
@@ -350,11 +379,23 @@ def main():
     for co, hrs_data in hours_by_company.items():
         co_hrs = hrs_data["total"]
         co_inc = by_company.get(co, {})
+        co_lti_inc = lti_by_company.get(co, {})
         co_rec = co_inc.get("ytd_count", 0)
+        co_lti_count = co_lti_inc.get("ytd_count", 0)
         co_trir = round(co_rec * 200_000 / co_hrs, 2) if co_hrs > 0 else 0.0
-        co_dart = co_trir  # All recordables = DART cases
-        co_days = co_inc.get("days_since", None)
-        co_last = co_inc.get("last_date", None)
+        co_dart_rate = round(co_lti_count * 200_000 / co_hrs, 2) if co_hrs > 0 else 0.0
+
+        # Days since recordable (fallback: clean since Jan 1)
+        co_days_rec = co_inc.get("days_since", None)
+        co_last_rec = co_inc.get("last_date", None)
+        if co_days_rec is None:
+            co_days_rec = jan1_days  # No recordables found -> clean all year
+
+        # Days since LTI (fallback: clean since Jan 1)
+        co_days_lti = co_lti_inc.get("days_since", None)
+        co_last_lti = co_lti_inc.get("last_date", None)
+        if co_days_lti is None:
+            co_days_lti = jan1_days  # No LTIs found -> clean all year
 
         # Normalize service line names to dashboard division names
         raw_svc = co_inc.get("service_lines", {})
@@ -362,7 +403,6 @@ def main():
         for sl_name, sl_data in raw_svc.items():
             mapped = KPA_SVC_TO_DIVISION.get(sl_name, sl_name)
             if mapped in norm_svc:
-                # Merge: keep most recent date, sum ytd_count
                 existing = norm_svc[mapped]
                 if sl_data.get("last_date", "") > existing.get("last_date", ""):
                     existing["last_date"] = sl_data["last_date"]
@@ -375,9 +415,12 @@ def main():
             "man_hours": co_hrs,
             "recordables": co_rec,
             "trir": co_trir,
-            "dart": co_dart,
-            "days_since_recordable": co_days,
-            "last_recordable_date": co_last,
+            "dart": co_dart_rate,
+            "dart_cases": co_lti_count,
+            "days_since_recordable": co_days_rec,
+            "last_recordable_date": co_last_rec,
+            "days_since_lti": co_days_lti,
+            "last_lti_date": co_last_lti,
             "by_division": hrs_data["by_division"],
             "service_lines": norm_svc,
         }
@@ -392,7 +435,7 @@ def main():
         "ytd_man_hours": round(ytd_hours),
         "days_since_lti": days_lti,
         "days_since_recordable": days_rec,
-        "last_lti_date": overall_last.isoformat() if overall_last else None,
+        "last_lti_date": lti_last.isoformat() if lti_last else None,
         "last_recordable_date": overall_last.isoformat() if overall_last else None,
         "by_company": by_company,
         "stats_by_company": stats_by_company,
@@ -405,11 +448,12 @@ def main():
         json.dump(json_data, f, indent=2, default=str)
 
     print(f"\n  YTD TRIR: {ytd_trir}")
-    print(f"  YTD DART: {ytd_dart}")
+    print(f"  YTD DART: {ytd_dart} ({ytd_dart_cases} cases)")
     print(f"  Days since recordable: {days_rec}")
+    print(f"  Days since LTI: {days_lti}")
     print(f"  JSON written: {out}")
     for co, st in sorted(stats_by_company.items()):
-        print(f"    {co}: {st['man_hours']:,}h, TRIR={st['trir']}, rec={st['recordables']}, days={st['days_since_recordable']}")
+        print(f"    {co}: {st['man_hours']:,}h, TRIR={st['trir']}, DART={st['dart']}, rec={st['recordables']}, days_rec={st['days_since_recordable']}, days_lti={st['days_since_lti']}")
     print("  Done.")
 
 

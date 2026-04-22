@@ -76,7 +76,7 @@ YARD_PREFIXES = {
     "DS": "North Dakota",
 }
 DIV_PREFIXES = {
-    "CSG": "Casing", "RAT": "Rathole", "ANC": "Anchors",
+    "CSG": "Casing", "CAS": "Casing", "RAT": "Rathole", "ANC": "Anchors",
     "PP": "Poly Pipe", "PL": "Pit Lining", "CON": "Construction",
     "ENV": "Environmental", "FEN": "Fencing", "DT": "Drilling Tools",
     "VAL": "Valor", "BTI": "BTI", "TD": "Transcend",
@@ -249,12 +249,16 @@ def fetch_all_kpa_observations(start_date):
             continue
         obs_type = row.get(OBS_TYPE_HASH, "Other") or "Other"
         svc = get_svc_line(row)
+        location = row.get(OBS_LOCATION_HASH, "") or ""
+        # Infer Transcend from rig location when service_line is empty
+        if not svc and re.search(r"Rig\s+\d+", location, re.IGNORECASE):
+            svc = "Drilling"
         results.append({
             "date": row_date,
             "observer": row.get("Name", "") or row.get("observer", "") or "",
             "type": obs_type,
             "description": row.get(OBS_DESC_HASH, "") or "",
-            "location": row.get(OBS_LOCATION_HASH, "") or "",
+            "location": location,
             "service_line": svc,
             "report_number": row.get("report number", "") or "",
             "yard": normalize_yard(row.get(OBS_YARD_HASH, "")),
@@ -324,12 +328,17 @@ def fetch_all_kpa_assessments(start_date):
             if not row_date or row_date < start_date:
                 continue
             svc = get_svc_line(row)
+            # For "Shared" forms (152018, 152034), prefer service_line routing
+            if division == "Shared":
+                resolved_div = svc_to_div(svc) or "Shared"
+            else:
+                resolved_div = division or svc_to_div(svc)
             results.append({
                 "date": row_date,
                 "assessor": row.get("Name", "") or row.get("observer", "") or "",
                 "form_id": form_id,
                 "form_name": form_name,
-                "division": division or svc_to_div(svc),
+                "division": resolved_div,
                 "location": row.get(OBS_LOCATION_HASH, "") or "",
                 "report_number": row.get("report number", "") or "",
             })
@@ -516,6 +525,8 @@ def fetch_all_motive_mileage(start_date, end_date):
 def build_vehicle_lookup():
     """Build vehicle -> (yard, driver) lookup from Motive /v1/vehicles API.
 
+    Uses GROUP_ID_MAP to map ALL divisions (not just Casing) to yards.
+
     Returns (vehicle_drivers, vehicle_yards, casing_vehicles) where:
     - vehicle_drivers: {vehicle_number: driver_name}
     - vehicle_yards: {vehicle_number: yard_name}
@@ -526,6 +537,7 @@ def build_vehicle_lookup():
     vehicle_drivers = {}
     vehicle_yards = {}
     casing_vehicles = set()
+    mapped_count = 0
     page = 1
 
     while True:
@@ -545,55 +557,72 @@ def build_vehicle_lookup():
             if not num:
                 continue
             group_ids = v.get("group_ids", [])
+            # Check ALL divisions via GROUP_ID_MAP
             yard = None
             for gid in group_ids:
-                if gid in CASING_GROUP_IDS:
-                    yard = CASING_GROUP_IDS[gid]
+                if gid in GROUP_ID_MAP:
+                    _div, yard = GROUP_ID_MAP[gid]
                     break
             if yard is None:
                 continue
             short_num = num.split(" ")[0].strip()
-            casing_vehicles.add(num)
-            casing_vehicles.add(short_num)  # also match by short form
             vehicle_yards[num] = yard
-            vehicle_yards[short_num] = yard  # also index by short form
+            vehicle_yards[short_num] = yard
+            mapped_count += 1
+            # Track Casing vehicles separately (for camera filtering)
+            if gid in CASING_GROUP_IDS:
+                casing_vehicles.add(num)
+                casing_vehicles.add(short_num)
+            # Driver lookup
             for field in ("current_driver", "permanent_driver"):
                 d = v.get(field)
                 if d and isinstance(d, dict):
                     name = f"{d.get('first_name', '')} {d.get('last_name', '')}".strip()
                     if name:
                         vehicle_drivers[num] = name
+                        vehicle_drivers[short_num] = name
                         break
         pag = data.get("pagination", {})
         if page * 100 >= pag.get("total", 0):
             break
         page += 1
 
-    print(f"    Found {len(casing_vehicles)} Casing vehicles")
+    print(f"    Mapped {mapped_count} vehicles ({len(casing_vehicles)} Casing, {len(vehicle_drivers)} with drivers)")
     return vehicle_drivers, vehicle_yards, casing_vehicles
 
 
-def enrich_speeding_yards(events, vehicle_yards):
-    """Fix 'Unknown' yards on speeding events using vehicle lookup."""
-    # Build a normalized lookup: strip driver info from vehicle numbers
-    # e.g., "2317C - TT TECH" -> "2317C"
+def enrich_speeding_events(events, vehicle_yards, vehicle_drivers):
+    """Enrich speeding events with yard and driver from vehicle lookup."""
+    # Build normalized lookups
     norm_yards = {}
     for vnum, yard in vehicle_yards.items():
-        short = vnum.split(" ")[0].split("-")[0].strip() if " " in vnum else vnum
+        short = vnum.split(" ")[0].strip()
         norm_yards[short] = yard
-        norm_yards[vnum] = yard  # also keep full match
+        norm_yards[vnum] = yard
 
-    fixed = 0
+    norm_drivers = {}
+    for vnum, drv in vehicle_drivers.items():
+        short = vnum.split(" ")[0].strip()
+        norm_drivers[short] = drv
+        norm_drivers[vnum] = drv
+
+    yard_fixed = 0
+    driver_fixed = 0
     for e in events:
+        veh_full = e.get("vehicle", "")
+        veh_short = veh_full.split(" ")[0].strip()
         if e.get("yard", "Unknown") == "Unknown":
-            veh_full = e.get("vehicle", "")
-            veh_short = veh_full.split(" ")[0].strip()
             yard = norm_yards.get(veh_full) or norm_yards.get(veh_short)
             if yard:
                 e["yard"] = yard
-                fixed += 1
-    if fixed:
-        print(f"    Enriched {fixed} speeding events with yard from vehicle lookup")
+                yard_fixed += 1
+        if e.get("driver", "Unknown") == "Unknown":
+            drv = norm_drivers.get(veh_full) or norm_drivers.get(veh_short)
+            if drv:
+                e["driver"] = drv
+                driver_fixed += 1
+    if yard_fixed or driver_fixed:
+        print(f"    Enriched speeding: {yard_fixed} yards, {driver_fixed} drivers from vehicle lookup")
     return events
 
 
@@ -908,7 +937,7 @@ def main():
         vehicle_drivers, vehicle_yards, casing_vehicles = build_vehicle_lookup()
         time.sleep(2)
         all_speeding = fetch_all_motive_speeding(motive_start, end_date)
-        all_speeding = enrich_speeding_yards(all_speeding, vehicle_yards)
+        all_speeding = enrich_speeding_events(all_speeding, vehicle_yards, vehicle_drivers)
         time.sleep(5)
         all_mileage = fetch_all_motive_mileage(motive_start, end_date)
         time.sleep(5)

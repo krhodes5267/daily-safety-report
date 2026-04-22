@@ -105,8 +105,22 @@ KPA_SVC_TO_DIVISION = {
     "Pit Lining": "Pit Lining",
     "Anchor": "Anchors", "Anchors": "Anchors",
     "Construction": "Construction", "Civil": "Construction",
+    "Water/Construction": "Construction",
     "Environmental": "Environmental", "Containment": "Environmental",
     "Fencing": "Fencing",
+    "Drilling Tools": "Drilling Tools", "Downhole Tools": "Valor",
+    "Shop": "Shop", "Fabrication": "Fabrication",
+    "Corporate": "Corporate",
+    # Non-BRHAS companies (map to their division name used in dashboard)
+    "BTI": "BTI", "Butch's Trucking": "BTI", "Trucking": "BTI",
+    "Drilling": "Transcend", "Transcend": "Transcend",
+    "Transcend Drilling": "Transcend",
+    "Drilling - Rig 4": "Transcend", "Drilling - Rig 12": "Transcend",
+    "Drilling - Rig 16": "Transcend", "Drilling - Rig 18": "Transcend",
+    "Drilling - Rig 20": "Transcend",
+    "Valor": "Valor", "Valor Energy": "Valor",
+    "Valor Energy Services": "Valor",
+    "Rentals": "Permian", "PER": "Permian", "Permian": "Permian",
 }
 
 KPA_RESPONSE_URL = "https://brhas-ees.kpaehs.com/forms/responses/view"

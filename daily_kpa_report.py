@@ -729,6 +729,81 @@ def _extract_generic_analytics(row):
     }
 
 
+# Form 152018 Vehicle Inspection Checklist -- per-item field mapping
+# Hash -> (short_label, deficiency_hash)
+_152018_CHECKLIST = {
+    "hdsknmmnuk5cltvr": ("License available", "43rudsqzxll9uuwa"),
+    "q2eglc4iamdxlqt3": ("Medical card", "1r4rznr7vmigvtq5"),
+    "qekewx5xdfs4rge8": ("DVIR/Pre-Trip complete", "ibwiqmlxhmq3jn8z"),
+    "fg3pbpju7dvy8bce": ("ELD/Log current", "0dn5jzlxw5bpu6qh"),
+    "x4nbi0nkw0gf8ng1": ("First Aid/BBP/Spill kit", "tzpddi67rftznie9"),
+    "wq4tafdvqt2z1mmh": ("Fire extinguisher (truck)", "05ioaavw1ox6hx7k"),
+    "fezxmdjqlik6o0h0": ("Spare fuses", "0yxlthe29aeehxh4"),
+    "m8aqplrya7g1tdyz": ("Reflective triangles", "oxge7gfogdgyaicv"),
+    "3yggp273xd5kldlh": ("Spare tire", "ydcefeo159ua2vo0"),
+    "46qmntcr1w5xyfok": ("Unit number on vehicle", "hvb3sx1u08lln73a"),
+    "uz3dzdmxmtwa7s73": ("Logo on vehicle", "tzzhm5r0tuuphza0"),
+    "duyhapqhr4932lkl": ("DOT number visible", "i2rbp3mxq2ys93y2"),
+    "2cl1s4qs1j7gagtu": ("Registration/insurance", "pz2sa9krulb34akp"),
+    "qrb1m8ezustvpgsi": ("Current DOT inspection", "e17mjjgi1zty4wb9"),
+    "b8uriw50jrcgubb6": ("Permits in order", "88a2pcx841nfk8li"),
+    "ur3snzmk8l21kfa8": ("Defroster", "2om7ra0rhmkgif7h"),
+    "k1d199huactnw4ws": ("Windshield", "cf8tao10eqyuc3bi"),
+    "jt6pqi2lmu65u7hv": ("Wiper/washer fluid", "l76jkpmb1lkhx1ri"),
+    "fn6dzafvm1n9k6kz": ("Horn", "z9ns5s77dx2i37ak"),
+    "ph7zf4accevapsyf": ("Housekeeping/secured", "cq7600qmadl34s1i"),
+    "hvrfr6rkmx405bti": ("All lights function", "xwm3lin858eflqmw"),
+    "l5qv3uqdnwe2r87s": ("Tires/tread depth", "5otqtnytyymmkcav"),
+    "ggiqx3fkjnaiwj0o": ("Wheels condition", "eot58x9hwihd7bwa"),
+    "5yvdp2ldrrwwegza": ("Lug nuts secure", "qkve8n3c7ti068lc"),
+    "pvhdyvkiux1zrkk6": ("Free from leaks", "v8za67krm0vzdsu1"),
+    "pimy8vrfgquhwk0a": ("Suspension", "5wd26qk8fuu7nr5x"),
+    "ajwk0rsamhjrqqgc": ("Air hose/lines", "rg91mjn0u03edkxz"),
+    "03vhfjz35zza42hg": ("Tie downs", "91ft3ubtpoj9jefi"),
+    "913tref52055jlvs": ("DOT reflective tape", "53mi6c2kr9kmqdn4"),
+    # Trailer items
+    "csr1wm58mtn27602": ("Trailer reg/DOT annual", "65us86q2q3wdbj81"),
+    "mpv662w3zzby117z": ("Trailer fire extinguisher", "iiqefcmjvc9t4fz0"),
+    "4z64sagft7c1v3bx": ("Breakaway cable condition", "rj3z6ev5xmgmw4df"),
+    "fll32f3ry27o8zvd": ("Breakaway cable connected", "2g88iktmnzoqa6d4"),
+    "el575el1olhgjdhw": ("Coupling devices", "ndevl51fgwyjh6a4"),
+    "8alkovn0lp6vhnsz": ("Batteries secured/covered", "8lkp32j2bs63mza3"),
+    "ovazhx8udcmfiudy": ("Battery functional", "wh0tsjfl1alhrnp5"),
+    "h2ewf9o1gkhu3kw7": ("Deck boards", "8mise9svng7p8tas"),
+    "495oj5vxxsx8rl25": ("Trailer lights", "37faqoirgkiy1ju6"),
+    "plhmcn2mhxadk29r": ("Trailer tires", "wcj2qc8ltc9zqdmz"),
+    "xxlt4aamiqj4i5y1": ("Trailer wheels", "h7ifs2jb4llokqnr"),
+    "cyn7xscdcnqhpecr": ("Trailer lug nuts", "o3xy924pv85wmssu"),
+    "dubz4vakqlg1skwn": ("Load secured", "jvxvw68w4yp5bpbr"),
+    "8b9cb2ko3c2fdo12": ("Trailer suspension", "ng3dm187rlpg6umt"),
+}
+
+
+def _extract_152018_analytics(row):
+    """Extract per-checklist-item results from form 152018 (Vehicle Inspection Checklist).
+
+    Returns standard analytics dict PLUS 'item_failures' list of failed items with notes.
+    """
+    base = _extract_generic_analytics(row)
+
+    # Extract individual checklist item results
+    failures = []
+    for field_hash, (label, deficiency_hash) in _152018_CHECKLIST.items():
+        val = (row.get(field_hash, "") or "").strip()
+        if val == "No":
+            note = (row.get(deficiency_hash, "") or "").strip()
+            # Also check -notes field
+            notes_val = (row.get(field_hash + "-notes", "") or "").strip()
+            failures.append({
+                "item": label,
+                "deficiency": note if note and note != label else "",
+                "notes": notes_val,
+            })
+
+    base["item_failures"] = failures
+    return base
+
+
 def _extract_381707_analytics(row):
     """Extract deep analytics fields from a form 381707 row."""
     # Compliance tallies
@@ -954,9 +1029,29 @@ def pull_assessment_history():
                 "report_number": rpt,
             }
 
+            # Form 152018: capture truck/driver/trailer info
+            if form_id == 152018:
+                driver_name = (row.get("o4anp0lsn0j6sl4h", "") or row.get("6qjqf1qihwp01elb", "") or "").strip()
+                unit_num = (row.get("shwrxgdeo3liaukp", "") or "").strip()
+                make_model = (row.get("28oshxapsgaqdq2u", "") or "").strip()
+                trailer_num = (row.get("y9nj1tqxtcandgfr", "") or "").strip()
+                trailer_style = (row.get("al2tycw4v31z68b5", "") or "").strip()
+                if driver_name:
+                    entry["driver"] = driver_name
+                if unit_num:
+                    entry["unit_number"] = unit_num
+                if make_model:
+                    entry["make_model"] = make_model
+                if trailer_num:
+                    entry["trailer_number"] = trailer_num
+                if trailer_style:
+                    entry["trailer_style"] = trailer_style
+
             # Deep analytics extraction per form
             if form_id == 381707:
                 entry.update(_extract_381707_analytics(row))
+            elif form_id == 152018:
+                entry.update(_extract_152018_analytics(row))
             elif form_id in ANALYTICS_FORMS:
                 entry.update(_extract_generic_analytics(row))
 
@@ -1382,7 +1477,7 @@ def pull_assessment_history():
             for flag in adata.get("red_flags", []):
                 f_red_flags.append({"assessor": aname, "detail": flag})
 
-        form_analytics[key] = {
+        analytics_entry = {
             "form_name": label,
             "company": company,
             "division": division,
@@ -1398,6 +1493,105 @@ def pull_assessment_history():
             "by_assessor": f_by_assessor,
             "red_flags": f_red_flags,
         }
+
+        # For form 152018: aggregate per-checklist-item failure counts
+        if any(a.get("item_failures") is not None for a in ytd_rows):
+            item_counts = defaultdict(lambda: {"fail": 0, "total": 0})
+            item_monthly = defaultdict(lambda: defaultdict(int))
+            item_notes = defaultdict(list)
+            for a in ytd_rows:
+                for fail in a.get("item_failures", []):
+                    item = fail["item"]
+                    item_counts[item]["fail"] += 1
+                    item_monthly[a["month"]][item] += 1
+                    note = fail.get("notes") or fail.get("deficiency") or ""
+                    if note:
+                        item_notes[item].append({"date": a["date"], "note": note})
+            # Count total inspections each item was checked
+            for a in ytd_rows:
+                for field_hash, (lbl, _) in _152018_CHECKLIST.items():
+                    # item was inspected if it has Yes, No, or N/A
+                    # (we only count Yes + No for fail rate)
+                    item_counts[lbl]["total"] += 1
+            # Sort by failure count descending, keep top items with failures
+            sorted_items = sorted(
+                [(k, v) for k, v in item_counts.items() if v["fail"] > 0],
+                key=lambda x: -x[1]["fail"]
+            )
+            analytics_entry["item_failures"] = [
+                {
+                    "item": k,
+                    "fail_count": v["fail"],
+                    "inspections": v["total"],
+                    "fail_pct": round(v["fail"] / v["total"] * 100, 1) if v["total"] > 0 else 0,
+                    "notes": item_notes.get(k, [])[:5],  # cap at 5 most recent
+                }
+                for k, v in sorted_items[:15]  # top 15 items
+            ]
+            analytics_entry["item_failures_monthly"] = {
+                m: dict(items) for m, items in sorted(item_monthly.items())
+            }
+
+        # Vehicle/driver/trailer repeat issue tracking (form 152018 only)
+        # Use all-time data for deeper pattern detection
+        insp_rows = [a for a in all_rows if a.get("unit_number")]
+        if insp_rows:
+            truck_issues = defaultdict(lambda: {"inspections": 0, "failures": 0, "items": defaultdict(int), "driver": ""})
+            trailer_issues = defaultdict(lambda: {"inspections": 0, "failures": 0, "items": defaultdict(int)})
+            driver_issues = defaultdict(lambda: {"inspections": 0, "failures": 0, "items": defaultdict(int), "trucks": set()})
+            for a in insp_rows:
+                unit = a.get("unit_number", "")
+                trailer = a.get("trailer_number", "")
+                driver = a.get("driver", "")
+                fails = a.get("item_failures", [])
+                if unit:
+                    truck_issues[unit]["inspections"] += 1
+                    if driver:
+                        truck_issues[unit]["driver"] = driver  # latest driver
+                    if fails:
+                        truck_issues[unit]["failures"] += 1
+                        for f in fails:
+                            truck_issues[unit]["items"][f["item"]] += 1
+                if trailer:
+                    trailer_issues[trailer]["inspections"] += 1
+                    if fails:
+                        # Only count trailer-specific failures
+                        trailer_fails = [f for f in fails if any(kw in f["item"].lower() for kw in
+                            ("trailer", "breakaway", "coupling", "batter", "deck", "load secured"))]
+                        if trailer_fails:
+                            trailer_issues[trailer]["failures"] += 1
+                            for f in trailer_fails:
+                                trailer_issues[trailer]["items"][f["item"]] += 1
+                if driver:
+                    driver_issues[driver]["inspections"] += 1
+                    if unit:
+                        driver_issues[driver]["trucks"].add(unit)
+                    if fails:
+                        driver_issues[driver]["failures"] += 1
+                        for f in fails:
+                            driver_issues[driver]["items"][f["item"]] += 1
+
+            # Only include trucks/trailers/drivers with 2+ failures
+            analytics_entry["truck_issues"] = sorted([
+                {"unit": k, "driver": v["driver"], "inspections": v["inspections"],
+                 "failures": v["failures"], "top_items": [{"item": i, "count": c} for i, c in
+                    sorted(v["items"].items(), key=lambda x: -x[1])[:3]]}
+                for k, v in truck_issues.items() if v["failures"] >= 2
+            ], key=lambda x: -x["failures"])
+            analytics_entry["trailer_issues"] = sorted([
+                {"unit": k, "inspections": v["inspections"], "failures": v["failures"],
+                 "top_items": [{"item": i, "count": c} for i, c in
+                    sorted(v["items"].items(), key=lambda x: -x[1])[:3]]}
+                for k, v in trailer_issues.items() if v["failures"] >= 2
+            ], key=lambda x: -x["failures"])
+            analytics_entry["driver_issues"] = sorted([
+                {"driver": k, "trucks": sorted(v["trucks"]), "inspections": v["inspections"],
+                 "failures": v["failures"], "top_items": [{"item": i, "count": c} for i, c in
+                    sorted(v["items"].items(), key=lambda x: -x[1])[:3]]}
+                for k, v in driver_issues.items() if v["failures"] >= 2
+            ], key=lambda x: -x["failures"])
+
+        form_analytics[key] = analytics_entry
         print(f"  {label} ({company}/{division}): {n_ytd} YTD, compliance={f_compliance}%, findings={f_finding_rate}%")
 
     for af_id, af_info in ANALYTICS_FORMS.items():
@@ -1427,6 +1621,24 @@ def pull_assessment_history():
                 form_rows, ytd_rows
             )
 
+    # Build per-inspection detail records for archive/dashboard date-range views
+    inspection_details = []
+    for a in all_assessments:
+        rec = {
+            "date": a["date"],
+            "assessor": a["assessor"],
+            "form_id": a["form_id"],
+            "form_name": a["form_name"],
+            "company": a.get("company", ""),
+            "division": a.get("division", ""),
+            "yard": a.get("yard", ""),
+        }
+        # Form 152018: include truck/driver/trailer and item failures
+        for extra in ("driver", "unit_number", "make_model", "trailer_number", "trailer_style", "item_failures"):
+            if a.get(extra):
+                rec[extra] = a[extra]
+        inspection_details.append(rec)
+
     result = {
         "current_month": current_month,
         "current_year": current_year,
@@ -1441,6 +1653,7 @@ def pull_assessment_history():
         "by_form_all": dict(by_form_all),
         "assessment_analytics": analytics,
         "form_analytics": form_analytics,
+        "details": inspection_details,
     }
 
     print(f"  MTD assessments: {result['total_mtd']}")

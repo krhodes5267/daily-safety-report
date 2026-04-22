@@ -467,11 +467,11 @@ Issues Found:
 - [x] **Assessment form_name is empty in archive** -- FIXED 2026-04-20. Added FORM_NAME_MAP to backfill_archive.py mapping all 10 form IDs to human-readable names. Re-backfilled 110 archive files.
 
 ### SHOULD FIX
-- [ ] **182 observations YTD have empty service_line** -- can't route to any division. Investigate: are these from a form that doesn't have the SL field? Could some be inferred from observer name or location?
-- [ ] **Vehicle Inspection Checklists (form 152018) are "Shared"** -- need to determine which are BTI (Bernard's truck audits) vs other divisions. May need to check observer or vehicle field.
-- [ ] **Camera events only cover ~30 days** -- Motive v2 API retention limit. Not fixable via API. Document as known limitation.
-- [ ] **83.6% of speeding events have Unknown driver** -- Motive configuration issue. Only BTI (93% known) and Construction (~42% known) have meaningful driver assignment. All other divisions are 100% unknown.
-- [ ] **Non-Casing divisions have 100% Unknown yard on speeding** -- Vehicle lookup only built for Casing. Need to expand to Rathole, Poly Pipe, Pit Lining, Anchors, Environmental, Fencing, Valor group IDs.
+- [x] **182 observations YTD have empty service_line** -- FIXED 2026-04-20. 30 are Transcend (Rig N pattern in location, auto-inferred as "Drilling"). 149 are well-pad locations (likely Rathole, but can't confirm without KPA source fix). 3 have blank location. Added location-based Transcend inference to backfill_archive.py. Also expanded KPA_SVC_TO_DIVISION in api_config.py to cover all companies/divisions.
+- [x] **Vehicle Inspection Checklists (form 152018) are "Shared"** -- FIXED 2026-04-20. Changed assessment routing: "Shared" forms now prefer service_line-based routing over hardcoded "Shared" division. Added BTI/Transcend/Valor/Permian to KPA_SVC_TO_DIVISION map so service_line values like "BTI", "Trucking" properly route.
+- [x] **Camera events only cover ~30 days** -- DOCUMENTED 2026-04-20. Motive v2 camera API only retains ~30 days of events. This is a Motive platform limitation, not fixable via API. Historical camera data beyond 30 days is permanently unavailable. Dashboard archive files only contain camera data from the date they were archived forward. Backfills cannot recover historical camera events.
+- [x] **83.6% of speeding events have Unknown driver** -- FIXED 2026-04-20. Added driver enrichment to build_vehicle_lookup() in backfill_archive.py -- indexes vehicle_drivers by both full and short vehicle number. Driver data comes from Motive /v1/vehicles current_driver/permanent_driver fields. Note: many vehicles still have no assigned driver in Motive (configuration issue at fleet level, not an API limitation).
+- [x] **Non-Casing divisions have 100% Unknown yard on speeding** -- FIXED 2026-04-20. Expanded build_vehicle_lookup() in backfill_archive.py and _build_vehicle_yards() in archive_today.py from CASING_GROUP_IDS to GROUP_ID_MAP. Now maps all Motive group IDs (Rathole, Poly Pipe, Anchors, BTI, Transcend, Valor, etc.) to yard names.
 
 ### NICE TO HAVE
 - [ ] **BTI SAFER score** -- look up at https://safer.fmcsa.dot.gov for Butch's Trucking Inc. Manual lookup, add to BTI profile.

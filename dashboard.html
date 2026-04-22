@@ -1509,7 +1509,7 @@
 <script>
 // ===== GLOBALS =====
 var D = { ytd: null, kpa: null, camera: null, speeding: null, devices: null, training: null, cas: null };
-var D_today = { camera: null, devices: null, training: null, mileage: null }; // Static snapshots kept for non-API sources
+var D_today = { camera: null, devices: null, training: null, mileage: null, driver_scorecards: null }; // Static snapshots kept for non-API sources
 var CHARTS = {};
 
 // === Chart.js Global Defaults (premium styling) ===
@@ -2328,10 +2328,10 @@ function loadData() {
                 .then(function(arch) {
                     if (arch && arch.mileage && arch.mileage.total_miles > 0) {
                         D.mileage = arch.mileage;
-                        if (arch.driver_scorecards) D.driver_scorecards = arch.driver_scorecards;
+                        if (arch.driver_scorecards) { D.driver_scorecards = arch.driver_scorecards; D_today.driver_scorecards = arch.driver_scorecards; }
                         initDashboard();
                     } else {
-                        if (arch && arch.driver_scorecards && !D.driver_scorecards) D.driver_scorecards = arch.driver_scorecards;
+                        if (arch && arch.driver_scorecards && !D.driver_scorecards) { D.driver_scorecards = arch.driver_scorecards; D_today.driver_scorecards = arch.driver_scorecards; }
                         tryMileage(idx + 1);
                     }
                 });
@@ -2672,10 +2672,13 @@ function applyAPIData(data, startDate, endDate) {
         D.mileage = { total_miles: 0, by_division: {}, vehicle_count: 0, _iftaLag: true };
         console.log('[DateRange] No mileage for date range (IFTA lag)');
     }
-    // Driver scorecards (from merged archive data)
-    if (data.driver_scorecards) {
+    // Driver scorecards: always use the initial snapshot (current roster, not date-specific)
+    // Scorecards are a rolling 30-day window -- same driver list regardless of date range selected
+    if (D_today.driver_scorecards) {
+        D.driver_scorecards = D_today.driver_scorecards;
+    } else if (data.driver_scorecards) {
         D.driver_scorecards = data.driver_scorecards;
-        console.log('[DateRange] Updated D.driver_scorecards (' + data.driver_scorecards.length + ' drivers)');
+        D_today.driver_scorecards = data.driver_scorecards;
     }
     // Camera, devices, training stay from today's static files
     D.camera = D_today.camera;
@@ -8067,7 +8070,7 @@ function renderDriverScorecard() {
     var trucking = isTrucking();
     var period = getPeriodLabel();
     var html = '<div class="section"><h2 class="section-title">Driver Scorecard -- ' + period + '</h2>';
-    html += '<div class="info-note">Grades calculated from speeding events per mile driven. RED events (-15), ORANGE (-8), YELLOW (-4) per 1,000 miles. More miles with fewer events = higher grade. Miles estimated from Motive driver data, scaled to selected date range.</div>';
+    html += '<div class="info-note">Grades calculated from speeding events per mile driven. RED events (-40), ORANGE (-20), YELLOW (-10) deductions per 1,000 miles. More miles with fewer events = higher grade. Miles from Motive 30-day data, scaled to selected date range.</div>';
 
     // KPI cards
     html += '<div class="card-row" style="margin-bottom:16px">';

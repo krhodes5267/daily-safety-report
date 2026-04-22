@@ -838,10 +838,13 @@
             .header-metric { min-width: 70px; padding: 6px 10px; }
             .quick-pulse { flex-wrap: wrap; padding: 8px var(--page-pad); }
             .pulse-card { min-width: calc(50% - 6px); }
-            .section { padding: 20px; }
+            .section { padding: 20px; overflow-x: auto; }
             .card-row { grid-template-columns: repeat(2, 1fr); }
             .yard-health-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
             .exec-headline { font-size: 14px; }
+            .tod-grid, .tod-labels { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .tod-cell { min-width: 28px; flex-shrink: 0; }
+            .tod-label { min-width: 28px; flex-shrink: 0; }
         }
         @media (max-width: 480px) {
             table { font-size: 12px; }

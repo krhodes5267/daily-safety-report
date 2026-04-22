@@ -573,9 +573,39 @@ def main():
         else:
             mileage_data = None
 
+    # Build driver_name -> division/company lookup from vehicle assignments
+    driver_to_division = {}
+    driver_to_company = {}
+    for veh_num, driver_name in vehicle_drivers.items():
+        if driver_name and driver_name not in driver_to_division:
+            div = vehicle_divisions.get(veh_num, "Unknown")
+            driver_to_division[driver_name] = div
+            # Map division to company
+            if div in ("Valor",):
+                driver_to_company[driver_name] = "Valor"
+            elif div in ("BTI",):
+                driver_to_company[driver_name] = "BTI"
+            elif div in ("Transcend",):
+                driver_to_company[driver_name] = "Transcend"
+            elif div in ("Permian",):
+                driver_to_company[driver_name] = "Permian"
+            else:
+                driver_to_company[driver_name] = "BRHAS"
+
     # Fetch driver scorecards (rolling 30-day window ending on archive date)
     scorecard_start = (datetime.strptime(archive_date, "%Y-%m-%d") - timedelta(days=29)).strftime("%Y-%m-%d")
     driver_scorecards = fetch_driver_scorecards(scorecard_start, archive_date)
+
+    # Enrich scorecards with division/company
+    if driver_scorecards:
+        matched = 0
+        for sc in driver_scorecards:
+            name = sc.get("name", "")
+            if name in driver_to_division:
+                sc["division"] = driver_to_division[name]
+                sc["company"] = driver_to_company[name]
+                matched += 1
+        print(f"  Scorecards: {matched}/{len(driver_scorecards)} matched to divisions")
 
     # Build archive object
     archive = {

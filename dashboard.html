@@ -2328,8 +2328,10 @@ function loadData() {
                 .then(function(arch) {
                     if (arch && arch.mileage && arch.mileage.total_miles > 0) {
                         D.mileage = arch.mileage;
+                        if (arch.driver_scorecards) D.driver_scorecards = arch.driver_scorecards;
                         initDashboard();
                     } else {
+                        if (arch && arch.driver_scorecards && !D.driver_scorecards) D.driver_scorecards = arch.driver_scorecards;
                         tryMileage(idx + 1);
                     }
                 });
@@ -7996,9 +7998,20 @@ function renderDriverScorecard() {
     var rangeDays = Math.max(1, Math.round((rangeEnd - rangeStart) / 86400000) + 1);
     var milesScale = rangeDays / 30;
 
+    // Filter scorecards to current company (if division/company tags exist)
+    var filteredScorecards = scorecards;
+    if (currentCompany && currentCompany !== 'All') {
+        var hasCompanyTag = scorecards.some(function(sc) { return sc.company; });
+        if (hasCompanyTag) {
+            filteredScorecards = scorecards.filter(function(sc) {
+                return sc.company === currentCompany;
+            });
+        }
+    }
+
     // Merge scorecard mileage with our speeding data to build custom grade
     var drivers = [];
-    scorecards.forEach(function(sc) {
+    filteredScorecards.forEach(function(sc) {
         var key = (sc.name || '').toLowerCase().trim();
         if (!key || sc.miles < 10) return; // Skip drivers with trivial mileage
         var spd = driverSpd[key] || { total: 0, red: 0, orange: 0, yellow: 0 };

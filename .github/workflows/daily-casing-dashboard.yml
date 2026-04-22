@@ -130,6 +130,7 @@ jobs:
           cp dashboard.html _site/index.html
           cp -r output _site/output
           if [ -d archive ]; then cp -r archive _site/archive; fi
+          if [ -d logos ]; then cp -r logos _site/logos; fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

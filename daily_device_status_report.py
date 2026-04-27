@@ -237,6 +237,8 @@ def fetch_casing_vehicles():
                 vid = v.get("id")
                 if not vid:
                     continue
+                if v.get("status") == "deactivated":
+                    continue
 
                 group_ids = v.get("group_ids", [])
                 yard = None

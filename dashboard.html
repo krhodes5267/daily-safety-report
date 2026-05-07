@@ -200,7 +200,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            height: 60px;
+            height: 56px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
         .header.red {
@@ -220,27 +220,26 @@
             content: ''; display: inline-block; width: 6px; height: 6px;
             border-radius: 50%; background: var(--green); animation: pulse 3s infinite;
         }
-        .header-metrics { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .header-metrics { display: flex; gap: 10px; align-items: center; }
         .header-metric {
-            text-align: center; padding: 10px 20px; border-radius: 12px;
+            text-align: center; padding: 8px 16px; border-radius: 10px;
             background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
             border: 1px solid var(--border);
-            transition: all 0.2s ease; min-width: 84px;
-            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .header-metric:hover { border-color: #cbd5e1; box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+        .header-metric:hover { border-color: #cbd5e1; box-shadow: var(--shadow-sm); }
         .header-metric .val {
-            font-size: 18px; font-weight: 800; letter-spacing: -0.03em;
+            font-size: 20px; font-weight: 800; letter-spacing: -0.03em;
             color: var(--text);
         }
         .header-metric .lbl {
             font-size: 9px; color: var(--text-muted); text-transform: uppercase;
-            letter-spacing: 1.2px; font-weight: 700; margin-top: 2px;
+            letter-spacing: 1px; font-weight: 700; margin-top: 2px;
         }
         .header-metric .trend { font-size: 10px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
         .header-metric.critical { background: linear-gradient(180deg, var(--red-soft) 0%, #fff5f5 100%); border-color: var(--red-border); }
-        .header-metric.critical .val { font-size: 19px; color: var(--red); }
-        .header-metric-primary .val { font-size: 28px !important; font-weight: 800 !important; }
+        .header-metric.critical .val { font-size: 21px; color: var(--red); }
+        .header-metric-primary .val { font-size: 24px !important; font-weight: 800 !important; }
 
         /* Safety Score card */
         .header-safety-score {
@@ -248,23 +247,23 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 90px;
-            padding: 8px 16px;
-            border-radius: 12px;
-            margin-right: 16px;
+            min-width: 70px;
+            padding: 6px 14px;
+            border-radius: 10px;
+            margin-right: 10px;
         }
         .safety-score-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             line-height: 1;
             font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
         }
         .safety-score-label {
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             opacity: 0.8;
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         /* Three-tier status utility classes */
@@ -1056,13 +1055,13 @@
             font-weight: 700; color: var(--text);
         }
         .header-left-group {
-            display: flex; align-items: center; gap: 16px;
+            display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+            min-width: 120px; flex-shrink: 0;
         }
         .header-metrics-group {
-            display: flex; gap: 4px; align-items: center;
-            background: linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
-            border-radius: 14px; padding: 5px; border: 1px solid var(--border);
-            position: relative; box-shadow: var(--shadow-xs);
+            display: flex; gap: 0; align-items: center;
+            background: none; border: none; box-shadow: none;
+            padding: 0;
         }
         .header-metrics-group-label {
             position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
@@ -1071,7 +1070,7 @@
             background: var(--bg); padding: 0 6px;
         }
         .header-metric-divider {
-            width: 1px; height: 24px; background: var(--border); margin: 0 2px;
+            width: 1px; height: 18px; background: var(--border); margin: 0 1px;
         }
 
         /* Flag card enhanced */
@@ -1370,39 +1369,18 @@
                 <div class="safety-score-label">Safety Score</div>
             </div>
             <div class="header-metrics-group">
-                <span class="header-metrics-group-label">Safety Rates</span>
                 <div class="header-metric header-metric-primary"><div class="val mono" id="hmTRIR">--</div><div class="lbl">TRIR</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric"><div class="val mono" id="hmDART">--</div><div class="lbl">DART</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric"><div class="val mono" id="hmRecordables">--</div><div class="lbl">Recordables</div></div>
             </div>
             <div class="header-metrics-group">
-                <span class="header-metrics-group-label">Milestones</span>
                 <div class="header-metric"><div class="val mono" id="hmDaysRec">--</div><div class="lbl">Days Since Rec.</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric"><div class="val mono" id="hmDaysLTI">--</div><div class="lbl">Days Since LTI</div></div>
             </div>
-            <div class="header-metrics-group">
-                <span class="header-metrics-group-label">Workforce</span>
-                <div class="header-metric"><div class="val mono" id="hmManHours">--</div><div class="lbl">Man-Hours</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric header-metric-primary"><div class="val mono" id="hmTraining">--</div><div class="lbl">Training</div></div>
-            </div>
-            <div class="header-metrics-group">
-                <span class="header-metrics-group-label">Actions</span>
-                <div class="header-metric header-metric-primary"><div class="val mono" id="hmOpenCAs">--</div><div class="lbl">Open CAs</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric"><div class="val mono" id="hmOverdueCAs">--</div><div class="lbl">Past Due</div></div>
-            </div>
-            <div class="header-metrics-group">
-                <span class="header-metrics-group-label">Compliance</span>
-                <div class="header-metric"><div class="val mono" id="hmObsRate">--</div><div class="lbl">Obs/100 Emp</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric"><div class="val mono" id="hmAssessments">--</div><div class="lbl">Assessments</div></div>
-                <div class="header-metric-divider"></div>
-                <div class="header-metric"><div class="val mono" id="hmDefectRate">--</div><div class="lbl">Insp Defect %</div></div>
-            </div>
+        </div>
+        <!-- Hidden: keeps JS populators working without display -->
+        <div style="display:none">
+            <span id="hmDART"></span><span id="hmRecordables"></span><span id="hmDaysLTI"></span>
+            <span id="hmManHours"></span><span id="hmTraining"></span>
+            <span id="hmOpenCAs"></span><span id="hmOverdueCAs"></span>
+            <span id="hmObsRate"></span><span id="hmAssessments"></span><span id="hmDefectRate"></span>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
             <button type="button" id="refreshBtn" onclick="location.reload()" style="padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;color:var(--text-secondary);transition:all 0.15s" title="Refresh data" aria-label="Refresh dashboard data">Refresh</button>
@@ -1448,6 +1426,7 @@
         <details class="detail-collapse" open><summary>Event Summary</summary><div id="weeklyEventTrendSection"></div></details>
         <div id="redFlagSection"></div>
         <div id="yardScorecardSection"></div>
+        <div id="dotComplianceSection"></div>
     </div>
 
     <!-- Tab 2: Fleet Safety (Camera + Speeding + Devices) -->
@@ -2076,14 +2055,44 @@ function getTrendArrow(key, currentVal) {
     return '';
 }
 
+// Trend arrow for percentage metrics (higher=better: green up, red down; higher=worse: red up, green down)
+function getTrendArrowPct(key, currentVal, higherIsBetter) {
+    var prev = null;
+    try {
+        var cache = JSON.parse(localStorage.getItem('brhas_prev_day') || '{}');
+        prev = cache[key];
+    } catch(e) {}
+    if (prev === null || prev === undefined || currentVal === '--') return '';
+    var diff = Math.round(currentVal - prev);
+    if (diff === 0) return '';
+    if (higherIsBetter) {
+        return diff > 0 ? '<span class="text-green">&#9650; ' + diff + '</span>' : '<span class="text-red">&#9660; ' + Math.abs(diff) + '</span>';
+    } else {
+        return diff > 0 ? '<span class="text-red">&#9650; ' + diff + '</span>' : '<span class="text-green">&#9660; ' + Math.abs(diff) + '</span>';
+    }
+}
+
 function saveTodayAsBaseline() {
     try {
+        // Leading indicator values for trend arrows
+        var spdEvts = getYardFilteredSpeeding();
+        var redSpd = spdEvts.filter(function(e) { return e.tier === 'RED'; }).length;
+        var redPctVal = spdEvts.length > 0 ? Math.round(redSpd / spdEvts.length * 100) : 0;
+        var trStats = getFilteredTrainingStats();
+        var trainPctVal = (trStats && trStats.pct != null) ? trStats.pct : null;
+        var safCAs = (typeof getFilteredSafetyCAs === 'function') ? getFilteredSafetyCAs() : [];
+        var overdCAs = safCAs.filter(function(c) { return c.overdue; });
+        var caOTVal = safCAs.length > 0 ? Math.round((safCAs.length - overdCAs.length) / safCAs.length * 100) : null;
+
         var baseline = {
             camera: getYardFilteredCamera().length,
-            speeding: getYardFilteredSpeeding().length,
+            speeding: spdEvts.length,
             observations: getFilteredObservations().length,
             nearMisses: getFilteredNearMisses().length,
             deviceIssues: getYardFilteredDevices().length,
+            redEventPct: redPctVal,
+            trainingPct: trainPctVal,
+            caOnTimePct: caOTVal,
             date: D.ytd ? D.ytd.report_date : ''
         };
         var existing = JSON.parse(localStorage.getItem('brhas_prev_day') || '{}');
@@ -2306,11 +2315,13 @@ function loadData() {
         fetch('output/speeding_events.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
         fetch('output/device_status.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
         fetch('output/training_compliance.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
-        fetch('output/corrective_actions.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;})
+        fetch('output/corrective_actions.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;}),
+        fetch('output/dot_compliance.json' + cacheBust).then(function(r){return r.json();}).catch(function(){return null;})
     ]).then(function(results) {
         D.ytd = results[0]; D.kpa = results[1]; D.camera = results[2];
         D.speeding = results[3]; D.devices = results[4];
         D.training = results[5]; D.cas = results[6];
+        D.dot_compliance = results[7];
         // Save today's static snapshots for camera/devices/training/ytd
         D_today.camera = D.camera;
         D_today.devices = D.devices;
@@ -2333,9 +2344,13 @@ function loadData() {
                     if (arch && arch.mileage && arch.mileage.total_miles > 0) {
                         D.mileage = arch.mileage;
                         if (arch.driver_scorecards) { D.driver_scorecards = arch.driver_scorecards; D_today.driver_scorecards = arch.driver_scorecards; }
+                        if (arch.fuel_levels) { D.fuel_levels = arch.fuel_levels; }
+                        if (arch.idle_events) { D.idle_events = arch.idle_events; }
                         initDashboard();
                     } else {
                         if (arch && arch.driver_scorecards && !D.driver_scorecards) { D.driver_scorecards = arch.driver_scorecards; D_today.driver_scorecards = arch.driver_scorecards; }
+                        if (arch && arch.fuel_levels && !D.fuel_levels) { D.fuel_levels = arch.fuel_levels; }
+                        if (arch && arch.idle_events && !D.idle_events) { D.idle_events = arch.idle_events; }
                         tryMileage(idx + 1);
                     }
                 });
@@ -2558,6 +2573,28 @@ function mergeArchiveDays(days) {
     // Driver scorecards: use last day's snapshot (rolling 30-day window from Motive)
     merged.driver_scorecards = lastDay.driver_scorecards || null;
 
+    // Fuel levels: point-in-time snapshot, use last day
+    merged.fuel_levels = lastDay.fuel_levels || null;
+
+    // Idle events: accumulate across days
+    merged.idle_events = { total_idle_hours: 0, event_count: 0, by_division: {}, by_driver: {} };
+    for (var ie = 0; ie < days.length; ie++) {
+        var idleDay = days[ie].idle_events;
+        if (idleDay) {
+            merged.idle_events.total_idle_hours += idleDay.total_idle_hours || 0;
+            merged.idle_events.event_count += idleDay.event_count || 0;
+            var idleByDiv = idleDay.by_division || {};
+            for (var idiv in idleByDiv) {
+                merged.idle_events.by_division[idiv] = (merged.idle_events.by_division[idiv] || 0) + idleByDiv[idiv];
+            }
+            var idleByDrv = idleDay.by_driver || {};
+            for (var idrv in idleByDrv) {
+                merged.idle_events.by_driver[idrv] = (merged.idle_events.by_driver[idrv] || 0) + idleByDrv[idrv];
+            }
+        }
+    }
+    if (merged.idle_events.total_idle_hours === 0) merged.idle_events = null;
+
     return merged;
 }
 
@@ -2684,6 +2721,10 @@ function applyAPIData(data, startDate, endDate) {
         D.driver_scorecards = data.driver_scorecards;
         D_today.driver_scorecards = data.driver_scorecards;
     }
+    // Fuel levels and idle events from archive
+    if (data.fuel_levels) D.fuel_levels = data.fuel_levels;
+    if (data.idle_events) D.idle_events = data.idle_events;
+
     // Camera, devices, training stay from today's static files
     D.camera = D_today.camera;
     D.devices = D_today.devices;
@@ -3063,7 +3104,7 @@ function renderHeader() {
         document.getElementById('hmManHours').textContent = st.man_hours ? st.man_hours.toLocaleString() : '--';
         document.getElementById('hmManHours').parentElement.title = 'Total exposure hours YTD. Higher = more exposure, more risk opportunity.';
         var trirEl = document.getElementById('hmTRIR');
-        trirEl.textContent = st.trir != null ? st.trir.toFixed(1) : '--';
+        trirEl.textContent = st.trir != null ? st.trir.toFixed(isTrucking() ? 2 : 1) : '--';
         trirEl.className = 'val mono';
         if (isTrucking()) {
             trirEl.parentElement.title = 'Trucking Industry Avg (NAICS 484): 2.9. Target: < 1.5';
@@ -3081,7 +3122,7 @@ function renderHeader() {
             }
         }
         var dartEl = document.getElementById('hmDART');
-        dartEl.textContent = st.dart != null ? st.dart.toFixed(1) : '--';
+        dartEl.textContent = st.dart != null ? st.dart.toFixed(isTrucking() ? 2 : 1) : '--';
         dartEl.className = 'val mono';
         if (isTrucking()) {
             dartEl.parentElement.title = 'Trucking Industry Avg (NAICS 484): 1.95. Target: < 1.0';
@@ -3183,7 +3224,7 @@ function renderHeader() {
         var inspTotal = btiStats ? btiStats.totalInsp : 0;
         // If Today view has 0 inspections, show YTD value with suffix
         if (inspTotal === 0 && currentDateRange === 'today') {
-            var ytdBtiStats = getBTIInspectionStatsForRange_YTD ? getBTIInspectionStatsForRange_YTD() : null;
+            var ytdBtiStats = (typeof getBTIInspectionStatsForRange_YTD === 'function') ? getBTIInspectionStatsForRange_YTD() : null;
             if (!ytdBtiStats) {
                 // Fallback: compute from full by_month data
                 var fullStats = (function() {
@@ -3334,7 +3375,7 @@ function renderHeader() {
         currentDivision !== 'All Divisions' && currentDivision !== 'All' ?
         currentDivision + ' Division' : currentCompany;
     if (currentYard && currentYard !== 'All Yards') scope += ' -- ' + currentYard;
-    var sources = currentCompany === 'Permian' ? 'KPA EHS' : 'Motive API + KPA EHS';
+    var sources = currentCompany === 'Permian' ? 'KPA EHS' : isTrucking() ? 'ELD/GPS + Safety Management' : 'Motive API + KPA EHS';
 
     // Data freshness indicator
     var genTime = y.generated_at || '';
@@ -3683,6 +3724,8 @@ function renderQuickPulse() {
         var inspCount = btiInspStats ? btiInspStats.totalInsp : 0;
         cards = cards.filter(function(c) { return c.key !== 'observations'; });
         cards.splice(1, 0, { num: inspCount, lbl: 'Inspections', color: inspCount === 0 ? 'yellow' : 'blue', key: 'inspections', tab: 'field' });
+        // BTI: hide perpetually-zero cards (paper pre-trips, no BBS near-miss program)
+        cards = cards.filter(function(c) { return c.num > 0; });
     }
 
     var html = '';
@@ -3793,6 +3836,7 @@ function renderTabContent(tab) {
         }
         safeRender(renderRedFlagDrivers, 'redFlagDrivers');
         safeRender(renderYardScorecard, 'yardScorecard');
+        safeRender(renderDOTCompliance, 'dotCompliance');
     } else if (tab === 'fleet') {
         safeRender(renderFleetKPIs, 'fleetKPIs');
         if (isTrucking()) {
@@ -3890,6 +3934,7 @@ function renderAll() {
         }
     }
 
+    safeRender(renderHeader, 'header');
     safeRender(renderQuickPulse, 'quickPulse');
     // Determine currently active tab
     var activeTab = 'overview';
@@ -3978,7 +4023,7 @@ function renderExecutiveSummary() {
         // Add YTD context for green status
         var filteredSt = getCompanyStats();
         if (filteredSt && filteredSt.trir != null) {
-            headline += ' YTD TRIR: ' + Number(filteredSt.trir).toFixed(1) + '.';
+            headline += ' YTD TRIR: ' + Number(filteredSt.trir).toFixed(isTrucking() ? 2 : 1) + '.';
         }
     } else if (status === 'red') {
         var parts = [];
@@ -4161,13 +4206,15 @@ function renderExecutiveSummary() {
     jumpHtml += '</div>';
     html += jumpHtml;
 
-    var briefTitle = currentDateRange === 'today' ? 'Daily Safety Briefing' : 'Safety Briefing (' + getPeriodLabel() + ')';
+    var briefTitle = isTrucking()
+        ? (currentDateRange === 'today' ? 'Safety Snapshot' : 'Safety Snapshot (' + getPeriodLabel() + ')')
+        : (currentDateRange === 'today' ? 'Daily Safety Briefing' : 'Safety Briefing (' + getPeriodLabel() + ')');
     var severityBadge = status === 'red' ? '<span class="badge badge-red" style="margin-left:12px;font-size:9px">&#x26A0; SEVERITY: HIGH</span>' :
         status === 'yellow' ? '<span class="badge badge-yellow" style="margin-left:12px;font-size:9px">● SEVERITY: MODERATE</span>' :
         '<span class="badge badge-green" style="margin-left:12px;font-size:9px">✓ NORMAL</span>';
     html += '<div class="exec-summary-title">' + briefTitle + severityBadge + '</div>';
     html += '<div class="exec-status-sub">' + esc(statusLabel) + '</div>';
-    html += narrativeHtml;
+    if (!isTrucking()) html += narrativeHtml;
     html += '<div class="exec-headline">' + esc(headline) + '</div>';
     if (streakText) html += '<div class="safety-streak">' + esc(streakText) + '</div>';
 
@@ -4179,8 +4226,7 @@ function renderExecutiveSummary() {
         var btiOverdue = btiCAs.filter(function(c) { return c.overdue; });
         var btiMiles = (D.mileage && D.mileage.by_division) ? (D.mileage.by_division['BTI'] || 0) : 0;
         html += '<div class="card-row" style="margin-top:16px">';
-        html += '<div class="card"><div class="card-num">' + spdEvents.length + '</div><div class="card-lbl">Speeding Events</div></div>';
-        html += '<div class="card"><div class="card-num">' + (btiMiles > 0 ? btiMiles.toLocaleString() : '--') + '</div><div class="card-lbl">Miles Driven</div></div>';
+        html += '<div class="card"><div class="card-num">' + (btiMiles > 0 ? Math.round(btiMiles).toLocaleString() : '--') + '</div><div class="card-lbl">Miles Driven</div></div>';
         if (btiSt && btiSt.trir != null) {
             var btiTrirC = btiSt.trir < 1.5 ? 'text-trir-good' : btiSt.trir <= 2.9 ? 'text-trir-warn' : 'text-trir-bad';
             html += '<div class="card"><div class="card-num ' + btiTrirC + '">' + btiSt.trir.toFixed(2) + '</div><div class="card-lbl">TRIR</div></div>';
@@ -4864,16 +4910,20 @@ function renderSpeeding() {
 
     var spdScope = currentCompany === 'All' ? 'All Companies' :
         currentDivision !== 'All Divisions' && currentDivision !== 'All' ? currentDivision : currentCompany;
-    var html = '<div class="section"><h2 class="section-title">Speeding Events Summary (' + spdScope + ')</h2>';
-    if (red === 0 && events.length > 0) {
-        html += '<div class="alert-green" style="margin-bottom:12px">' + ICON_CHECK + ' Zero RED-tier speeding events -- clean driving day for severe violations.</div>';
+    var html = '';
+    if (!isTrucking()) {
+        // Full summary cards (BTI shows these on Fleet KPIs tab instead)
+        html += '<div class="section"><h2 class="section-title">Speeding Events Summary (' + spdScope + ')</h2>';
+        if (red === 0 && events.length > 0) {
+            html += '<div class="alert-green" style="margin-bottom:12px">' + ICON_CHECK + ' Zero RED-tier speeding events -- clean driving day for severe violations.</div>';
+        }
+        html += '<div class="card-row">';
+        html += '<div class="card"><div class="card-num">' + events.length + '</div><div class="card-lbl">Total Events</div></div>';
+        html += '<div class="card card-red"><div class="card-num">' + red + '</div><div class="card-lbl"><span class="badge badge-red">&#x26A0; RED</span> 20+ Over / 90+ mph</div></div>';
+        html += '<div class="card"><div class="card-num text-orange">' + orange + '</div><div class="card-lbl"><span class="badge badge-orange">● ORANGE</span> 15-19 Over</div></div>';
+        html += '<div class="card"><div class="card-num text-gold">' + yellow + '</div><div class="card-lbl"><span class="badge badge-yellow">YELLOW</span> 10-14 Over</div></div>';
+        html += '</div></div>';
     }
-    html += '<div class="card-row">';
-    html += '<div class="card"><div class="card-num">' + events.length + '</div><div class="card-lbl">Total Events</div></div>';
-    html += '<div class="card card-red"><div class="card-num">' + red + '</div><div class="card-lbl"><span class="badge badge-red">&#x26A0; RED</span> 20+ Over / 90+ mph</div></div>';
-    html += '<div class="card"><div class="card-num text-orange">' + orange + '</div><div class="card-lbl"><span class="badge badge-orange">● ORANGE</span> 15-19 Over</div></div>';
-    html += '<div class="card"><div class="card-num text-gold">' + yellow + '</div><div class="card-lbl"><span class="badge badge-yellow">YELLOW</span> 10-14 Over</div></div>';
-    html += '</div></div>';
     document.getElementById('speedingSummarySection').innerHTML = html;
 
     // Item 6: Time-of-day for speeding
@@ -6577,6 +6627,117 @@ function renderTraining() {
     }
 }
 
+// ===== DOT / FMCSA SAFER Compliance =====
+function renderDOTCompliance() {
+    var div = document.getElementById('dotComplianceSection');
+    if (!div) return;
+    var dot = D.dot_compliance;
+    if (!dot || !dot.companies) { div.innerHTML = ''; return; }
+
+    var companies = [];
+    if (currentCompany === 'All') {
+        companies = Object.keys(dot.companies);
+    } else {
+        if (dot.companies[currentCompany]) companies = [currentCompany];
+    }
+    if (companies.length === 0) { div.innerHTML = ''; return; }
+
+    var notes = dot.notes || {};
+    var html = '<div class="section">';
+    html += '<h2 class="section-title">DOT / FMCSA Compliance</h2>';
+
+    // Build one table for all -- same layout whether 1 or 4 companies
+    html += '<div class="table-wrap"><table><thead><tr>';
+    if (companies.length > 1) html += '<th>Company</th>';
+    html += '<th>DOT#</th><th>Rating</th><th>Units</th><th>Drivers</th><th>MCS-150 Miles</th>';
+    html += '<th>Vehicle OOS</th>';
+    html += '<th>Driver OOS</th>';
+    html += '<th>Crashes (24 mo)</th>';
+    html += '</tr></thead><tbody>';
+
+    companies.forEach(function(coKey) {
+        var c = dot.companies[coKey];
+        if (!c) return;
+        var insp = c.inspections || {};
+        var natl = insp.national_avg || {};
+        var veh = insp.vehicle || {};
+        var drv = insp.driver || {};
+        var haz = insp.hazmat || {};
+        var crashes = c.crashes || {};
+
+        // Rating color
+        var rc = '';
+        if (c.safety_rating === 'Satisfactory') rc = 'var(--green)';
+        else if (c.safety_rating === 'Conditional') rc = 'var(--amber)';
+        else if (c.safety_rating === 'Unsatisfactory') rc = 'var(--red)';
+
+        // OOS colors
+        var vOOS = veh.oos_pct || 0;
+        var vNatl = natl.vehicle_oos_pct || 22.26;
+        var vc = vOOS <= vNatl ? 'var(--green)' : 'var(--red)';
+        var dOOS = drv.oos_pct || 0;
+        var dNatl = natl.driver_oos_pct || 6.67;
+        var dc = dOOS <= dNatl ? 'var(--green)' : 'var(--red)';
+
+        // Crash color
+        var crashTotal = crashes.total || 0;
+        var cc = crashTotal === 0 ? 'var(--green)' : (crashes.fatal > 0 ? 'var(--red)' : 'var(--amber)');
+        var crashParts = [];
+        if (crashes.fatal > 0) crashParts.push(crashes.fatal + ' fatal');
+        if (crashes.injury > 0) crashParts.push(crashes.injury + ' inj');
+        if (crashes.tow > 0) crashParts.push(crashes.tow + ' tow');
+
+        // Mileage
+        var miles = c.mcs150_mileage ? (c.mcs150_mileage.miles || 0).toLocaleString() : '--';
+        var milesYr = c.mcs150_mileage ? ' (' + c.mcs150_mileage.year + ')' : '';
+
+        html += '<tr>';
+        if (companies.length > 1) html += '<td style="font-weight:600">' + esc(coKey) + '</td>';
+        html += '<td style="color:var(--text-muted)">' + c.dot_number + '</td>';
+        html += '<td style="color:' + rc + ';font-weight:600">' + (c.safety_rating || 'None') + '</td>';
+        html += '<td>' + (c.power_units || '--') + '</td>';
+        html += '<td>' + (c.drivers || '--') + '</td>';
+        html += '<td>' + miles + '<span style="color:var(--text-muted);font-size:10px">' + milesYr + '</span></td>';
+        // Vehicle OOS
+        html += '<td style="color:' + vc + ';font-weight:600">' + vOOS.toFixed(1) + '%';
+        html += '<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">' + (veh.oos||0) + '/' + (veh.total||0) + ' &bull; avg ' + vNatl + '%</span></td>';
+        // Driver OOS
+        html += '<td style="color:' + dc + ';font-weight:600">' + dOOS.toFixed(1) + '%';
+        html += '<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">' + (drv.oos||0) + '/' + (drv.total||0) + ' &bull; avg ' + dNatl + '%</span></td>';
+        // Crashes
+        html += '<td style="color:' + cc + ';font-weight:600">' + crashTotal;
+        if (crashParts.length) html += '<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">' + crashParts.join(', ') + '</span>';
+        html += '</td>';
+        html += '</tr>';
+
+        // Note row (e.g. BTI fatal crash context)
+        if (notes[coKey]) {
+            html += '<tr><td colspan="' + (companies.length > 1 ? 9 : 8) + '" style="font-size:11px;font-style:italic;color:var(--text-secondary);padding:2px 12px 10px">&#8627; ' + esc(notes[coKey]) + '</td></tr>';
+        }
+
+        // Hazmat row if they have inspections
+        if ((haz.total || 0) > 0) {
+            var hOOS = haz.oos_pct || 0;
+            var hNatl = natl.hazmat_oos_pct || 4.44;
+            var hc = hOOS <= hNatl ? 'var(--green)' : 'var(--red)';
+            html += '<tr><td colspan="' + (companies.length > 1 ? 7 : 6) + '" style="text-align:right;font-size:11px;color:var(--text-muted);padding:2px 8px">Hazmat OOS:</td>';
+            html += '<td style="color:' + hc + ';font-weight:600;font-size:12px">' + hOOS.toFixed(1) + '%<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">' + (haz.oos||0) + '/' + (haz.total||0) + ' &bull; avg ' + hNatl + '%</span></td>';
+            html += '<td></td></tr>';
+        }
+    });
+
+    html += '</tbody></table></div>';
+
+    // Source line
+    html += '<div style="margin-top:10px;font-size:11px;color:var(--text-muted);text-align:right">';
+    html += 'Source: FMCSA SAFER &bull; 24-month snapshot as of ' + (dot.generated_at || '').slice(0, 10);
+    html += ' &bull; OOS rates color-coded: <span style="color:var(--green)">at/below</span> or <span style="color:var(--red)">above</span> national average';
+    html += '</div>';
+
+    html += '</div>';
+    div.innerHTML = html;
+}
+
 // ===== Item 4: Yard Comparison Scorecard with Events-Per-Vehicle =====
 function renderYardScorecard() {
     var div = document.getElementById('yardScorecardSection');
@@ -7204,22 +7365,8 @@ function renderLeadingIndicators() {
     html += '<div class="li-row">';
 
     if (isTrucking()) {
-        // Trucking leading indicators: speeding rate + inspection completion
+        // Trucking leading indicators: RED event % (unique here; other metrics on Fleet tab)
         var spdEvts = getYardFilteredSpeeding();
-        var btiMiles = (D.mileage && D.mileage.by_division) ? (D.mileage.by_division['BTI'] || 0) : 0;
-        var ratePer10k = btiMiles > 0 ? (spdEvts.length / btiMiles * 10000).toFixed(1) : '--';
-        var rateColor = ratePer10k === '--' ? '' : (parseFloat(ratePer10k) <= 2.0 ? 'text-green' : parseFloat(ratePer10k) <= 4.0 ? 'text-amber' : 'text-red');
-        var rateCtx = ratePer10k === '--' ? 'Mileage data loading' : (parseFloat(ratePer10k) <= 2.0 ? 'Target: < 2.0' : 'Above 2.0 target');
-
-        html += '<div class="li-card">';
-        html += '<div class="li-card-icon icon-blue"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg></div>';
-        html += '<div class="li-num ' + rateColor + '">' + ratePer10k + '</div>';
-        html += '<div class="li-lbl">Speeding per 10K Miles</div>';
-        if (rateCtx) html += '<div class="li-card-context">' + rateCtx + '</div>';
-        if (rateColor === 'text-red') html += '<div class="li-card-context" style="margin-top:6px"><span class="badge badge-red">&#x26A0; HIGH</span></div>';
-        else if (rateColor === 'text-amber') html += '<div class="li-card-context" style="margin-top:6px"><span class="badge badge-yellow">MONITOR</span></div>';
-        else if (rateColor === 'text-green') html += '<div class="li-card-context" style="margin-top:6px"><span class="badge badge-green">&#10003; ON TARGET</span></div>';
-        html += '</div>';
 
         // RED event % of total
         var redSpd = spdEvts.filter(function(e) { return e.tier === 'RED'; }).length;
@@ -7227,7 +7374,8 @@ function renderLeadingIndicators() {
         var redPctColor = redPct === '--' ? '' : (parseInt(redPct) <= 5 ? 'text-green' : parseInt(redPct) <= 15 ? 'text-amber' : 'text-red');
         html += '<div class="li-card">';
         html += '<div class="li-card-icon icon-red"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div>';
-        html += '<div class="li-num ' + redPctColor + '">' + redPct + '%</div>';
+        var redTrend = getTrendArrowPct('redEventPct', redPct === '--' ? '--' : parseInt(redPct), false);
+        html += '<div class="li-num ' + redPctColor + '">' + redPct + '% ' + redTrend + '</div>';
         html += '<div class="li-lbl">RED Events (20+ Over)</div>';
         html += '<div class="li-card-context">Target: < 5% of total</div>';
         if (redPctColor === 'text-red') html += '<div class="li-card-context" style="margin-top:6px"><span class="badge badge-red">&#x26A0; HIGH</span></div>';
@@ -7262,7 +7410,8 @@ function renderLeadingIndicators() {
     // Training
     html += '<div class="li-card">';
     html += '<div class="li-card-icon icon-amber"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/></svg></div>';
-    html += '<div class="li-num ' + trColor + '">' + trainPct + '%</div>';
+    var trainTrend = getTrendArrowPct('trainingPct', trainPct === '--' ? '--' : parseInt(trainPct), true);
+    html += '<div class="li-num ' + trColor + '">' + trainPct + '% ' + trainTrend + '</div>';
     html += '<div class="li-lbl">Training Compliance</div>';
     if (trCtx) html += '<div class="li-card-context">' + trCtx + '</div>';
     if (trColor === 'text-red') html += '<div class="li-card-context" style="margin-top:6px"><span class="badge badge-red">&#x26A0; CRITICAL</span></div>';
@@ -7273,7 +7422,8 @@ function renderLeadingIndicators() {
     // CA On-Time
     html += '<div class="li-card">';
     html += '<div class="li-card-icon icon-red"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.828a1 1 0 101.415-1.414L11 9.586V6z" clip-rule="evenodd"/></svg></div>';
-    html += '<div class="li-num ' + caColor + '">' + caOnTimeRate + '%</div>';
+    var caTrend = getTrendArrowPct('caOnTimePct', caOnTimeRate === '--' ? '--' : parseInt(caOnTimeRate), true);
+    html += '<div class="li-num ' + caColor + '">' + caOnTimeRate + '% ' + caTrend + '</div>';
     html += '<div class="li-lbl">Safety CAs On-Time</div>';
     // Add count context when total CAs is small (makes % less misleading)
     if (safetyCAs.length > 0 && safetyCAs.length <= 3) {
@@ -7373,14 +7523,14 @@ function renderTRIRTrend() {
                     annotation: {
                         annotations: {
                             trirTarget: {
-                                type: 'line', yMin: 1.0, yMax: 1.0,
+                                type: 'line', yMin: isTrucking() ? 1.5 : 1.0, yMax: isTrucking() ? 1.5 : 1.0,
                                 borderColor: '#dc2626', borderDash: [5, 5], borderWidth: 1,
-                                label: { content: 'TRIR Target 1.0', display: true, position: 'start', font: { size: 10 } }
+                                label: { content: isTrucking() ? 'TRIR Target 1.5' : 'TRIR Target 1.0', display: true, position: 'start', font: { size: 10 } }
                             },
                             dartTarget: {
-                                type: 'line', yMin: 0.4, yMax: 0.4,
+                                type: 'line', yMin: isTrucking() ? 1.0 : 0.4, yMax: isTrucking() ? 1.0 : 0.4,
                                 borderColor: '#f39c12', borderDash: [5, 5], borderWidth: 1,
-                                label: { content: 'DART Target 0.4', display: true, position: 'end', font: { size: 10 } }
+                                label: { content: isTrucking() ? 'DART Target 1.0' : 'DART Target 0.4', display: true, position: 'end', font: { size: 10 } }
                             }
                         }
                     }
@@ -7730,6 +7880,9 @@ function renderFleetKPIs() {
         html += '<div class="section-jumps" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:8px 12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);font-size:10px">';
         html += '<span style="color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;line-height:2.2">Jump to:</span>';
         html += '<a href="#" onclick="document.getElementById(\'speedingSummarySection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Speeding</a>';
+        html += '<a href="#" onclick="document.getElementById(\'hardEventsSection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Hard Events</a>';
+        html += '<a href="#" onclick="document.getElementById(\'idleTimeSection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Idle Time</a>';
+        html += '<a href="#" onclick="document.getElementById(\'fuelLevelSection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Fuel</a>';
         html += '<a href="#" onclick="document.getElementById(\'repeatOffendersSection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Repeat Offenders</a>';
         html += '<a href="#" onclick="document.getElementById(\'driverScorecardSection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Driver Scorecard</a>';
         html += '</div>';
@@ -7738,13 +7891,16 @@ function renderFleetKPIs() {
             html += '<div class="snapshot-badge">Data reflects ' + getPeriodLabel() + '.' + mileNote + '</div>';
         }
 
-        html += '<div class="card-row">';
-        html += '<div class="card"><div class="card-num">' + (hasMileage ? totalMiles.toLocaleString() : '--') + '</div><div class="card-lbl">Total Miles' + (iftaLag ? '<br><span style="font-size:9px;color:#d97706">IFTA pending</span>' : '') + '</div></div>';
-        html += '<div class="card"><div class="card-num">' + spdEvents.length + '</div><div class="card-lbl">Speeding Events</div></div>';
-        html += '<div class="card card-red"><div class="card-num">' + redSpd + '</div><div class="card-lbl">RED (20+ Over)</div></div>';
-        html += '<div class="card"><div class="card-num">' + orangeSpd + '</div><div class="card-lbl">ORANGE (15-19)</div></div>';
         var yellowSpd2 = spdEvents.length - redSpd - orangeSpd;
-        html += '<div class="card"><div class="card-num">' + yellowSpd2 + '</div><div class="card-lbl">YELLOW (10-14)</div></div>';
+        var mileSource = D.mileage ? (D.mileage.source || '') : '';
+        var mileAvgNote = '';
+        if (mileSource.indexOf('odometer_avg_') === 0) {
+            var avgDays = mileSource.replace('odometer_avg_', '').replace('d', '');
+            mileAvgNote = '<br><span style="font-size:9px;color:#d97706">(' + avgDays + '-day avg)</span>';
+        }
+        html += '<div class="card-row">';
+        html += '<div class="card"><div class="card-num">' + (hasMileage ? Math.round(totalMiles).toLocaleString() : '--') + '</div><div class="card-lbl">' + (currentDateRange === 'today' ? 'Daily' : 'Total') + ' Miles' + (iftaLag ? '<br><span style="font-size:9px;color:#d97706">IFTA pending</span>' : mileAvgNote) + '</div></div>';
+        html += '<div class="card"><div class="card-num">' + spdEvents.length + '</div><div class="card-lbl">Speeding Events</div></div>';
         html += '</div>';
 
         html += '<div class="card-row" style="margin-top:8px">';
@@ -7772,6 +7928,69 @@ function renderFleetKPIs() {
             html += '<span style="color:#f39c12">ORANGE ' + orangeSpd + ' (' + pctOrange + '%)</span>';
             html += '<span style="color:#eab308">YELLOW ' + yellowSpd + ' (' + pctYellow + '%)</span>';
             html += '</div></div>';
+        }
+
+        // Hard Events KPI Row (from driver scorecards - 30-day rolling window)
+        var totalHardBrakes = 0, totalHardAccels = 0, totalHardCorners = 0, scMiles = 0;
+        if (D.driver_scorecards) {
+            D.driver_scorecards.forEach(function(sc) {
+                if (sc.company !== 'BTI') return;
+                totalHardBrakes += sc.hard_brakes || 0;
+                totalHardAccels += sc.hard_accels || 0;
+                totalHardCorners += sc.hard_corners || 0;
+                scMiles += sc.miles || 0;
+            });
+        }
+        var totalHardEvents = totalHardBrakes + totalHardAccels + totalHardCorners;
+        var hardPer10K = scMiles > 0 ? (totalHardEvents / scMiles * 10000).toFixed(1) : '--';
+        var hardColor = hardPer10K === '--' ? '#999' : (parseFloat(hardPer10K) <= 5.0 ? '#27ae60' : parseFloat(hardPer10K) <= 10.0 ? '#f39c12' : '#dc2626');
+
+        html += '<div id="hardEventsSection" style="margin-top:20px"><div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Hard Events (30-day rolling)</div>';
+        html += '<div class="card-row">';
+        html += '<div class="card"><div class="card-num">' + totalHardBrakes + '</div><div class="card-lbl">Hard Brakes</div></div>';
+        html += '<div class="card"><div class="card-num">' + totalHardAccels + '</div><div class="card-lbl">Hard Accels</div></div>';
+        html += '<div class="card"><div class="card-num">' + totalHardCorners + '</div><div class="card-lbl">Hard Corners</div></div>';
+        html += '<div class="card" title="Combined hard brakes + accels + corners per 10,000 miles driven"><div class="card-num mono" style="color:' + hardColor + '">' + hardPer10K + '</div><div class="card-lbl">Hard Events per 10K Mi<br><span style="font-size:9px;color:#999">Goal: &lt; 5.0</span></div></div>';
+        html += '</div></div>';
+
+        // Idle Time KPI Row
+        if (D.idle_events) {
+            var btiIdleHrs = D.idle_events.by_division ? (D.idle_events.by_division['BTI'] || 0) : 0;
+            // Use per-division event count if available, otherwise estimate from hours proportion
+            var btiIdleEvts = D.idle_events.by_division_count ? (D.idle_events.by_division_count['BTI'] || 0) : 0;
+            if (!btiIdleEvts && btiIdleHrs > 0 && D.idle_events.total_idle_hours > 0) {
+                btiIdleEvts = Math.round((D.idle_events.event_count || 0) * btiIdleHrs / D.idle_events.total_idle_hours);
+            }
+            var vehCount = D.mileage ? (D.mileage.vehicle_count || 0) : 0;
+            var avgIdlePerVeh = (btiIdleHrs > 0 && vehCount > 0) ? (btiIdleHrs / vehCount).toFixed(1) : '--';
+
+            html += '<div id="idleTimeSection" style="margin-top:20px"><div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Idle Time</div>';
+            html += '<div class="card-row">';
+            html += '<div class="card"><div class="card-num">' + (btiIdleHrs > 0 ? btiIdleHrs.toFixed(1) : '--') + '</div><div class="card-lbl">Total Idle Hours</div></div>';
+            html += '<div class="card"><div class="card-num">' + btiIdleEvts + '</div><div class="card-lbl">Idle Events</div></div>';
+            html += '<div class="card"><div class="card-num">' + avgIdlePerVeh + '</div><div class="card-lbl">Avg Idle hrs / Vehicle</div></div>';
+            html += '</div></div>';
+        }
+
+        // Fuel Level KPI Row
+        if (D.fuel_levels) {
+            var btiFuelAvg = D.fuel_levels.by_division ? (D.fuel_levels.by_division['BTI'] || D.fuel_levels.fleet_avg_fuel_pct || 0) : 0;
+            var lowFuelVehicles = (D.fuel_levels.low_fuel_vehicles || []).filter(function(v) {
+                return v.division === 'BTI';
+            });
+            var fuelColor = btiFuelAvg >= 50 ? '#27ae60' : btiFuelAvg >= 30 ? '#f39c12' : '#dc2626';
+
+            html += '<div id="fuelLevelSection" style="margin-top:20px"><div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Fuel Levels (Current Snapshot)</div>';
+            html += '<div class="card-row">';
+            html += '<div class="card"><div class="card-num mono" style="color:' + fuelColor + '">' + (btiFuelAvg > 0 ? btiFuelAvg + '%' : '--') + '</div><div class="card-lbl">Avg Fuel Level</div></div>';
+            html += '<div class="card' + (lowFuelVehicles.length > 0 ? ' card-red' : '') + '"><div class="card-num">' + lowFuelVehicles.length + '</div><div class="card-lbl">Low Fuel (&lt; 25%)</div></div>';
+            html += '</div>';
+            if (lowFuelVehicles.length > 0) {
+                html += '<div style="margin-top:8px;font-size:12px;color:var(--text-muted)"><strong>Low Fuel Vehicles:</strong> ';
+                html += lowFuelVehicles.map(function(v) { return esc(v.vehicle) + ' (' + v.fuel_pct + '%)'; }).join(', ');
+                html += '</div>';
+            }
+            html += '</div>';
         }
 
         html += '</div>';
@@ -8043,7 +8262,8 @@ function renderDriverScorecard() {
             yellow: spd.yellow,
             evtPer10K: miles > 0 ? ((spd.total / miles) * 10000) : 0,
             hardBrakes: sc.hard_brakes || 0,
-            hardAccels: sc.hard_accels || 0
+            hardAccels: sc.hard_accels || 0,
+            hardCorners: sc.hard_corners || 0
         });
     });
 
@@ -8091,6 +8311,7 @@ function renderDriverScorecard() {
         html += '<h3 style="color:var(--green);margin:12px 0 6px;font-size:14px">Top Performers</h3>';
         html += '<div class="table-wrap"><table><thead><tr>';
         html += '<th>Driver</th><th>Grade</th><th>Miles</th><th>Speeding</th><th>RED</th><th>Evt/10K Mi</th>';
+        if (trucking) html += '<th>Brk</th><th>Acc</th>';
         html += '</tr></thead><tbody>';
         var topTableId = 'topDrivers_' + Date.now();
         for (var t = 0; t < topDrivers.length; t++) {
@@ -8105,6 +8326,7 @@ function renderDriverScorecard() {
             html += '<td>' + d.total + '</td>';
             html += '<td class="' + (d.red > 0 ? 'fw-700 text-red' : '') + '">' + d.red + '</td>';
             html += '<td class="mono">' + d.evtPer10K.toFixed(1) + '</td>';
+            if (trucking) html += '<td class="mono">' + d.hardBrakes + '</td><td class="mono">' + d.hardAccels + '</td>';
             html += '</tr>';
         }
         html += '</tbody></table></div>';
@@ -8121,6 +8343,7 @@ function renderDriverScorecard() {
         html += '<h3 style="color:var(--red);margin:18px 0 6px;font-size:14px">Needs Improvement</h3>';
         html += '<div class="table-wrap"><table><thead><tr>';
         html += '<th>Driver</th><th>Grade</th><th>Miles</th><th>Speeding</th><th>RED</th><th>Evt/10K Mi</th>';
+        if (trucking) html += '<th>Brk</th><th>Acc</th>';
         html += '</tr></thead><tbody>';
         for (var b = 0; b < bottomFiltered.length; b++) {
             var bd = bottomFiltered[b];
@@ -8134,6 +8357,7 @@ function renderDriverScorecard() {
             html += '<td>' + bd.total + '</td>';
             html += '<td class="' + (bd.red > 0 ? 'fw-700 text-red' : '') + '">' + bd.red + '</td>';
             html += '<td class="mono">' + bd.evtPer10K.toFixed(1) + '</td>';
+            if (trucking) html += '<td class="mono">' + bd.hardBrakes + '</td><td class="mono">' + bd.hardAccels + '</td>';
             html += '</tr>';
         }
         html += '</tbody></table></div>';
@@ -9191,7 +9415,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // UX17/18: Restore filter state from URL hash
-    var hash = window.location.hash.substring(1);
+    var hash = decodeURIComponent(window.location.hash.substring(1));
     if (hash) {
         var parts = hash.split('|');
         if (parts.length >= 4) {

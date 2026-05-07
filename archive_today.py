@@ -83,11 +83,13 @@ def parse_vehicle_division(vehicle):
 
 def _build_vehicle_lookup():
     """Build vehicle_number -> yard, division, and driver lookups from Motive /v1/vehicles API.
-    Uses GROUP_ID_MAP to map ALL divisions (not just Casing) to yards/divisions."""
+    Uses GROUP_ID_MAP to map ALL divisions (not just Casing) to yards/divisions.
+    Also returns list of Motive vehicle IDs (for idle events API)."""
     headers = {"X-Api-Key": MOTIVE_KEY}
     vehicle_yards = {}
     vehicle_divisions = {}
     vehicle_drivers = {}
+    vehicle_motive_ids = []
     page = 1
     while True:
         resp = _api_get(
@@ -108,6 +110,10 @@ def _build_vehicle_lookup():
             short_num = num.split(" ")[0].strip()
             # Also clean double-space descriptions: "BTI-6172" from "BTI-6172  - DRIVER NAME"
             clean_num = num.split("  ")[0].strip() if "  " in num else short_num
+            # Store Motive vehicle ID for idle events API
+            veh_id = v.get("id")
+            if veh_id:
+                vehicle_motive_ids.append(int(veh_id))
             matched = False
             for gid in v.get("group_ids", []):
                 if gid in GROUP_ID_MAP:
@@ -145,7 +151,7 @@ def _build_vehicle_lookup():
         if page * 100 >= pag.get("total", 0):
             break
         page += 1
-    return vehicle_yards, vehicle_divisions, vehicle_drivers
+    return vehicle_yards, vehicle_divisions, vehicle_drivers, vehicle_motive_ids
 
 
 def fetch_daily_mileage(target_date):
@@ -291,17 +297,20 @@ def parse_vehicle_yard(vehicle):
 
 
 def fetch_vehicle_odometers():
-    """Fetch current odometer readings for ALL vehicles via /v1/vehicle_locations.
+    """Fetch current odometer readings and fuel levels for ALL vehicles via /v1/vehicle_locations.
 
-    Returns dict: {vehicle_number: odometer_miles} or None on failure.
+    Returns tuple: (odometers, fuel_levels)
+      odometers: {vehicle_number: odometer_miles} or None
+      fuel_levels: {vehicle_number: {primary_pct, secondary_pct, engine_hours}} or None
     This endpoint has NO lag -- returns real-time readings.
     """
     if not MOTIVE_KEY:
         print("  Odometer: MOTIVE_API_KEY not set, skipping")
-        return None
+        return None, None
 
     headers = {"X-Api-Key": MOTIVE_KEY}
     odometers = {}
+    fuel_levels = {}
     page = 1
 
     while page <= 100:
@@ -324,15 +333,43 @@ def fetch_vehicle_odometers():
             veh_num = veh_data.get("number", "")
             loc = veh_data.get("current_location") or {}
             odo = loc.get("odometer") if loc else None
-            if veh_num and odo is not None:
+
+            # Clean vehicle number
+            clean_num = ""
+            if veh_num:
+                clean_num = veh_num.split("  ")[0].strip() if "  " in veh_num else veh_num.strip()
+
+            if clean_num and odo is not None:
                 try:
                     odo_val = float(odo)
                     if odo_val > 0:
-                        # Clean vehicle number (take first token before long descriptions)
-                        clean_num = veh_num.split("  ")[0].strip() if "  " in veh_num else veh_num.strip()
                         odometers[clean_num] = round(odo_val, 1)
                 except (ValueError, TypeError):
                     pass
+
+            # Extract fuel levels and engine hours
+            if clean_num and loc:
+                fuel_entry = {}
+                fuel_pri = loc.get("fuel_primary_remaining_percentage")
+                fuel_sec = loc.get("fuel_secondary_remaining_percentage")
+                eng_hrs = loc.get("true_engine_hours") or loc.get("engine_hours")
+                if fuel_pri is not None:
+                    try:
+                        fuel_entry["primary_pct"] = round(float(fuel_pri), 1)
+                    except (ValueError, TypeError):
+                        pass
+                if fuel_sec is not None:
+                    try:
+                        fuel_entry["secondary_pct"] = round(float(fuel_sec), 1)
+                    except (ValueError, TypeError):
+                        pass
+                if eng_hrs is not None:
+                    try:
+                        fuel_entry["engine_hours"] = round(float(eng_hrs), 1)
+                    except (ValueError, TypeError):
+                        pass
+                if fuel_entry:
+                    fuel_levels[clean_num] = fuel_entry
 
         pag = data.get("pagination", {})
         total = pag.get("total", 0)
@@ -344,7 +381,129 @@ def fetch_vehicle_odometers():
         print(f"  Odometer: {len(odometers)} vehicles with readings")
     else:
         print("  Odometer: no readings returned")
-    return odometers if odometers else None
+    if fuel_levels:
+        print(f"  Fuel: {len(fuel_levels)} vehicles with fuel data")
+    return (odometers if odometers else None, fuel_levels if fuel_levels else None)
+
+
+def fetch_idle_events(target_date, vehicle_motive_ids, vehicle_divisions=None):
+    """Fetch idle events from Motive /v1/idle_events for a single day.
+
+    Args:
+        target_date: date string YYYY-MM-DD
+        vehicle_motive_ids: list of Motive vehicle IDs (integers)
+        vehicle_divisions: {vehicle_number: division} for tagging
+
+    Returns dict with total_idle_hours, event_count, by_division, by_driver, or None.
+    """
+    if not MOTIVE_KEY:
+        print("  Idle: MOTIVE_API_KEY not set, skipping")
+        return None
+    if not vehicle_motive_ids:
+        print("  Idle: no vehicle IDs available, skipping")
+        return None
+
+    headers = {"X-Api-Key": MOTIVE_KEY, "X-Metric-Units": "false"}
+    events = []
+
+    # Batch vehicle IDs in groups of 50 to avoid URL length limits
+    batch_size = 50
+    for batch_start in range(0, len(vehicle_motive_ids), batch_size):
+        batch_ids = vehicle_motive_ids[batch_start:batch_start + batch_size]
+        page = 1
+        while page <= 50:
+            # Build query string manually for vehicle_ids[] array params
+            param_parts = [
+                f"per_page=100",
+                f"page_no={page}",
+                f"start_date={target_date}",
+                f"end_date={target_date}",
+            ]
+            for vid in batch_ids:
+                param_parts.append(f"vehicle_ids[]={vid}")
+            query_string = "&".join(param_parts)
+
+            resp = _api_get(
+                f"{MOTIVE_BASE_V1}/idle_events?{query_string}",
+                headers=headers,
+                params=None,
+                timeout=60,
+            )
+            if not resp:
+                break
+            data = resp.json()
+
+            items = data.get("idle_events", [])
+            if not items:
+                break
+
+            for item in items:
+                evt = item.get("idle_event", item)
+                start_time = evt.get("start_time")
+                end_time = evt.get("end_time")
+                if not start_time or not end_time:
+                    continue
+
+                # Calculate duration in hours
+                try:
+                    st = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+                    et = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+                    duration_hrs = (et - st).total_seconds() / 3600
+                except Exception:
+                    duration_hrs = 0
+
+                if duration_hrs <= 0 or duration_hrs > 24:
+                    continue
+
+                # Extract vehicle/driver info
+                veh = evt.get("vehicle") or {}
+                veh_num = veh.get("number", "") if isinstance(veh, dict) else ""
+                clean_num = veh_num.split("  ")[0].strip() if "  " in veh_num else veh_num.strip()
+
+                driver = evt.get("driver") or {}
+                driver_name = ""
+                if isinstance(driver, dict):
+                    driver_name = f"{driver.get('first_name', '')} {driver.get('last_name', '')}".strip()
+
+                div = (vehicle_divisions or {}).get(clean_num) or parse_vehicle_division(clean_num)
+
+                events.append({
+                    "vehicle": clean_num,
+                    "driver": driver_name,
+                    "division": div,
+                    "duration_hrs": round(duration_hrs, 2),
+                })
+
+            pag = data.get("pagination", {})
+            total = pag.get("total", 0)
+            if total and page * 100 >= total:
+                break
+            page += 1
+
+    if not events:
+        print("  Idle: no events found")
+        return None
+
+    # Aggregate
+    total_hours = sum(e["duration_hrs"] for e in events)
+    by_division = defaultdict(float)
+    by_division_count = defaultdict(int)
+    by_driver = defaultdict(float)
+    for e in events:
+        by_division[e["division"]] += e["duration_hrs"]
+        by_division_count[e["division"]] += 1
+        if e["driver"]:
+            by_driver[e["driver"]] += e["duration_hrs"]
+
+    print(f"  Idle: {len(events)} events, {total_hours:.1f} total hours")
+
+    return {
+        "total_idle_hours": round(total_hours, 1),
+        "event_count": len(events),
+        "by_division": {k: round(v, 1) for k, v in sorted(by_division.items(), key=lambda x: -x[1])},
+        "by_division_count": dict(sorted(by_division_count.items(), key=lambda x: -x[1])),
+        "by_driver": {k: round(v, 1) for k, v in sorted(by_driver.items(), key=lambda x: -x[1])[:20]},
+    }
 
 
 def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
@@ -365,11 +524,12 @@ def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
     if not current_odometers:
         return None
 
-    # Try to find previous day's odometer readings (check up to 3 days back)
+    # Try to find previous day's odometer readings (check up to 30 days back)
     prev_odometers = None
+    prev_days_gap = 0
     from datetime import datetime as dt2, timedelta as td2
     target = dt2.strptime(archive_date, "%Y-%m-%d").date()
-    for days_back in range(1, 4):
+    for days_back in range(1, 31):
         prev_date = (target - td2(days=days_back)).isoformat()
         prev_path = os.path.join(archive_dir, f"{prev_date}.json")
         if os.path.exists(prev_path):
@@ -379,7 +539,8 @@ def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
                 prev_odo = (prev_archive.get("mileage") or {}).get("odometers")
                 if prev_odo and len(prev_odo) > 0:
                     prev_odometers = prev_odo
-                    print(f"  Odometer: using baseline from {prev_date} ({len(prev_odo)} vehicles)")
+                    prev_days_gap = days_back
+                    print(f"  Odometer: using baseline from {prev_date} ({len(prev_odo)} vehicles, {days_back} day{'s' if days_back > 1 else ''} gap)")
                     break
             except Exception:
                 pass
@@ -395,7 +556,9 @@ def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
             "source": "odometer_baseline",
         }
 
-    # Compute deltas
+    # Compute deltas (scale sanity check by gap size)
+    max_miles_per_day = 2000
+    max_miles = max_miles_per_day * max(prev_days_gap, 1)
     total_miles = 0
     by_division = defaultdict(float)
     by_yard = defaultdict(float)
@@ -406,8 +569,8 @@ def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
         if prev_odo is None:
             continue  # New vehicle, no baseline
         delta = odo - prev_odo
-        # Sanity check: skip negative deltas (odometer reset) or impossibly high (>2000 mi/day)
-        if delta <= 0 or delta > 2000:
+        # Sanity check: skip negative deltas (odometer reset) or impossibly high
+        if delta <= 0 or delta > max_miles:
             continue
         total_miles += delta
         # Use group-based lookup first (accurate), fall back to prefix parsing
@@ -417,7 +580,14 @@ def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
         by_yard[yard] += delta
         vehicles_with_miles.add(veh)
 
-    print(f"  Odometer: {total_miles:,.1f} daily miles from {len(vehicles_with_miles)} vehicles")
+    # If multi-day gap, divide to get per-day average
+    if prev_days_gap > 1 and total_miles > 0:
+        print(f"  Odometer: {total_miles:,.1f} miles over {prev_days_gap} days = {total_miles / prev_days_gap:,.1f} avg/day from {len(vehicles_with_miles)} vehicles")
+        total_miles = round(total_miles / prev_days_gap, 1)
+        by_division = {k: round(v / prev_days_gap, 1) for k, v in by_division.items()}
+        by_yard = {k: round(v / prev_days_gap, 1) for k, v in by_yard.items()}
+    else:
+        print(f"  Odometer: {total_miles:,.1f} daily miles from {len(vehicles_with_miles)} vehicles")
 
     return {
         "total_miles": round(total_miles, 1),
@@ -425,7 +595,7 @@ def compute_odometer_mileage(current_odometers, archive_dir, archive_date,
         "by_yard": {k: round(v, 1) for k, v in sorted(by_yard.items(), key=lambda x: -x[1])},
         "vehicle_count": len(vehicles_with_miles),
         "odometers": current_odometers,
-        "source": "odometer_delta",
+        "source": "odometer_delta" if prev_days_gap <= 1 else f"odometer_avg_{prev_days_gap}d",
     }
 
 
@@ -525,7 +695,7 @@ def main():
     vehicle_divisions = {}
     vehicle_drivers = {}
     if MOTIVE_KEY:
-        vehicle_yards, vehicle_divisions, vehicle_drivers = _build_vehicle_lookup()
+        vehicle_yards, vehicle_divisions, vehicle_drivers, vehicle_motive_ids = _build_vehicle_lookup()
 
     # Enrich speeding yard + driver data
     speeding = loaded.get("speeding")
@@ -550,7 +720,7 @@ def main():
 
     # Fetch mileage: prefer odometer deltas (no lag), fall back to IFTA
     mileage_data = None
-    odometers = fetch_vehicle_odometers()
+    odometers, fuel_levels_raw = fetch_vehicle_odometers()
     if odometers:
         mileage_data = compute_odometer_mileage(
             odometers, args.output_dir, archive_date,
@@ -607,6 +777,33 @@ def main():
                 matched += 1
         print(f"  Scorecards: {matched}/{len(driver_scorecards)} matched to divisions")
 
+    # Compute fuel level summary
+    fuel_summary = None
+    if fuel_levels_raw:
+        fuel_by_division = defaultdict(list)
+        low_fuel_vehicles = []
+        for veh, fl in fuel_levels_raw.items():
+            div = vehicle_divisions.get(veh) or parse_vehicle_division(veh)
+            pct = fl.get("primary_pct")
+            if pct is not None:
+                fuel_by_division[div].append(pct)
+                if pct < 25:
+                    low_fuel_vehicles.append({"vehicle": veh, "fuel_pct": pct, "division": div})
+        div_avgs = {d: round(sum(vals) / len(vals), 1) for d, vals in fuel_by_division.items() if vals}
+        all_pcts = [fl.get("primary_pct") for fl in fuel_levels_raw.values() if fl.get("primary_pct") is not None]
+        fleet_avg = round(sum(all_pcts) / len(all_pcts), 1) if all_pcts else None
+        fuel_summary = {
+            "fleet_avg_fuel_pct": fleet_avg,
+            "by_division": div_avgs,
+            "low_fuel_vehicles": sorted(low_fuel_vehicles, key=lambda x: x["fuel_pct"])[:10],
+            "vehicle_count": len(all_pcts),
+        }
+        print(f"  Fuel summary: {len(all_pcts)} vehicles, fleet avg {fleet_avg}%, {len(low_fuel_vehicles)} low fuel")
+
+    # Fetch idle events
+    idle_data = fetch_idle_events(archive_date, vehicle_motive_ids,
+                                  vehicle_divisions=vehicle_divisions)
+
     # Build archive object
     archive = {
         "date": archive_date,
@@ -617,6 +814,8 @@ def main():
         "ytd": loaded.get("ytd"),
         "mileage": mileage_data,
         "driver_scorecards": driver_scorecards,
+        "fuel_levels": fuel_summary,
+        "idle_events": idle_data,
         "cas": None,       # Point-in-time, not archived
         "training": None,  # Point-in-time, not archived
         "devices": None,   # Point-in-time, not archived
@@ -636,7 +835,9 @@ def main():
     mi_total = round((mileage_data or {}).get("total_miles", 0))
     sc_ct = len(driver_scorecards) if driver_scorecards else 0
     print(f"  Archived {archive_date}: {output_path} ({size_kb:.1f} KB)")
-    print(f"  Summary: speeding={spd_ct} camera={cam_ct} kpa={kpa_ok} mileage={mi_total}mi scorecards={sc_ct}")
+    fuel_ok = "Y" if fuel_summary else "N"
+    idle_ct = (idle_data or {}).get("event_count", 0)
+    print(f"  Summary: speeding={spd_ct} camera={cam_ct} kpa={kpa_ok} mileage={mi_total}mi scorecards={sc_ct} fuel={fuel_ok} idle={idle_ct}")
 
 
 if __name__ == "__main__":

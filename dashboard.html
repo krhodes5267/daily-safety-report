@@ -3057,6 +3057,9 @@ function renderHeader() {
     headerDateEl.title = 'Green dot = data is from today (live)';
 
     var genAt = y.generated_at || '';
+    // Reset stale styles first
+    headerDateEl.style.color = '';
+    headerDateEl.style.fontWeight = '';
     if (genAt) {
         var genDate = new Date(genAt);
         var nowDate = new Date();

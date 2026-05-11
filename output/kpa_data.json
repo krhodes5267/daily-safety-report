@@ -1,6 +1,6 @@
 {
   "report_date": "2026-05-10",
-  "generated_at": "2026-05-11 15:29:59",
+  "generated_at": "2026-05-11 17:01:53",
   "observations": {
     "total": 12,
     "by_type": {
@@ -262,7 +262,7 @@
     "current_month": "2026-05",
     "current_year": 2026,
     "total_all_time": 2072,
-    "total_mtd": 166,
+    "total_mtd": 168,
     "total_ytd": 1254,
     "mtd_by_assessor": {
       "Michael Salazar": {
@@ -308,6 +308,25 @@
         ],
         "forms": [
           "WS - Poly Pipe Field Assessment"
+        ]
+      },
+      "Dustin Fry": {
+        "count": 13,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection",
+          "HSE - Workplace Inspection Checklist"
+        ]
+      },
+      "James Bowling": {
+        "count": 18,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
         ]
       },
       "Hector Cruz": {
@@ -391,16 +410,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Dustin Fry": {
-        "count": 12,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection",
-          "HSE - Workplace Inspection Checklist"
-        ]
-      },
       "Roger Gray": {
         "count": 8,
         "yards": [
@@ -430,15 +439,6 @@
       },
       "Sergio Garcia": {
         "count": 3,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "James Bowling": {
-        "count": 17,
         "yards": [
           "Unknown"
         ],
@@ -777,6 +777,25 @@
           "RH - Rathole Field Assessment"
         ]
       },
+      "Dustin Fry": {
+        "count": 13,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection",
+          "HSE - Workplace Inspection Checklist"
+        ]
+      },
+      "James Bowling": {
+        "count": 36,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
       "Hector Cruz": {
         "count": 51,
         "yards": [
@@ -858,16 +877,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Dustin Fry": {
-        "count": 12,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection",
-          "HSE - Workplace Inspection Checklist"
-        ]
-      },
       "Roger Gray": {
         "count": 65,
         "yards": [
@@ -904,17 +913,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "James Bowling": {
-        "count": 35,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Ruben Lopez": {
-        "count": 10,
+        "count": 9,
         "yards": [
           "Unknown"
         ],
@@ -1139,7 +1139,7 @@
         ]
       },
       "Taurino Medrano": {
-        "count": 20,
+        "count": 19,
         "yards": [
           "Unknown"
         ],
@@ -1304,14 +1304,14 @@
     "mtd_by_form": {
       "CSG - Safety Casing Field Assessment": 14,
       "WS - Poly Pipe Field Assessment": 1,
-      "CSG - Pre/Post Trip Inspection": 150,
+      "CSG - Pre/Post Trip Inspection": 152,
       "HSE - Workplace Inspection Checklist": 1
     },
     "mtd_by_yard": {
       "Midland": 11,
       "Laredo": 1,
       "Hobbs": 2,
-      "Unknown": 152
+      "Unknown": 154
     },
     "by_month": {
       "2025-01": 29,
@@ -1327,10 +1327,10 @@
       "2025-11": 62,
       "2025-12": 68,
       "2026-01": 71,
-      "2026-02": 87,
+      "2026-02": 85,
       "2026-03": 509,
       "2026-04": 421,
-      "2026-05": 166
+      "2026-05": 168
     },
     "by_form_all": {
       "CSG - Safety Casing Field Assessment": 406,
@@ -15591,6 +15591,24 @@
         "yard": "Unknown"
       },
       {
+        "date": "2026-05-11",
+        "assessor": "Dustin Fry",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-05-11",
+        "assessor": "James Bowling",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
         "date": "2026-05-04",
         "assessor": "Hector Cruz",
         "form_id": 229645,
@@ -24566,24 +24584,6 @@
       {
         "date": "2026-02-26",
         "assessor": "James Sellers",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-26",
-        "assessor": "Taurino Medrano",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-25",
-        "assessor": "Ruben Lopez",
         "form_id": 229645,
         "form_name": "CSG - Pre/Post Trip Inspection",
         "company": "BRHAS",

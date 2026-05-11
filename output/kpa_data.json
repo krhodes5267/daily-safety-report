@@ -1,6 +1,6 @@
 {
   "report_date": "2026-05-10",
-  "generated_at": "2026-05-11 17:11:20",
+  "generated_at": "2026-05-11 18:50:40",
   "observations": {
     "total": 12,
     "by_type": {
@@ -262,7 +262,7 @@
     "current_month": "2026-05",
     "current_year": 2026,
     "total_all_time": 2072,
-    "total_mtd": 168,
+    "total_mtd": 170,
     "total_ytd": 1254,
     "mtd_by_assessor": {
       "Michael Salazar": {
@@ -308,6 +308,24 @@
         ],
         "forms": [
           "WS - Poly Pipe Field Assessment"
+        ]
+      },
+      "Roger Gray": {
+        "count": 9,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Luis Ocampo": {
+        "count": 4,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
         ]
       },
       "Dustin Fry": {
@@ -403,15 +421,6 @@
       },
       "Salvador Ramos": {
         "count": 2,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Roger Gray": {
-        "count": 8,
         "yards": [
           "Unknown"
         ],
@@ -617,15 +626,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Luis Ocampo": {
-        "count": 3,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Osvaldo Jauregui Polanco": {
         "count": 1,
         "yards": [
@@ -777,6 +777,24 @@
           "RH - Rathole Field Assessment"
         ]
       },
+      "Roger Gray": {
+        "count": 66,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Luis Ocampo": {
+        "count": 13,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
       "Dustin Fry": {
         "count": 13,
         "yards": [
@@ -842,7 +860,7 @@
         ]
       },
       "James Sellers": {
-        "count": 202,
+        "count": 200,
         "yards": [
           "Unknown"
         ],
@@ -870,15 +888,6 @@
       },
       "Salvador Ramos": {
         "count": 10,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Roger Gray": {
-        "count": 65,
         "yards": [
           "Unknown"
         ],
@@ -1076,15 +1085,6 @@
         ]
       },
       "Ricardo Chavez": {
-        "count": 12,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Luis Ocampo": {
         "count": 12,
         "yards": [
           "Unknown"
@@ -1304,14 +1304,14 @@
     "mtd_by_form": {
       "CSG - Safety Casing Field Assessment": 14,
       "WS - Poly Pipe Field Assessment": 1,
-      "CSG - Pre/Post Trip Inspection": 152,
+      "CSG - Pre/Post Trip Inspection": 154,
       "HSE - Workplace Inspection Checklist": 1
     },
     "mtd_by_yard": {
       "Midland": 11,
       "Laredo": 1,
       "Hobbs": 2,
-      "Unknown": 154
+      "Unknown": 156
     },
     "by_month": {
       "2025-01": 29,
@@ -1327,10 +1327,10 @@
       "2025-11": 62,
       "2025-12": 68,
       "2026-01": 71,
-      "2026-02": 85,
+      "2026-02": 83,
       "2026-03": 509,
       "2026-04": 421,
-      "2026-05": 168
+      "2026-05": 170
     },
     "by_form_all": {
       "CSG - Safety Casing Field Assessment": 406,
@@ -15591,6 +15591,24 @@
         "yard": "Unknown"
       },
       {
+        "date": "2026-05-10",
+        "assessor": "Roger Gray",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-05-11",
+        "assessor": "Luis Ocampo",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
         "date": "2026-05-11",
         "assessor": "Dustin Fry",
         "form_id": 229645,
@@ -24566,24 +24584,6 @@
       {
         "date": "2026-02-26",
         "assessor": "Noe Roman",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-26",
-        "assessor": "James Sellers",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-26",
-        "assessor": "James Sellers",
         "form_id": 229645,
         "form_name": "CSG - Pre/Post Trip Inspection",
         "company": "BRHAS",

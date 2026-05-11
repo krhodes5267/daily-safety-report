@@ -2529,6 +2529,10 @@ function mergeArchiveDays(days) {
     var lastDay = days[days.length - 1];
     merged.ytd = lastDay.ytd || null;
     merged.cas = lastDay.cas || null;
+    // Ensure generated_at exists so header doesn't show stale
+    if (merged.ytd && !merged.ytd.generated_at) {
+        merged.ytd.generated_at = lastDay.generated_at || new Date().toISOString().replace('T', ' ').slice(0, 19);
+    }
     // Carry assessment_activity from last day (has form_analytics + details for all forms)
     if (lastDay.kpa && lastDay.kpa.assessment_activity) {
         merged.kpa.assessment_activity = lastDay.kpa.assessment_activity;

@@ -2365,7 +2365,7 @@ function loadData() {
 
 function initDashboard() {
     // Clear stale sessionStorage cache on version bump
-    var DASH_VERSION = '20260511b';
+    var DASH_VERSION = '20260512a';
     if (sessionStorage.getItem('dash_v') !== DASH_VERSION) {
         sessionStorage.clear();
         sessionStorage.setItem('dash_v', DASH_VERSION);
@@ -2469,6 +2469,8 @@ function restoreTodayData() {
         D.camera = D_today.camera;
         D.devices = D_today.devices;
         D.training = D_today.training;
+        if (D_today.mileage) D.mileage = D_today.mileage;
+        if (D_today.driver_scorecards) D.driver_scorecards = D_today.driver_scorecards;
         var banner = document.getElementById('apiBanner');
         banner.style.display = 'none';
         renderHeader();
@@ -7306,8 +7308,8 @@ function renderPortfolioScorecard() {
     }
     html += '<div class="card"><div class="card-num">' + spdCount + '</div><div class="card-lbl">Speeding Events</div></div>';
     if (isTrucking()) {
-        var btiMiles = (D.mileage && D.mileage.by_division && !D.mileage._iftaLag) ? (D.mileage.by_division['BTI'] || 0) : 0;
-        html += '<div class="card"><div class="card-num">' + (btiMiles > 0 ? btiMiles.toLocaleString() : '--') + '</div><div class="card-lbl">Miles Driven' + (D.mileage && D.mileage._iftaLag ? '<br><span style="font-size:9px;color:#d97706">IFTA pending</span>' : '') + '</div></div>';
+        var btiMiles = (D.mileage && D.mileage.by_division) ? (D.mileage.by_division['BTI'] || 0) : 0;
+        html += '<div class="card"><div class="card-num">' + (btiMiles > 0 ? Math.round(btiMiles).toLocaleString() : '--') + '</div><div class="card-lbl">Miles Driven</div></div>';
     }
     if (trSt && trSt.pct != null) {
         html += '<div class="card"><div class="card-num ' + (trSt.pct >= 95 ? 'text-trir-good' : trSt.pct >= 85 ? 'text-trir-warn' : 'text-red') + '">' + trSt.pct + '%</div><div class="card-lbl">Training</div></div>';
@@ -7875,11 +7877,10 @@ function renderFleetKPIs() {
     if (isTrucking()) {
         // Get mileage from merged archive data (D.mileage populated by mergeArchiveDays)
         var totalMiles = 0;
-        var iftaLag = D.mileage && D.mileage._iftaLag;
         if (D.mileage && D.mileage.by_division) {
             totalMiles = D.mileage.by_division['BTI'] || 0;
         }
-        var hasMileage = totalMiles > 0 && !iftaLag;
+        var hasMileage = totalMiles > 0;
         var milesPerEvent = (hasMileage && spdEvents.length > 0) ? Math.round(totalMiles / spdEvents.length) : 0;
         var ratePer10k = hasMileage ? (spdEvents.length / totalMiles * 10000).toFixed(1) : '--';
         var avgDailyMiles = 0;
@@ -7903,8 +7904,7 @@ function renderFleetKPIs() {
         html += '<a href="#" onclick="document.getElementById(\'driverScorecardSection\').scrollIntoView({behavior:\'smooth\'});return false" class="jump-link">Driver Scorecard</a>';
         html += '</div>';
         if (currentDateRange !== 'today') {
-            var mileNote = iftaLag ? ' Mileage unavailable -- Motive IFTA data has a 1-3 day processing delay.' : '';
-            html += '<div class="snapshot-badge">Data reflects ' + getPeriodLabel() + '.' + mileNote + '</div>';
+            html += '<div class="snapshot-badge">Data reflects ' + getPeriodLabel() + '.</div>';
         }
 
         var yellowSpd2 = spdEvents.length - redSpd - orangeSpd;
@@ -7915,7 +7915,7 @@ function renderFleetKPIs() {
             mileAvgNote = '<br><span style="font-size:9px;color:#d97706">(' + avgDays + '-day avg)</span>';
         }
         html += '<div class="card-row">';
-        html += '<div class="card"><div class="card-num">' + (hasMileage ? Math.round(totalMiles).toLocaleString() : '--') + '</div><div class="card-lbl">' + (currentDateRange === 'today' ? 'Daily' : 'Total') + ' Miles' + (iftaLag ? '<br><span style="font-size:9px;color:#d97706">IFTA pending</span>' : mileAvgNote) + '</div></div>';
+        html += '<div class="card"><div class="card-num">' + (hasMileage ? Math.round(totalMiles).toLocaleString() : '--') + '</div><div class="card-lbl">' + (currentDateRange === 'today' ? 'Daily' : 'Total') + ' Miles' + mileAvgNote + '</div></div>';
         html += '<div class="card"><div class="card-num">' + spdEvents.length + '</div><div class="card-lbl">Speeding Events</div></div>';
         html += '</div>';
 

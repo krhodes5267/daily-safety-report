@@ -1,6 +1,6 @@
 {
   "report_date": "2026-05-11",
-  "generated_at": "2026-05-12 12:03:47",
+  "generated_at": "2026-05-12 13:39:28",
   "observations": {
     "total": 20,
     "by_type": {
@@ -381,7 +381,7 @@
     "current_month": "2026-05",
     "current_year": 2026,
     "total_all_time": 2072,
-    "total_mtd": 179,
+    "total_mtd": 182,
     "total_ytd": 1254,
     "mtd_by_assessor": {
       "Michael Salazar": {
@@ -427,6 +427,33 @@
         ],
         "forms": [
           "WS - Poly Pipe Field Assessment"
+        ]
+      },
+      "Rafael Munoz": {
+        "count": 2,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Salvador Ramos": {
+        "count": 3,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Joao Demenjon": {
+        "count": 3,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
         ]
       },
       "Leopoldo Guerrero": {
@@ -592,15 +619,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Salvador Ramos": {
-        "count": 2,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Raymundo Ramos": {
         "count": 2,
         "yards": [
@@ -638,15 +656,6 @@
         ]
       },
       "Hurbano Lopez": {
-        "count": 2,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Joao Demenjon": {
         "count": 2,
         "yards": [
           "Unknown"
@@ -755,15 +764,6 @@
         ]
       },
       "Osvaldo Jauregui Polanco": {
-        "count": 1,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Rafael Munoz": {
         "count": 1,
         "yards": [
           "Unknown"
@@ -905,6 +905,33 @@
           "RH - Rathole Field Assessment"
         ]
       },
+      "Rafael Munoz": {
+        "count": 23,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Salvador Ramos": {
+        "count": 11,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Joao Demenjon": {
+        "count": 12,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
       "Leopoldo Guerrero": {
         "count": 2,
         "yards": [
@@ -924,7 +951,7 @@
         ]
       },
       "James Sellers": {
-        "count": 200,
+        "count": 198,
         "yards": [
           "Unknown"
         ],
@@ -1006,7 +1033,7 @@
         ]
       },
       "Hector Cruz": {
-        "count": 50,
+        "count": 49,
         "yards": [
           "Unknown"
         ],
@@ -1068,15 +1095,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Salvador Ramos": {
-        "count": 10,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Raymundo Ramos": {
         "count": 2,
         "yards": [
@@ -1115,15 +1133,6 @@
       },
       "Hurbano Lopez": {
         "count": 7,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Joao Demenjon": {
-        "count": 11,
         "yards": [
           "Unknown"
         ],
@@ -1232,15 +1241,6 @@
       },
       "Osvaldo Jauregui Polanco": {
         "count": 7,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Rafael Munoz": {
-        "count": 22,
         "yards": [
           "Unknown"
         ],
@@ -1432,14 +1432,14 @@
     "mtd_by_form": {
       "CSG - Safety Casing Field Assessment": 14,
       "WS - Poly Pipe Field Assessment": 1,
-      "CSG - Pre/Post Trip Inspection": 163,
+      "CSG - Pre/Post Trip Inspection": 166,
       "HSE - Workplace Inspection Checklist": 1
     },
     "mtd_by_yard": {
       "Midland": 11,
       "Laredo": 1,
       "Hobbs": 2,
-      "Unknown": 165
+      "Unknown": 168
     },
     "by_month": {
       "2025-01": 29,
@@ -1455,10 +1455,10 @@
       "2025-11": 62,
       "2025-12": 68,
       "2026-01": 71,
-      "2026-02": 74,
+      "2026-02": 71,
       "2026-03": 509,
       "2026-04": 421,
-      "2026-05": 179
+      "2026-05": 182
     },
     "by_form_all": {
       "CSG - Safety Casing Field Assessment": 406,
@@ -15720,6 +15720,33 @@
       },
       {
         "date": "2026-05-12",
+        "assessor": "Rafael Munoz",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-05-12",
+        "assessor": "Salvador Ramos",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-05-12",
+        "assessor": "Joao Demenjon",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-05-12",
         "assessor": "Leopoldo Guerrero",
         "form_id": 229645,
         "form_name": "CSG - Pre/Post Trip Inspection",
@@ -24685,33 +24712,6 @@
       {
         "date": "2026-02-27",
         "assessor": "Cesar Herrera Garcia",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-27",
-        "assessor": "Hector Cruz",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-27",
-        "assessor": "James Sellers",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-02-27",
-        "assessor": "James Sellers",
         "form_id": 229645,
         "form_name": "CSG - Pre/Post Trip Inspection",
         "company": "BRHAS",

@@ -1,15 +1,15 @@
 {
   "report_date": "2026-05-12",
-  "generated_at": "2026-05-12 12:06:43",
+  "generated_at": "2026-05-12 13:42:24",
   "overall_pct": 76.6,
-  "total_employees": 1085,
-  "compliant_count": 831,
+  "total_employees": 1087,
+  "compliant_count": 833,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
-      "total": 736,
-      "compliant": 608,
-      "pct": 82.6
+      "total": 738,
+      "compliant": 609,
+      "pct": 82.5
     },
     "BTI": {
       "total": 62,
@@ -18,8 +18,8 @@
     },
     "Transcend": {
       "total": 106,
-      "compliant": 89,
-      "pct": 84.0
+      "compliant": 90,
+      "pct": 84.9
     },
     "Permian": {
       "total": 151,
@@ -39,9 +39,9 @@
       "pct": 55.6
     },
     "Casing": {
-      "total": 395,
-      "compliant": 325,
-      "pct": 82.3
+      "total": 397,
+      "compliant": 326,
+      "pct": 82.1
     },
     "Construction": {
       "total": 18,
@@ -111,9 +111,9 @@
       "pct": 100.0
     },
     "Jourdanton": {
-      "total": 19,
-      "compliant": 14,
-      "pct": 73.7
+      "total": 21,
+      "compliant": 15,
+      "pct": 71.4
     },
     "Laredo": {
       "total": 39,
@@ -129,9 +129,9 @@
         "pct": 98.3
       },
       "Jourdanton": {
-        "total": 33,
-        "compliant": 27,
-        "pct": 81.8
+        "total": 35,
+        "compliant": 28,
+        "pct": 80.0
       },
       "Midland": {
         "total": 304,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 106,
-        "compliant": 89,
-        "pct": 84.0
+        "compliant": 90,
+        "pct": 84.9
       }
     },
     "Permian": {
@@ -253,9 +253,9 @@
     },
     "Casing": {
       "Jourdanton": {
-        "total": 19,
-        "compliant": 14,
-        "pct": 73.7
+        "total": 21,
+        "compliant": 15,
+        "pct": 71.4
       },
       "Midland": {
         "total": 176,
@@ -415,13 +415,13 @@
     },
     "Midland": {
       "total": 616,
-      "compliant": 471,
-      "pct": 76.5
+      "compliant": 472,
+      "pct": 76.6
     },
     "Jourdanton": {
-      "total": 33,
-      "compliant": 27,
-      "pct": 81.8
+      "total": 35,
+      "compliant": 28,
+      "pct": 80.0
     },
     "Levelland": {
       "total": 105,
@@ -1135,6 +1135,25 @@
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Brandon Fraire",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Jourdanton",
+      "percent_complete": 28,
+      "incomplete_count": 28,
+      "complete_count": 11,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Hot Work - Welding, Cutting, and Brazing",
+        "HSE - Heat Management",
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1881,25 +1900,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Steven Ceja",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 74,
-      "incomplete_count": 10,
-      "complete_count": 29,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Cold Weather Management",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Leopoldo Diaz Acevedo",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -2176,6 +2176,25 @@
         "HSE - Lock Out/Tag Out ",
         "HSE - Electrical Grounding and Bonding",
         "HSE - Electrical Safety "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Steven Ceja",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Laredo",
+      "percent_complete": 79,
+      "incomplete_count": 8,
+      "complete_count": 31,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Cold Weather Management",
+        "HSE - Excavation & Trenching",
+        "HSE - Fall Protection",
+        "HSE - Driver Safety "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3892,24 +3911,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Steven Vinson",
-      "company": "Transcend",
-      "division": "TD Rig 20",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesus Cervantes Ponce De Leon",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -3982,23 +3983,6 @@
       "company": "BRHAS",
       "division": "Casing",
       "yard": "Bryan",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Pete Gonzales",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
       "percent_complete": 92,
       "incomplete_count": 3,
       "complete_count": 36,
@@ -4430,22 +4414,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Cedric Dixon",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 36,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Roel Garcia",
       "company": "BTI",
       "division": "Trucking",
@@ -4457,6 +4425,22 @@
       "incomplete_training_names": [
         "HSE - Confined Space - Permit Required ",
         "HSE - Behavioral Based Safety"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Pete Gonzales",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Jourdanton",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Confined Space - Permit Required ",
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4761,6 +4745,21 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Cedric Dixon",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 37,
+      "total_assigned": 38,
+      "incomplete_training_names": [
+        "HSE - Observation Program "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Juan Esquivel Jr",
       "company": "BRHAS",
       "division": "Rathole",
@@ -5032,7 +5031,7 @@
     }
   ],
   "headcount_by_yard": {
-    "Jourdanton": 19,
+    "Jourdanton": 21,
     "Midland": 176,
     "Bryan": 47,
     "Hobbs": 47,

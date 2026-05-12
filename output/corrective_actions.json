@@ -1,8 +1,8 @@
 {
   "report_date": "2026-05-12",
-  "generated_at": "2026-05-12 12:07:16",
+  "generated_at": "2026-05-12 13:42:53",
   "summary": {
-    "total_open": 678,
+    "total_open": 677,
     "total_overdue": 325,
     "by_assignee": {
       "Sergio Damian Martinez Salazar": {
@@ -633,10 +633,6 @@
         "total": 1,
         "overdue": 0
       },
-      "Michael Hancock": {
-        "total": 1,
-        "overdue": 0
-      },
       "Geronimo Fuentes": {
         "total": 1,
         "overdue": 0
@@ -690,11 +686,10 @@
       "Root Cause Analysis": 1,
       "Unknown (478502)": 5,
       "TD - Observation Card": 6,
-      "Unknown (194580)": 1,
-      "Unknown (241495)": 1
+      "Unknown (194580)": 1
     },
     "by_age": {
-      "0-7 days": 12,
+      "0-7 days": 11,
       "8-30 days": 25,
       "31-60 days": 23,
       "61-90 days": 15,
@@ -10732,21 +10727,6 @@
       "description": "Please set follow up date two weeks from lubrication date and assign to the rig manager.",
       "assigned_to": "Randall Mull",
       "created_by": "Randall Mull",
-      "created_date": "2026-05-07",
-      "due_date": "",
-      "days_open": 5,
-      "overdue": false
-    },
-    {
-      "id": "ondsyyn6flujg17ii2p4",
-      "report_number": "80825131",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/80825131",
-      "form_id": 241495,
-      "origin_form": "Unknown (241495)",
-      "division": "Shared",
-      "description": "Extinguisher was out of compliance, new one out on after KPA",
-      "assigned_to": "Michael Hancock",
-      "created_by": "Dimitri Moliere",
       "created_date": "2026-05-07",
       "due_date": "",
       "days_open": 5,

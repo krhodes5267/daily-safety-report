@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-05-18",
-  "generated_at": "2026-05-18 13:57:03",
-  "overall_pct": 78.8,
-  "total_employees": 1087,
-  "compliant_count": 857,
+  "report_date": "2026-05-19",
+  "generated_at": "2026-05-19 12:50:09",
+  "overall_pct": 79.2,
+  "total_employees": 1088,
+  "compliant_count": 862,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 741,
-      "compliant": 627,
-      "pct": 84.6
+      "compliant": 631,
+      "pct": 85.2
     },
     "BTI": {
       "total": 62,
@@ -22,9 +22,9 @@
       "pct": 87.5
     },
     "Permian": {
-      "total": 150,
-      "compliant": 75,
-      "pct": 50.0
+      "total": 151,
+      "compliant": 76,
+      "pct": 50.3
     },
     "Valor": {
       "total": 30,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 403,
-      "compliant": 336,
-      "pct": 83.4
+      "compliant": 337,
+      "pct": 83.6
     },
     "Construction": {
       "total": 16,
@@ -80,13 +80,13 @@
     },
     "Rathole": {
       "total": 138,
-      "compliant": 117,
-      "pct": 84.8
+      "compliant": 119,
+      "pct": 86.2
     },
     "Shop": {
       "total": 17,
-      "compliant": 7,
-      "pct": 41.2
+      "compliant": 8,
+      "pct": 47.1
     }
   },
   "by_yard": {
@@ -97,8 +97,8 @@
     },
     "Bryan": {
       "total": 50,
-      "compliant": 34,
-      "pct": 68.0
+      "compliant": 35,
+      "pct": 70.0
     },
     "Kilgore": {
       "total": 65,
@@ -135,18 +135,18 @@
       },
       "Midland": {
         "total": 302,
-        "compliant": 277,
-        "pct": 91.7
+        "compliant": 278,
+        "pct": 92.1
       },
       "Levelland": {
         "total": 75,
-        "compliant": 56,
-        "pct": 74.7
+        "compliant": 58,
+        "pct": 77.3
       },
       "Bryan": {
         "total": 50,
-        "compliant": 34,
-        "pct": 68.0
+        "compliant": 35,
+        "pct": 70.0
       },
       "Hobbs": {
         "total": 50,
@@ -218,9 +218,9 @@
     },
     "Permian": {
       "Midland": {
-        "total": 143,
-        "compliant": 73,
-        "pct": 51.0
+        "total": 144,
+        "compliant": 74,
+        "pct": 51.4
       },
       "Lubbock": {
         "total": 7,
@@ -264,8 +264,8 @@
       },
       "Bryan": {
         "total": 50,
-        "compliant": 34,
-        "pct": 68.0
+        "compliant": 35,
+        "pct": 70.0
       },
       "Hobbs": {
         "total": 50,
@@ -303,8 +303,8 @@
     "Rathole": {
       "Levelland": {
         "total": 64,
-        "compliant": 51,
-        "pct": 79.7
+        "compliant": 53,
+        "pct": 82.8
       },
       "North Dakota": {
         "total": 6,
@@ -397,8 +397,8 @@
     "Shop": {
       "Midland": {
         "total": 8,
-        "compliant": 3,
-        "pct": 37.5
+        "compliant": 4,
+        "pct": 50.0
       },
       "Levelland": {
         "total": 9,
@@ -414,9 +414,9 @@
       "pct": 98.3
     },
     "Midland": {
-      "total": 611,
-      "compliant": 483,
-      "pct": 79.1
+      "total": 612,
+      "compliant": 485,
+      "pct": 79.2
     },
     "Jourdanton": {
       "total": 35,
@@ -425,13 +425,13 @@
     },
     "Levelland": {
       "total": 105,
-      "compliant": 78,
-      "pct": 74.3
+      "compliant": 80,
+      "pct": 76.2
     },
     "Bryan": {
       "total": 50,
-      "compliant": 34,
-      "pct": 68.0
+      "compliant": 35,
+      "pct": 70.0
     },
     "Hobbs": {
       "total": 50,
@@ -1344,25 +1344,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Cipriano Rivera Guerrero",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 54,
-      "incomplete_count": 12,
-      "complete_count": 14,
-      "total_assigned": 26,
-      "incomplete_training_names": [
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Hearing Conservation/Noise Awareness ",
-        "HSE - Incident Reporting",
-        "HSE - Spotter Safety Training",
-        "HSE - Driver Safety "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesus Paz Jr",
       "company": "Permian",
       "division": "Rentals",
@@ -1377,6 +1358,25 @@
         "HSE - Personal Protective Equipment (PPE)",
         "HSE - Hand Protection and Placement",
         "HSE - Respiratory Protection "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Cipriano Rivera Guerrero",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 56,
+      "incomplete_count": 12,
+      "complete_count": 15,
+      "total_assigned": 27,
+      "incomplete_training_names": [
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Hearing Conservation/Noise Awareness ",
+        "HSE - Incident Reporting",
+        "HSE - Spotter Safety Training",
+        "HSE - Driver Safety "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3103,24 +3103,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Carlos Gonzales Jr",
-      "company": "BRHAS",
-      "division": "Shop",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Epifanio Hernandez",
       "company": "BRHAS",
       "division": "Casing",
@@ -3894,23 +3876,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Isacc Pinedo",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Luciano Rodela",
       "company": "BRHAS",
       "division": "Environmental",
@@ -4217,22 +4182,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Clarence Roberts Jr",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Billy Simpson",
       "company": "BRHAS",
       "division": "Shop",
@@ -4472,21 +4421,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Luis Ocampo",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Bryan",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Behavioral Based Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

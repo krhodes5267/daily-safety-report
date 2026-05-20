@@ -1,6 +1,6 @@
 {
-  "report_date": "2026-05-19",
-  "generated_at": "2026-05-19 12:50:09",
+  "report_date": "2026-05-20",
+  "generated_at": "2026-05-20 12:33:31",
   "overall_pct": 79.2,
   "total_employees": 1088,
   "compliant_count": 862,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 403,
-      "compliant": 337,
-      "pct": 83.6
+      "compliant": 336,
+      "pct": 83.4
     },
     "Construction": {
       "total": 16,
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 138,
-      "compliant": 119,
-      "pct": 86.2
+      "compliant": 120,
+      "pct": 87.0
     },
     "Shop": {
       "total": 17,
@@ -112,8 +112,8 @@
     },
     "Jourdanton": {
       "total": 21,
-      "compliant": 16,
-      "pct": 76.2
+      "compliant": 15,
+      "pct": 71.4
     },
     "Laredo": {
       "total": 40,
@@ -130,8 +130,8 @@
       },
       "Jourdanton": {
         "total": 35,
-        "compliant": 29,
-        "pct": 82.9
+        "compliant": 28,
+        "pct": 80.0
       },
       "Midland": {
         "total": 302,
@@ -140,8 +140,8 @@
       },
       "Levelland": {
         "total": 75,
-        "compliant": 58,
-        "pct": 77.3
+        "compliant": 59,
+        "pct": 78.7
       },
       "Bryan": {
         "total": 50,
@@ -254,8 +254,8 @@
     "Casing": {
       "Jourdanton": {
         "total": 21,
-        "compliant": 16,
-        "pct": 76.2
+        "compliant": 15,
+        "pct": 71.4
       },
       "Midland": {
         "total": 175,
@@ -303,8 +303,8 @@
     "Rathole": {
       "Levelland": {
         "total": 64,
-        "compliant": 53,
-        "pct": 82.8
+        "compliant": 54,
+        "pct": 84.4
       },
       "North Dakota": {
         "total": 6,
@@ -420,13 +420,13 @@
     },
     "Jourdanton": {
       "total": 35,
-      "compliant": 29,
-      "pct": 82.9
+      "compliant": 28,
+      "pct": 80.0
     },
     "Levelland": {
       "total": 105,
-      "compliant": 80,
-      "pct": 76.2
+      "compliant": 81,
+      "pct": 77.1
     },
     "Bryan": {
       "total": 50,
@@ -3157,24 +3157,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Christopher Kuelling",
-      "company": "Transcend",
-      "division": "TD Rig 20",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Devhen Lott",
       "company": "BTI",
       "division": "Trucking",
@@ -4166,22 +4148,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Robert Ramirez",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 36,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Billy Simpson",
       "company": "BRHAS",
       "division": "Shop",
@@ -4496,6 +4462,36 @@
       "total_assigned": 38,
       "incomplete_training_names": [
         "HSE - Behavioral Based Safety"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Brandon Fraire",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Jourdanton",
+      "percent_complete": 98,
+      "incomplete_count": 1,
+      "complete_count": 39,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "CSG - FMS TRAINING"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Christopher Kuelling",
+      "company": "Transcend",
+      "division": "TD Rig 20",
+      "yard": "Midland",
+      "percent_complete": 98,
+      "incomplete_count": 1,
+      "complete_count": 39,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

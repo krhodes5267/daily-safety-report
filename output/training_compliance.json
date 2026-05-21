@@ -1,35 +1,35 @@
 {
-  "report_date": "2026-05-20",
-  "generated_at": "2026-05-20 12:33:31",
-  "overall_pct": 79.2,
-  "total_employees": 1088,
-  "compliant_count": 862,
+  "report_date": "2026-05-21",
+  "generated_at": "2026-05-21 12:52:59",
+  "overall_pct": 79.6,
+  "total_employees": 1090,
+  "compliant_count": 868,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
-      "total": 741,
-      "compliant": 631,
-      "pct": 85.2
+      "total": 742,
+      "compliant": 633,
+      "pct": 85.3
     },
     "BTI": {
       "total": 62,
-      "compliant": 42,
-      "pct": 67.7
+      "compliant": 43,
+      "pct": 69.4
     },
     "Transcend": {
       "total": 104,
-      "compliant": 91,
-      "pct": 87.5
+      "compliant": 92,
+      "pct": 88.5
     },
     "Permian": {
-      "total": 151,
-      "compliant": 76,
-      "pct": 50.3
+      "total": 152,
+      "compliant": 77,
+      "pct": 50.7
     },
     "Valor": {
       "total": 30,
-      "compliant": 22,
-      "pct": 73.3
+      "compliant": 23,
+      "pct": 76.7
     }
   },
   "by_division": {
@@ -39,9 +39,9 @@
       "pct": 66.7
     },
     "Casing": {
-      "total": 403,
-      "compliant": 336,
-      "pct": 83.4
+      "total": 404,
+      "compliant": 338,
+      "pct": 83.7
     },
     "Construction": {
       "total": 16,
@@ -112,13 +112,13 @@
     },
     "Jourdanton": {
       "total": 21,
-      "compliant": 15,
-      "pct": 71.4
+      "compliant": 16,
+      "pct": 76.2
     },
     "Laredo": {
-      "total": 40,
-      "compliant": 25,
-      "pct": 62.5
+      "total": 41,
+      "compliant": 26,
+      "pct": 63.4
     }
   },
   "by_company_location": {
@@ -130,8 +130,8 @@
       },
       "Jourdanton": {
         "total": 35,
-        "compliant": 28,
-        "pct": 80.0
+        "compliant": 29,
+        "pct": 82.9
       },
       "Midland": {
         "total": 302,
@@ -164,9 +164,9 @@
         "pct": 64.6
       },
       "Laredo": {
-        "total": 40,
-        "compliant": 25,
-        "pct": 62.5
+        "total": 41,
+        "compliant": 26,
+        "pct": 63.4
       },
       "Odessa": {
         "total": 16,
@@ -212,15 +212,15 @@
     "Transcend": {
       "Midland": {
         "total": 104,
-        "compliant": 91,
-        "pct": 87.5
+        "compliant": 92,
+        "pct": 88.5
       }
     },
     "Permian": {
       "Midland": {
-        "total": 144,
-        "compliant": 74,
-        "pct": 51.4
+        "total": 145,
+        "compliant": 75,
+        "pct": 51.7
       },
       "Lubbock": {
         "total": 7,
@@ -231,15 +231,15 @@
     "BTI": {
       "Midland": {
         "total": 62,
-        "compliant": 42,
-        "pct": 67.7
+        "compliant": 43,
+        "pct": 69.4
       }
     },
     "Valor": {
       "Levelland": {
         "total": 30,
-        "compliant": 22,
-        "pct": 73.3
+        "compliant": 23,
+        "pct": 76.7
       }
     }
   },
@@ -254,8 +254,8 @@
     "Casing": {
       "Jourdanton": {
         "total": 21,
-        "compliant": 15,
-        "pct": 71.4
+        "compliant": 16,
+        "pct": 76.2
       },
       "Midland": {
         "total": 175,
@@ -278,9 +278,9 @@
         "pct": 64.6
       },
       "Laredo": {
-        "total": 40,
-        "compliant": 25,
-        "pct": 62.5
+        "total": 41,
+        "compliant": 26,
+        "pct": 63.4
       },
       "Unassigned": {
         "total": 1,
@@ -414,19 +414,19 @@
       "pct": 98.3
     },
     "Midland": {
-      "total": 612,
-      "compliant": 485,
-      "pct": 79.2
+      "total": 613,
+      "compliant": 488,
+      "pct": 79.6
     },
     "Jourdanton": {
       "total": 35,
-      "compliant": 28,
-      "pct": 80.0
+      "compliant": 29,
+      "pct": 82.9
     },
     "Levelland": {
       "total": 105,
-      "compliant": 81,
-      "pct": 77.1
+      "compliant": 82,
+      "pct": 78.1
     },
     "Bryan": {
       "total": 50,
@@ -454,9 +454,9 @@
       "pct": 64.6
     },
     "Laredo": {
-      "total": 40,
-      "compliant": 25,
-      "pct": 62.5
+      "total": 41,
+      "compliant": 26,
+      "pct": 63.4
     },
     "Odessa": {
       "total": 16,
@@ -3655,23 +3655,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Edgar Izaguirre",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Incident Reporting",
-        "HSE - Spotter Safety Training",
-        "HSE - Lock Out/Tag Out "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "James Lee Jr",
       "company": "BRHAS",
       "division": "Casing",
@@ -4036,6 +4019,22 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Edgar Izaguirre",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Spotter Safety Training",
+        "HSE - Lock Out/Tag Out "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Randy Jenkins",
       "company": "Permian",
       "division": "Rentals",
@@ -4047,22 +4046,6 @@
       "incomplete_training_names": [
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Carlos Lopez",
-      "company": "Transcend",
-      "division": "TD Rig 18",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 38,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Behavioral Based Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4111,22 +4094,6 @@
       "incomplete_training_names": [
         "HSE - Confined Space - Permit Required ",
         "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jayden Perez",
-      "company": "Transcend",
-      "division": "TD Rig 18",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 38,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4257,21 +4224,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Martin Arellano Jr",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Kirby Chandler",
       "company": "BRHAS",
       "division": "Casing",
@@ -4357,21 +4309,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Spotter Safety Training"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Omar Granados",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 37,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Behavioral Based Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4467,21 +4404,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Brandon Fraire",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
-      "percent_complete": 98,
-      "incomplete_count": 1,
-      "complete_count": 39,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "CSG - FMS TRAINING"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Christopher Kuelling",
       "company": "Transcend",
       "division": "TD Rig 20",
@@ -4507,6 +4429,21 @@
       "total_assigned": 40,
       "incomplete_training_names": [
         "CSG - FMS TRAINING"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Carlos Lopez",
+      "company": "Transcend",
+      "division": "TD Rig 18",
+      "yard": "Midland",
+      "percent_complete": 98,
+      "incomplete_count": 1,
+      "complete_count": 39,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Behavioral Based Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4548,7 +4485,7 @@
     "Bryan": 50,
     "Hobbs": 50,
     "Kilgore": 65,
-    "Laredo": 40,
+    "Laredo": 41,
     "Unassigned": 1,
     "San Angelo": 1
   }

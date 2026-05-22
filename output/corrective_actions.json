@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-05-21",
-  "generated_at": "2026-05-21 12:53:24",
+  "report_date": "2026-05-22",
+  "generated_at": "2026-05-22 12:30:03",
   "summary": {
     "total_open": 696,
-    "total_overdue": 336,
+    "total_overdue": 344,
     "by_assignee": {
       "Sergio Damian Martinez Salazar": {
         "total": 4,
@@ -557,13 +557,9 @@
         "total": 2,
         "overdue": 0
       },
-      "Joshua Rose": {
-        "total": 1,
-        "overdue": 1
-      },
       "Robert Ramirez": {
-        "total": 10,
-        "overdue": 10
+        "total": 11,
+        "overdue": 11
       },
       "Damian Tapia": {
         "total": 1,
@@ -582,8 +578,8 @@
         "overdue": 2
       },
       "Michael Zaricor III": {
-        "total": 8,
-        "overdue": 3
+        "total": 9,
+        "overdue": 8
       },
       "Jayden Perez": {
         "total": 1,
@@ -594,8 +590,8 @@
         "overdue": 0
       },
       "Michael Vinson": {
-        "total": 13,
-        "overdue": 2
+        "total": 7,
+        "overdue": 3
       },
       "James Lee Jr": {
         "total": 1,
@@ -625,12 +621,28 @@
         "total": 1,
         "overdue": 1
       },
+      "Justin Hale": {
+        "total": 1,
+        "overdue": 0
+      },
       "Edgar Gonzalez": {
         "total": 1,
         "overdue": 0
       },
       "Shawn Padron": {
         "total": 1,
+        "overdue": 1
+      },
+      "Eddie Lohse": {
+        "total": 1,
+        "overdue": 0
+      },
+      "Steven Vinson": {
+        "total": 1,
+        "overdue": 1
+      },
+      "Daniel Hall": {
+        "total": 2,
         "overdue": 1
       }
     },
@@ -639,7 +651,7 @@
       "RH - Rathole Field Assessment": 3,
       "Unknown (151673)": 6,
       "Unknown (156162)": 2,
-      "Observation Card": 54,
+      "Observation Card": 55,
       "Unknown (161108)": 2,
       "Unknown (156163)": 1,
       "Unknown (151875)": 62,
@@ -657,23 +669,24 @@
       "Unknown (234136)": 11,
       "Construction - Site Safety Review": 2,
       "Unknown (239074)": 1,
-      "JSA Log": 35,
+      "JSA Log": 37,
       "CSG - Workplace Inspection": 5,
       "CSG - Safety Casing Field Assessment": 25,
-      "TD - Rig Inspection": 37,
+      "TD - Rig Inspection": 31,
       "Unknown (153236)": 12,
       "Incident Report": 2,
       "Root Cause Analysis": 1,
-      "Unknown (478502)": 2,
       "TD - Observation Card": 7,
-      "Unknown (194580)": 1
+      "Unknown (194580)": 1,
+      "Unknown (478502)": 3,
+      "Unknown (206674)": 2
     },
     "by_age": {
-      "0-7 days": 30,
+      "0-7 days": 29,
       "8-30 days": 22,
-      "31-60 days": 26,
-      "61-90 days": 14,
-      "90+ days": 604
+      "31-60 days": 28,
+      "61-90 days": 12,
+      "90+ days": 605
     }
   },
   "corrective_actions": [
@@ -689,7 +702,7 @@
       "created_by": "Tyrone Johnson",
       "created_date": "2019-11-21",
       "due_date": "",
-      "days_open": 2373,
+      "days_open": 2374,
       "overdue": false
     },
     {
@@ -704,7 +717,7 @@
       "created_by": "Tyrone Johnson",
       "created_date": "2020-02-04",
       "due_date": "2020-02-11",
-      "days_open": 2298,
+      "days_open": 2299,
       "overdue": true
     },
     {
@@ -719,7 +732,7 @@
       "created_by": "Tyrone Johnson",
       "created_date": "2020-02-04",
       "due_date": "2020-02-11",
-      "days_open": 2298,
+      "days_open": 2299,
       "overdue": true
     },
     {
@@ -734,7 +747,7 @@
       "created_by": "Tyrone Johnson",
       "created_date": "2020-02-04",
       "due_date": "2020-02-11",
-      "days_open": 2298,
+      "days_open": 2299,
       "overdue": true
     },
     {
@@ -749,7 +762,7 @@
       "created_by": "Jose Romero",
       "created_date": "2020-03-10",
       "due_date": "2020-03-27",
-      "days_open": 2263,
+      "days_open": 2264,
       "overdue": true
     },
     {
@@ -764,7 +777,7 @@
       "created_by": "Jose Romero",
       "created_date": "2020-03-10",
       "due_date": "2020-03-27",
-      "days_open": 2263,
+      "days_open": 2264,
       "overdue": true
     },
     {
@@ -779,7 +792,7 @@
       "created_by": "Jose Romero",
       "created_date": "2020-03-10",
       "due_date": "2020-03-27",
-      "days_open": 2263,
+      "days_open": 2264,
       "overdue": true
     },
     {
@@ -794,7 +807,7 @@
       "created_by": "Edgar Pedraza",
       "created_date": "2020-07-01",
       "due_date": "",
-      "days_open": 2150,
+      "days_open": 2151,
       "overdue": false
     },
     {
@@ -809,7 +822,7 @@
       "created_by": "Ezequiel Roman-Arroyo",
       "created_date": "2020-07-13",
       "due_date": "",
-      "days_open": 2138,
+      "days_open": 2139,
       "overdue": false
     },
     {
@@ -824,7 +837,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2020-09-11",
       "due_date": "2020-10-02",
-      "days_open": 2078,
+      "days_open": 2079,
       "overdue": true
     },
     {
@@ -839,7 +852,7 @@
       "created_by": "Jeanna Kelly",
       "created_date": "2020-10-22",
       "due_date": "2020-10-23",
-      "days_open": 2037,
+      "days_open": 2038,
       "overdue": true
     },
     {
@@ -854,7 +867,7 @@
       "created_by": "Jeanna Kelly",
       "created_date": "2020-10-22",
       "due_date": "2020-10-23",
-      "days_open": 2037,
+      "days_open": 2038,
       "overdue": true
     },
     {
@@ -869,7 +882,7 @@
       "created_by": "Jeanna Kelly",
       "created_date": "2020-11-04",
       "due_date": "2020-11-21",
-      "days_open": 2024,
+      "days_open": 2025,
       "overdue": true
     },
     {
@@ -884,7 +897,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-02-01",
       "due_date": "2021-02-03",
-      "days_open": 1935,
+      "days_open": 1936,
       "overdue": true
     },
     {
@@ -899,7 +912,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-02-12",
       "due_date": "",
-      "days_open": 1924,
+      "days_open": 1925,
       "overdue": false
     },
     {
@@ -914,7 +927,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-10",
       "due_date": "",
-      "days_open": 1898,
+      "days_open": 1899,
       "overdue": false
     },
     {
@@ -929,7 +942,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-10",
       "due_date": "",
-      "days_open": 1898,
+      "days_open": 1899,
       "overdue": false
     },
     {
@@ -944,7 +957,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-10",
       "due_date": "",
-      "days_open": 1898,
+      "days_open": 1899,
       "overdue": false
     },
     {
@@ -959,7 +972,7 @@
       "created_by": "Jorge Gutierrez",
       "created_date": "2021-03-10",
       "due_date": "2021-03-09",
-      "days_open": 1898,
+      "days_open": 1899,
       "overdue": true
     },
     {
@@ -974,7 +987,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-03-19",
       "due_date": "2021-03-22",
-      "days_open": 1889,
+      "days_open": 1890,
       "overdue": true
     },
     {
@@ -989,7 +1002,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-23",
       "due_date": "",
-      "days_open": 1885,
+      "days_open": 1886,
       "overdue": false
     },
     {
@@ -1004,7 +1017,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-23",
       "due_date": "",
-      "days_open": 1885,
+      "days_open": 1886,
       "overdue": false
     },
     {
@@ -1019,7 +1032,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-25",
       "due_date": "",
-      "days_open": 1883,
+      "days_open": 1884,
       "overdue": false
     },
     {
@@ -1034,7 +1047,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-25",
       "due_date": "",
-      "days_open": 1883,
+      "days_open": 1884,
       "overdue": false
     },
     {
@@ -1049,7 +1062,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-26",
       "due_date": "",
-      "days_open": 1882,
+      "days_open": 1883,
       "overdue": false
     },
     {
@@ -1064,7 +1077,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-26",
       "due_date": "",
-      "days_open": 1882,
+      "days_open": 1883,
       "overdue": false
     },
     {
@@ -1079,7 +1092,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-27",
       "due_date": "",
-      "days_open": 1881,
+      "days_open": 1882,
       "overdue": false
     },
     {
@@ -1094,7 +1107,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-27",
       "due_date": "",
-      "days_open": 1881,
+      "days_open": 1882,
       "overdue": false
     },
     {
@@ -1109,7 +1122,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-03-28",
       "due_date": "",
-      "days_open": 1880,
+      "days_open": 1881,
       "overdue": false
     },
     {
@@ -1124,7 +1137,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-04-07",
       "due_date": "",
-      "days_open": 1870,
+      "days_open": 1871,
       "overdue": false
     },
     {
@@ -1139,7 +1152,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-04-09",
       "due_date": "",
-      "days_open": 1868,
+      "days_open": 1869,
       "overdue": false
     },
     {
@@ -1154,7 +1167,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-04-14",
       "due_date": "2021-04-18",
-      "days_open": 1863,
+      "days_open": 1864,
       "overdue": true
     },
     {
@@ -1169,7 +1182,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-04-25",
       "due_date": "",
-      "days_open": 1852,
+      "days_open": 1853,
       "overdue": false
     },
     {
@@ -1184,7 +1197,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-04-25",
       "due_date": "",
-      "days_open": 1852,
+      "days_open": 1853,
       "overdue": false
     },
     {
@@ -1199,7 +1212,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-04-25",
       "due_date": "",
-      "days_open": 1852,
+      "days_open": 1853,
       "overdue": false
     },
     {
@@ -1214,7 +1227,7 @@
       "created_by": "David Dudley",
       "created_date": "2021-05-08",
       "due_date": "2021-05-08",
-      "days_open": 1839,
+      "days_open": 1840,
       "overdue": true
     },
     {
@@ -1229,7 +1242,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2021-05-08",
       "due_date": "",
-      "days_open": 1839,
+      "days_open": 1840,
       "overdue": false
     },
     {
@@ -1244,7 +1257,7 @@
       "created_by": "David Dudley",
       "created_date": "2021-05-10",
       "due_date": "2021-05-11",
-      "days_open": 1837,
+      "days_open": 1838,
       "overdue": true
     },
     {
@@ -1259,7 +1272,7 @@
       "created_by": "Jose Romero",
       "created_date": "2021-05-28",
       "due_date": "2021-06-04",
-      "days_open": 1819,
+      "days_open": 1820,
       "overdue": true
     },
     {
@@ -1274,7 +1287,7 @@
       "created_by": "Jose Romero",
       "created_date": "2021-05-28",
       "due_date": "2021-06-11",
-      "days_open": 1819,
+      "days_open": 1820,
       "overdue": true
     },
     {
@@ -1289,7 +1302,7 @@
       "created_by": "David Dudley",
       "created_date": "2021-06-05",
       "due_date": "2021-06-04",
-      "days_open": 1811,
+      "days_open": 1812,
       "overdue": true
     },
     {
@@ -1304,7 +1317,7 @@
       "created_by": "David Dudley",
       "created_date": "2021-06-18",
       "due_date": "2021-06-18",
-      "days_open": 1798,
+      "days_open": 1799,
       "overdue": true
     },
     {
@@ -1319,7 +1332,7 @@
       "created_by": "David Dudley",
       "created_date": "2021-07-15",
       "due_date": "2021-07-15",
-      "days_open": 1771,
+      "days_open": 1772,
       "overdue": true
     },
     {
@@ -1334,7 +1347,7 @@
       "created_by": "Stanley Blair",
       "created_date": "2021-08-18",
       "due_date": "2021-09-20",
-      "days_open": 1737,
+      "days_open": 1738,
       "overdue": true
     },
     {
@@ -1349,7 +1362,7 @@
       "created_by": "George Torres",
       "created_date": "2021-08-19",
       "due_date": "2021-08-19",
-      "days_open": 1736,
+      "days_open": 1737,
       "overdue": true
     },
     {
@@ -1364,7 +1377,7 @@
       "created_by": "Michael Garcia",
       "created_date": "2021-10-13",
       "due_date": "2021-11-13",
-      "days_open": 1681,
+      "days_open": 1682,
       "overdue": true
     },
     {
@@ -1379,7 +1392,7 @@
       "created_by": "Rene Hernandez",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1394,7 +1407,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1409,7 +1422,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1424,7 +1437,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1439,7 +1452,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1454,7 +1467,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1469,7 +1482,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1484,7 +1497,7 @@
       "created_by": "Jesse Posada",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1499,7 +1512,7 @@
       "created_by": "Valerie Valencia",
       "created_date": "2021-10-18",
       "due_date": "2021-11-18",
-      "days_open": 1676,
+      "days_open": 1677,
       "overdue": true
     },
     {
@@ -1514,7 +1527,7 @@
       "created_by": "Christian Lara",
       "created_date": "2021-10-20",
       "due_date": "2021-11-20",
-      "days_open": 1674,
+      "days_open": 1675,
       "overdue": true
     },
     {
@@ -1529,7 +1542,7 @@
       "created_by": "Ismael Arvizu Hernandez",
       "created_date": "2021-10-20",
       "due_date": "2021-11-20",
-      "days_open": 1674,
+      "days_open": 1675,
       "overdue": true
     },
     {
@@ -1544,7 +1557,7 @@
       "created_by": "Marco Arvizu",
       "created_date": "2021-10-20",
       "due_date": "2021-11-20",
-      "days_open": 1674,
+      "days_open": 1675,
       "overdue": true
     },
     {
@@ -1559,7 +1572,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-21",
       "due_date": "2021-11-21",
-      "days_open": 1673,
+      "days_open": 1674,
       "overdue": true
     },
     {
@@ -1574,7 +1587,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2021-10-21",
       "due_date": "2021-11-21",
-      "days_open": 1673,
+      "days_open": 1674,
       "overdue": true
     },
     {
@@ -1589,7 +1602,7 @@
       "created_by": "Osvaldo Jauregui Polanco",
       "created_date": "2021-10-26",
       "due_date": "2021-11-26",
-      "days_open": 1668,
+      "days_open": 1669,
       "overdue": true
     },
     {
@@ -1604,7 +1617,7 @@
       "created_by": "Jose Diaz Gutierrez",
       "created_date": "2021-10-26",
       "due_date": "2021-11-26",
-      "days_open": 1668,
+      "days_open": 1669,
       "overdue": true
     },
     {
@@ -1619,7 +1632,7 @@
       "created_by": "Luis Salas",
       "created_date": "2021-10-28",
       "due_date": "2021-11-28",
-      "days_open": 1666,
+      "days_open": 1667,
       "overdue": true
     },
     {
@@ -1634,7 +1647,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-11-02",
       "due_date": "2021-12-02",
-      "days_open": 1661,
+      "days_open": 1662,
       "overdue": true
     },
     {
@@ -1649,7 +1662,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-11-02",
       "due_date": "2021-12-02",
-      "days_open": 1661,
+      "days_open": 1662,
       "overdue": true
     },
     {
@@ -1664,7 +1677,7 @@
       "created_by": "Leean Benavides",
       "created_date": "2021-11-04",
       "due_date": "2021-12-04",
-      "days_open": 1659,
+      "days_open": 1660,
       "overdue": true
     },
     {
@@ -1679,7 +1692,7 @@
       "created_by": "Anthony Baker",
       "created_date": "2021-11-06",
       "due_date": "2021-11-30",
-      "days_open": 1657,
+      "days_open": 1658,
       "overdue": true
     },
     {
@@ -1694,7 +1707,7 @@
       "created_by": "Juan Cardona",
       "created_date": "2021-11-09",
       "due_date": "2021-12-09",
-      "days_open": 1654,
+      "days_open": 1655,
       "overdue": true
     },
     {
@@ -1709,7 +1722,7 @@
       "created_by": "Michael Burtchell Jr",
       "created_date": "2021-11-11",
       "due_date": "2021-12-11",
-      "days_open": 1652,
+      "days_open": 1653,
       "overdue": true
     },
     {
@@ -1724,7 +1737,7 @@
       "created_by": "Holton Johnson",
       "created_date": "2021-11-16",
       "due_date": "2021-12-16",
-      "days_open": 1647,
+      "days_open": 1648,
       "overdue": true
     },
     {
@@ -1739,7 +1752,7 @@
       "created_by": "Michael Miller",
       "created_date": "2021-11-21",
       "due_date": "2021-12-04",
-      "days_open": 1642,
+      "days_open": 1643,
       "overdue": true
     },
     {
@@ -1754,7 +1767,7 @@
       "created_by": "Omar Lopez",
       "created_date": "2021-11-22",
       "due_date": "2021-12-22",
-      "days_open": 1641,
+      "days_open": 1642,
       "overdue": true
     },
     {
@@ -1769,7 +1782,7 @@
       "created_by": "Genaro Rincon Jr",
       "created_date": "2021-11-30",
       "due_date": "2021-11-30",
-      "days_open": 1633,
+      "days_open": 1634,
       "overdue": true
     },
     {
@@ -1784,7 +1797,7 @@
       "created_by": "Joshua Terrazas",
       "created_date": "2021-11-30",
       "due_date": "2021-12-30",
-      "days_open": 1633,
+      "days_open": 1634,
       "overdue": true
     },
     {
@@ -1799,7 +1812,7 @@
       "created_by": "Marcus Rodriguez",
       "created_date": "2021-11-30",
       "due_date": "2021-12-30",
-      "days_open": 1633,
+      "days_open": 1634,
       "overdue": true
     },
     {
@@ -1814,7 +1827,7 @@
       "created_by": "Aaron Salazar",
       "created_date": "2021-11-30",
       "due_date": "2021-12-30",
-      "days_open": 1633,
+      "days_open": 1634,
       "overdue": true
     },
     {
@@ -1829,7 +1842,7 @@
       "created_by": "Alexander Smotherman",
       "created_date": "2021-11-30",
       "due_date": "2021-12-30",
-      "days_open": 1633,
+      "days_open": 1634,
       "overdue": true
     },
     {
@@ -1844,7 +1857,7 @@
       "created_by": "Jose Romero",
       "created_date": "2021-11-30",
       "due_date": "2021-12-17",
-      "days_open": 1633,
+      "days_open": 1634,
       "overdue": true
     },
     {
@@ -1859,7 +1872,7 @@
       "created_by": "Alexie Mauz",
       "created_date": "2021-12-03",
       "due_date": "",
-      "days_open": 1630,
+      "days_open": 1631,
       "overdue": false
     },
     {
@@ -1874,7 +1887,7 @@
       "created_by": "Alexie Mauz",
       "created_date": "2021-12-03",
       "due_date": "",
-      "days_open": 1630,
+      "days_open": 1631,
       "overdue": false
     },
     {
@@ -1889,7 +1902,7 @@
       "created_by": "Alexie Mauz",
       "created_date": "2021-12-03",
       "due_date": "",
-      "days_open": 1630,
+      "days_open": 1631,
       "overdue": false
     },
     {
@@ -1904,7 +1917,7 @@
       "created_by": "Jose Rodriguez",
       "created_date": "2022-01-06",
       "due_date": "2022-02-06",
-      "days_open": 1596,
+      "days_open": 1597,
       "overdue": true
     },
     {
@@ -1919,7 +1932,7 @@
       "created_by": "Daniel Gonzalez",
       "created_date": "2022-01-13",
       "due_date": "2022-02-13",
-      "days_open": 1589,
+      "days_open": 1590,
       "overdue": true
     },
     {
@@ -1934,7 +1947,7 @@
       "created_by": "Jose Romero",
       "created_date": "2022-01-14",
       "due_date": "2022-01-28",
-      "days_open": 1588,
+      "days_open": 1589,
       "overdue": true
     },
     {
@@ -1949,7 +1962,7 @@
       "created_by": "Vincent Casares",
       "created_date": "2022-01-19",
       "due_date": "2022-02-19",
-      "days_open": 1583,
+      "days_open": 1584,
       "overdue": true
     },
     {
@@ -1964,7 +1977,7 @@
       "created_by": "Sean Fry",
       "created_date": "2022-01-27",
       "due_date": "2022-01-31",
-      "days_open": 1575,
+      "days_open": 1576,
       "overdue": true
     },
     {
@@ -1979,7 +1992,7 @@
       "created_by": "Sean Fry",
       "created_date": "2022-01-27",
       "due_date": "2022-01-31",
-      "days_open": 1575,
+      "days_open": 1576,
       "overdue": true
     },
     {
@@ -1994,7 +2007,7 @@
       "created_by": "Sean Fry",
       "created_date": "2022-01-27",
       "due_date": "2022-01-31",
-      "days_open": 1575,
+      "days_open": 1576,
       "overdue": true
     },
     {
@@ -2009,7 +2022,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-02-16",
       "due_date": "",
-      "days_open": 1555,
+      "days_open": 1556,
       "overdue": false
     },
     {
@@ -2024,7 +2037,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-02-16",
       "due_date": "",
-      "days_open": 1555,
+      "days_open": 1556,
       "overdue": false
     },
     {
@@ -2039,7 +2052,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-02-16",
       "due_date": "",
-      "days_open": 1555,
+      "days_open": 1556,
       "overdue": false
     },
     {
@@ -2054,7 +2067,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-02-24",
       "due_date": "",
-      "days_open": 1547,
+      "days_open": 1548,
       "overdue": false
     },
     {
@@ -2069,7 +2082,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-02-27",
       "due_date": "",
-      "days_open": 1544,
+      "days_open": 1545,
       "overdue": false
     },
     {
@@ -2084,7 +2097,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-03-07",
       "due_date": "",
-      "days_open": 1536,
+      "days_open": 1537,
       "overdue": false
     },
     {
@@ -2099,7 +2112,7 @@
       "created_by": "Jose Romero",
       "created_date": "2022-03-08",
       "due_date": "2022-03-25",
-      "days_open": 1535,
+      "days_open": 1536,
       "overdue": true
     },
     {
@@ -2114,7 +2127,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-03-13",
       "due_date": "",
-      "days_open": 1530,
+      "days_open": 1531,
       "overdue": false
     },
     {
@@ -2129,7 +2142,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-03-19",
       "due_date": "",
-      "days_open": 1524,
+      "days_open": 1525,
       "overdue": false
     },
     {
@@ -2144,7 +2157,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-03-21",
       "due_date": "",
-      "days_open": 1522,
+      "days_open": 1523,
       "overdue": false
     },
     {
@@ -2159,7 +2172,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-03-23",
       "due_date": "",
-      "days_open": 1520,
+      "days_open": 1521,
       "overdue": false
     },
     {
@@ -2174,7 +2187,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-03-25",
       "due_date": "",
-      "days_open": 1518,
+      "days_open": 1519,
       "overdue": false
     },
     {
@@ -2189,7 +2202,7 @@
       "created_by": "Jose Romero",
       "created_date": "2022-04-16",
       "due_date": "2022-04-29",
-      "days_open": 1496,
+      "days_open": 1497,
       "overdue": true
     },
     {
@@ -2204,7 +2217,7 @@
       "created_by": "Jose Romero",
       "created_date": "2022-04-20",
       "due_date": "2022-05-06",
-      "days_open": 1492,
+      "days_open": 1493,
       "overdue": true
     },
     {
@@ -2219,7 +2232,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-04-25",
       "due_date": "",
-      "days_open": 1487,
+      "days_open": 1488,
       "overdue": false
     },
     {
@@ -2234,7 +2247,7 @@
       "created_by": "Michael Vanderburg",
       "created_date": "2022-04-26",
       "due_date": "2022-04-26",
-      "days_open": 1486,
+      "days_open": 1487,
       "overdue": true
     },
     {
@@ -2249,7 +2262,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2022-06-21",
       "due_date": "2022-06-21",
-      "days_open": 1430,
+      "days_open": 1431,
       "overdue": true
     },
     {
@@ -2264,7 +2277,7 @@
       "created_by": "Jose Romero",
       "created_date": "2022-08-01",
       "due_date": "2022-08-05",
-      "days_open": 1389,
+      "days_open": 1390,
       "overdue": true
     },
     {
@@ -2279,7 +2292,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2022-08-17",
       "due_date": "2022-08-17",
-      "days_open": 1373,
+      "days_open": 1374,
       "overdue": true
     },
     {
@@ -2294,7 +2307,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-08-29",
       "due_date": "",
-      "days_open": 1361,
+      "days_open": 1362,
       "overdue": false
     },
     {
@@ -2309,7 +2322,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-09-02",
       "due_date": "2022-09-05",
-      "days_open": 1357,
+      "days_open": 1358,
       "overdue": true
     },
     {
@@ -2324,7 +2337,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-09-09",
       "due_date": "",
-      "days_open": 1350,
+      "days_open": 1351,
       "overdue": false
     },
     {
@@ -2339,7 +2352,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2022-09-15",
       "due_date": "2022-09-16",
-      "days_open": 1344,
+      "days_open": 1345,
       "overdue": true
     },
     {
@@ -2354,7 +2367,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-09-15",
       "due_date": "",
-      "days_open": 1344,
+      "days_open": 1345,
       "overdue": false
     },
     {
@@ -2369,7 +2382,7 @@
       "created_by": "Daniel Steedley",
       "created_date": "2022-09-18",
       "due_date": "",
-      "days_open": 1341,
+      "days_open": 1342,
       "overdue": false
     },
     {
@@ -2384,7 +2397,7 @@
       "created_by": "Daniel Steedley",
       "created_date": "2022-09-18",
       "due_date": "",
-      "days_open": 1341,
+      "days_open": 1342,
       "overdue": false
     },
     {
@@ -2399,7 +2412,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-09-20",
       "due_date": "2022-09-27",
-      "days_open": 1339,
+      "days_open": 1340,
       "overdue": true
     },
     {
@@ -2414,7 +2427,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-09-21",
       "due_date": "2022-09-21",
-      "days_open": 1338,
+      "days_open": 1339,
       "overdue": true
     },
     {
@@ -2429,7 +2442,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-10-14",
       "due_date": "",
-      "days_open": 1315,
+      "days_open": 1316,
       "overdue": false
     },
     {
@@ -2444,7 +2457,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-10-17",
       "due_date": "2022-10-24",
-      "days_open": 1312,
+      "days_open": 1313,
       "overdue": true
     },
     {
@@ -2459,7 +2472,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-10-17",
       "due_date": "2022-10-17",
-      "days_open": 1312,
+      "days_open": 1313,
       "overdue": true
     },
     {
@@ -2474,7 +2487,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-10-17",
       "due_date": "2022-10-24",
-      "days_open": 1312,
+      "days_open": 1313,
       "overdue": true
     },
     {
@@ -2489,7 +2502,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-10-21",
       "due_date": "",
-      "days_open": 1308,
+      "days_open": 1309,
       "overdue": false
     },
     {
@@ -2504,7 +2517,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-10-25",
       "due_date": "2022-11-01",
-      "days_open": 1304,
+      "days_open": 1305,
       "overdue": true
     },
     {
@@ -2519,7 +2532,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-10-25",
       "due_date": "2022-11-01",
-      "days_open": 1304,
+      "days_open": 1305,
       "overdue": true
     },
     {
@@ -2534,7 +2547,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-11-02",
       "due_date": "",
-      "days_open": 1296,
+      "days_open": 1297,
       "overdue": false
     },
     {
@@ -2549,7 +2562,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-11-02",
       "due_date": "",
-      "days_open": 1296,
+      "days_open": 1297,
       "overdue": false
     },
     {
@@ -2564,7 +2577,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-11-05",
       "due_date": "",
-      "days_open": 1293,
+      "days_open": 1294,
       "overdue": false
     },
     {
@@ -2579,7 +2592,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-11-06",
       "due_date": "2022-11-13",
-      "days_open": 1292,
+      "days_open": 1293,
       "overdue": true
     },
     {
@@ -2594,7 +2607,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-11-06",
       "due_date": "2022-11-13",
-      "days_open": 1292,
+      "days_open": 1293,
       "overdue": true
     },
     {
@@ -2609,7 +2622,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-11-08",
       "due_date": "",
-      "days_open": 1290,
+      "days_open": 1291,
       "overdue": false
     },
     {
@@ -2624,7 +2637,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-11-22",
       "due_date": "2022-11-29",
-      "days_open": 1276,
+      "days_open": 1277,
       "overdue": true
     },
     {
@@ -2639,7 +2652,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-01",
       "due_date": "2022-12-08",
-      "days_open": 1267,
+      "days_open": 1268,
       "overdue": true
     },
     {
@@ -2654,7 +2667,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-01",
       "due_date": "2022-12-08",
-      "days_open": 1267,
+      "days_open": 1268,
       "overdue": true
     },
     {
@@ -2669,7 +2682,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-02",
       "due_date": "2022-12-09",
-      "days_open": 1266,
+      "days_open": 1267,
       "overdue": true
     },
     {
@@ -2684,7 +2697,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-02",
       "due_date": "2022-12-09",
-      "days_open": 1266,
+      "days_open": 1267,
       "overdue": true
     },
     {
@@ -2699,7 +2712,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-12-17",
       "due_date": "",
-      "days_open": 1251,
+      "days_open": 1252,
       "overdue": false
     },
     {
@@ -2714,7 +2727,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2022-12-18",
       "due_date": "",
-      "days_open": 1250,
+      "days_open": 1251,
       "overdue": false
     },
     {
@@ -2729,7 +2742,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-19",
       "due_date": "2022-12-23",
-      "days_open": 1249,
+      "days_open": 1250,
       "overdue": true
     },
     {
@@ -2744,7 +2757,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-19",
       "due_date": "2022-12-23",
-      "days_open": 1249,
+      "days_open": 1250,
       "overdue": true
     },
     {
@@ -2759,7 +2772,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-19",
       "due_date": "2022-12-23",
-      "days_open": 1249,
+      "days_open": 1250,
       "overdue": true
     },
     {
@@ -2774,7 +2787,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-19",
       "due_date": "2022-12-23",
-      "days_open": 1249,
+      "days_open": 1250,
       "overdue": true
     },
     {
@@ -2789,7 +2802,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-12-24",
       "due_date": "",
-      "days_open": 1244,
+      "days_open": 1245,
       "overdue": false
     },
     {
@@ -2804,7 +2817,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-12-27",
       "due_date": "2023-01-03",
-      "days_open": 1241,
+      "days_open": 1242,
       "overdue": true
     },
     {
@@ -2819,7 +2832,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2022-12-27",
       "due_date": "2022-12-28",
-      "days_open": 1241,
+      "days_open": 1242,
       "overdue": true
     },
     {
@@ -2834,7 +2847,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-28",
       "due_date": "2023-01-04",
-      "days_open": 1240,
+      "days_open": 1241,
       "overdue": true
     },
     {
@@ -2849,7 +2862,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2022-12-28",
       "due_date": "2023-01-04",
-      "days_open": 1240,
+      "days_open": 1241,
       "overdue": true
     },
     {
@@ -2864,7 +2877,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-12-29",
       "due_date": "",
-      "days_open": 1239,
+      "days_open": 1240,
       "overdue": false
     },
     {
@@ -2879,7 +2892,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-12-31",
       "due_date": "2023-01-06",
-      "days_open": 1237,
+      "days_open": 1238,
       "overdue": true
     },
     {
@@ -2894,7 +2907,7 @@
       "created_by": "Roger Gray",
       "created_date": "2022-12-31",
       "due_date": "2023-01-06",
-      "days_open": 1237,
+      "days_open": 1238,
       "overdue": true
     },
     {
@@ -2909,7 +2922,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-01-07",
       "due_date": "2023-01-13",
-      "days_open": 1230,
+      "days_open": 1231,
       "overdue": true
     },
     {
@@ -2924,7 +2937,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-01-13",
       "due_date": "",
-      "days_open": 1224,
+      "days_open": 1225,
       "overdue": false
     },
     {
@@ -2939,7 +2952,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2023-01-14",
       "due_date": "",
-      "days_open": 1223,
+      "days_open": 1224,
       "overdue": false
     },
     {
@@ -2954,7 +2967,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-01-20",
       "due_date": "2023-01-27",
-      "days_open": 1217,
+      "days_open": 1218,
       "overdue": true
     },
     {
@@ -2969,7 +2982,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-01-27",
       "due_date": "2023-01-31",
-      "days_open": 1210,
+      "days_open": 1211,
       "overdue": true
     },
     {
@@ -2984,7 +2997,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-01-27",
       "due_date": "2023-01-31",
-      "days_open": 1210,
+      "days_open": 1211,
       "overdue": true
     },
     {
@@ -2999,7 +3012,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-01-29",
       "due_date": "",
-      "days_open": 1208,
+      "days_open": 1209,
       "overdue": false
     },
     {
@@ -3014,7 +3027,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-02-06",
       "due_date": "2023-02-13",
-      "days_open": 1200,
+      "days_open": 1201,
       "overdue": true
     },
     {
@@ -3029,7 +3042,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-02-06",
       "due_date": "2023-02-13",
-      "days_open": 1200,
+      "days_open": 1201,
       "overdue": true
     },
     {
@@ -3044,7 +3057,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-02-21",
       "due_date": "2023-02-28",
-      "days_open": 1185,
+      "days_open": 1186,
       "overdue": true
     },
     {
@@ -3059,7 +3072,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-02-22",
       "due_date": "",
-      "days_open": 1184,
+      "days_open": 1185,
       "overdue": false
     },
     {
@@ -3074,7 +3087,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-02-26",
       "due_date": "",
-      "days_open": 1180,
+      "days_open": 1181,
       "overdue": false
     },
     {
@@ -3089,7 +3102,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-03-01",
       "due_date": "",
-      "days_open": 1177,
+      "days_open": 1178,
       "overdue": false
     },
     {
@@ -3104,7 +3117,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-03-06",
       "due_date": "",
-      "days_open": 1172,
+      "days_open": 1173,
       "overdue": false
     },
     {
@@ -3119,7 +3132,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-03-06",
       "due_date": "",
-      "days_open": 1172,
+      "days_open": 1173,
       "overdue": false
     },
     {
@@ -3134,7 +3147,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2023-03-09",
       "due_date": "2023-03-09",
-      "days_open": 1169,
+      "days_open": 1170,
       "overdue": true
     },
     {
@@ -3149,7 +3162,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-10",
       "due_date": "",
-      "days_open": 1168,
+      "days_open": 1169,
       "overdue": false
     },
     {
@@ -3164,7 +3177,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-03-20",
       "due_date": "2023-03-27",
-      "days_open": 1158,
+      "days_open": 1159,
       "overdue": true
     },
     {
@@ -3179,7 +3192,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-03-20",
       "due_date": "2023-03-27",
-      "days_open": 1158,
+      "days_open": 1159,
       "overdue": true
     },
     {
@@ -3194,7 +3207,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-03-20",
       "due_date": "2023-03-27",
-      "days_open": 1158,
+      "days_open": 1159,
       "overdue": true
     },
     {
@@ -3209,7 +3222,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-03-22",
       "due_date": "",
-      "days_open": 1156,
+      "days_open": 1157,
       "overdue": false
     },
     {
@@ -3224,7 +3237,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-23",
       "due_date": "",
-      "days_open": 1155,
+      "days_open": 1156,
       "overdue": false
     },
     {
@@ -3239,7 +3252,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-23",
       "due_date": "",
-      "days_open": 1155,
+      "days_open": 1156,
       "overdue": false
     },
     {
@@ -3254,7 +3267,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-23",
       "due_date": "",
-      "days_open": 1155,
+      "days_open": 1156,
       "overdue": false
     },
     {
@@ -3269,7 +3282,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-23",
       "due_date": "",
-      "days_open": 1155,
+      "days_open": 1156,
       "overdue": false
     },
     {
@@ -3284,7 +3297,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2023-03-23",
       "due_date": "2023-03-23",
-      "days_open": 1155,
+      "days_open": 1156,
       "overdue": true
     },
     {
@@ -3299,7 +3312,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-25",
       "due_date": "",
-      "days_open": 1153,
+      "days_open": 1154,
       "overdue": false
     },
     {
@@ -3314,7 +3327,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-25",
       "due_date": "",
-      "days_open": 1153,
+      "days_open": 1154,
       "overdue": false
     },
     {
@@ -3329,7 +3342,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-25",
       "due_date": "",
-      "days_open": 1153,
+      "days_open": 1154,
       "overdue": false
     },
     {
@@ -3344,7 +3357,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-27",
       "due_date": "",
-      "days_open": 1151,
+      "days_open": 1152,
       "overdue": false
     },
     {
@@ -3359,7 +3372,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-27",
       "due_date": "",
-      "days_open": 1151,
+      "days_open": 1152,
       "overdue": false
     },
     {
@@ -3374,7 +3387,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-27",
       "due_date": "",
-      "days_open": 1151,
+      "days_open": 1152,
       "overdue": false
     },
     {
@@ -3389,7 +3402,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-28",
       "due_date": "",
-      "days_open": 1150,
+      "days_open": 1151,
       "overdue": false
     },
     {
@@ -3404,7 +3417,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-03-28",
       "due_date": "",
-      "days_open": 1150,
+      "days_open": 1151,
       "overdue": false
     },
     {
@@ -3419,7 +3432,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2023-03-31",
       "due_date": "2023-03-30",
-      "days_open": 1147,
+      "days_open": 1148,
       "overdue": true
     },
     {
@@ -3434,7 +3447,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2023-04-04",
       "due_date": "2023-04-04",
-      "days_open": 1143,
+      "days_open": 1144,
       "overdue": true
     },
     {
@@ -3449,7 +3462,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-04-06",
       "due_date": "2023-04-13",
-      "days_open": 1141,
+      "days_open": 1142,
       "overdue": true
     },
     {
@@ -3464,7 +3477,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-08",
       "due_date": "2023-04-15",
-      "days_open": 1139,
+      "days_open": 1140,
       "overdue": true
     },
     {
@@ -3479,7 +3492,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-08",
       "due_date": "2023-04-15",
-      "days_open": 1139,
+      "days_open": 1140,
       "overdue": true
     },
     {
@@ -3494,7 +3507,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-08",
       "due_date": "2023-04-15",
-      "days_open": 1139,
+      "days_open": 1140,
       "overdue": true
     },
     {
@@ -3509,7 +3522,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-08",
       "due_date": "2023-04-15",
-      "days_open": 1139,
+      "days_open": 1140,
       "overdue": true
     },
     {
@@ -3524,7 +3537,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-04-12",
       "due_date": "2023-04-19",
-      "days_open": 1135,
+      "days_open": 1136,
       "overdue": true
     },
     {
@@ -3539,7 +3552,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-14",
       "due_date": "",
-      "days_open": 1133,
+      "days_open": 1134,
       "overdue": false
     },
     {
@@ -3554,7 +3567,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-16",
       "due_date": "",
-      "days_open": 1131,
+      "days_open": 1132,
       "overdue": false
     },
     {
@@ -3569,7 +3582,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-16",
       "due_date": "",
-      "days_open": 1131,
+      "days_open": 1132,
       "overdue": false
     },
     {
@@ -3584,7 +3597,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-18",
       "due_date": "",
-      "days_open": 1129,
+      "days_open": 1130,
       "overdue": false
     },
     {
@@ -3599,7 +3612,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-18",
       "due_date": "",
-      "days_open": 1129,
+      "days_open": 1130,
       "overdue": false
     },
     {
@@ -3614,7 +3627,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-18",
       "due_date": "",
-      "days_open": 1129,
+      "days_open": 1130,
       "overdue": false
     },
     {
@@ -3629,7 +3642,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-04-18",
       "due_date": "2023-04-24",
-      "days_open": 1129,
+      "days_open": 1130,
       "overdue": true
     },
     {
@@ -3644,7 +3657,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-19",
       "due_date": "",
-      "days_open": 1128,
+      "days_open": 1129,
       "overdue": false
     },
     {
@@ -3659,7 +3672,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-20",
       "due_date": "",
-      "days_open": 1127,
+      "days_open": 1128,
       "overdue": false
     },
     {
@@ -3674,7 +3687,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-20",
       "due_date": "",
-      "days_open": 1127,
+      "days_open": 1128,
       "overdue": false
     },
     {
@@ -3689,7 +3702,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-21",
       "due_date": "",
-      "days_open": 1126,
+      "days_open": 1127,
       "overdue": false
     },
     {
@@ -3704,7 +3717,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-04-21",
       "due_date": "2023-04-28",
-      "days_open": 1126,
+      "days_open": 1127,
       "overdue": true
     },
     {
@@ -3719,7 +3732,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-21",
       "due_date": "",
-      "days_open": 1126,
+      "days_open": 1127,
       "overdue": false
     },
     {
@@ -3734,7 +3747,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-21",
       "due_date": "",
-      "days_open": 1126,
+      "days_open": 1127,
       "overdue": false
     },
     {
@@ -3749,7 +3762,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-04-24",
       "due_date": "",
-      "days_open": 1123,
+      "days_open": 1124,
       "overdue": false
     },
     {
@@ -3764,7 +3777,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-04-25",
       "due_date": "2023-04-30",
-      "days_open": 1122,
+      "days_open": 1123,
       "overdue": true
     },
     {
@@ -3779,7 +3792,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-04-25",
       "due_date": "2023-05-02",
-      "days_open": 1122,
+      "days_open": 1123,
       "overdue": true
     },
     {
@@ -3794,7 +3807,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-04-28",
       "due_date": "2023-05-05",
-      "days_open": 1119,
+      "days_open": 1120,
       "overdue": true
     },
     {
@@ -3809,7 +3822,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-02",
       "due_date": "",
-      "days_open": 1115,
+      "days_open": 1116,
       "overdue": false
     },
     {
@@ -3824,7 +3837,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-05-03",
       "due_date": "2023-05-10",
-      "days_open": 1114,
+      "days_open": 1115,
       "overdue": true
     },
     {
@@ -3839,7 +3852,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-05-05",
       "due_date": "2023-05-12",
-      "days_open": 1112,
+      "days_open": 1113,
       "overdue": true
     },
     {
@@ -3854,7 +3867,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-07",
       "due_date": "",
-      "days_open": 1110,
+      "days_open": 1111,
       "overdue": false
     },
     {
@@ -3869,7 +3882,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-09",
       "due_date": "",
-      "days_open": 1108,
+      "days_open": 1109,
       "overdue": false
     },
     {
@@ -3884,7 +3897,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-10",
       "due_date": "2023-05-17",
-      "days_open": 1107,
+      "days_open": 1108,
       "overdue": true
     },
     {
@@ -3899,7 +3912,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-10",
       "due_date": "2023-05-17",
-      "days_open": 1107,
+      "days_open": 1108,
       "overdue": true
     },
     {
@@ -3914,7 +3927,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-05-11",
       "due_date": "2023-05-18",
-      "days_open": 1106,
+      "days_open": 1107,
       "overdue": true
     },
     {
@@ -3929,7 +3942,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-11",
       "due_date": "2023-05-18",
-      "days_open": 1106,
+      "days_open": 1107,
       "overdue": true
     },
     {
@@ -3944,7 +3957,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-11",
       "due_date": "2023-05-17",
-      "days_open": 1106,
+      "days_open": 1107,
       "overdue": true
     },
     {
@@ -3959,7 +3972,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-16",
       "due_date": "",
-      "days_open": 1101,
+      "days_open": 1102,
       "overdue": false
     },
     {
@@ -3974,7 +3987,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-16",
       "due_date": "",
-      "days_open": 1101,
+      "days_open": 1102,
       "overdue": false
     },
     {
@@ -3989,7 +4002,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-17",
       "due_date": "",
-      "days_open": 1100,
+      "days_open": 1101,
       "overdue": false
     },
     {
@@ -4004,7 +4017,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-18",
       "due_date": "2023-05-25",
-      "days_open": 1099,
+      "days_open": 1100,
       "overdue": true
     },
     {
@@ -4019,7 +4032,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-18",
       "due_date": "2023-05-25",
-      "days_open": 1099,
+      "days_open": 1100,
       "overdue": true
     },
     {
@@ -4034,7 +4047,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-19",
       "due_date": "",
-      "days_open": 1098,
+      "days_open": 1099,
       "overdue": false
     },
     {
@@ -4049,7 +4062,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-20",
       "due_date": "",
-      "days_open": 1097,
+      "days_open": 1098,
       "overdue": false
     },
     {
@@ -4064,7 +4077,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-21",
       "due_date": "",
-      "days_open": 1096,
+      "days_open": 1097,
       "overdue": false
     },
     {
@@ -4079,7 +4092,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-05-23",
       "due_date": "2023-05-29",
-      "days_open": 1094,
+      "days_open": 1095,
       "overdue": true
     },
     {
@@ -4094,7 +4107,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-05-24",
       "due_date": "2023-05-31",
-      "days_open": 1093,
+      "days_open": 1094,
       "overdue": true
     },
     {
@@ -4109,7 +4122,7 @@
       "created_by": "Jose Romero",
       "created_date": "2023-05-25",
       "due_date": "2023-06-02",
-      "days_open": 1092,
+      "days_open": 1093,
       "overdue": true
     },
     {
@@ -4124,7 +4137,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-05-27",
       "due_date": "2023-06-03",
-      "days_open": 1090,
+      "days_open": 1091,
       "overdue": true
     },
     {
@@ -4139,7 +4152,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-30",
       "due_date": "",
-      "days_open": 1087,
+      "days_open": 1088,
       "overdue": false
     },
     {
@@ -4154,7 +4167,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-05-31",
       "due_date": "",
-      "days_open": 1086,
+      "days_open": 1087,
       "overdue": false
     },
     {
@@ -4169,7 +4182,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-06-05",
       "due_date": "2023-06-12",
-      "days_open": 1081,
+      "days_open": 1082,
       "overdue": true
     },
     {
@@ -4184,7 +4197,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2023-06-05",
       "due_date": "2023-06-12",
-      "days_open": 1081,
+      "days_open": 1082,
       "overdue": true
     },
     {
@@ -4199,7 +4212,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-07",
       "due_date": "",
-      "days_open": 1079,
+      "days_open": 1080,
       "overdue": false
     },
     {
@@ -4214,7 +4227,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-06-10",
       "due_date": "2023-06-17",
-      "days_open": 1076,
+      "days_open": 1077,
       "overdue": true
     },
     {
@@ -4229,7 +4242,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-12",
       "due_date": "",
-      "days_open": 1074,
+      "days_open": 1075,
       "overdue": false
     },
     {
@@ -4244,7 +4257,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-12",
       "due_date": "",
-      "days_open": 1074,
+      "days_open": 1075,
       "overdue": false
     },
     {
@@ -4259,7 +4272,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-12",
       "due_date": "",
-      "days_open": 1074,
+      "days_open": 1075,
       "overdue": false
     },
     {
@@ -4274,7 +4287,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-12",
       "due_date": "",
-      "days_open": 1074,
+      "days_open": 1075,
       "overdue": false
     },
     {
@@ -4289,7 +4302,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-12",
       "due_date": "",
-      "days_open": 1074,
+      "days_open": 1075,
       "overdue": false
     },
     {
@@ -4304,7 +4317,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-13",
       "due_date": "",
-      "days_open": 1073,
+      "days_open": 1074,
       "overdue": false
     },
     {
@@ -4319,7 +4332,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-13",
       "due_date": "",
-      "days_open": 1073,
+      "days_open": 1074,
       "overdue": false
     },
     {
@@ -4334,7 +4347,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-14",
       "due_date": "",
-      "days_open": 1072,
+      "days_open": 1073,
       "overdue": false
     },
     {
@@ -4349,7 +4362,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-14",
       "due_date": "",
-      "days_open": 1072,
+      "days_open": 1073,
       "overdue": false
     },
     {
@@ -4364,7 +4377,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-15",
       "due_date": "",
-      "days_open": 1071,
+      "days_open": 1072,
       "overdue": false
     },
     {
@@ -4379,7 +4392,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-15",
       "due_date": "",
-      "days_open": 1071,
+      "days_open": 1072,
       "overdue": false
     },
     {
@@ -4394,7 +4407,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-06-15",
       "due_date": "2023-06-22",
-      "days_open": 1071,
+      "days_open": 1072,
       "overdue": true
     },
     {
@@ -4409,7 +4422,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-06-16",
       "due_date": "2023-06-23",
-      "days_open": 1070,
+      "days_open": 1071,
       "overdue": true
     },
     {
@@ -4424,7 +4437,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-17",
       "due_date": "",
-      "days_open": 1069,
+      "days_open": 1070,
       "overdue": false
     },
     {
@@ -4439,7 +4452,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-17",
       "due_date": "",
-      "days_open": 1069,
+      "days_open": 1070,
       "overdue": false
     },
     {
@@ -4454,7 +4467,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-06-19",
       "due_date": "2023-06-26",
-      "days_open": 1067,
+      "days_open": 1068,
       "overdue": true
     },
     {
@@ -4469,7 +4482,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-19",
       "due_date": "",
-      "days_open": 1067,
+      "days_open": 1068,
       "overdue": false
     },
     {
@@ -4484,7 +4497,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-19",
       "due_date": "",
-      "days_open": 1067,
+      "days_open": 1068,
       "overdue": false
     },
     {
@@ -4499,7 +4512,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-06-19",
       "due_date": "2023-06-25",
-      "days_open": 1067,
+      "days_open": 1068,
       "overdue": true
     },
     {
@@ -4514,7 +4527,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-28",
       "due_date": "",
-      "days_open": 1058,
+      "days_open": 1059,
       "overdue": false
     },
     {
@@ -4529,7 +4542,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-06-29",
       "due_date": "",
-      "days_open": 1057,
+      "days_open": 1058,
       "overdue": false
     },
     {
@@ -4544,7 +4557,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-01",
       "due_date": "",
-      "days_open": 1055,
+      "days_open": 1056,
       "overdue": false
     },
     {
@@ -4559,7 +4572,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-03",
       "due_date": "",
-      "days_open": 1053,
+      "days_open": 1054,
       "overdue": false
     },
     {
@@ -4574,7 +4587,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-11",
       "due_date": "",
-      "days_open": 1045,
+      "days_open": 1046,
       "overdue": false
     },
     {
@@ -4589,7 +4602,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-07-12",
       "due_date": "2023-07-19",
-      "days_open": 1044,
+      "days_open": 1045,
       "overdue": true
     },
     {
@@ -4604,7 +4617,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-07-12",
       "due_date": "2023-07-19",
-      "days_open": 1044,
+      "days_open": 1045,
       "overdue": true
     },
     {
@@ -4619,7 +4632,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-12",
       "due_date": "",
-      "days_open": 1044,
+      "days_open": 1045,
       "overdue": false
     },
     {
@@ -4634,7 +4647,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-07-12",
       "due_date": "2023-07-19",
-      "days_open": 1044,
+      "days_open": 1045,
       "overdue": true
     },
     {
@@ -4649,7 +4662,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-15",
       "due_date": "",
-      "days_open": 1041,
+      "days_open": 1042,
       "overdue": false
     },
     {
@@ -4664,7 +4677,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-07-16",
       "due_date": "2023-07-23",
-      "days_open": 1040,
+      "days_open": 1041,
       "overdue": true
     },
     {
@@ -4679,7 +4692,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-17",
       "due_date": "",
-      "days_open": 1039,
+      "days_open": 1040,
       "overdue": false
     },
     {
@@ -4694,7 +4707,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-24",
       "due_date": "",
-      "days_open": 1032,
+      "days_open": 1033,
       "overdue": false
     },
     {
@@ -4709,7 +4722,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-24",
       "due_date": "",
-      "days_open": 1032,
+      "days_open": 1033,
       "overdue": false
     },
     {
@@ -4724,7 +4737,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-24",
       "due_date": "",
-      "days_open": 1032,
+      "days_open": 1033,
       "overdue": false
     },
     {
@@ -4739,7 +4752,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-24",
       "due_date": "",
-      "days_open": 1032,
+      "days_open": 1033,
       "overdue": false
     },
     {
@@ -4754,7 +4767,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-24",
       "due_date": "",
-      "days_open": 1032,
+      "days_open": 1033,
       "overdue": false
     },
     {
@@ -4769,7 +4782,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-26",
       "due_date": "",
-      "days_open": 1030,
+      "days_open": 1031,
       "overdue": false
     },
     {
@@ -4784,7 +4797,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-26",
       "due_date": "",
-      "days_open": 1030,
+      "days_open": 1031,
       "overdue": false
     },
     {
@@ -4799,7 +4812,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-07-27",
       "due_date": "",
-      "days_open": 1029,
+      "days_open": 1030,
       "overdue": false
     },
     {
@@ -4814,7 +4827,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-08-01",
       "due_date": "",
-      "days_open": 1024,
+      "days_open": 1025,
       "overdue": false
     },
     {
@@ -4829,7 +4842,7 @@
       "created_by": "Jose Romero",
       "created_date": "2023-08-09",
       "due_date": "2023-08-11",
-      "days_open": 1016,
+      "days_open": 1017,
       "overdue": true
     },
     {
@@ -4844,7 +4857,7 @@
       "created_by": "Jose Romero",
       "created_date": "2023-08-09",
       "due_date": "2023-08-18",
-      "days_open": 1016,
+      "days_open": 1017,
       "overdue": true
     },
     {
@@ -4859,7 +4872,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-08-11",
       "due_date": "2023-08-18",
-      "days_open": 1014,
+      "days_open": 1015,
       "overdue": true
     },
     {
@@ -4874,7 +4887,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-08-14",
       "due_date": "",
-      "days_open": 1011,
+      "days_open": 1012,
       "overdue": false
     },
     {
@@ -4889,7 +4902,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-08-23",
       "due_date": "",
-      "days_open": 1002,
+      "days_open": 1003,
       "overdue": false
     },
     {
@@ -4904,7 +4917,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-09-01",
       "due_date": "2023-09-08",
-      "days_open": 993,
+      "days_open": 994,
       "overdue": true
     },
     {
@@ -4919,7 +4932,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-09-02",
       "due_date": "2023-09-08",
-      "days_open": 992,
+      "days_open": 993,
       "overdue": true
     },
     {
@@ -4934,7 +4947,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-09-06",
       "due_date": "",
-      "days_open": 988,
+      "days_open": 989,
       "overdue": false
     },
     {
@@ -4949,7 +4962,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-09-16",
       "due_date": "",
-      "days_open": 978,
+      "days_open": 979,
       "overdue": false
     },
     {
@@ -4964,7 +4977,7 @@
       "created_by": "Hugo Luna",
       "created_date": "2023-09-17",
       "due_date": "",
-      "days_open": 977,
+      "days_open": 978,
       "overdue": false
     },
     {
@@ -4979,7 +4992,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-09-24",
       "due_date": "",
-      "days_open": 970,
+      "days_open": 971,
       "overdue": false
     },
     {
@@ -4994,7 +5007,7 @@
       "created_by": "Marvin Lawry Jr",
       "created_date": "2023-09-24",
       "due_date": "2023-09-25",
-      "days_open": 970,
+      "days_open": 971,
       "overdue": true
     },
     {
@@ -5009,7 +5022,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-10-06",
       "due_date": "",
-      "days_open": 958,
+      "days_open": 959,
       "overdue": false
     },
     {
@@ -5024,7 +5037,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-10-07",
       "due_date": "",
-      "days_open": 957,
+      "days_open": 958,
       "overdue": false
     },
     {
@@ -5039,7 +5052,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-10-15",
       "due_date": "2023-10-22",
-      "days_open": 949,
+      "days_open": 950,
       "overdue": true
     },
     {
@@ -5054,7 +5067,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-10-19",
       "due_date": "",
-      "days_open": 945,
+      "days_open": 946,
       "overdue": false
     },
     {
@@ -5069,7 +5082,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-10-19",
       "due_date": "2023-10-26",
-      "days_open": 945,
+      "days_open": 946,
       "overdue": true
     },
     {
@@ -5084,7 +5097,7 @@
       "created_by": "Gustavo Dominguez Jr",
       "created_date": "2023-10-25",
       "due_date": "",
-      "days_open": 939,
+      "days_open": 940,
       "overdue": false
     },
     {
@@ -5099,7 +5112,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-10-30",
       "due_date": "",
-      "days_open": 934,
+      "days_open": 935,
       "overdue": false
     },
     {
@@ -5114,7 +5127,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-03",
       "due_date": "",
-      "days_open": 930,
+      "days_open": 931,
       "overdue": false
     },
     {
@@ -5129,7 +5142,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-03",
       "due_date": "",
-      "days_open": 930,
+      "days_open": 931,
       "overdue": false
     },
     {
@@ -5144,7 +5157,7 @@
       "created_by": "Jose Romero",
       "created_date": "2023-11-03",
       "due_date": "2023-11-17",
-      "days_open": 930,
+      "days_open": 931,
       "overdue": true
     },
     {
@@ -5159,7 +5172,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-04",
       "due_date": "",
-      "days_open": 929,
+      "days_open": 930,
       "overdue": false
     },
     {
@@ -5174,7 +5187,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2023-11-07",
       "due_date": "2023-11-07",
-      "days_open": 926,
+      "days_open": 927,
       "overdue": true
     },
     {
@@ -5189,7 +5202,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-15",
       "due_date": "",
-      "days_open": 918,
+      "days_open": 919,
       "overdue": false
     },
     {
@@ -5204,7 +5217,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-18",
       "due_date": "",
-      "days_open": 915,
+      "days_open": 916,
       "overdue": false
     },
     {
@@ -5219,7 +5232,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-19",
       "due_date": "",
-      "days_open": 914,
+      "days_open": 915,
       "overdue": false
     },
     {
@@ -5234,7 +5247,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-19",
       "due_date": "",
-      "days_open": 914,
+      "days_open": 915,
       "overdue": false
     },
     {
@@ -5249,7 +5262,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-21",
       "due_date": "",
-      "days_open": 912,
+      "days_open": 913,
       "overdue": false
     },
     {
@@ -5264,7 +5277,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-21",
       "due_date": "",
-      "days_open": 912,
+      "days_open": 913,
       "overdue": false
     },
     {
@@ -5279,7 +5292,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-21",
       "due_date": "",
-      "days_open": 912,
+      "days_open": 913,
       "overdue": false
     },
     {
@@ -5294,7 +5307,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-11-23",
       "due_date": "2023-11-30",
-      "days_open": 910,
+      "days_open": 911,
       "overdue": true
     },
     {
@@ -5309,7 +5322,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-30",
       "due_date": "",
-      "days_open": 903,
+      "days_open": 904,
       "overdue": false
     },
     {
@@ -5324,7 +5337,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-11-30",
       "due_date": "",
-      "days_open": 903,
+      "days_open": 904,
       "overdue": false
     },
     {
@@ -5339,7 +5352,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-12-13",
       "due_date": "",
-      "days_open": 890,
+      "days_open": 891,
       "overdue": false
     },
     {
@@ -5354,7 +5367,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-12-14",
       "due_date": "",
-      "days_open": 889,
+      "days_open": 890,
       "overdue": false
     },
     {
@@ -5369,7 +5382,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-12-16",
       "due_date": "2023-12-23",
-      "days_open": 887,
+      "days_open": 888,
       "overdue": true
     },
     {
@@ -5384,7 +5397,7 @@
       "created_by": "Roger Gray",
       "created_date": "2023-12-16",
       "due_date": "2023-12-22",
-      "days_open": 887,
+      "days_open": 888,
       "overdue": true
     },
     {
@@ -5399,7 +5412,7 @@
       "created_by": "Geoni White",
       "created_date": "2023-12-17",
       "due_date": "2024-01-17",
-      "days_open": 886,
+      "days_open": 887,
       "overdue": true
     },
     {
@@ -5414,7 +5427,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-12-17",
       "due_date": "",
-      "days_open": 886,
+      "days_open": 887,
       "overdue": false
     },
     {
@@ -5429,7 +5442,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-12-18",
       "due_date": "",
-      "days_open": 885,
+      "days_open": 886,
       "overdue": false
     },
     {
@@ -5444,7 +5457,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2023-12-18",
       "due_date": "",
-      "days_open": 885,
+      "days_open": 886,
       "overdue": false
     },
     {
@@ -5459,7 +5472,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2023-12-26",
       "due_date": "",
-      "days_open": 877,
+      "days_open": 878,
       "overdue": false
     },
     {
@@ -5474,7 +5487,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2023-12-26",
       "due_date": "",
-      "days_open": 877,
+      "days_open": 878,
       "overdue": false
     },
     {
@@ -5489,7 +5502,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-02",
       "due_date": "",
-      "days_open": 870,
+      "days_open": 871,
       "overdue": false
     },
     {
@@ -5504,7 +5517,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-01-04",
       "due_date": "2024-01-10",
-      "days_open": 868,
+      "days_open": 869,
       "overdue": true
     },
     {
@@ -5519,7 +5532,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-01-09",
       "due_date": "2024-01-16",
-      "days_open": 863,
+      "days_open": 864,
       "overdue": true
     },
     {
@@ -5534,7 +5547,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-09",
       "due_date": "2024-01-11",
-      "days_open": 863,
+      "days_open": 864,
       "overdue": true
     },
     {
@@ -5549,7 +5562,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-09",
       "due_date": "2024-01-11",
-      "days_open": 863,
+      "days_open": 864,
       "overdue": true
     },
     {
@@ -5564,7 +5577,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-09",
       "due_date": "2024-01-11",
-      "days_open": 863,
+      "days_open": 864,
       "overdue": true
     },
     {
@@ -5579,7 +5592,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-10",
       "due_date": "",
-      "days_open": 862,
+      "days_open": 863,
       "overdue": false
     },
     {
@@ -5594,7 +5607,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-10",
       "due_date": "",
-      "days_open": 862,
+      "days_open": 863,
       "overdue": false
     },
     {
@@ -5609,7 +5622,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2024-01-10",
       "due_date": "2024-01-11",
-      "days_open": 862,
+      "days_open": 863,
       "overdue": true
     },
     {
@@ -5624,7 +5637,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-01-12",
       "due_date": "2024-01-19",
-      "days_open": 860,
+      "days_open": 861,
       "overdue": true
     },
     {
@@ -5639,7 +5652,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-15",
       "due_date": "",
-      "days_open": 857,
+      "days_open": 858,
       "overdue": false
     },
     {
@@ -5654,7 +5667,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-01-15",
       "due_date": "2024-02-08",
-      "days_open": 857,
+      "days_open": 858,
       "overdue": true
     },
     {
@@ -5669,7 +5682,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-15",
       "due_date": "",
-      "days_open": 857,
+      "days_open": 858,
       "overdue": false
     },
     {
@@ -5684,7 +5697,7 @@
       "created_by": "Javier Galvan",
       "created_date": "2024-01-20",
       "due_date": "2024-01-20",
-      "days_open": 852,
+      "days_open": 853,
       "overdue": true
     },
     {
@@ -5699,7 +5712,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-01-23",
       "due_date": "",
-      "days_open": 849,
+      "days_open": 850,
       "overdue": false
     },
     {
@@ -5714,7 +5727,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2024-01-27",
       "due_date": "",
-      "days_open": 845,
+      "days_open": 846,
       "overdue": false
     },
     {
@@ -5729,7 +5742,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-02-05",
       "due_date": "2024-02-20",
-      "days_open": 836,
+      "days_open": 837,
       "overdue": true
     },
     {
@@ -5744,7 +5757,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-02-05",
       "due_date": "2024-02-25",
-      "days_open": 836,
+      "days_open": 837,
       "overdue": true
     },
     {
@@ -5759,7 +5772,7 @@
       "created_by": "Mario Mendiola",
       "created_date": "2024-02-05",
       "due_date": "2024-02-05",
-      "days_open": 836,
+      "days_open": 837,
       "overdue": true
     },
     {
@@ -5774,7 +5787,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2024-02-06",
       "due_date": "",
-      "days_open": 835,
+      "days_open": 836,
       "overdue": false
     },
     {
@@ -5789,7 +5802,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-02-06",
       "due_date": "2024-03-05",
-      "days_open": 835,
+      "days_open": 836,
       "overdue": true
     },
     {
@@ -5804,7 +5817,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-02-06",
       "due_date": "2024-03-05",
-      "days_open": 835,
+      "days_open": 836,
       "overdue": true
     },
     {
@@ -5819,7 +5832,7 @@
       "created_by": "Anthony Fionda",
       "created_date": "2024-02-08",
       "due_date": "",
-      "days_open": 833,
+      "days_open": 834,
       "overdue": false
     },
     {
@@ -5834,7 +5847,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2024-02-09",
       "due_date": "",
-      "days_open": 832,
+      "days_open": 833,
       "overdue": false
     },
     {
@@ -5849,7 +5862,7 @@
       "created_by": "Geoni White",
       "created_date": "2024-02-12",
       "due_date": "",
-      "days_open": 829,
+      "days_open": 830,
       "overdue": false
     },
     {
@@ -5864,7 +5877,7 @@
       "created_by": "Victor Alvarez",
       "created_date": "2024-02-12",
       "due_date": "2024-03-12",
-      "days_open": 829,
+      "days_open": 830,
       "overdue": true
     },
     {
@@ -5879,7 +5892,7 @@
       "created_by": "David Dudley",
       "created_date": "2024-02-13",
       "due_date": "2024-02-16",
-      "days_open": 828,
+      "days_open": 829,
       "overdue": true
     },
     {
@@ -5894,7 +5907,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-02-21",
       "due_date": "2024-03-19",
-      "days_open": 820,
+      "days_open": 821,
       "overdue": true
     },
     {
@@ -5909,7 +5922,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-02-21",
       "due_date": "2024-03-19",
-      "days_open": 820,
+      "days_open": 821,
       "overdue": true
     },
     {
@@ -5924,7 +5937,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-02-22",
       "due_date": "2024-02-29",
-      "days_open": 819,
+      "days_open": 820,
       "overdue": true
     },
     {
@@ -5939,7 +5952,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-02-22",
       "due_date": "",
-      "days_open": 819,
+      "days_open": 820,
       "overdue": false
     },
     {
@@ -5954,7 +5967,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-02-25",
       "due_date": "",
-      "days_open": 816,
+      "days_open": 817,
       "overdue": false
     },
     {
@@ -5969,7 +5982,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-02-26",
       "due_date": "",
-      "days_open": 815,
+      "days_open": 816,
       "overdue": false
     },
     {
@@ -5984,7 +5997,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-02-28",
       "due_date": "2024-03-05",
-      "days_open": 813,
+      "days_open": 814,
       "overdue": true
     },
     {
@@ -5999,7 +6012,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-03-06",
       "due_date": "",
-      "days_open": 806,
+      "days_open": 807,
       "overdue": false
     },
     {
@@ -6014,7 +6027,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-03-06",
       "due_date": "2024-04-04",
-      "days_open": 806,
+      "days_open": 807,
       "overdue": true
     },
     {
@@ -6029,7 +6042,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-03-06",
       "due_date": "2024-04-04",
-      "days_open": 806,
+      "days_open": 807,
       "overdue": true
     },
     {
@@ -6044,7 +6057,7 @@
       "created_by": "Shana Beeson",
       "created_date": "2024-03-06",
       "due_date": "2024-04-04",
-      "days_open": 806,
+      "days_open": 807,
       "overdue": true
     },
     {
@@ -6059,7 +6072,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-03-08",
       "due_date": "2024-03-15",
-      "days_open": 804,
+      "days_open": 805,
       "overdue": true
     },
     {
@@ -6074,7 +6087,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-03-09",
       "due_date": "",
-      "days_open": 803,
+      "days_open": 804,
       "overdue": false
     },
     {
@@ -6089,7 +6102,7 @@
       "created_by": "Ray Aguilar",
       "created_date": "2024-03-11",
       "due_date": "2024-03-11",
-      "days_open": 801,
+      "days_open": 802,
       "overdue": true
     },
     {
@@ -6104,7 +6117,7 @@
       "created_by": "Ryder Stanbery",
       "created_date": "2024-03-11",
       "due_date": "",
-      "days_open": 801,
+      "days_open": 802,
       "overdue": false
     },
     {
@@ -6119,7 +6132,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2024-03-11",
       "due_date": "2024-03-11",
-      "days_open": 801,
+      "days_open": 802,
       "overdue": true
     },
     {
@@ -6134,7 +6147,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2024-03-11",
       "due_date": "2024-03-11",
-      "days_open": 801,
+      "days_open": 802,
       "overdue": true
     },
     {
@@ -6149,7 +6162,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-03-19",
       "due_date": "",
-      "days_open": 793,
+      "days_open": 794,
       "overdue": false
     },
     {
@@ -6164,7 +6177,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-03-20",
       "due_date": "",
-      "days_open": 792,
+      "days_open": 793,
       "overdue": false
     },
     {
@@ -6179,7 +6192,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-03-23",
       "due_date": "",
-      "days_open": 789,
+      "days_open": 790,
       "overdue": false
     },
     {
@@ -6194,7 +6207,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2024-03-25",
       "due_date": "2024-03-25",
-      "days_open": 787,
+      "days_open": 788,
       "overdue": true
     },
     {
@@ -6209,7 +6222,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-03-26",
       "due_date": "",
-      "days_open": 786,
+      "days_open": 787,
       "overdue": false
     },
     {
@@ -6224,7 +6237,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-04-03",
       "due_date": "",
-      "days_open": 778,
+      "days_open": 779,
       "overdue": false
     },
     {
@@ -6239,7 +6252,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-04-03",
       "due_date": "",
-      "days_open": 778,
+      "days_open": 779,
       "overdue": false
     },
     {
@@ -6254,7 +6267,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-04-09",
       "due_date": "",
-      "days_open": 772,
+      "days_open": 773,
       "overdue": false
     },
     {
@@ -6269,7 +6282,7 @@
       "created_by": "Victor Alvarez",
       "created_date": "2024-04-15",
       "due_date": "2024-05-16",
-      "days_open": 766,
+      "days_open": 767,
       "overdue": true
     },
     {
@@ -6284,7 +6297,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-04-21",
       "due_date": "",
-      "days_open": 760,
+      "days_open": 761,
       "overdue": false
     },
     {
@@ -6299,7 +6312,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-04-22",
       "due_date": "",
-      "days_open": 759,
+      "days_open": 760,
       "overdue": false
     },
     {
@@ -6314,7 +6327,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-04-24",
       "due_date": "2024-05-01",
-      "days_open": 757,
+      "days_open": 758,
       "overdue": true
     },
     {
@@ -6329,7 +6342,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-04-24",
       "due_date": "",
-      "days_open": 757,
+      "days_open": 758,
       "overdue": false
     },
     {
@@ -6344,7 +6357,7 @@
       "created_by": "Mario Mendiola",
       "created_date": "2024-05-01",
       "due_date": "2024-05-05",
-      "days_open": 750,
+      "days_open": 751,
       "overdue": true
     },
     {
@@ -6359,7 +6372,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-05-01",
       "due_date": "2024-05-08",
-      "days_open": 750,
+      "days_open": 751,
       "overdue": true
     },
     {
@@ -6374,7 +6387,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-05-03",
       "due_date": "2024-05-10",
-      "days_open": 748,
+      "days_open": 749,
       "overdue": true
     },
     {
@@ -6389,7 +6402,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-04",
       "due_date": "",
-      "days_open": 747,
+      "days_open": 748,
       "overdue": false
     },
     {
@@ -6404,7 +6417,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-05",
       "due_date": "",
-      "days_open": 746,
+      "days_open": 747,
       "overdue": false
     },
     {
@@ -6419,7 +6432,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-05",
       "due_date": "",
-      "days_open": 746,
+      "days_open": 747,
       "overdue": false
     },
     {
@@ -6434,7 +6447,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-07",
       "due_date": "",
-      "days_open": 744,
+      "days_open": 745,
       "overdue": false
     },
     {
@@ -6449,7 +6462,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2024-05-09",
       "due_date": "2024-05-08",
-      "days_open": 742,
+      "days_open": 743,
       "overdue": true
     },
     {
@@ -6464,7 +6477,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-18",
       "due_date": "",
-      "days_open": 733,
+      "days_open": 734,
       "overdue": false
     },
     {
@@ -6479,7 +6492,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-22",
       "due_date": "",
-      "days_open": 729,
+      "days_open": 730,
       "overdue": false
     },
     {
@@ -6494,7 +6507,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-05-27",
       "due_date": "2024-06-03",
-      "days_open": 724,
+      "days_open": 725,
       "overdue": true
     },
     {
@@ -6509,7 +6522,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-05-27",
       "due_date": "2024-05-30",
-      "days_open": 724,
+      "days_open": 725,
       "overdue": true
     },
     {
@@ -6524,7 +6537,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-05-28",
       "due_date": "",
-      "days_open": 723,
+      "days_open": 724,
       "overdue": false
     },
     {
@@ -6539,7 +6552,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-06-04",
       "due_date": "",
-      "days_open": 716,
+      "days_open": 717,
       "overdue": false
     },
     {
@@ -6554,7 +6567,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2024-06-15",
       "due_date": "2024-06-15",
-      "days_open": 705,
+      "days_open": 706,
       "overdue": true
     },
     {
@@ -6569,7 +6582,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-06-16",
       "due_date": "",
-      "days_open": 704,
+      "days_open": 705,
       "overdue": false
     },
     {
@@ -6584,7 +6597,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-06-16",
       "due_date": "",
-      "days_open": 704,
+      "days_open": 705,
       "overdue": false
     },
     {
@@ -6599,7 +6612,7 @@
       "created_by": "Mario Mendiola",
       "created_date": "2024-06-17",
       "due_date": "2024-06-19",
-      "days_open": 703,
+      "days_open": 704,
       "overdue": true
     },
     {
@@ -6614,7 +6627,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2024-06-22",
       "due_date": "2024-06-22",
-      "days_open": 698,
+      "days_open": 699,
       "overdue": true
     },
     {
@@ -6629,7 +6642,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-06-22",
       "due_date": "2024-06-28",
-      "days_open": 698,
+      "days_open": 699,
       "overdue": true
     },
     {
@@ -6644,7 +6657,7 @@
       "created_by": "Mario Mendiola",
       "created_date": "2024-06-26",
       "due_date": "2024-06-27",
-      "days_open": 694,
+      "days_open": 695,
       "overdue": true
     },
     {
@@ -6659,7 +6672,7 @@
       "created_by": "Mario Mendiola",
       "created_date": "2024-06-26",
       "due_date": "2024-06-29",
-      "days_open": 694,
+      "days_open": 695,
       "overdue": true
     },
     {
@@ -6674,7 +6687,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-06-27",
       "due_date": "",
-      "days_open": 693,
+      "days_open": 694,
       "overdue": false
     },
     {
@@ -6689,7 +6702,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-07-14",
       "due_date": "",
-      "days_open": 676,
+      "days_open": 677,
       "overdue": false
     },
     {
@@ -6704,7 +6717,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-07-15",
       "due_date": "2024-07-21",
-      "days_open": 675,
+      "days_open": 676,
       "overdue": true
     },
     {
@@ -6719,7 +6732,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-07-15",
       "due_date": "2024-07-21",
-      "days_open": 675,
+      "days_open": 676,
       "overdue": true
     },
     {
@@ -6734,7 +6747,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-07-16",
       "due_date": "2024-07-23",
-      "days_open": 674,
+      "days_open": 675,
       "overdue": true
     },
     {
@@ -6749,7 +6762,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-07-16",
       "due_date": "2024-07-23",
-      "days_open": 674,
+      "days_open": 675,
       "overdue": true
     },
     {
@@ -6764,7 +6777,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-07-24",
       "due_date": "",
-      "days_open": 666,
+      "days_open": 667,
       "overdue": false
     },
     {
@@ -6779,7 +6792,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-07-28",
       "due_date": "",
-      "days_open": 662,
+      "days_open": 663,
       "overdue": false
     },
     {
@@ -6794,7 +6807,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-07-28",
       "due_date": "2024-08-04",
-      "days_open": 662,
+      "days_open": 663,
       "overdue": true
     },
     {
@@ -6809,7 +6822,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-08-07",
       "due_date": "",
-      "days_open": 652,
+      "days_open": 653,
       "overdue": false
     },
     {
@@ -6824,7 +6837,7 @@
       "created_by": "Jesus Cortez",
       "created_date": "2024-08-17",
       "due_date": "2024-08-17",
-      "days_open": 642,
+      "days_open": 643,
       "overdue": true
     },
     {
@@ -6839,7 +6852,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-09-08",
       "due_date": "",
-      "days_open": 620,
+      "days_open": 621,
       "overdue": false
     },
     {
@@ -6854,7 +6867,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2024-09-13",
       "due_date": "2024-10-13",
-      "days_open": 615,
+      "days_open": 616,
       "overdue": true
     },
     {
@@ -6869,7 +6882,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-09-22",
       "due_date": "",
-      "days_open": 606,
+      "days_open": 607,
       "overdue": false
     },
     {
@@ -6884,7 +6897,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-09-22",
       "due_date": "",
-      "days_open": 606,
+      "days_open": 607,
       "overdue": false
     },
     {
@@ -6899,7 +6912,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2024-10-02",
       "due_date": "2024-10-02",
-      "days_open": 596,
+      "days_open": 597,
       "overdue": true
     },
     {
@@ -6914,7 +6927,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-10-06",
       "due_date": "",
-      "days_open": 592,
+      "days_open": 593,
       "overdue": false
     },
     {
@@ -6929,7 +6942,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-10-06",
       "due_date": "",
-      "days_open": 592,
+      "days_open": 593,
       "overdue": false
     },
     {
@@ -6944,7 +6957,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-10-10",
       "due_date": "",
-      "days_open": 588,
+      "days_open": 589,
       "overdue": false
     },
     {
@@ -6959,7 +6972,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-10-10",
       "due_date": "2024-10-17",
-      "days_open": 588,
+      "days_open": 589,
       "overdue": true
     },
     {
@@ -6974,7 +6987,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2024-10-10",
       "due_date": "2024-10-10",
-      "days_open": 588,
+      "days_open": 589,
       "overdue": true
     },
     {
@@ -6989,7 +7002,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2024-10-18",
       "due_date": "2024-11-18",
-      "days_open": 580,
+      "days_open": 581,
       "overdue": true
     },
     {
@@ -7004,7 +7017,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-10-21",
       "due_date": "2024-10-28",
-      "days_open": 577,
+      "days_open": 578,
       "overdue": true
     },
     {
@@ -7019,7 +7032,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-11-03",
       "due_date": "",
-      "days_open": 564,
+      "days_open": 565,
       "overdue": false
     },
     {
@@ -7034,7 +7047,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-11-04",
       "due_date": "2024-11-11",
-      "days_open": 563,
+      "days_open": 564,
       "overdue": true
     },
     {
@@ -7049,7 +7062,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-11-05",
       "due_date": "",
-      "days_open": 562,
+      "days_open": 563,
       "overdue": false
     },
     {
@@ -7064,7 +7077,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2024-11-06",
       "due_date": "2024-12-06",
-      "days_open": 561,
+      "days_open": 562,
       "overdue": true
     },
     {
@@ -7079,7 +7092,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-11-14",
       "due_date": "",
-      "days_open": 553,
+      "days_open": 554,
       "overdue": false
     },
     {
@@ -7094,7 +7107,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-11-19",
       "due_date": "",
-      "days_open": 548,
+      "days_open": 549,
       "overdue": false
     },
     {
@@ -7109,7 +7122,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-11-26",
       "due_date": "",
-      "days_open": 541,
+      "days_open": 542,
       "overdue": false
     },
     {
@@ -7124,7 +7137,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-12-03",
       "due_date": "2024-12-10",
-      "days_open": 534,
+      "days_open": 535,
       "overdue": true
     },
     {
@@ -7139,7 +7152,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-12-18",
       "due_date": "2024-12-25",
-      "days_open": 519,
+      "days_open": 520,
       "overdue": true
     },
     {
@@ -7154,7 +7167,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-12-19",
       "due_date": "2024-12-26",
-      "days_open": 518,
+      "days_open": 519,
       "overdue": true
     },
     {
@@ -7169,7 +7182,7 @@
       "created_by": "Ryder Stanbery",
       "created_date": "2024-12-20",
       "due_date": "2024-12-31",
-      "days_open": 517,
+      "days_open": 518,
       "overdue": true
     },
     {
@@ -7184,7 +7197,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-12-27",
       "due_date": "2025-01-03",
-      "days_open": 510,
+      "days_open": 511,
       "overdue": true
     },
     {
@@ -7199,7 +7212,7 @@
       "created_by": "Roger Gray",
       "created_date": "2024-12-28",
       "due_date": "2025-01-04",
-      "days_open": 509,
+      "days_open": 510,
       "overdue": true
     },
     {
@@ -7214,7 +7227,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2024-12-28",
       "due_date": "",
-      "days_open": 509,
+      "days_open": 510,
       "overdue": false
     },
     {
@@ -7229,7 +7242,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-01-23",
       "due_date": "2025-01-24",
-      "days_open": 483,
+      "days_open": 484,
       "overdue": true
     },
     {
@@ -7244,7 +7257,7 @@
       "created_by": "Francisco Toledo",
       "created_date": "2025-01-25",
       "due_date": "",
-      "days_open": 481,
+      "days_open": 482,
       "overdue": false
     },
     {
@@ -7259,7 +7272,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-01-31",
       "due_date": "2025-02-01",
-      "days_open": 475,
+      "days_open": 476,
       "overdue": true
     },
     {
@@ -7274,7 +7287,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-02-22",
       "due_date": "2025-02-23",
-      "days_open": 453,
+      "days_open": 454,
       "overdue": true
     },
     {
@@ -7289,7 +7302,7 @@
       "created_by": "David Dudley",
       "created_date": "2025-02-26",
       "due_date": "2025-03-12",
-      "days_open": 449,
+      "days_open": 450,
       "overdue": true
     },
     {
@@ -7304,7 +7317,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-03-06",
       "due_date": "",
-      "days_open": 441,
+      "days_open": 442,
       "overdue": false
     },
     {
@@ -7319,7 +7332,7 @@
       "created_by": "David Dudley",
       "created_date": "2025-03-11",
       "due_date": "2025-03-13",
-      "days_open": 436,
+      "days_open": 437,
       "overdue": true
     },
     {
@@ -7334,7 +7347,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2025-03-14",
       "due_date": "2025-03-14",
-      "days_open": 433,
+      "days_open": 434,
       "overdue": true
     },
     {
@@ -7349,7 +7362,7 @@
       "created_by": "Ricky Rhine",
       "created_date": "2025-03-16",
       "due_date": "2025-03-16",
-      "days_open": 431,
+      "days_open": 432,
       "overdue": true
     },
     {
@@ -7364,7 +7377,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-03-21",
       "due_date": "2025-04-21",
-      "days_open": 426,
+      "days_open": 427,
       "overdue": true
     },
     {
@@ -7379,7 +7392,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-03-22",
       "due_date": "",
-      "days_open": 425,
+      "days_open": 426,
       "overdue": false
     },
     {
@@ -7394,7 +7407,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-04-08",
       "due_date": "",
-      "days_open": 408,
+      "days_open": 409,
       "overdue": false
     },
     {
@@ -7409,7 +7422,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-04-16",
       "due_date": "",
-      "days_open": 400,
+      "days_open": 401,
       "overdue": false
     },
     {
@@ -7424,7 +7437,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-04-16",
       "due_date": "2025-04-21",
-      "days_open": 400,
+      "days_open": 401,
       "overdue": true
     },
     {
@@ -7439,7 +7452,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-04-16",
       "due_date": "2025-04-17",
-      "days_open": 400,
+      "days_open": 401,
       "overdue": true
     },
     {
@@ -7454,7 +7467,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-04-16",
       "due_date": "2025-04-21",
-      "days_open": 400,
+      "days_open": 401,
       "overdue": true
     },
     {
@@ -7469,7 +7482,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-04-16",
       "due_date": "2025-04-16",
-      "days_open": 400,
+      "days_open": 401,
       "overdue": true
     },
     {
@@ -7484,7 +7497,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-04-22",
       "due_date": "",
-      "days_open": 394,
+      "days_open": 395,
       "overdue": false
     },
     {
@@ -7499,7 +7512,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-04-24",
       "due_date": "",
-      "days_open": 392,
+      "days_open": 393,
       "overdue": false
     },
     {
@@ -7514,7 +7527,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-04-29",
       "due_date": "",
-      "days_open": 387,
+      "days_open": 388,
       "overdue": false
     },
     {
@@ -7529,7 +7542,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-04-30",
       "due_date": "",
-      "days_open": 386,
+      "days_open": 387,
       "overdue": false
     },
     {
@@ -7544,7 +7557,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-05-01",
       "due_date": "2025-06-01",
-      "days_open": 385,
+      "days_open": 386,
       "overdue": true
     },
     {
@@ -7559,7 +7572,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-05-17",
       "due_date": "",
-      "days_open": 369,
+      "days_open": 370,
       "overdue": false
     },
     {
@@ -7574,7 +7587,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-05-17",
       "due_date": "",
-      "days_open": 369,
+      "days_open": 370,
       "overdue": false
     },
     {
@@ -7589,7 +7602,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2025-05-23",
       "due_date": "",
-      "days_open": 363,
+      "days_open": 364,
       "overdue": false
     },
     {
@@ -7604,7 +7617,7 @@
       "created_by": "Juan Espinoza",
       "created_date": "2025-05-23",
       "due_date": "",
-      "days_open": 363,
+      "days_open": 364,
       "overdue": false
     },
     {
@@ -7619,7 +7632,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-06-16",
       "due_date": "",
-      "days_open": 339,
+      "days_open": 340,
       "overdue": false
     },
     {
@@ -7634,7 +7647,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2025-06-23",
       "due_date": "",
-      "days_open": 332,
+      "days_open": 333,
       "overdue": false
     },
     {
@@ -7649,7 +7662,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-06-30",
       "due_date": "",
-      "days_open": 325,
+      "days_open": 326,
       "overdue": false
     },
     {
@@ -7664,7 +7677,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-06-30",
       "due_date": "",
-      "days_open": 325,
+      "days_open": 326,
       "overdue": false
     },
     {
@@ -7679,7 +7692,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-02",
       "due_date": "",
-      "days_open": 323,
+      "days_open": 324,
       "overdue": false
     },
     {
@@ -7694,7 +7707,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-02",
       "due_date": "",
-      "days_open": 323,
+      "days_open": 324,
       "overdue": false
     },
     {
@@ -7709,7 +7722,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-06",
       "due_date": "",
-      "days_open": 319,
+      "days_open": 320,
       "overdue": false
     },
     {
@@ -7724,7 +7737,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-07-13",
       "due_date": "2025-07-20",
-      "days_open": 312,
+      "days_open": 313,
       "overdue": true
     },
     {
@@ -7739,7 +7752,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-15",
       "due_date": "",
-      "days_open": 310,
+      "days_open": 311,
       "overdue": false
     },
     {
@@ -7754,7 +7767,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-22",
       "due_date": "",
-      "days_open": 303,
+      "days_open": 304,
       "overdue": false
     },
     {
@@ -7769,7 +7782,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-22",
       "due_date": "",
-      "days_open": 303,
+      "days_open": 304,
       "overdue": false
     },
     {
@@ -7784,7 +7797,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-22",
       "due_date": "",
-      "days_open": 303,
+      "days_open": 304,
       "overdue": false
     },
     {
@@ -7799,7 +7812,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2025-07-28",
       "due_date": "",
-      "days_open": 297,
+      "days_open": 298,
       "overdue": false
     },
     {
@@ -7814,7 +7827,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-07-30",
       "due_date": "",
-      "days_open": 295,
+      "days_open": 296,
       "overdue": false
     },
     {
@@ -7829,7 +7842,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-08-01",
       "due_date": "2025-09-01",
-      "days_open": 293,
+      "days_open": 294,
       "overdue": true
     },
     {
@@ -7844,7 +7857,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2025-08-06",
       "due_date": "",
-      "days_open": 288,
+      "days_open": 289,
       "overdue": false
     },
     {
@@ -7859,7 +7872,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2025-08-14",
       "due_date": "",
-      "days_open": 280,
+      "days_open": 281,
       "overdue": false
     },
     {
@@ -7874,7 +7887,7 @@
       "created_by": "Adrien Osmer-Higginbotham",
       "created_date": "2025-08-19",
       "due_date": "2025-09-19",
-      "days_open": 275,
+      "days_open": 276,
       "overdue": true
     },
     {
@@ -7889,7 +7902,7 @@
       "created_by": "Rene Gallegos",
       "created_date": "2025-08-21",
       "due_date": "2025-09-21",
-      "days_open": 273,
+      "days_open": 274,
       "overdue": true
     },
     {
@@ -7904,7 +7917,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-08-22",
       "due_date": "2025-08-28",
-      "days_open": 272,
+      "days_open": 273,
       "overdue": true
     },
     {
@@ -7919,7 +7932,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-08-27",
       "due_date": "2025-09-02",
-      "days_open": 267,
+      "days_open": 268,
       "overdue": true
     },
     {
@@ -7934,7 +7947,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-09-05",
       "due_date": "2025-09-12",
-      "days_open": 258,
+      "days_open": 259,
       "overdue": true
     },
     {
@@ -7949,7 +7962,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2025-09-10",
       "due_date": "",
-      "days_open": 253,
+      "days_open": 254,
       "overdue": false
     },
     {
@@ -7964,7 +7977,7 @@
       "created_by": "Miguel Marquez",
       "created_date": "2025-09-17",
       "due_date": "2025-10-17",
-      "days_open": 246,
+      "days_open": 247,
       "overdue": true
     },
     {
@@ -7979,7 +7992,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-09-18",
       "due_date": "",
-      "days_open": 245,
+      "days_open": 246,
       "overdue": false
     },
     {
@@ -7994,7 +8007,7 @@
       "created_by": "Adrien Osmer-Higginbotham",
       "created_date": "2025-09-20",
       "due_date": "2025-10-19",
-      "days_open": 243,
+      "days_open": 244,
       "overdue": true
     },
     {
@@ -8009,7 +8022,7 @@
       "created_by": "James Stone",
       "created_date": "2025-09-22",
       "due_date": "",
-      "days_open": 241,
+      "days_open": 242,
       "overdue": false
     },
     {
@@ -8024,7 +8037,7 @@
       "created_by": "Julian Cordova-Lopez",
       "created_date": "2025-09-23",
       "due_date": "2025-10-23",
-      "days_open": 240,
+      "days_open": 241,
       "overdue": true
     },
     {
@@ -8039,7 +8052,7 @@
       "created_by": "Erick Jaime sustaita",
       "created_date": "2025-09-23",
       "due_date": "2025-09-23",
-      "days_open": 240,
+      "days_open": 241,
       "overdue": true
     },
     {
@@ -8054,7 +8067,7 @@
       "created_by": "Steven Crabtree",
       "created_date": "2025-09-23",
       "due_date": "2025-09-23",
-      "days_open": 240,
+      "days_open": 241,
       "overdue": true
     },
     {
@@ -8069,7 +8082,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-09-23",
       "due_date": "",
-      "days_open": 240,
+      "days_open": 241,
       "overdue": false
     },
     {
@@ -8084,7 +8097,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-09-23",
       "due_date": "",
-      "days_open": 240,
+      "days_open": 241,
       "overdue": false
     },
     {
@@ -8099,7 +8112,7 @@
       "created_by": "Adrien Osmer-Higginbotham",
       "created_date": "2025-10-02",
       "due_date": "2025-11-02",
-      "days_open": 231,
+      "days_open": 232,
       "overdue": true
     },
     {
@@ -8114,7 +8127,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-10-04",
       "due_date": "2025-10-11",
-      "days_open": 229,
+      "days_open": 230,
       "overdue": true
     },
     {
@@ -8129,7 +8142,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-10-13",
       "due_date": "2025-10-20",
-      "days_open": 220,
+      "days_open": 221,
       "overdue": true
     },
     {
@@ -8144,7 +8157,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2025-10-14",
       "due_date": "",
-      "days_open": 219,
+      "days_open": 220,
       "overdue": false
     },
     {
@@ -8159,7 +8172,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-10-18",
       "due_date": "",
-      "days_open": 215,
+      "days_open": 216,
       "overdue": false
     },
     {
@@ -8174,7 +8187,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-10-18",
       "due_date": "",
-      "days_open": 215,
+      "days_open": 216,
       "overdue": false
     },
     {
@@ -8189,7 +8202,7 @@
       "created_by": "Erick Jaime sustaita",
       "created_date": "2025-10-23",
       "due_date": "",
-      "days_open": 210,
+      "days_open": 211,
       "overdue": false
     },
     {
@@ -8204,7 +8217,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8219,7 +8232,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8234,7 +8247,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8249,7 +8262,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8264,7 +8277,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8279,7 +8292,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8294,7 +8307,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8309,7 +8322,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8324,7 +8337,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8339,7 +8352,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8354,7 +8367,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8369,7 +8382,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8384,7 +8397,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-10-24",
       "due_date": "2025-10-27",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8399,7 +8412,7 @@
       "created_by": "Michael Slay",
       "created_date": "2025-10-24",
       "due_date": "2025-11-23",
-      "days_open": 209,
+      "days_open": 210,
       "overdue": true
     },
     {
@@ -8414,7 +8427,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-10-27",
       "due_date": "2025-11-03",
-      "days_open": 206,
+      "days_open": 207,
       "overdue": true
     },
     {
@@ -8429,7 +8442,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-10-27",
       "due_date": "",
-      "days_open": 206,
+      "days_open": 207,
       "overdue": false
     },
     {
@@ -8444,7 +8457,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-10-27",
       "due_date": "",
-      "days_open": 206,
+      "days_open": 207,
       "overdue": false
     },
     {
@@ -8459,7 +8472,7 @@
       "created_by": "Bernard Bradley",
       "created_date": "2025-10-29",
       "due_date": "2025-11-10",
-      "days_open": 204,
+      "days_open": 205,
       "overdue": true
     },
     {
@@ -8474,7 +8487,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-10-30",
       "due_date": "",
-      "days_open": 203,
+      "days_open": 204,
       "overdue": false
     },
     {
@@ -8489,7 +8502,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-10-30",
       "due_date": "",
-      "days_open": 203,
+      "days_open": 204,
       "overdue": false
     },
     {
@@ -8504,7 +8517,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-01",
       "due_date": "",
-      "days_open": 201,
+      "days_open": 202,
       "overdue": false
     },
     {
@@ -8519,7 +8532,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-02",
       "due_date": "",
-      "days_open": 200,
+      "days_open": 201,
       "overdue": false
     },
     {
@@ -8534,7 +8547,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-02",
       "due_date": "",
-      "days_open": 200,
+      "days_open": 201,
       "overdue": false
     },
     {
@@ -8549,7 +8562,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-03",
       "due_date": "",
-      "days_open": 199,
+      "days_open": 200,
       "overdue": false
     },
     {
@@ -8564,7 +8577,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2025-11-03",
       "due_date": "",
-      "days_open": 199,
+      "days_open": 200,
       "overdue": false
     },
     {
@@ -8579,7 +8592,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-03",
       "due_date": "",
-      "days_open": 199,
+      "days_open": 200,
       "overdue": false
     },
     {
@@ -8594,7 +8607,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-11-04",
       "due_date": "2025-12-04",
-      "days_open": 198,
+      "days_open": 199,
       "overdue": true
     },
     {
@@ -8609,7 +8622,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-04",
       "due_date": "",
-      "days_open": 198,
+      "days_open": 199,
       "overdue": false
     },
     {
@@ -8624,7 +8637,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-04",
       "due_date": "",
-      "days_open": 198,
+      "days_open": 199,
       "overdue": false
     },
     {
@@ -8639,7 +8652,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-04",
       "due_date": "",
-      "days_open": 198,
+      "days_open": 199,
       "overdue": false
     },
     {
@@ -8654,7 +8667,7 @@
       "created_by": "Cesar Rivas",
       "created_date": "2025-11-04",
       "due_date": "2025-11-03",
-      "days_open": 198,
+      "days_open": 199,
       "overdue": true
     },
     {
@@ -8669,7 +8682,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-11-05",
       "due_date": "2025-11-06",
-      "days_open": 197,
+      "days_open": 198,
       "overdue": true
     },
     {
@@ -8684,7 +8697,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-11-05",
       "due_date": "2025-11-06",
-      "days_open": 197,
+      "days_open": 198,
       "overdue": true
     },
     {
@@ -8699,7 +8712,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-11-06",
       "due_date": "2025-11-07",
-      "days_open": 196,
+      "days_open": 197,
       "overdue": true
     },
     {
@@ -8714,7 +8727,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-12",
       "due_date": "",
-      "days_open": 190,
+      "days_open": 191,
       "overdue": false
     },
     {
@@ -8729,7 +8742,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-16",
       "due_date": "",
-      "days_open": 186,
+      "days_open": 187,
       "overdue": false
     },
     {
@@ -8744,7 +8757,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-17",
       "due_date": "",
-      "days_open": 185,
+      "days_open": 186,
       "overdue": false
     },
     {
@@ -8759,7 +8772,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-17",
       "due_date": "",
-      "days_open": 185,
+      "days_open": 186,
       "overdue": false
     },
     {
@@ -8774,7 +8787,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-11-17",
       "due_date": "",
-      "days_open": 185,
+      "days_open": 186,
       "overdue": false
     },
     {
@@ -8789,7 +8802,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-11-26",
       "due_date": "2025-11-26",
-      "days_open": 176,
+      "days_open": 177,
       "overdue": true
     },
     {
@@ -8804,7 +8817,7 @@
       "created_by": "Jose Romero",
       "created_date": "2025-11-26",
       "due_date": "2025-12-01",
-      "days_open": 176,
+      "days_open": 177,
       "overdue": true
     },
     {
@@ -8819,7 +8832,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-11-28",
       "due_date": "2025-11-28",
-      "days_open": 174,
+      "days_open": 175,
       "overdue": true
     },
     {
@@ -8834,7 +8847,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-01",
       "due_date": "",
-      "days_open": 171,
+      "days_open": 172,
       "overdue": false
     },
     {
@@ -8849,7 +8862,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-01",
       "due_date": "",
-      "days_open": 171,
+      "days_open": 172,
       "overdue": false
     },
     {
@@ -8864,7 +8877,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-01",
       "due_date": "",
-      "days_open": 171,
+      "days_open": 172,
       "overdue": false
     },
     {
@@ -8879,7 +8892,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-12-02",
       "due_date": "2025-12-02",
-      "days_open": 170,
+      "days_open": 171,
       "overdue": true
     },
     {
@@ -8894,7 +8907,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-12-03",
       "due_date": "2025-12-03",
-      "days_open": 169,
+      "days_open": 170,
       "overdue": true
     },
     {
@@ -8909,7 +8922,7 @@
       "created_by": "David Winkler",
       "created_date": "2025-12-04",
       "due_date": "",
-      "days_open": 168,
+      "days_open": 169,
       "overdue": false
     },
     {
@@ -8924,7 +8937,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2025-12-05",
       "due_date": "2025-12-05",
-      "days_open": 167,
+      "days_open": 168,
       "overdue": true
     },
     {
@@ -8939,7 +8952,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2025-12-05",
       "due_date": "2025-12-06",
-      "days_open": 167,
+      "days_open": 168,
       "overdue": true
     },
     {
@@ -8954,7 +8967,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-09",
       "due_date": "",
-      "days_open": 163,
+      "days_open": 164,
       "overdue": false
     },
     {
@@ -8969,7 +8982,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-11",
       "due_date": "",
-      "days_open": 161,
+      "days_open": 162,
       "overdue": false
     },
     {
@@ -8984,7 +8997,7 @@
       "created_by": "Noe Roman",
       "created_date": "2025-12-11",
       "due_date": "2025-12-10",
-      "days_open": 161,
+      "days_open": 162,
       "overdue": true
     },
     {
@@ -8999,7 +9012,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-12",
       "due_date": "",
-      "days_open": 160,
+      "days_open": 161,
       "overdue": false
     },
     {
@@ -9014,7 +9027,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-13",
       "due_date": "",
-      "days_open": 159,
+      "days_open": 160,
       "overdue": false
     },
     {
@@ -9029,7 +9042,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-14",
       "due_date": "",
-      "days_open": 158,
+      "days_open": 159,
       "overdue": false
     },
     {
@@ -9044,7 +9057,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-14",
       "due_date": "",
-      "days_open": 158,
+      "days_open": 159,
       "overdue": false
     },
     {
@@ -9059,7 +9072,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-15",
       "due_date": "",
-      "days_open": 157,
+      "days_open": 158,
       "overdue": false
     },
     {
@@ -9074,7 +9087,7 @@
       "created_by": "James Stone",
       "created_date": "2025-12-20",
       "due_date": "",
-      "days_open": 152,
+      "days_open": 153,
       "overdue": false
     },
     {
@@ -9089,7 +9102,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-23",
       "due_date": "",
-      "days_open": 149,
+      "days_open": 150,
       "overdue": false
     },
     {
@@ -9104,7 +9117,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-24",
       "due_date": "",
-      "days_open": 148,
+      "days_open": 149,
       "overdue": false
     },
     {
@@ -9119,7 +9132,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-26",
       "due_date": "",
-      "days_open": 146,
+      "days_open": 147,
       "overdue": false
     },
     {
@@ -9134,7 +9147,7 @@
       "created_by": "Roger Gray",
       "created_date": "2025-12-27",
       "due_date": "2026-01-03",
-      "days_open": 145,
+      "days_open": 146,
       "overdue": true
     },
     {
@@ -9149,7 +9162,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2025-12-29",
       "due_date": "",
-      "days_open": 143,
+      "days_open": 144,
       "overdue": false
     },
     {
@@ -9164,7 +9177,7 @@
       "created_by": "Julio Moreno",
       "created_date": "2025-12-29",
       "due_date": "2025-12-28",
-      "days_open": 143,
+      "days_open": 144,
       "overdue": true
     },
     {
@@ -9179,7 +9192,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-01-03",
       "due_date": "2026-01-10",
-      "days_open": 138,
+      "days_open": 139,
       "overdue": true
     },
     {
@@ -9194,7 +9207,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-07",
       "due_date": "",
-      "days_open": 134,
+      "days_open": 135,
       "overdue": false
     },
     {
@@ -9209,7 +9222,7 @@
       "created_by": "James Stone",
       "created_date": "2026-01-10",
       "due_date": "2026-01-10",
-      "days_open": 131,
+      "days_open": 132,
       "overdue": true
     },
     {
@@ -9224,7 +9237,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-10",
       "due_date": "",
-      "days_open": 131,
+      "days_open": 132,
       "overdue": false
     },
     {
@@ -9239,7 +9252,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-10",
       "due_date": "",
-      "days_open": 131,
+      "days_open": 132,
       "overdue": false
     },
     {
@@ -9254,7 +9267,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-01-10",
       "due_date": "2026-01-16",
-      "days_open": 131,
+      "days_open": 132,
       "overdue": true
     },
     {
@@ -9269,7 +9282,7 @@
       "created_by": "Steven Crabtree",
       "created_date": "2026-01-11",
       "due_date": "2026-02-11",
-      "days_open": 130,
+      "days_open": 131,
       "overdue": true
     },
     {
@@ -9284,7 +9297,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-01-18",
       "due_date": "2026-01-24",
-      "days_open": 123,
+      "days_open": 124,
       "overdue": true
     },
     {
@@ -9299,7 +9312,7 @@
       "created_by": "James Stone",
       "created_date": "2026-01-20",
       "due_date": "",
-      "days_open": 121,
+      "days_open": 122,
       "overdue": false
     },
     {
@@ -9314,7 +9327,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-20",
       "due_date": "",
-      "days_open": 121,
+      "days_open": 122,
       "overdue": false
     },
     {
@@ -9329,7 +9342,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2026-01-21",
       "due_date": "",
-      "days_open": 120,
+      "days_open": 121,
       "overdue": false
     },
     {
@@ -9344,7 +9357,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-23",
       "due_date": "",
-      "days_open": 118,
+      "days_open": 119,
       "overdue": false
     },
     {
@@ -9359,7 +9372,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-23",
       "due_date": "",
-      "days_open": 118,
+      "days_open": 119,
       "overdue": false
     },
     {
@@ -9374,7 +9387,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-23",
       "due_date": "",
-      "days_open": 118,
+      "days_open": 119,
       "overdue": false
     },
     {
@@ -9389,7 +9402,7 @@
       "created_by": "James Stone",
       "created_date": "2026-01-23",
       "due_date": "",
-      "days_open": 118,
+      "days_open": 119,
       "overdue": false
     },
     {
@@ -9404,7 +9417,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-24",
       "due_date": "",
-      "days_open": 117,
+      "days_open": 118,
       "overdue": false
     },
     {
@@ -9419,7 +9432,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-25",
       "due_date": "",
-      "days_open": 116,
+      "days_open": 117,
       "overdue": false
     },
     {
@@ -9434,7 +9447,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-25",
       "due_date": "",
-      "days_open": 116,
+      "days_open": 117,
       "overdue": false
     },
     {
@@ -9449,7 +9462,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-26",
       "due_date": "",
-      "days_open": 115,
+      "days_open": 116,
       "overdue": false
     },
     {
@@ -9464,7 +9477,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-01-27",
       "due_date": "",
-      "days_open": 114,
+      "days_open": 115,
       "overdue": false
     },
     {
@@ -9479,7 +9492,7 @@
       "created_by": "Kelly Rhodes",
       "created_date": "2026-01-29",
       "due_date": "2026-02-28",
-      "days_open": 112,
+      "days_open": 113,
       "overdue": true
     },
     {
@@ -9494,7 +9507,7 @@
       "created_by": "Justin Conrad",
       "created_date": "2026-01-30",
       "due_date": "2026-02-06",
-      "days_open": 111,
+      "days_open": 112,
       "overdue": true
     },
     {
@@ -9509,7 +9522,7 @@
       "created_by": "Justin Conrad",
       "created_date": "2026-01-30",
       "due_date": "2026-02-06",
-      "days_open": 111,
+      "days_open": 112,
       "overdue": true
     },
     {
@@ -9524,7 +9537,7 @@
       "created_by": "Justin Conrad",
       "created_date": "2026-01-30",
       "due_date": "2026-02-06",
-      "days_open": 111,
+      "days_open": 112,
       "overdue": true
     },
     {
@@ -9539,7 +9552,7 @@
       "created_by": "Justin Conrad",
       "created_date": "2026-01-30",
       "due_date": "2026-01-30",
-      "days_open": 111,
+      "days_open": 112,
       "overdue": true
     },
     {
@@ -9554,7 +9567,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-03",
       "due_date": "",
-      "days_open": 107,
+      "days_open": 108,
       "overdue": false
     },
     {
@@ -9569,7 +9582,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-04",
       "due_date": "",
-      "days_open": 106,
+      "days_open": 107,
       "overdue": false
     },
     {
@@ -9584,7 +9597,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-02-04",
       "due_date": "2026-02-10",
-      "days_open": 106,
+      "days_open": 107,
       "overdue": true
     },
     {
@@ -9599,7 +9612,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-02-05",
       "due_date": "2026-02-11",
-      "days_open": 105,
+      "days_open": 106,
       "overdue": true
     },
     {
@@ -9614,7 +9627,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-06",
       "due_date": "",
-      "days_open": 104,
+      "days_open": 105,
       "overdue": false
     },
     {
@@ -9629,7 +9642,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-06",
       "due_date": "",
-      "days_open": 104,
+      "days_open": 105,
       "overdue": false
     },
     {
@@ -9644,7 +9657,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-07",
       "due_date": "",
-      "days_open": 103,
+      "days_open": 104,
       "overdue": false
     },
     {
@@ -9659,7 +9672,7 @@
       "created_by": "Justin Conrad",
       "created_date": "2026-02-10",
       "due_date": "2026-02-10",
-      "days_open": 100,
+      "days_open": 101,
       "overdue": true
     },
     {
@@ -9674,7 +9687,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-10",
       "due_date": "",
-      "days_open": 100,
+      "days_open": 101,
       "overdue": false
     },
     {
@@ -9689,7 +9702,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-10",
       "due_date": "",
-      "days_open": 100,
+      "days_open": 101,
       "overdue": false
     },
     {
@@ -9704,7 +9717,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-18",
       "due_date": "",
-      "days_open": 92,
+      "days_open": 93,
       "overdue": false
     },
     {
@@ -9719,7 +9732,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-18",
       "due_date": "",
-      "days_open": 92,
+      "days_open": 93,
       "overdue": false
     },
     {
@@ -9734,7 +9747,7 @@
       "created_by": "James Barnett",
       "created_date": "2026-02-19",
       "due_date": "",
-      "days_open": 91,
+      "days_open": 92,
       "overdue": false
     },
     {
@@ -9749,7 +9762,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-20",
       "due_date": "",
-      "days_open": 90,
+      "days_open": 91,
       "overdue": false
     },
     {
@@ -9764,7 +9777,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-21",
       "due_date": "",
-      "days_open": 89,
+      "days_open": 90,
       "overdue": false
     },
     {
@@ -9779,7 +9792,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-21",
       "due_date": "",
-      "days_open": 89,
+      "days_open": 90,
       "overdue": false
     },
     {
@@ -9794,7 +9807,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-22",
       "due_date": "",
-      "days_open": 88,
+      "days_open": 89,
       "overdue": false
     },
     {
@@ -9809,23 +9822,8 @@
       "created_by": "James Barnett",
       "created_date": "2026-02-23",
       "due_date": "",
-      "days_open": 87,
+      "days_open": 88,
       "overdue": false
-    },
-    {
-      "id": "kgu4sed1gqbgtkc8r580",
-      "report_number": "75747328",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/75747328",
-      "form_id": 478502,
-      "origin_form": "Unknown (478502)",
-      "division": "Shared",
-      "description": "Please set follow up date two weeks from lubrication date and assign to the rig manager.",
-      "assigned_to": "Joshua Rose",
-      "created_by": "Anthony Coffman",
-      "created_date": "2026-02-23",
-      "due_date": "2026-03-02",
-      "days_open": 87,
-      "overdue": true
     },
     {
       "id": "6f1okf61j4raqr6j6f42",
@@ -9839,7 +9837,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-23",
       "due_date": "",
-      "days_open": 87,
+      "days_open": 88,
       "overdue": false
     },
     {
@@ -9854,7 +9852,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-25",
       "due_date": "",
-      "days_open": 85,
+      "days_open": 86,
       "overdue": false
     },
     {
@@ -9869,7 +9867,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-25",
       "due_date": "",
-      "days_open": 85,
+      "days_open": 86,
       "overdue": false
     },
     {
@@ -9884,7 +9882,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-02-25",
       "due_date": "",
-      "days_open": 85,
+      "days_open": 86,
       "overdue": false
     },
     {
@@ -9899,7 +9897,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-03-03",
       "due_date": "2026-03-03",
-      "days_open": 79,
+      "days_open": 80,
       "overdue": true
     },
     {
@@ -9914,7 +9912,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-03-06",
       "due_date": "",
-      "days_open": 76,
+      "days_open": 77,
       "overdue": false
     },
     {
@@ -9929,7 +9927,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-03-16",
       "due_date": "2026-03-16",
-      "days_open": 66,
+      "days_open": 67,
       "overdue": true
     },
     {
@@ -9944,7 +9942,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-03-21",
       "due_date": "2026-03-28",
-      "days_open": 61,
+      "days_open": 62,
       "overdue": true
     },
     {
@@ -9959,7 +9957,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-03-25",
       "due_date": "2026-03-25",
-      "days_open": 57,
+      "days_open": 58,
       "overdue": true
     },
     {
@@ -9974,7 +9972,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-03-30",
       "due_date": "2026-03-30",
-      "days_open": 52,
+      "days_open": 53,
       "overdue": true
     },
     {
@@ -9989,7 +9987,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-03-30",
       "due_date": "2026-03-30",
-      "days_open": 52,
+      "days_open": 53,
       "overdue": true
     },
     {
@@ -10004,7 +10002,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-04-01",
       "due_date": "2026-04-08",
-      "days_open": 50,
+      "days_open": 51,
       "overdue": true
     },
     {
@@ -10019,7 +10017,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-04-01",
       "due_date": "2026-04-08",
-      "days_open": 50,
+      "days_open": 51,
       "overdue": true
     },
     {
@@ -10034,7 +10032,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-04-02",
       "due_date": "2026-04-02",
-      "days_open": 49,
+      "days_open": 50,
       "overdue": true
     },
     {
@@ -10049,7 +10047,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-02",
       "due_date": "",
-      "days_open": 49,
+      "days_open": 50,
       "overdue": false
     },
     {
@@ -10064,7 +10062,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-02",
       "due_date": "",
-      "days_open": 49,
+      "days_open": 50,
       "overdue": false
     },
     {
@@ -10079,7 +10077,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-02",
       "due_date": "",
-      "days_open": 49,
+      "days_open": 50,
       "overdue": false
     },
     {
@@ -10094,7 +10092,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-02",
       "due_date": "",
-      "days_open": 49,
+      "days_open": 50,
       "overdue": false
     },
     {
@@ -10109,7 +10107,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-03",
       "due_date": "",
-      "days_open": 48,
+      "days_open": 49,
       "overdue": false
     },
     {
@@ -10124,7 +10122,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-06",
       "due_date": "",
-      "days_open": 45,
+      "days_open": 46,
       "overdue": false
     },
     {
@@ -10139,7 +10137,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-06",
       "due_date": "",
-      "days_open": 45,
+      "days_open": 46,
       "overdue": false
     },
     {
@@ -10154,7 +10152,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-06",
       "due_date": "",
-      "days_open": 45,
+      "days_open": 46,
       "overdue": false
     },
     {
@@ -10169,7 +10167,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-04-07",
       "due_date": "2026-04-14",
-      "days_open": 44,
+      "days_open": 45,
       "overdue": true
     },
     {
@@ -10184,7 +10182,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-07",
       "due_date": "",
-      "days_open": 44,
+      "days_open": 45,
       "overdue": false
     },
     {
@@ -10199,7 +10197,7 @@
       "created_by": "Trayzebrik Williams",
       "created_date": "2026-04-08",
       "due_date": "",
-      "days_open": 43,
+      "days_open": 44,
       "overdue": false
     },
     {
@@ -10214,7 +10212,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-04-09",
       "due_date": "2026-04-13",
-      "days_open": 42,
+      "days_open": 43,
       "overdue": true
     },
     {
@@ -10229,7 +10227,7 @@
       "created_by": "James Barnett",
       "created_date": "2026-04-09",
       "due_date": "",
-      "days_open": 42,
+      "days_open": 43,
       "overdue": false
     },
     {
@@ -10244,7 +10242,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-04-11",
       "due_date": "2026-04-18",
-      "days_open": 40,
+      "days_open": 41,
       "overdue": true
     },
     {
@@ -10259,7 +10257,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-04-15",
       "due_date": "",
-      "days_open": 36,
+      "days_open": 37,
       "overdue": false
     },
     {
@@ -10274,7 +10272,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-04-15",
       "due_date": "2026-04-15",
-      "days_open": 36,
+      "days_open": 37,
       "overdue": true
     },
     {
@@ -10289,7 +10287,7 @@
       "created_by": "Nicholas Sanchez",
       "created_date": "2026-04-15",
       "due_date": "2026-04-15",
-      "days_open": 36,
+      "days_open": 37,
       "overdue": true
     },
     {
@@ -10304,7 +10302,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-18",
       "due_date": "2026-04-19",
-      "days_open": 33,
+      "days_open": 34,
       "overdue": true
     },
     {
@@ -10319,7 +10317,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-20",
       "due_date": "2026-04-21",
-      "days_open": 31,
+      "days_open": 32,
       "overdue": true
     },
     {
@@ -10334,7 +10332,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-20",
       "due_date": "2026-04-21",
-      "days_open": 31,
+      "days_open": 32,
       "overdue": true
     },
     {
@@ -10349,7 +10347,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-21",
       "due_date": "2026-04-22",
-      "days_open": 30,
+      "days_open": 31,
       "overdue": true
     },
     {
@@ -10364,7 +10362,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-21",
       "due_date": "2026-04-24",
-      "days_open": 30,
+      "days_open": 31,
       "overdue": true
     },
     {
@@ -10379,7 +10377,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-23",
       "due_date": "2026-04-23",
-      "days_open": 28,
+      "days_open": 29,
       "overdue": true
     },
     {
@@ -10394,7 +10392,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-23",
       "due_date": "2026-04-23",
-      "days_open": 28,
+      "days_open": 29,
       "overdue": true
     },
     {
@@ -10409,7 +10407,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-23",
       "due_date": "2026-04-22",
-      "days_open": 28,
+      "days_open": 29,
       "overdue": true
     },
     {
@@ -10424,7 +10422,7 @@
       "created_by": "Joseph Speyrer",
       "created_date": "2026-04-24",
       "due_date": "",
-      "days_open": 27,
+      "days_open": 28,
       "overdue": false
     },
     {
@@ -10439,7 +10437,7 @@
       "created_by": "John Snodgrass",
       "created_date": "2026-04-25",
       "due_date": "",
-      "days_open": 26,
+      "days_open": 27,
       "overdue": false
     },
     {
@@ -10454,7 +10452,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-26",
       "due_date": "2026-04-27",
-      "days_open": 25,
+      "days_open": 26,
       "overdue": true
     },
     {
@@ -10469,7 +10467,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-27",
       "due_date": "2026-04-28",
-      "days_open": 24,
+      "days_open": 25,
       "overdue": true
     },
     {
@@ -10484,7 +10482,7 @@
       "created_by": "James Barnett",
       "created_date": "2026-04-28",
       "due_date": "",
-      "days_open": 23,
+      "days_open": 24,
       "overdue": false
     },
     {
@@ -10499,7 +10497,7 @@
       "created_by": "John Draper Jr",
       "created_date": "2026-04-28",
       "due_date": "2026-04-28",
-      "days_open": 23,
+      "days_open": 24,
       "overdue": true
     },
     {
@@ -10514,7 +10512,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-04-30",
       "due_date": "2026-05-02",
-      "days_open": 21,
+      "days_open": 22,
       "overdue": true
     },
     {
@@ -10529,7 +10527,7 @@
       "created_by": "James Barnett",
       "created_date": "2026-04-30",
       "due_date": "",
-      "days_open": 21,
+      "days_open": 22,
       "overdue": false
     },
     {
@@ -10544,7 +10542,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-05-02",
       "due_date": "",
-      "days_open": 19,
+      "days_open": 20,
       "overdue": false
     },
     {
@@ -10559,7 +10557,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-05-03",
       "due_date": "",
-      "days_open": 18,
+      "days_open": 19,
       "overdue": false
     },
     {
@@ -10574,7 +10572,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-05",
       "due_date": "2026-05-11",
-      "days_open": 16,
+      "days_open": 17,
       "overdue": true
     },
     {
@@ -10589,7 +10587,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-05-05",
       "due_date": "",
-      "days_open": 16,
+      "days_open": 17,
       "overdue": false
     },
     {
@@ -10604,7 +10602,7 @@
       "created_by": "Randall Mull",
       "created_date": "2026-05-07",
       "due_date": "",
-      "days_open": 14,
+      "days_open": 15,
       "overdue": false
     },
     {
@@ -10619,7 +10617,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-08",
       "due_date": "2026-05-18",
-      "days_open": 13,
+      "days_open": 14,
       "overdue": true
     },
     {
@@ -10634,7 +10632,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-05-10",
       "due_date": "2026-05-17",
-      "days_open": 11,
+      "days_open": 12,
       "overdue": true
     },
     {
@@ -10649,7 +10647,7 @@
       "created_by": "Roger Gray",
       "created_date": "2026-05-10",
       "due_date": "2026-05-17",
-      "days_open": 11,
+      "days_open": 12,
       "overdue": true
     },
     {
@@ -10664,7 +10662,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-10",
       "due_date": "2026-05-10",
-      "days_open": 11,
+      "days_open": 12,
       "overdue": true
     },
     {
@@ -10679,7 +10677,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-14",
       "due_date": "2026-05-14",
-      "days_open": 7,
+      "days_open": 8,
       "overdue": true
     },
     {
@@ -10694,7 +10692,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-14",
       "due_date": "2026-05-14",
-      "days_open": 7,
+      "days_open": 8,
       "overdue": true
     },
     {
@@ -10709,8 +10707,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-15",
       "due_date": "2026-05-21",
-      "days_open": 6,
-      "overdue": false
+      "days_open": 7,
+      "overdue": true
     },
     {
       "id": "cf9c1arq1lum6ys0figf",
@@ -10724,7 +10722,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-15",
       "due_date": "2026-05-15",
-      "days_open": 6,
+      "days_open": 7,
       "overdue": true
     },
     {
@@ -10739,8 +10737,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-15",
       "due_date": "2026-05-21",
-      "days_open": 6,
-      "overdue": false
+      "days_open": 7,
+      "overdue": true
     },
     {
       "id": "zsunr5pi0u2cl5i9dabd",
@@ -10754,8 +10752,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-15",
       "due_date": "2026-05-21",
-      "days_open": 6,
-      "overdue": false
+      "days_open": 7,
+      "overdue": true
     },
     {
       "id": "7v7gaox3whq0gm53zkkn",
@@ -10769,8 +10767,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-15",
       "due_date": "2026-05-21",
-      "days_open": 6,
-      "overdue": false
+      "days_open": 7,
+      "overdue": true
     },
     {
       "id": "on476h0yog11gbqb20hz",
@@ -10784,7 +10782,22 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-15",
       "due_date": "2026-05-21",
-      "days_open": 6,
+      "days_open": 7,
+      "overdue": true
+    },
+    {
+      "id": "9s9pjcnnzncvdwlj6763",
+      "report_number": "81881032",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81881032",
+      "form_id": 478502,
+      "origin_form": "Unknown (478502)",
+      "division": "Shared",
+      "description": "Please set follow up date two weeks from lubrication date and assign to the rig manager.",
+      "assigned_to": "Justin Hale",
+      "created_by": "Daniel Hernandez",
+      "created_date": "2026-05-15",
+      "due_date": "",
+      "days_open": 7,
       "overdue": false
     },
     {
@@ -10799,7 +10812,7 @@
       "created_by": "Michael Hancock",
       "created_date": "2026-05-16",
       "due_date": "",
-      "days_open": 5,
+      "days_open": 6,
       "overdue": false
     },
     {
@@ -10814,7 +10827,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-16",
       "due_date": "2026-05-16",
-      "days_open": 5,
+      "days_open": 6,
       "overdue": true
     },
     {
@@ -10829,7 +10842,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-16",
       "due_date": "2026-05-16",
-      "days_open": 5,
+      "days_open": 6,
       "overdue": true
     },
     {
@@ -10844,7 +10857,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-17",
       "due_date": "2026-05-16",
-      "days_open": 4,
+      "days_open": 5,
       "overdue": true
     },
     {
@@ -10859,7 +10872,7 @@
       "created_by": "David Cordova",
       "created_date": "2026-05-18",
       "due_date": "",
-      "days_open": 3,
+      "days_open": 4,
       "overdue": false
     },
     {
@@ -10874,7 +10887,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-18",
       "due_date": "2026-05-17",
-      "days_open": 3,
+      "days_open": 4,
       "overdue": true
     },
     {
@@ -10889,8 +10902,23 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-19",
       "due_date": "2026-05-20",
-      "days_open": 2,
+      "days_open": 3,
       "overdue": true
+    },
+    {
+      "id": "tui8iy9qp33tqjboshfb",
+      "report_number": "81808298",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81808298",
+      "form_id": 151085,
+      "origin_form": "Observation Card",
+      "division": "Shared",
+      "description": "Something we can stress to these guys about the importance of running the hoses so it does not create a trip hazard. I\u2019ve spoke to the pusher about this and he corrected it immediately. ",
+      "assigned_to": "Eddie Lohse",
+      "created_by": "David Cordova",
+      "created_date": "2026-05-20",
+      "due_date": "",
+      "days_open": 2,
+      "overdue": false
     },
     {
       "id": "dydlb2246uvegg9pgesd",
@@ -10904,38 +10932,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-31",
-      "days_open": 1,
+      "days_open": 2,
       "overdue": false
-    },
-    {
-      "id": "zuef8mylnfoqdbgyoy3w",
-      "report_number": "81742087",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81742087",
-      "form_id": 385365,
-      "origin_form": "TD - Rig Inspection",
-      "division": "Transcend",
-      "description": "Get with Calvin see if you can replace electric line on back of pit. Got some flat spots and 3 splices in it.",
-      "assigned_to": "Michael Vinson",
-      "created_by": "Charles Langwell",
-      "created_date": "2026-05-20",
-      "due_date": "2026-05-31",
-      "days_open": 1,
-      "overdue": false
-    },
-    {
-      "id": "xh0v8ar9s7808ah05gag",
-      "report_number": "81742087",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81742087",
-      "form_id": 385365,
-      "origin_form": "TD - Rig Inspection",
-      "division": "Transcend",
-      "description": "Clean out trough get electric line out of water",
-      "assigned_to": "Michael Vinson",
-      "created_by": "Charles Langwell",
-      "created_date": "2026-05-20",
-      "due_date": "2026-05-20",
-      "days_open": 1,
-      "overdue": true
     },
     {
       "id": "ke5qbq56gq76mg96wf2j",
@@ -10949,22 +10947,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-31",
-      "days_open": 1,
-      "overdue": false
-    },
-    {
-      "id": "i726szlbjzs5widy1z2b",
-      "report_number": "81742087",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81742087",
-      "form_id": 385365,
-      "origin_form": "TD - Rig Inspection",
-      "division": "Transcend",
-      "description": "Put missing bolts on generator",
-      "assigned_to": "Michael Vinson",
-      "created_by": "Charles Langwell",
-      "created_date": "2026-05-20",
-      "due_date": "2026-05-24",
-      "days_open": 1,
+      "days_open": 2,
       "overdue": false
     },
     {
@@ -10979,37 +10962,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-25",
-      "days_open": 1,
-      "overdue": false
-    },
-    {
-      "id": "zk649d265jgiz5ene7n9",
-      "report_number": "81742087",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81742087",
-      "form_id": 385365,
-      "origin_form": "TD - Rig Inspection",
-      "division": "Transcend",
-      "description": "Get the right size bolt for whipcheck saddle on #2 pump",
-      "assigned_to": "Michael Vinson",
-      "created_by": "Charles Langwell",
-      "created_date": "2026-05-20",
-      "due_date": "2026-05-21",
-      "days_open": 1,
-      "overdue": false
-    },
-    {
-      "id": "0nya8wl7ld3k2w7bvm5a",
-      "report_number": "81742087",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81742087",
-      "form_id": 385365,
-      "origin_form": "TD - Rig Inspection",
-      "division": "Transcend",
-      "description": "Tighten bolt on #1 popoff whip check saddle",
-      "assigned_to": "Michael Vinson",
-      "created_by": "Charles Langwell",
-      "created_date": "2026-05-20",
-      "due_date": "2026-05-21",
-      "days_open": 1,
+      "days_open": 2,
       "overdue": false
     },
     {
@@ -11024,7 +10977,7 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-31",
-      "days_open": 1,
+      "days_open": 2,
       "overdue": false
     },
     {
@@ -11039,8 +10992,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-21",
-      "days_open": 1,
-      "overdue": false
+      "days_open": 2,
+      "overdue": true
     },
     {
       "id": "5jj07oofhwsxourtiiqb",
@@ -11054,23 +11007,8 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-21",
-      "days_open": 1,
-      "overdue": false
-    },
-    {
-      "id": "zrvec393qh0v7jwgfepk",
-      "report_number": "81742087",
-      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81742087",
-      "form_id": 385365,
-      "origin_form": "TD - Rig Inspection",
-      "division": "Transcend",
-      "description": "Tighten bolts on #1 agitater motor",
-      "assigned_to": "Michael Vinson",
-      "created_by": "Charles Langwell",
-      "created_date": "2026-05-20",
-      "due_date": "2026-05-21",
-      "days_open": 1,
-      "overdue": false
+      "days_open": 2,
+      "overdue": true
     },
     {
       "id": "vngmu72ns3s7g25ky27k",
@@ -11084,7 +11022,7 @@
       "created_by": "David Cordova",
       "created_date": "2026-05-20",
       "due_date": "",
-      "days_open": 1,
+      "days_open": 2,
       "overdue": false
     },
     {
@@ -11099,8 +11037,53 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-20",
       "due_date": "2026-05-19",
+      "days_open": 2,
+      "overdue": true
+    },
+    {
+      "id": "wlhmfmtrif29u1tk8wiq",
+      "report_number": "81790881",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81790881",
+      "form_id": 170742,
+      "origin_form": "JSA Log",
+      "division": "Shared",
+      "description": "Needs well name",
+      "assigned_to": "Steven Vinson",
+      "created_by": "Charles Langwell",
+      "created_date": "2026-05-21",
+      "due_date": "2026-05-21",
       "days_open": 1,
       "overdue": true
+    },
+    {
+      "id": "p20ohf8t7cmanoc7kgod",
+      "report_number": "81841294",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81841294",
+      "form_id": 206674,
+      "origin_form": "Unknown (206674)",
+      "division": "Shared",
+      "description": "Make sure all trash pumps are grounded",
+      "assigned_to": "Daniel Hall",
+      "created_by": "Charles Langwell",
+      "created_date": "2026-05-21",
+      "due_date": "2026-05-21",
+      "days_open": 1,
+      "overdue": true
+    },
+    {
+      "id": "4c480h9x93rhzxictuw7",
+      "report_number": "81841294",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81841294",
+      "form_id": 206674,
+      "origin_form": "Unknown (206674)",
+      "division": "Shared",
+      "description": "Need to drill a hole so keeper can be put in handrail on lubster steps",
+      "assigned_to": "Daniel Hall",
+      "created_by": "Charles Langwell",
+      "created_date": "2026-05-21",
+      "due_date": "2026-05-25",
+      "days_open": 1,
+      "overdue": false
     },
     {
       "id": "kam8mrzlkibkxly9qen3",
@@ -11114,6 +11097,36 @@
       "created_by": "Charles Langwell",
       "created_date": "2026-05-21",
       "due_date": "2026-05-20",
+      "days_open": 1,
+      "overdue": true
+    },
+    {
+      "id": "2cn8khi7pyo6yqlirrw3",
+      "report_number": "81874876",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81874876",
+      "form_id": 478502,
+      "origin_form": "Unknown (478502)",
+      "division": "Shared",
+      "description": "Please set follow up date two weeks from lubrication date and assign to the rig manager.",
+      "assigned_to": "Michael Zaricor III",
+      "created_by": "Daniel Lozano",
+      "created_date": "2026-05-22",
+      "due_date": "2026-05-22",
+      "days_open": 0,
+      "overdue": false
+    },
+    {
+      "id": "gs2f7m01ezhukev6qscr",
+      "report_number": "81790651",
+      "kpa_link": "https://brhas-ees.kpaehs.com/forms/responses/view/81790651",
+      "form_id": 170742,
+      "origin_form": "JSA Log",
+      "division": "Shared",
+      "description": "Change rig number from 1 to 20",
+      "assigned_to": "Robert Ramirez",
+      "created_by": "Charles Langwell",
+      "created_date": "2026-05-22",
+      "due_date": "2026-05-21",
       "days_open": 0,
       "overdue": true
     }

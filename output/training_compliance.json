@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-05-23",
-  "generated_at": "2026-05-23 11:25:52",
-  "overall_pct": 80.1,
+  "report_date": "2026-05-24",
+  "generated_at": "2026-05-24 11:29:20",
+  "overall_pct": 80.2,
   "total_employees": 1089,
-  "compliant_count": 872,
+  "compliant_count": 873,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 743,
-      "compliant": 637,
-      "pct": 85.7
+      "compliant": 638,
+      "pct": 85.9
     },
     "BTI": {
       "total": 61,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 404,
-      "compliant": 337,
-      "pct": 83.4
+      "compliant": 338,
+      "pct": 83.7
     },
     "Construction": {
       "total": 16,
@@ -97,8 +97,8 @@
     },
     "Bryan": {
       "total": 48,
-      "compliant": 34,
-      "pct": 70.8
+      "compliant": 35,
+      "pct": 72.9
     },
     "Kilgore": {
       "total": 66,
@@ -145,8 +145,8 @@
       },
       "Bryan": {
         "total": 48,
-        "compliant": 34,
-        "pct": 70.8
+        "compliant": 35,
+        "pct": 72.9
       },
       "Hobbs": {
         "total": 52,
@@ -264,8 +264,8 @@
       },
       "Bryan": {
         "total": 48,
-        "compliant": 34,
-        "pct": 70.8
+        "compliant": 35,
+        "pct": 72.9
       },
       "Hobbs": {
         "total": 52,
@@ -430,8 +430,8 @@
     },
     "Bryan": {
       "total": 48,
-      "compliant": 34,
-      "pct": 70.8
+      "compliant": 35,
+      "pct": 72.9
     },
     "Hobbs": {
       "total": 52,
@@ -2117,16 +2117,16 @@
       "company": "BRHAS",
       "division": "Casing",
       "yard": "Midland",
-      "percent_complete": 80,
-      "incomplete_count": 8,
+      "percent_complete": 82,
+      "incomplete_count": 7,
       "complete_count": 32,
-      "total_assigned": 40,
+      "total_assigned": 39,
       "incomplete_training_names": [
-        "CSG - Running Casing SOP Quiz",
         "HSE - Driver Safety ",
         "HSE - Lock Out/Tag Out ",
         "HSE - Electrical Grounding and Bonding",
-        "HSE - Electrical Safety "
+        "HSE - Electrical Safety ",
+        "HSE - Confined Space - Permit Required "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3715,23 +3715,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Smokey Oliver",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Salvador Ortiz",
       "company": "BRHAS",
       "division": "Casing",
@@ -4023,6 +4006,22 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Smokey Oliver",
+      "company": "BRHAS",
+      "division": "Rathole",
+      "yard": "Levelland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Hazard Communication- Chemical Safety",
+        "HSE - Observation Program "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Sabas Prado III",
       "company": "BRHAS",
       "division": "Rathole",
@@ -4293,21 +4292,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Electrical Safety "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Mario Rodriguez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Bryan",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 34,
-      "total_assigned": 35,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

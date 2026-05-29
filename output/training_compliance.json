@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-05-28",
-  "generated_at": "2026-05-28 14:01:33",
-  "overall_pct": 80.8,
+  "report_date": "2026-05-29",
+  "generated_at": "2026-05-29 12:57:46",
+  "overall_pct": 81.1,
   "total_employees": 1089,
-  "compliant_count": 880,
+  "compliant_count": 883,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 744,
-      "compliant": 641,
-      "pct": 86.2
+      "compliant": 644,
+      "pct": 86.6
     },
     "BTI": {
       "total": 61,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 405,
-      "compliant": 341,
-      "pct": 84.2
+      "compliant": 343,
+      "pct": 84.7
     },
     "Construction": {
       "total": 16,
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 138,
-      "compliant": 122,
-      "pct": 88.4
+      "compliant": 123,
+      "pct": 89.1
     },
     "Shop": {
       "total": 17,
@@ -112,8 +112,8 @@
     },
     "Jourdanton": {
       "total": 21,
-      "compliant": 16,
-      "pct": 76.2
+      "compliant": 18,
+      "pct": 85.7
     },
     "Laredo": {
       "total": 41,
@@ -130,8 +130,8 @@
       },
       "Jourdanton": {
         "total": 35,
-        "compliant": 29,
-        "pct": 82.9
+        "compliant": 32,
+        "pct": 91.4
       },
       "Midland": {
         "total": 302,
@@ -254,8 +254,8 @@
     "Casing": {
       "Jourdanton": {
         "total": 21,
-        "compliant": 16,
-        "pct": 76.2
+        "compliant": 18,
+        "pct": 85.7
       },
       "Midland": {
         "total": 175,
@@ -328,8 +328,8 @@
       },
       "Jourdanton": {
         "total": 14,
-        "compliant": 13,
-        "pct": 92.9
+        "compliant": 14,
+        "pct": 100.0
       },
       "Barstow": {
         "total": 10,
@@ -420,8 +420,8 @@
     },
     "Jourdanton": {
       "total": 35,
-      "compliant": 29,
-      "pct": 82.9
+      "compliant": 32,
+      "pct": 91.4
     },
     "Levelland": {
       "total": 105,
@@ -2075,25 +2075,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Ronnie Graninger",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 79,
-      "incomplete_count": 8,
-      "complete_count": 31,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Hearing Conservation/Noise Awareness ",
-        "HSE - Incident Reporting",
-        "HSE - Spotter Safety Training",
-        "HSE - Lock Out/Tag Out "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Christopher Moore",
       "company": "Permian",
       "division": "Rentals",
@@ -2165,25 +2146,6 @@
         "HSE - Electrical Safety ",
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Robert Crosby",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 82,
-      "incomplete_count": 7,
-      "complete_count": 32,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Access to Medical and Exposure Records",
-        "HSE - Hearing Conservation/Noise Awareness ",
-        "HSE - Incident Reporting",
-        "HSE - Driver Safety ",
-        "HSE - Lock Out/Tag Out "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2662,6 +2624,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Robert Crosby",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 87,
+      "incomplete_count": 5,
+      "complete_count": 34,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Hearing Conservation/Noise Awareness ",
+        "HSE - Incident Reporting",
+        "HSE - Lock Out/Tag Out ",
+        "HSE - Electrical Grounding and Bonding",
+        "HSE - Electrical Safety "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Edgar Garcia",
       "company": "Permian",
       "division": "Rentals",
@@ -3070,24 +3051,6 @@
       "incomplete_count": 4,
       "complete_count": 36,
       "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Observation Program ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Epifanio Hernandez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Bryan",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety",
@@ -3526,6 +3489,23 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Epifanio Hernandez",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Bryan",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 36,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Confined Space - Permit Required ",
+        "HSE - Hazard Communication- Chemical Safety",
+        "HSE - Behavioral Based Safety"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Tomas Hernandez",
       "company": "BTI",
       "division": "Trucking",
@@ -3572,23 +3552,6 @@
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety",
         "HSE - Observation Program "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Dustin Longoria",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Behavioral Based Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3859,17 +3822,17 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Pete Gonzales",
+      "employee_name": "Ronnie Graninger",
       "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
+      "division": "Rathole",
+      "yard": "Levelland",
       "percent_complete": 95,
       "incomplete_count": 2,
       "complete_count": 37,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety"
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Lock Out/Tag Out "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4164,21 +4127,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Observation Program "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Ethan Peredo",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Jourdanton",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 35,
-      "total_assigned": 36,
-      "incomplete_training_names": [
-        "HSE - Behavioral Based Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

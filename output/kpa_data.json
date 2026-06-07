@@ -1,256 +1,290 @@
 {
-  "report_date": "2026-06-05",
-  "generated_at": "2026-06-06 11:39:56",
+  "report_date": "2026-06-06",
+  "generated_at": "2026-06-07 11:52:28",
   "observations": {
-    "total": 22,
+    "total": 26,
     "by_type": {
-      "Recognition": 8,
-      "At-Risk Condition": 5,
-      "At-Risk Procedure": 2,
-      "At-Risk Behavior": 4,
+      "Near Miss": 2,
+      "At-Risk Condition": 15,
+      "Recognition": 7,
       "Suggestion": 1,
-      "Near Miss": 1,
-      "Recognition/Safe": 1
+      "At-Risk Procedure": 1
     },
     "details": [
       {
-        "report_number": "82903243",
-        "date": "2026-06-05 20:59:15",
-        "observer": "Leroy Roach",
-        "type": "Recognition",
-        "description": "Ray Ramos crew did an excellent job with great customer service ",
-        "location": "Persuasion 567",
+        "report_number": "82935788",
+        "date": "2026-06-06 20:52:48",
+        "observer": "Daniel Carlos",
+        "type": "Near Miss",
+        "description": "Rotating pipe driller realsed torque and slacked off instantly stacking on on slips with external crt hitting the guide plate ",
+        "location": "Cactus 172",
         "service_line": "Casing"
       },
       {
-        "report_number": "82884086",
-        "date": "2026-06-05 14:34:45",
-        "observer": "David Cordova",
-        "type": "Recognition",
-        "description": "After conducting a dump test, the operator was having some trouble pulling back the tongs. The crew quickly noticed and were able to assist him in getting it done.",
-        "location": "Cactus 145",
+        "report_number": "82930214",
+        "date": "2026-06-06 17:01:11",
+        "observer": "Robert Morales",
+        "type": "Near Miss",
+        "description": "Trucker got out of truck without hard hat",
+        "location": "",
+        "service_line": "Drilling - Rig 4"
+      },
+      {
+        "report_number": "82935157",
+        "date": "2026-06-06 20:07:15",
+        "observer": "Julio Moreno",
+        "type": "At-Risk Condition",
+        "description": "Un companero de trabajo no salio del area de trabajo cuando mandaron las fieros a ciarriba de la torre ",
+        "location": "Carmine ",
         "service_line": "Casing"
       },
       {
-        "report_number": "82882140",
-        "date": "2026-06-05 14:00:04",
+        "report_number": "82935054",
+        "date": "2026-06-06 20:00:21",
+        "observer": "Emilio Moreno",
+        "type": "At-Risk Condition",
+        "description": "Cactus 145 no querian dar agua para beber, nos dijeron que trajieramos nuestra agua para beber",
+        "location": "Robbing tx.",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82935025",
+        "date": "2026-06-06 19:58:50",
+        "observer": "Julio Moreno",
+        "type": "At-Risk Condition",
+        "description": "Las tongas estaban tirando mucho aceite ",
+        "location": "Robbing ",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82930435",
+        "date": "2026-06-06 17:06:41",
+        "observer": "Steven Lewis",
+        "type": "At-Risk Condition",
+        "description": "Not wereing face shield ",
+        "location": "Plu 16 21 BD Pad B 101h ",
+        "service_line": "Drilling"
+      },
+      {
+        "report_number": "82930434",
+        "date": "2026-06-06 17:06:41",
+        "observer": "Steven Lewis",
+        "type": "At-Risk Condition",
+        "description": "Not wereing face shield ",
+        "location": "Plu 16 21 BD Pad B 101h ",
+        "service_line": "Drilling"
+      },
+      {
+        "report_number": "82928957",
+        "date": "2026-06-06 16:17:54",
+        "observer": "Jacinto Almager Jr",
+        "type": "At-Risk Condition",
+        "description": "Noticed truck driver walking in red zone while tripping out of hole",
+        "location": "",
+        "service_line": "Drilling"
+      },
+      {
+        "report_number": "82928596",
+        "date": "2026-06-06 16:05:12",
+        "observer": "Sean Kelley",
+        "type": "At-Risk Condition",
+        "description": "Truck driver without his hard hat",
+        "location": "",
+        "service_line": "Drilling"
+      },
+      {
+        "report_number": "82925669",
+        "date": "2026-06-06 11:38:47",
+        "observer": "Michael Salazar",
+        "type": "At-Risk Condition",
+        "description": "Due to recent rains the location was extremely muddy causing the forklift to lose traction ",
+        "location": "Cactus 172",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82923534",
+        "date": "2026-06-06 12:22:44",
+        "observer": "Pete Gonzales",
+        "type": "At-Risk Condition",
+        "description": "Noticed the nut from the 10ft bails had backed out pin/cotter pin was still inserted",
+        "location": "Hp 248",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82922707",
+        "date": "2026-06-06 11:43:57",
+        "observer": "Ray Guerrero",
+        "type": "At-Risk Condition",
+        "description": "Unlatched elevators and noticed hydraulic leak from top drive ",
+        "location": "H&P 267",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82921136",
+        "date": "2026-06-06 10:42:44",
+        "observer": "Reuben Arredondo",
+        "type": "At-Risk Condition",
+        "description": "Fms panel #tr-2310017 ,la pinche button/knob is hard to push all the way down to switch to pinche fms mode. Also la pinche panel is loosing to much pinche pressure rapido. Even after resetting it quickly goes down much of tike to zero if u don't keep resetting it ",
+        "location": "Robbins, tx",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82920503",
+        "date": "2026-06-06 10:19:10",
+        "observer": "Andres RodrIguez",
+        "type": "At-Risk Condition",
+        "description": "Las escaleras no tenian gancho de seguridad ",
+        "location": "PU 72 ",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82919509",
+        "date": "2026-06-06 09:43:22",
+        "observer": "Taurino Medrano",
+        "type": "At-Risk Condition",
+        "description": "Dia con mucha humedad ambiental",
+        "location": "Pulling unit",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82905613",
+        "date": "2026-06-06 01:07:39",
+        "observer": "Francisco Toledo",
+        "type": "At-Risk Condition",
+        "description": "Por tanta lluvia habia mucho lodo ",
+        "location": "Noram 25/casing",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82929775",
+        "date": "2026-06-06 16:46:54",
+        "observer": "Humberto Canizales",
+        "type": "Recognition",
+        "description": "Drill line got all twisted up",
+        "location": "540",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82929401",
+        "date": "2026-06-06 16:33:06",
+        "observer": "Justin Hale",
+        "type": "Recognition",
+        "description": "While floor hands were powerwashing equipment i noticed that they had all the required PPE on,great job",
+        "location": "Staley A State Com 110 H",
+        "service_line": "Drilling"
+      },
+      {
+        "report_number": "82925668",
+        "date": "2026-06-06 14:01:50",
+        "observer": "Michael Salazar",
+        "type": "Recognition",
+        "description": "Crew working well together during rig down. Rig down was smooth with no issues",
+        "location": "Cactus 172",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82920624",
+        "date": "2026-06-06 10:24:08",
+        "observer": "Carlos Medina",
+        "type": "Recognition",
+        "description": "Excelente ",
+        "location": "Pu western midstream ",
+        "service_line": "Casing"
+      },
+      {
+        "report_number": "82920555",
+        "date": "2026-06-06 10:22:21",
         "observer": "Miguel Valladarez",
         "type": "Recognition",
         "description": "Todo salio bien ",
-        "location": "Citadel 2 ",
+        "location": "P.U western midstream ",
         "service_line": "Casing"
       },
       {
-        "report_number": "82879597",
-        "date": "2026-06-05 13:17:13",
-        "observer": "Dustin Fry",
+        "report_number": "82910118",
+        "date": "2026-06-06 05:55:02",
+        "observer": "Gabriel Cortez",
         "type": "Recognition",
-        "description": "Billy B, notice fuel level was getting low and called to ask to bring out diesel so they didn't run out.",
-        "location": "Sunset 6",
+        "description": "Crew hauler Juan Banuelos made sure to let the casing hand know to look up at the elevators/pipe while the driller was picking up the joint of pipe out of the trough when starting the job, ",
+        "location": "H&P 540",
         "service_line": "Casing"
       },
       {
-        "report_number": "82877136",
-        "date": "2026-06-05 12:35:04",
-        "observer": "Michael Crum",
+        "report_number": "82906917",
+        "date": "2026-06-06 04:00:17",
+        "observer": "Humberto Canizales",
         "type": "Recognition",
-        "description": "Donald lead the jsa meeting and help the other crew with their paperwork since it was their first chevron job",
-        "location": "Screwball 3019",
-        "service_line": "Rat Hole"
-      },
-      {
-        "report_number": "82837257",
-        "date": "2026-06-05 05:45:21",
-        "observer": "Dustin Gray",
-        "type": "Recognition",
-        "description": "Good team work to get job done safely no near misses no injuries ",
-        "location": "H&p 423",
+        "description": "Tongs was missing the big pin from the back",
+        "location": "540",
         "service_line": "Casing"
       },
       {
-        "report_number": "82836987",
-        "date": "2026-06-05 05:42:44",
-        "observer": "Jason Worthen",
-        "type": "Recognition",
-        "description": "Made sure to have good questions with skate operator and drill when latching elevators and telling in pipe ",
-        "location": "H&P423",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82832198",
-        "date": "2026-06-05 04:05:00",
-        "observer": "Adrien Osmer-Higginbotham",
-        "type": "Recognition",
-        "description": "Noticed the Elevators had a stripped out bolt holding the riser when rigging up ",
-        "location": "Patterson 815",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82899000",
-        "date": "2026-06-05 18:40:01",
-        "observer": "Jarrod Mata",
-        "type": "At-Risk Condition",
-        "description": "3rd party going into red zone ",
-        "location": "Plu 102 h ",
-        "service_line": "Drilling - Rig 4"
-      },
-      {
-        "report_number": "82881852",
-        "date": "2026-06-05 13:56:15",
-        "observer": "Andres RodrIguez",
-        "type": "At-Risk Condition",
-        "description": "La valvula. De la manguera de llenado liquidando mucho ",
-        "location": "Citadel 2 ",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82866760",
-        "date": "2026-06-05 10:03:00",
-        "observer": "David Cordova",
-        "type": "At-Risk Condition",
-        "description": "While loading a trailer, an employee was not wearing proper PPE. ",
-        "location": "Shop",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82837541",
-        "date": "2026-06-05 05:49:29",
-        "observer": "Heath Jones",
-        "type": "At-Risk Condition",
-        "description": "Rig floor was so cluttered well hammers collar claps slips ",
-        "location": "9 5/8 casing run ",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82832048",
-        "date": "2026-06-05 03:57:33",
-        "observer": "Roger Gray",
-        "type": "At-Risk Condition",
-        "description": "The seals on the clutch control started leaking on tongs",
-        "location": "Hp 423",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82896251",
-        "date": "2026-06-05 17:39:59",
-        "observer": "Cesar Herrera Garcia",
-        "type": "At-Risk Procedure",
-        "description": "While doing my pre trip notice a left light bulb was burn out ",
-        "location": "Jourdanton ",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82875695",
-        "date": "2026-06-05 08:43:18",
-        "observer": "Michael Salazar",
-        "type": "At-Risk Procedure",
-        "description": "Upon arrival visually observed that the JSA was blank ",
-        "location": "PD 567",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82887964",
-        "date": "2026-06-05 15:16:47",
+        "report_number": "82927833",
+        "date": "2026-06-06 15:30:21",
         "observer": "Luis Ocampo",
-        "type": "At-Risk Behavior",
-        "description": "Sending down tools there was not safety keeper on the hoist or pull line. ",
-        "location": "Magnolia HP 475/ Rigging down ",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82884087",
-        "date": "2026-06-05 14:34:37",
-        "observer": "David Cordova",
-        "type": "At-Risk Behavior",
-        "description": "While waiting on the cat walk operator to bring another joint to the rig floor, the door operator had his back towards the vdoor. ",
-        "location": "Cactus 145",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82875693",
-        "date": "2026-06-05 08:32:59",
-        "observer": "Michael Salazar",
-        "type": "At-Risk Behavior",
-        "description": "Crew member utilizing a hammer to drive in a pin not wearing gloves",
-        "location": "PD 567",
-        "service_line": "Casing"
-      },
-      {
-        "report_number": "82831931",
-        "date": "2026-06-05 03:49:45",
-        "observer": "Camarron Mixon",
-        "type": "At-Risk Behavior",
-        "description": "Observed rtm forgetting to put gloves on ",
-        "location": "PLU 16-21",
-        "service_line": "Drilling - Rig 4"
-      },
-      {
-        "report_number": "82882126",
-        "date": "2026-06-05 13:25:17",
-        "observer": "Hector Cruz",
         "type": "Suggestion",
-        "description": "While running pipe with FMS a wiper rubber was put on to hold onto centralized . ",
-        "location": "Hp 249",
+        "description": "Truck #2356C  needs windshield wipers, can hardly see when it's raining ",
+        "location": "",
         "service_line": "Casing"
       },
       {
-        "report_number": "82838185",
-        "date": "2026-06-05 05:57:00",
-        "observer": "Shon Rodgers",
-        "type": "Near Miss",
-        "description": "While picking up a 6 foot pup joint of 7 5/8 casing the driller floated the bails in and didn't realize it would slide in off the trough it did so and the pin hit the floor ",
-        "location": "H&P 423. Rig floor. ",
+        "report_number": "82919588",
+        "date": "2026-06-06 09:46:20",
+        "observer": "Taurino Medrano",
+        "type": "At-Risk Procedure",
+        "description": "Employee grab power tong door handle to pull tong on casing",
+        "location": "Citadel 2",
         "service_line": "Casing"
       },
       {
-        "report_number": "82876052",
-        "date": "2026-06-05 12:17:10",
-        "observer": "Charles Langwell",
-        "type": "Recognition/Safe",
-        "description": "Crew working as a team rigging down. Everyone staying busy not getting in a hurry and communicating good.",
-        "location": "Rig 16/rigging down",
+        "report_number": "82916807",
+        "date": "2026-06-06 08:13:04",
+        "observer": "Ross Ramirez",
+        "type": "At-Risk Condition",
+        "description": "H2S!",
+        "location": "",
         "service_line": "Drilling"
       }
     ]
   },
   "near_misses": [
     {
-      "report_number": "82838185",
-      "date": "2026-06-05 05:57:00",
-      "observer": "Shon Rodgers",
-      "description": "While picking up a 6 foot pup joint of 7 5/8 casing the driller floated the bails in and didn't realize it would slide in off the trough it did so and the pin hit the floor ",
-      "location": "H&P 423. Rig floor. ",
+      "report_number": "82935788",
+      "date": "2026-06-06 20:52:48",
+      "observer": "Daniel Carlos",
+      "description": "Rotating pipe driller realsed torque and slacked off instantly stacking on on slips with external crt hitting the guide plate ",
+      "location": "Cactus 172",
       "type": "Near Miss",
       "service_line": "Casing"
+    },
+    {
+      "report_number": "82930214",
+      "date": "2026-06-06 17:01:11",
+      "observer": "Robert Morales",
+      "description": "Trucker got out of truck without hard hat",
+      "location": "",
+      "type": "Near Miss",
+      "service_line": "Drilling - Rig 4"
     }
   ],
   "incidents": [],
   "assessments": {
-    "total": 28,
-    "findings": 7,
+    "total": 21,
+    "findings": 2,
     "by_assessor": {},
     "details": [
       {
         "form_name": "CSG - Safety Casing Field Assessment",
         "form_id": 381707,
-        "count": 2,
+        "count": 1,
         "rows": [
-          {
-            "assessor": "David Cordova",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82884089",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82884089",
-            "issue": "None noted",
-            "service_line": ""
-          },
           {
             "assessor": "Michael Salazar",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82875697",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82875697",
-            "issue": "It was discussed during pre job safety meeting",
+            "form_id": "82925670",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82925670",
+            "issue": "Still need help from the mentor but is coming along",
             "service_line": ""
           }
         ]
@@ -300,149 +334,14 @@
       {
         "form_name": "CSG - Pre/Post Trip Inspection",
         "form_id": 229645,
-        "count": 26,
+        "count": 20,
         "rows": [
           {
-            "assessor": "Gabriel Cortez",
+            "assessor": "Jose Zavala",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82905001",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82905001",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Stone",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82904738",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82904738",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Cesar Herrera Garcia",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82895943",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82895943",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Laredo Dispatch",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82892405",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82892405",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Laredo Dispatch",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82892404",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82892404",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Osvaldo Jauregui Polanco",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82889250",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82889250",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Bowling",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82888905",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82888905",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Laredo Dispatch",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82881595",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82881595",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Reuben Arredondo",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82868987",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82868987",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Bowling",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82868778",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82868778",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Joey Kermiar",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82866497",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82866497",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Dustin Fry",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82866459",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82866459",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Joey Kermiar",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82866390",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82866390",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Bowling",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82858161",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82858161",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Bowling",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82853599",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82853599",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Laredo Dispatch",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82844547",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82844547",
+            "form_id": "82936842",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82936842",
             "issue": "None noted",
             "service_line": "Casing"
           },
@@ -450,80 +349,44 @@
             "assessor": "Heath Jones",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82840302",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82840302",
+            "form_id": "82936059",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82936059",
             "issue": "None noted",
             "service_line": "Casing"
           },
           {
-            "assessor": "Anthony Ellis",
+            "assessor": "Osvaldo Jauregui Polanco",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82839247",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82839247",
+            "form_id": "82934031",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82934031",
             "issue": "None noted",
             "service_line": "Casing"
           },
           {
-            "assessor": "James Sellers",
+            "assessor": "Taurino Medrano",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82834003",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82834003",
+            "form_id": "82932676",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82932676",
             "issue": "None noted",
             "service_line": "Casing"
           },
           {
-            "assessor": "James Sellers",
+            "assessor": "Pete Gonzales",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82833963",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82833963",
+            "form_id": "82923732",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82923732",
             "issue": "None noted",
             "service_line": "Casing"
           },
           {
-            "assessor": "James Sellers",
+            "assessor": "James Lee Jr",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82833958",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82833958",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Sellers",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82833611",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82833611",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Sellers",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82833111",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82833111",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "James Sellers",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82833043",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82833043",
-            "issue": "None noted",
-            "service_line": "Casing"
-          },
-          {
-            "assessor": "Roger Gray",
-            "location": "Unknown",
-            "customer": "",
-            "form_id": "82832010",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82832010",
+            "form_id": "82923692",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82923692",
             "issue": "None noted",
             "service_line": "Casing"
           },
@@ -531,8 +394,125 @@
             "assessor": "Laredo Dispatch",
             "location": "Unknown",
             "customer": "",
-            "form_id": "82829810",
-            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82829810",
+            "form_id": "82922661",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82922661",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Sergio Garcia",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82921768",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82921768",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Arturo Cerda",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82919955",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82919955",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Dustin Fry",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82919627",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82919627",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Taurino Medrano",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82919450",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82919450",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Laredo Dispatch",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82916594",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82916594",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Laredo Dispatch",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82916571",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82916571",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Anthony Ellis",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82914476",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82914476",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Laredo Dispatch",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82913923",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82913923",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Hector Cruz",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82912941",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82912941",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Laredo Dispatch",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82909178",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82909178",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Salvador Ramos",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82907876",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82907876",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Noe Roman",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82907796",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82907796",
+            "issue": "None noted",
+            "service_line": "Casing"
+          },
+          {
+            "assessor": "Roger Gray",
+            "location": "Unknown",
+            "customer": "",
+            "form_id": "82905284",
+            "link": "https://brhas-ees.kpaehs.com/forms/responses/view/82905284",
             "issue": "None noted",
             "service_line": "Casing"
           }
@@ -543,23 +523,23 @@
   "assessment_activity": {
     "current_month": "2026-06",
     "current_year": 2026,
-    "total_all_time": 2133,
-    "total_mtd": 128,
-    "total_ytd": 1315,
+    "total_all_time": 2134,
+    "total_mtd": 150,
+    "total_ytd": 1316,
     "mtd_by_assessor": {
-      "David Cordova": {
-        "count": 2,
+      "Michael Salazar": {
+        "count": 3,
         "yards": [
-          "Bryan"
+          "Midland"
         ],
         "forms": [
           "CSG - Safety Casing Field Assessment"
         ]
       },
-      "Michael Salazar": {
+      "David Cordova": {
         "count": 2,
         "yards": [
-          "Midland"
+          "Bryan"
         ],
         "forms": [
           "CSG - Safety Casing Field Assessment"
@@ -619,8 +599,8 @@
           "RH - Rathole Field Assessment"
         ]
       },
-      "Laredo Dispatch": {
-        "count": 16,
+      "Roger Gray": {
+        "count": 8,
         "yards": [
           "Unknown"
         ],
@@ -628,7 +608,7 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Salvador Ramos": {
+      "Jose Zavala": {
         "count": 2,
         "yards": [
           "Unknown"
@@ -638,6 +618,33 @@
         ]
       },
       "Noe Roman": {
+        "count": 5,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Heath Jones": {
+        "count": 3,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Osvaldo Jauregui Polanco": {
+        "count": 3,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Taurino Medrano": {
         "count": 4,
         "yards": [
           "Unknown"
@@ -646,8 +653,80 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Roger Gray": {
+      "Pete Gonzales": {
+        "count": 3,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "James Lee Jr": {
+        "count": 1,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Laredo Dispatch": {
+        "count": 20,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Sergio Garcia": {
+        "count": 2,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Arturo Cerda": {
+        "count": 2,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Dustin Fry": {
         "count": 6,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Anthony Ellis": {
+        "count": 7,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Hector Cruz": {
+        "count": 5,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Salvador Ramos": {
+        "count": 2,
         "yards": [
           "Unknown"
         ],
@@ -682,15 +761,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Osvaldo Jauregui Polanco": {
-        "count": 2,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "James Bowling": {
         "count": 8,
         "yards": [
@@ -718,44 +788,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Dustin Fry": {
-        "count": 5,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Heath Jones": {
-        "count": 2,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Anthony Ellis": {
-        "count": 6,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "James Sellers": {
         "count": 17,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Arturo Cerda": {
-        "count": 1,
         "yards": [
           "Unknown"
         ],
@@ -791,15 +825,6 @@
         ]
       },
       "Jesus Cortez": {
-        "count": 1,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Sergio Garcia": {
         "count": 1,
         "yards": [
           "Unknown"
@@ -853,15 +878,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Hector Cruz": {
-        "count": 4,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Luis Ocampo": {
         "count": 2,
         "yards": [
@@ -889,15 +905,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Taurino Medrano": {
-        "count": 1,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Rafael Munoz": {
         "count": 1,
         "yards": [
@@ -915,22 +922,14 @@
         "forms": [
           "CSG - Pre/Post Trip Inspection"
         ]
-      },
-      "Pete Gonzales": {
-        "count": 2,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
       }
     },
     "ytd_by_assessor": {
-      "David Cordova": {
-        "count": 8,
+      "Michael Salazar": {
+        "count": 68,
         "yards": [
-          "Bryan",
+          "Midland",
+          "San Angelo",
           "Unknown"
         ],
         "forms": [
@@ -938,11 +937,10 @@
           "HSE - Workplace Inspection Checklist"
         ]
       },
-      "Michael Salazar": {
-        "count": 67,
+      "David Cordova": {
+        "count": 8,
         "yards": [
-          "Midland",
-          "San Angelo",
+          "Bryan",
           "Unknown"
         ],
         "forms": [
@@ -1071,8 +1069,8 @@
           "RH - Rathole Field Assessment"
         ]
       },
-      "Laredo Dispatch": {
-        "count": 115,
+      "Roger Gray": {
+        "count": 56,
         "yards": [
           "Unknown"
         ],
@@ -1080,8 +1078,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Salvador Ramos": {
-        "count": 13,
+      "Jose Zavala": {
+        "count": 20,
         "yards": [
           "Unknown"
         ],
@@ -1098,8 +1096,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Roger Gray": {
-        "count": 59,
+      "Heath Jones": {
+        "count": 12,
         "yards": [
           "Unknown"
         ],
@@ -1107,7 +1105,34 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Gabriel Cortez": {
+      "Osvaldo Jauregui Polanco": {
+        "count": 17,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Taurino Medrano": {
+        "count": 18,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Pete Gonzales": {
+        "count": 35,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "James Lee Jr": {
         "count": 10,
         "yards": [
           "Unknown"
@@ -1116,8 +1141,81 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
+      "Laredo Dispatch": {
+        "count": 113,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Sergio Garcia": {
+        "count": 16,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Arturo Cerda": {
+        "count": 9,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Dustin Fry": {
+        "count": 20,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection",
+          "HSE - Workplace Inspection Checklist"
+        ]
+      },
+      "Anthony Ellis": {
+        "count": 73,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Hector Cruz": {
+        "count": 54,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Salvador Ramos": {
+        "count": 13,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
+      "Gabriel Cortez": {
+        "count": 9,
+        "yards": [
+          "Unknown"
+        ],
+        "forms": [
+          "CSG - Pre/Post Trip Inspection"
+        ]
+      },
       "James Stone": {
-        "count": 8,
+        "count": 7,
         "yards": [
           "Unknown"
         ],
@@ -1127,15 +1225,6 @@
       },
       "Cesar Herrera Garcia": {
         "count": 47,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Osvaldo Jauregui Polanco": {
-        "count": 16,
         "yards": [
           "Unknown"
         ],
@@ -1170,45 +1259,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Dustin Fry": {
-        "count": 19,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection",
-          "HSE - Workplace Inspection Checklist"
-        ]
-      },
-      "Heath Jones": {
-        "count": 11,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Anthony Ellis": {
-        "count": 72,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "James Sellers": {
         "count": 165,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Arturo Cerda": {
-        "count": 9,
         "yards": [
           "Unknown"
         ],
@@ -1245,15 +1297,6 @@
       },
       "Jesus Cortez": {
         "count": 1,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Sergio Garcia": {
-        "count": 16,
         "yards": [
           "Unknown"
         ],
@@ -1306,17 +1349,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Hector Cruz": {
-        "count": 54,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Luis Ocampo": {
-        "count": 23,
+        "count": 22,
         "yards": [
           "Unknown"
         ],
@@ -1342,17 +1376,8 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "Taurino Medrano": {
-        "count": 15,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Rafael Munoz": {
-        "count": 17,
+        "count": 16,
         "yards": [
           "Unknown"
         ],
@@ -1362,15 +1387,6 @@
       },
       "Raul Ocampo Basabi": {
         "count": 1,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Pete Gonzales": {
-        "count": 34,
         "yards": [
           "Unknown"
         ],
@@ -1396,24 +1412,6 @@
           "CSG - Pre/Post Trip Inspection"
         ]
       },
-      "James Lee Jr": {
-        "count": 9,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
-      "Jose Zavala": {
-        "count": 19,
-        "yards": [
-          "Unknown"
-        ],
-        "forms": [
-          "CSG - Pre/Post Trip Inspection"
-        ]
-      },
       "Ruben Lopez": {
         "count": 9,
         "yards": [
@@ -1424,7 +1422,7 @@
         ]
       },
       "Apolonio Alcocer": {
-        "count": 5,
+        "count": 4,
         "yards": [
           "Unknown"
         ],
@@ -1605,18 +1603,18 @@
       }
     },
     "mtd_by_form": {
-      "CSG - Safety Casing Field Assessment": 9,
+      "CSG - Safety Casing Field Assessment": 10,
       "TD - Transcend Field Assessment": 1,
       "WS - Poly Pipe Field Assessment": 1,
       "RH - Rathole Field Assessment": 4,
-      "CSG - Pre/Post Trip Inspection": 113
+      "CSG - Pre/Post Trip Inspection": 134
     },
     "mtd_by_yard": {
+      "Midland": 4,
       "Bryan": 2,
-      "Midland": 3,
       "Kilgore": 3,
       "Hobbs": 1,
-      "Unknown": 119
+      "Unknown": 140
     },
     "by_month": {
       "2025-01": 29,
@@ -1633,13 +1631,13 @@
       "2025-12": 68,
       "2026-01": 71,
       "2026-02": 53,
-      "2026-03": 115,
+      "2026-03": 94,
       "2026-04": 421,
       "2026-05": 527,
-      "2026-06": 128
+      "2026-06": 150
     },
     "by_form_all": {
-      "CSG - Safety Casing Field Assessment": 436,
+      "CSG - Safety Casing Field Assessment": 437,
       "Vehicle Inspection Checklist": 262,
       "TD - Rig Inspection": 29,
       "TD - Transcend Field Assessment": 47,
@@ -1652,12 +1650,12 @@
     },
     "assessment_analytics": {
       "overall": {
-        "total_ytd": 131,
-        "total_all_time": 330,
-        "compliance_rate": 92.3,
-        "finding_rate": 26.0,
+        "total_ytd": 132,
+        "total_all_time": 331,
+        "compliance_rate": 92.4,
+        "finding_rate": 25.8,
         "avg_capas": 0.34,
-        "avg_notes": 1.12,
+        "avg_notes": 1.13,
         "avg_narrative": 5.5
       },
       "by_month": {
@@ -1774,14 +1772,26 @@
           "avg_notes": 2.09
         },
         "2026-06": {
-          "count": 9,
-          "compliance_rate": 92.1,
-          "finding_rate": 33.3,
-          "avg_capas": 0.44,
-          "avg_notes": 0.89
+          "count": 10,
+          "compliance_rate": 92.3,
+          "finding_rate": 30.0,
+          "avg_capas": 0.4,
+          "avg_notes": 1.0
         }
       },
       "by_assessor": {
+        "Michael Salazar": {
+          "count": 64,
+          "compliance_rate": 92.1,
+          "finding_rate": 12.5,
+          "avg_capas": 0.16,
+          "avg_notes": 1.81,
+          "avg_narrative": 5.4,
+          "quality_score": 39,
+          "red_flags": [
+            "25 consecutive assessments with no findings"
+          ]
+        },
         "David Cordova": {
           "count": 7,
           "compliance_rate": 93.0,
@@ -1791,18 +1801,6 @@
           "avg_narrative": 5.7,
           "quality_score": 33,
           "red_flags": []
-        },
-        "Michael Salazar": {
-          "count": 63,
-          "compliance_rate": 92.1,
-          "finding_rate": 12.7,
-          "avg_capas": 0.16,
-          "avg_notes": 1.81,
-          "avg_narrative": 5.4,
-          "quality_score": 40,
-          "red_flags": [
-            "25 consecutive assessments with no findings"
-          ]
         },
         "James Barnett": {
           "count": 9,
@@ -1849,6 +1847,17 @@
         }
       },
       "by_yard": {
+        "Midland": {
+          "count": 90,
+          "compliance_rate": 92.0,
+          "finding_rate": 22.2,
+          "avg_capas": 0.32,
+          "rep": "Salazar / Hancock",
+          "assessors": [
+            "Michael Hancock",
+            "Michael Salazar"
+          ]
+        },
         "Bryan": {
           "count": 7,
           "compliance_rate": 93.0,
@@ -1857,17 +1866,6 @@
           "rep": "",
           "assessors": [
             "David Cordova"
-          ]
-        },
-        "Midland": {
-          "count": 89,
-          "compliance_rate": 92.0,
-          "finding_rate": 22.5,
-          "avg_capas": 0.33,
-          "rep": "Salazar / Hancock",
-          "assessors": [
-            "Michael Hancock",
-            "Michael Salazar"
           ]
         },
         "Kilgore": {
@@ -4228,6 +4226,15 @@
       }
     },
     "details": [
+      {
+        "date": "2026-06-06",
+        "assessor": "Michael Salazar",
+        "form_id": 381707,
+        "form_name": "CSG - Safety Casing Field Assessment",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Midland"
+      },
       {
         "date": "2026-06-05",
         "assessor": "David Cordova",
@@ -16516,6 +16523,195 @@
         "yard": "Unknown"
       },
       {
+        "date": "2026-06-07",
+        "assessor": "Roger Gray",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-07",
+        "assessor": "Roger Gray",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-07",
+        "assessor": "Jose Zavala",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-07",
+        "assessor": "Noe Roman",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Jose Zavala",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Heath Jones",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Osvaldo Jauregui Polanco",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Taurino Medrano",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Pete Gonzales",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "James Lee Jr",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Laredo Dispatch",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Sergio Garcia",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Arturo Cerda",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Dustin Fry",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Taurino Medrano",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-04",
+        "assessor": "Taurino Medrano",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Laredo Dispatch",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Laredo Dispatch",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Anthony Ellis",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Laredo Dispatch",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
+        "date": "2026-06-06",
+        "assessor": "Hector Cruz",
+        "form_id": 229645,
+        "form_name": "CSG - Pre/Post Trip Inspection",
+        "company": "BRHAS",
+        "division": "Casing",
+        "yard": "Unknown"
+      },
+      {
         "date": "2026-06-06",
         "assessor": "Laredo Dispatch",
         "form_id": 229645,
@@ -25320,195 +25516,6 @@
       {
         "date": "2026-03-29",
         "assessor": "Anthony Ellis",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Laredo Dispatch",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Laredo Dispatch",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Apolonio Alcocer",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Sergio Garcia",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Gabriel Cortez",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Roger Gray",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Roger Gray",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Roger Gray",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Jose Zavala",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Rafael Munoz",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Luis Ocampo",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Noe Roman",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Roger Gray",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-28",
-        "assessor": "Hector Cruz",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "James Stone",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "Arturo Cerda",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "Laredo Dispatch",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "Laredo Dispatch",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "Laredo Dispatch",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "Roger Gray",
-        "form_id": 229645,
-        "form_name": "CSG - Pre/Post Trip Inspection",
-        "company": "BRHAS",
-        "division": "Casing",
-        "yard": "Unknown"
-      },
-      {
-        "date": "2026-03-27",
-        "assessor": "Laredo Dispatch",
         "form_id": 229645,
         "form_name": "CSG - Pre/Post Trip Inspection",
         "company": "BRHAS",

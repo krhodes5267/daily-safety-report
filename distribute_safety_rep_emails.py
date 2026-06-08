@@ -52,8 +52,8 @@ SAFETY_REP_MAP = [
         ],
     },
     {
-        "name": "Justin Conrad",
-        "emails": ["jconrad@brhas.com"],
+        "name": "David Cordova",
+        "emails": ["dcordova@brhas.com"],
         "divisions": [
             ("Casing", "Bryan"),
         ],

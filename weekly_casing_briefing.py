@@ -103,8 +103,8 @@ YARD_INFO = {
         "manager": "Richie Bentley",
     },
     "Bryan": {
-        "safety_reps": "Justin Conrad",
-        "safety_rep_emails": ["jconrad@brhas.com"],
+        "safety_reps": "David Cordova",
+        "safety_rep_emails": ["dcordova@brhas.com"],
         "manager": "Danny Lohse",
     },
     "Kilgore": {

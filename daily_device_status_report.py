@@ -106,7 +106,7 @@ SAFETY_DIRECTOR_RECIPIENTS = os.environ.get(
 # Same reps as the speeding report distribution
 SAFETY_REP_RECIPIENTS = {
     "Midland":    os.environ.get("DEVICE_REPORT_SAFETY_MIDLAND",    "mhancock@brhas.com, msalazar@brhas.com"),
-    "Bryan":      os.environ.get("DEVICE_REPORT_SAFETY_BRYAN",      "jconrad@brhas.com"),
+    "Bryan":      os.environ.get("DEVICE_REPORT_SAFETY_BRYAN",      "dcordova@brhas.com"),
     "Kilgore":    os.environ.get("DEVICE_REPORT_SAFETY_KILGORE",    "jbarnett@brhas.com"),
     "Hobbs":      os.environ.get("DEVICE_REPORT_SAFETY_HOBBS",      "abatts@brhas.com"),
     "Jourdanton": os.environ.get("DEVICE_REPORT_SAFETY_JOURDANTON", "jspeyrer@brhas.com"),

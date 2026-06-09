@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-06-08",
-  "generated_at": "2026-06-08 14:19:55",
-  "overall_pct": 72.0,
-  "total_employees": 1104,
-  "compliant_count": 795,
+  "report_date": "2026-06-09",
+  "generated_at": "2026-06-09 12:47:26",
+  "overall_pct": 72.3,
+  "total_employees": 1108,
+  "compliant_count": 801,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
-      "total": 757,
-      "compliant": 596,
-      "pct": 78.7
+      "total": 759,
+      "compliant": 600,
+      "pct": 79.1
     },
     "BTI": {
       "total": 62,
@@ -17,14 +17,14 @@
       "pct": 61.3
     },
     "Transcend": {
-      "total": 104,
-      "compliant": 81,
-      "pct": 77.9
+      "total": 105,
+      "compliant": 82,
+      "pct": 78.1
     },
     "Permian": {
-      "total": 152,
-      "compliant": 62,
-      "pct": 40.8
+      "total": 153,
+      "compliant": 63,
+      "pct": 41.2
     },
     "Valor": {
       "total": 29,
@@ -39,9 +39,9 @@
       "pct": 55.6
     },
     "Casing": {
-      "total": 411,
-      "compliant": 316,
-      "pct": 76.9
+      "total": 412,
+      "compliant": 318,
+      "pct": 77.2
     },
     "Construction": {
       "total": 16,
@@ -64,8 +64,8 @@
       "pct": 75.0
     },
     "Fencing": {
-      "total": 10,
-      "compliant": 10,
+      "total": 11,
+      "compliant": 11,
       "pct": 100.0
     },
     "Pit Lining": {
@@ -75,8 +75,8 @@
     },
     "Poly Pipe": {
       "total": 58,
-      "compliant": 39,
-      "pct": 67.2
+      "compliant": 40,
+      "pct": 69.0
     },
     "Rathole": {
       "total": 138,
@@ -91,14 +91,14 @@
   },
   "by_yard": {
     "Midland": {
-      "total": 178,
-      "compliant": 159,
-      "pct": 89.3
+      "total": 179,
+      "compliant": 160,
+      "pct": 89.4
     },
     "Bryan": {
       "total": 49,
-      "compliant": 35,
-      "pct": 71.4
+      "compliant": 36,
+      "pct": 73.5
     },
     "Kilgore": {
       "total": 66,
@@ -134,9 +134,9 @@
         "pct": 88.6
       },
       "Midland": {
-        "total": 308,
-        "compliant": 258,
-        "pct": 83.8
+        "total": 310,
+        "compliant": 261,
+        "pct": 84.2
       },
       "Levelland": {
         "total": 78,
@@ -145,8 +145,8 @@
       },
       "Bryan": {
         "total": 49,
-        "compliant": 35,
-        "pct": 71.4
+        "compliant": 36,
+        "pct": 73.5
       },
       "Hobbs": {
         "total": 53,
@@ -211,16 +211,16 @@
     },
     "Transcend": {
       "Midland": {
-        "total": 104,
-        "compliant": 81,
-        "pct": 77.9
+        "total": 105,
+        "compliant": 82,
+        "pct": 78.1
       }
     },
     "Permian": {
       "Midland": {
-        "total": 145,
-        "compliant": 60,
-        "pct": 41.4
+        "total": 146,
+        "compliant": 61,
+        "pct": 41.8
       },
       "Lubbock": {
         "total": 7,
@@ -258,14 +258,14 @@
         "pct": 90.9
       },
       "Midland": {
-        "total": 178,
-        "compliant": 159,
-        "pct": 89.3
+        "total": 179,
+        "compliant": 160,
+        "pct": 89.4
       },
       "Bryan": {
         "total": 49,
-        "compliant": 35,
-        "pct": 71.4
+        "compliant": 36,
+        "pct": 73.5
       },
       "Hobbs": {
         "total": 53,
@@ -350,8 +350,8 @@
     "Poly Pipe": {
       "Midland": {
         "total": 58,
-        "compliant": 39,
-        "pct": 67.2
+        "compliant": 40,
+        "pct": 69.0
       }
     },
     "Anchors": {
@@ -399,8 +399,8 @@
     },
     "Fencing": {
       "Midland": {
-        "total": 10,
-        "compliant": 10,
+        "total": 11,
+        "compliant": 11,
         "pct": 100.0
       }
     },
@@ -424,9 +424,9 @@
       "pct": 98.4
     },
     "Midland": {
-      "total": 619,
-      "compliant": 437,
-      "pct": 70.6
+      "total": 623,
+      "compliant": 442,
+      "pct": 70.9
     },
     "Jourdanton": {
       "total": 35,
@@ -440,8 +440,8 @@
     },
     "Bryan": {
       "total": 49,
-      "compliant": 35,
-      "pct": 71.4
+      "compliant": 36,
+      "pct": 73.5
     },
     "Hobbs": {
       "total": 53,
@@ -2648,25 +2648,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Gary Grant",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Barstow",
-      "percent_complete": 77,
-      "incomplete_count": 9,
-      "complete_count": 30,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - Fall Protection",
-        "HSE - Ladder Safety",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Billy Lamb",
       "company": "BRHAS",
       "division": "Casing",
@@ -2890,6 +2871,25 @@
         "HSE - Benzene Awareness- 0.15",
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Gary Grant",
+      "company": "BRHAS",
+      "division": "Rathole",
+      "yard": "Barstow",
+      "percent_complete": 79,
+      "incomplete_count": 8,
+      "complete_count": 31,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Heat Management",
+        "HSE - Fall Protection",
+        "HSE - Ladder Safety",
+        "HSE - Lifting & Back Safety",
+        "HSE - Personal Protective Equipment (PPE)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3203,25 +3203,6 @@
       "company": "Permian",
       "division": "Rentals",
       "yard": "Midland",
-      "percent_complete": 82,
-      "incomplete_count": 7,
-      "complete_count": 32,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Billy Mathis Jr",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Bryan",
       "percent_complete": 82,
       "incomplete_count": 7,
       "complete_count": 32,
@@ -5950,21 +5931,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Sione Kiteau",
-      "company": "BRHAS",
-      "division": "Poly Pipe",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Benzene Awareness- 0.15"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Julio Leyva",
       "company": "BRHAS",
       "division": "Casing",
@@ -6087,7 +6053,7 @@
   ],
   "headcount_by_yard": {
     "Jourdanton": 22,
-    "Midland": 178,
+    "Midland": 179,
     "Bryan": 49,
     "Hobbs": 53,
     "Kilgore": 66,

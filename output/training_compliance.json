@@ -1,20 +1,20 @@
 {
-  "report_date": "2026-06-11",
-  "generated_at": "2026-06-11 14:11:20",
-  "overall_pct": 73.3,
-  "total_employees": 1110,
-  "compliant_count": 814,
+  "report_date": "2026-06-12",
+  "generated_at": "2026-06-12 13:01:30",
+  "overall_pct": 73.5,
+  "total_employees": 1109,
+  "compliant_count": 815,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
-      "total": 759,
-      "compliant": 602,
+      "total": 758,
+      "compliant": 601,
       "pct": 79.3
     },
     "BTI": {
       "total": 62,
-      "compliant": 46,
-      "pct": 74.2
+      "compliant": 48,
+      "pct": 77.4
     },
     "Transcend": {
       "total": 106,
@@ -64,8 +64,8 @@
       "pct": 75.0
     },
     "Fencing": {
-      "total": 11,
-      "compliant": 11,
+      "total": 10,
+      "compliant": 10,
       "pct": 100.0
     },
     "Pit Lining": {
@@ -134,9 +134,9 @@
         "pct": 88.6
       },
       "Midland": {
-        "total": 310,
-        "compliant": 261,
-        "pct": 84.2
+        "total": 309,
+        "compliant": 260,
+        "pct": 84.1
       },
       "Levelland": {
         "total": 78,
@@ -231,8 +231,8 @@
     "BTI": {
       "Midland": {
         "total": 62,
-        "compliant": 46,
-        "pct": 74.2
+        "compliant": 48,
+        "pct": 77.4
       }
     },
     "Valor": {
@@ -399,8 +399,8 @@
     },
     "Fencing": {
       "Midland": {
-        "total": 11,
-        "compliant": 11,
+        "total": 10,
+        "compliant": 10,
         "pct": 100.0
       }
     },
@@ -424,9 +424,9 @@
       "pct": 98.4
     },
     "Midland": {
-      "total": 625,
-      "compliant": 452,
-      "pct": 72.3
+      "total": 624,
+      "compliant": 453,
+      "pct": 72.6
     },
     "Jourdanton": {
       "total": 35,
@@ -1325,24 +1325,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Maximiliano Zuniga",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 33,
-      "incomplete_count": 4,
-      "complete_count": 2,
-      "total_assigned": 6,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Devin Gatewood",
       "company": "Permian",
       "division": "Rentals",
@@ -1508,6 +1490,24 @@
         "HSE - Fire Protection",
         "HSE - Benzene Awareness- 0.15",
         "HSE - Confined Space - Permit Required ",
+        "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Maximiliano Zuniga",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 43,
+      "incomplete_count": 4,
+      "complete_count": 3,
+      "total_assigned": 7,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Benzene Awareness- 0.15",
         "HSE - Hot Work - Welding, Cutting, and Brazing"
       ],
       "status": "In Progress",
@@ -5013,23 +5013,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Duany Gomez",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Epifanio Hernandez",
       "company": "BRHAS",
       "division": "Casing",
@@ -5059,23 +5042,6 @@
         "HSE - Emergency Response Plans",
         "HSE - Fire Protection",
         "HSE - Hot Work - Welding, Cutting, and Brazing"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Nephtali Marin",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

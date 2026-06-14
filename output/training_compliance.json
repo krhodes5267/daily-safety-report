@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-06-13",
-  "generated_at": "2026-06-13 12:01:44",
-  "overall_pct": 73.7,
+  "report_date": "2026-06-14",
+  "generated_at": "2026-06-14 12:07:21",
+  "overall_pct": 73.8,
   "total_employees": 1107,
-  "compliant_count": 816,
+  "compliant_count": 817,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 756,
-      "compliant": 601,
-      "pct": 79.5
+      "compliant": 602,
+      "pct": 79.6
     },
     "BTI": {
       "total": 62,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 410,
-      "compliant": 319,
-      "pct": 77.8
+      "compliant": 320,
+      "pct": 78.0
     },
     "Construction": {
       "total": 16,
@@ -97,8 +97,8 @@
     },
     "Bryan": {
       "total": 49,
-      "compliant": 37,
-      "pct": 75.5
+      "compliant": 38,
+      "pct": 77.6
     },
     "Kilgore": {
       "total": 66,
@@ -145,8 +145,8 @@
       },
       "Bryan": {
         "total": 49,
-        "compliant": 37,
-        "pct": 75.5
+        "compliant": 38,
+        "pct": 77.6
       },
       "Hobbs": {
         "total": 52,
@@ -264,8 +264,8 @@
       },
       "Bryan": {
         "total": 49,
-        "compliant": 37,
-        "pct": 75.5
+        "compliant": 38,
+        "pct": 77.6
       },
       "Hobbs": {
         "total": 52,
@@ -440,8 +440,8 @@
     },
     "Bryan": {
       "total": 49,
-      "compliant": 37,
-      "pct": 75.5
+      "compliant": 38,
+      "pct": 77.6
     },
     "Hobbs": {
       "total": 52,
@@ -3427,25 +3427,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Leon Harden III",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 33,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Randy Jenkins",
       "company": "Permian",
       "division": "Rentals",
@@ -3497,25 +3478,6 @@
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety",
         "HSE - Observation Program ",
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Victor Rojas",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Bryan",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
         "HSE - Hot Work - Welding, Cutting, and Brazing"
       ],
       "status": "In Progress",
@@ -3771,6 +3733,24 @@
         "HSE - Fire Protection",
         "HSE - Benzene Awareness- 0.15",
         "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Leon Harden III",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 89,
+      "incomplete_count": 4,
+      "complete_count": 34,
+      "total_assigned": 38,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Confined Space - Permit Required "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

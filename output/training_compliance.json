@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-06-17",
-  "generated_at": "2026-06-17 13:48:23",
+  "report_date": "2026-06-18",
+  "generated_at": "2026-06-18 13:36:19",
   "overall_pct": 75.6,
-  "total_employees": 1114,
-  "compliant_count": 842,
+  "total_employees": 1116,
+  "compliant_count": 844,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -12,9 +12,9 @@
       "pct": 80.8
     },
     "BTI": {
-      "total": 62,
-      "compliant": 48,
-      "pct": 77.4
+      "total": 63,
+      "compliant": 49,
+      "pct": 77.8
     },
     "Transcend": {
       "total": 104,
@@ -22,9 +22,9 @@
       "pct": 82.7
     },
     "Permian": {
-      "total": 155,
-      "compliant": 69,
-      "pct": 44.5
+      "total": 156,
+      "compliant": 70,
+      "pct": 44.9
     },
     "Valor": {
       "total": 29,
@@ -218,9 +218,9 @@
     },
     "Permian": {
       "Midland": {
-        "total": 148,
-        "compliant": 67,
-        "pct": 45.3
+        "total": 149,
+        "compliant": 68,
+        "pct": 45.6
       },
       "Lubbock": {
         "total": 7,
@@ -230,9 +230,9 @@
     },
     "BTI": {
       "Midland": {
-        "total": 62,
-        "compliant": 48,
-        "pct": 77.4
+        "total": 63,
+        "compliant": 49,
+        "pct": 77.8
       }
     },
     "Valor": {
@@ -424,8 +424,8 @@
       "pct": 98.4
     },
     "Midland": {
-      "total": 628,
-      "compliant": 467,
+      "total": 630,
+      "compliant": 469,
       "pct": 74.4
     },
     "Jourdanton": {
@@ -1216,9 +1216,9 @@
       "company": "BRHAS",
       "division": "Construction",
       "yard": "Odessa",
-      "percent_complete": 26,
-      "incomplete_count": 29,
-      "complete_count": 10,
+      "percent_complete": 28,
+      "incomplete_count": 28,
+      "complete_count": 11,
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Emergency Response Plans",
@@ -2877,25 +2877,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Robert Ramirez",
-      "company": "Transcend",
-      "division": "TD Rig 20",
-      "yard": "Midland",
-      "percent_complete": 80,
-      "incomplete_count": 8,
-      "complete_count": 32,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Robert Santellano",
       "company": "Transcend",
       "division": "TD Rig 18",
@@ -3156,25 +3137,6 @@
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety",
         "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Oscar Monsivais",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 85,
-      "incomplete_count": 6,
-      "complete_count": 33,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Incident Reporting",
-        "HSE - Electrical Safety "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4344,6 +4306,24 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Robert Ramirez",
+      "company": "Transcend",
+      "division": "TD Rig 20",
+      "yard": "Midland",
+      "percent_complete": 90,
+      "incomplete_count": 4,
+      "complete_count": 36,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Confined Space - Permit Required ",
+        "HSE - Behavioral Based Safety"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Cesar Rivas",
       "company": "Transcend",
       "division": "TD Rig 20",
@@ -5063,6 +5043,22 @@
       "incomplete_training_names": [
         "HSE - Fire Protection",
         "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Oscar Monsivais",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

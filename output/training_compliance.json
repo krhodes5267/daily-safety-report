@@ -1,14 +1,14 @@
 {
-  "report_date": "2026-06-22",
-  "generated_at": "2026-06-22 15:30:40",
-  "overall_pct": 76.2,
+  "report_date": "2026-06-23",
+  "generated_at": "2026-06-23 12:41:25",
+  "overall_pct": 76.3,
   "total_employees": 1114,
-  "compliant_count": 849,
+  "compliant_count": 850,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
-      "total": 760,
-      "compliant": 621,
+      "total": 761,
+      "compliant": 622,
       "pct": 81.7
     },
     "BTI": {
@@ -18,13 +18,13 @@
     },
     "Transcend": {
       "total": 107,
-      "compliant": 88,
-      "pct": 82.2
+      "compliant": 89,
+      "pct": 83.2
     },
     "Permian": {
-      "total": 157,
-      "compliant": 71,
-      "pct": 45.2
+      "total": 156,
+      "compliant": 70,
+      "pct": 44.9
     },
     "Valor": {
       "total": 29,
@@ -39,9 +39,9 @@
       "pct": 77.8
     },
     "Casing": {
-      "total": 412,
-      "compliant": 335,
-      "pct": 81.3
+      "total": 413,
+      "compliant": 336,
+      "pct": 81.4
     },
     "Construction": {
       "total": 16,
@@ -91,8 +91,8 @@
   },
   "by_yard": {
     "Midland": {
-      "total": 179,
-      "compliant": 163,
+      "total": 180,
+      "compliant": 164,
       "pct": 91.1
     },
     "Bryan": {
@@ -134,8 +134,8 @@
         "pct": 91.4
       },
       "Midland": {
-        "total": 310,
-        "compliant": 265,
+        "total": 311,
+        "compliant": 266,
         "pct": 85.5
       },
       "Levelland": {
@@ -212,15 +212,15 @@
     "Transcend": {
       "Midland": {
         "total": 107,
-        "compliant": 88,
-        "pct": 82.2
+        "compliant": 89,
+        "pct": 83.2
       }
     },
     "Permian": {
       "Midland": {
-        "total": 150,
-        "compliant": 69,
-        "pct": 46.0
+        "total": 149,
+        "compliant": 68,
+        "pct": 45.6
       },
       "Lubbock": {
         "total": 7,
@@ -258,8 +258,8 @@
         "pct": 95.5
       },
       "Midland": {
-        "total": 179,
-        "compliant": 163,
+        "total": 180,
+        "compliant": 164,
         "pct": 91.1
       },
       "Bryan": {
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 628,
-      "compliant": 469,
-      "pct": 74.7
+      "compliant": 470,
+      "pct": 74.8
     },
     "Jourdanton": {
       "total": 35,
@@ -4206,24 +4206,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Robert Ramirez",
-      "company": "Transcend",
-      "division": "TD Rig 20",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Cesar Rivas",
       "company": "Transcend",
       "division": "TD Rig 20",
@@ -4539,23 +4521,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Modesto Lopez",
-      "company": "Transcend",
-      "division": "TD Rig 16",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 37,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jose Morales",
       "company": "Transcend",
       "division": "TD Rig 18",
@@ -4618,6 +4583,23 @@
       "incomplete_training_names": [
         "HSE - Spotter Safety Training",
         "HSE - Lock Out/Tag Out "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Robert Ramirez",
+      "company": "Transcend",
+      "division": "TD Rig 20",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 37,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Confined Space - Permit Required "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5300,7 +5282,7 @@
   ],
   "headcount_by_yard": {
     "Jourdanton": 22,
-    "Midland": 179,
+    "Midland": 180,
     "Bryan": 47,
     "Hobbs": 54,
     "Kilgore": 66,

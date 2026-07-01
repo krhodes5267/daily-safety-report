@@ -12,12 +12,12 @@ Data Sources → Daily Scripts → output/*.json → archive_today.py → archiv
                                                                          ↓
                                                  dashboard.html ← loads archive via fetch()
 ```
-- **KPA API** (kpaehs.com): Observations, incidents, assessments, training, corrective actions
+- **Novara Flex API** (novaraflex.com, formerly KPA): Observations, incidents, assessments, training, corrective actions
 - **Motive API** (gomotive.com): Speeding events, camera events, device status, vehicle data
 - **GitHub Action**: `daily-casing-dashboard.yml` runs at 5 AM CT, generates data, archives, deploys
 
 ## API Keys (local testing)
-- `KPA_API_TOKEN=ppd4tH128Jsx3SwUJEjSsBqp0HNEXCxc6`
+- `KPA_API_TOKEN=plnuF2fKcYuS07JoQHgOweB33Y8dldzdI`
 - `MOTIVE_API_KEY=8d3dd502-36c0-47c4-ade3-a1fbbef0c05c`
 - **KPA API CRITICAL:** Always use `requests.post(url, json=payload)` — requires JSON body, NOT query params. Token goes in JSON body.
 
@@ -238,3 +238,166 @@ python archive_today.py
 
 ## After Each Division
 Commit changes and update `division_audit.md` tracker.
+
+---
+
+# Monthly HSE Recap Generation
+
+## Overview
+The `generate_recap.py` script produces plain-text HSE data summaries for each division. These text files are then used as input to create formatted PDF reports (done separately via Claude Web or manual process).
+
+## Key Files
+| File | Purpose |
+|------|---------|
+| `generate_recap.py` | CLI entry point for monthly recap generation |
+| `safety_recap/config.py` | Division configs: Motive group IDs, KPA form IDs, sections, field hashes |
+| `safety_recap/data_fetcher.py` | `DataCollector` class - fetches from KPA API, Motive API, man-hours Excel |
+| `safety_recap/text_exporter.py` | Formats collected data into plain-text `.txt` summaries |
+
+## How to Run
+
+### Generate a single division
+```bash
+cd C:/Users/krhod/daily-safety-report
+KPA_API_TOKEN=plnuF2fKcYuS07JoQHgOweB33Y8dldzdI MOTIVE_API_KEY=8d3dd502-36c0-47c4-ade3-a1fbbef0c05c py -3 -u generate_recap.py --division transcend --month 2026-06 --data-only
+```
+
+### Generate all divisions
+```bash
+KPA_API_TOKEN=plnuF2fKcYuS07JoQHgOweB33Y8dldzdI MOTIVE_API_KEY=8d3dd502-36c0-47c4-ade3-a1fbbef0c05c py -3 -u generate_recap.py --division all --month 2026-06 --data-only
+```
+
+### With man-hours file
+```bash
+KPA_API_TOKEN=plnuF2fKcYuS07JoQHgOweB33Y8dldzdI MOTIVE_API_KEY=8d3dd502-36c0-47c4-ade3-a1fbbef0c05c py -3 -u generate_recap.py --division all --month 2026-06 --data-only --man-hours "C:/Users/krhod/Downloads/WorkMonthHoursReport_2026-06_2026-06.xlsx"
+```
+
+### Important flags
+- `--division [key|all]` — Division key from config.py DIVISIONS dict, or `all`
+- `--month YYYY-MM` — Report month
+- `--data-only` — Text-only output (no HTML/PDF)
+- `--man-hours [path]` — Path to man-hours Excel file
+
+## Output Location
+- Default: `~/Desktop/Monthly HSE Recaps/{Month Year}/`
+- Copy finished files to `~/Downloads/` for easy access
+
+## Windows-Specific Notes
+- **Must use `py -3`** (not `python`) — Windows Python launcher
+- **Use `-u` flag** for unbuffered output so you can see progress
+- **API env vars inline:** `KPA_API_TOKEN=... MOTIVE_API_KEY=... py -3 -u generate_recap.py ...`
+- **KPA rate limiting:** 1.5s delay between calls, 30/60/90s backoff on 429. Run divisions ONE AT A TIME to avoid excessive rate limiting
+- **10-minute bash timeout:** For long runs, use `run_in_background` and check with `TaskOutput`
+
+## Division List & Data Sources
+
+### Divisions WITH Motive fleet data (KPA + Motive):
+| Division Key | Display Name | Motive Group IDs |
+|---|---|---|
+| `casing` | Casing | 167175, 169090, 169092, 186740, 169091, 186739 |
+| `rathole` | Rathole | 167176, 220453, 274965, 186742, 307752, 341789, 308775, 351218, 265996-266028, 290471 |
+| `bti` | Butch's Trucking (BTI) | 265989 |
+| `transcend` | Transcend Drilling | 265986 |
+| `valor` | Valor Energy Services | 167178, 265985 |
+| `poly_pipe` | Poly Pipe | 265993, 296040, 296036, 296017, 296020 |
+| `anchors` | Anchors | 265982 |
+| `construction` | Construction | 265983 |
+| `environmental` | Environmental | 265987 |
+| `fencing` | Fencing | 265991 |
+| `pit_lining` | Pit Lining (Water Solutions) | 265992 |
+
+### Divisions KPA-ONLY (no Motive):
+| Division Key | Display Name | Reason |
+|---|---|---|
+| `per` | Permian Equipment Rentals | No fleet tracking needed |
+| `hutchs` | Hutch's | KPA only |
+| `shop` | Shop/Fabrication | KPA only |
+| `downhole` | Downhole Tools | KPA only |
+
+### Divisions to SKIP during monthly generation:
+- `hutchs`, `shop`, `downhole` — skip entirely (KPA-only, minimal data)
+- `casing` — often already done separately
+
+## Text Exporter Sections (what each .txt file contains)
+
+### Standard sections (all divisions):
+1. **Division Info** — name, company, manager, safety rep, headcount, man-hours
+2. **Lagging Indicators** — incidents, OSHA recordables, TRIR, DART
+3. **Leading Indicators** — observations (count + rate), training compliance
+4. **Observation Summary** — by type breakdown, by rig (if applicable), near misses/good catches count
+5. **Observation Details** — individual observation records
+6. **Incident Details** — individual incident records
+7. **Assessment Details** — field assessments grouped by report, with scores and deficiency flags
+8. **Training Compliance** — overall %, non-compliant employee list with incomplete programs
+
+### Fleet sections (divisions with Motive data):
+9. **Fleet Metrics** — active vehicles, utilization, total mileage, avg per vehicle
+10. **Speeding Analysis** — total events, severity breakdown (critical/high/medium), rate per 10k miles, top offenders
+11. **Camera/DriveCam Events** — by type, drowsiness alerts, top offenders
+12. **Top Vehicles by Miles** — top 15 vehicles with driver and mileage
+
+### Division-specific sections:
+13. **JSA Log Summary** — total JSAs, by rig/district, review rate, top submitters (Transcend, BTI)
+14. **Rig Inspections** — individual inspections with scores, deficiency flags, average score (Transcend)
+15. **Vehicle Inspection Details** — Bernard's truck audits with driver, truck#, score, deficiency themes (BTI)
+16. **Vehicle Inspections (Pre/Post Trip)** — count summary (BTI)
+17. **Mileage by Yard** — yard-level fleet breakdown (multi-yard divisions like Casing, Rathole)
+
+## Known Issues & Fixes Applied
+
+### Division-specific forms bypass company filter
+- **Problem:** `_fetch_form()` applies `_filter_rows()` which checks company/service_line fields. Division-specific forms (like Transcend's rig inspection form 385365) don't have these fields, so all rows get silently dropped.
+- **Fix:** Division-specific form fetches (rig_inspections, assessments) call `kpa.get_form_responses()` directly instead of `_fetch_form()`, bypassing the company/service_line filter.
+- **Affected forms:** 385365 (TD - Rig Inspection), 206674 (TD - Transcend Field Assessment), 225539 (TD - Management Audit)
+
+### Score double-percent
+- **Problem:** KPA `score-percent` field value already includes `%`, and renderers were appending another `%`.
+- **Fix:** `str(score).rstrip('%')` before appending `%` in all score display lines.
+
+### Man-hours Excel format mismatch
+- **Problem:** 2026 man-hours files use a single "Detail" sheet with all companies, format `WorkMonthReport_YYYY-MM_YYYY-MM`. The parser's `parse_2026()` method handles this but needs the correct sheet name.
+- **Status:** Parser auto-detects format via `has_detail_sheet()`. May show 0.0 hours if the Excel sheet doesn't have the expected "Detail" tab or if department/co-code filtering doesn't match.
+
+### KPA header echo rows
+- **Problem:** KPA API sometimes returns a header echo row (date="Date", observer="Observer") that slips through date filtering.
+- **Impact:** Minor — may inflate total counts by 1. Individual record rendering skips these since they have no useful data.
+
+## Comparison to PDF Reports
+
+### Transcend PDF sections vs text data:
+| PDF Section | Text File Section | Status |
+|---|---|---|
+| Executive Summary | Lagging + Leading Indicators | Done |
+| Observations (by type, by rig) | Observation Summary + Details | Done |
+| Near Misses & Good Catches | Observation Summary callout | Done |
+| JSA Log (by rig, review rate) | JSA Log Summary | Done |
+| KPA Form Activity | Not rendered | Gap - would need all-forms query |
+| Rig Inspections & Field Assessments | Rig Inspections + Assessments | Done |
+| Incidents | Incident Details | Done |
+| Training Compliance | Training Compliance | Done |
+
+### BTI PDF sections vs text data:
+| PDF Section | Text File Section | Status |
+|---|---|---|
+| Executive Summary | Lagging + Leading Indicators | Done |
+| Fleet Mileage (top trucks) | Top Vehicles by Miles | Done |
+| Speeding Summary (by driver) | Speeding Analysis | Done |
+| DOT Inspection Scorecard | N/A | Gap - external data source |
+| Bernard's Vehicle Inspections | Vehicle Inspection Details | Done |
+| Incidents | Incident Details | Done |
+| Training Compliance | Training Compliance | Done |
+
+## Step-by-Step: Running Monthly Recaps for a New Month
+
+1. **Get the man-hours file** from Downloads (format: `WorkMonthHoursReport_YYYY-MM_YYYY-MM.xlsx`)
+2. **Run divisions one at a time** to avoid KPA rate limiting:
+   ```bash
+   cd C:/Users/krhod/daily-safety-report
+   # Run each division individually:
+   KPA_API_TOKEN=plnuF2fKcYuS07JoQHgOweB33Y8dldzdI MOTIVE_API_KEY=8d3dd502-36c0-47c4-ade3-a1fbbef0c05c py -3 -u generate_recap.py --division poly_pipe --month 2026-06 --data-only --man-hours "C:/Users/krhod/Downloads/WorkMonthHoursReport_2026-06_2026-06.xlsx"
+   ```
+3. **Order of divisions to run:** anchors, poly_pipe, pit_lining, construction, environmental, fencing, rathole, bti, transcend, valor, per
+4. **Skip:** casing (done separately), hutchs, shop, downhole (KPA-only, minimal)
+5. **Output lands in:** `~/Desktop/Monthly HSE Recaps/{Month YYYY}/`
+6. **Copy to Downloads:** `cp "C:/Users/krhod/Desktop/Monthly HSE Recaps/June 2026/"*.txt "C:/Users/krhod/Downloads/"`
+7. **Verify each file** has the expected sections (fleet data for Motive divisions, observations, training, etc.)

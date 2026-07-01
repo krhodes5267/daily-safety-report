@@ -8,7 +8,7 @@ form IDs, group IDs, LOB IDs, hashes, and man-hours data.
 # ==============================================================================
 # KPA API
 # ==============================================================================
-KPA_API_BASE = "https://api.kpaehs.com/v1"
+KPA_API_BASE = "https://api.novaraflex.com/v1"
 
 # Form IDs
 OBSERVATION_FORM_ID = 151085
@@ -123,7 +123,7 @@ KPA_SVC_TO_DIVISION = {
     "Rentals": "Permian", "PER": "Permian", "Permian": "Permian",
 }
 
-KPA_RESPONSE_URL = "https://brhas-ees.kpaehs.com/forms/responses/view"
+KPA_RESPONSE_URL = "https://brhas-ees.novaraflex.com/forms/responses/view"
 
 # ==============================================================================
 # MOTIVE API

@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-07-03",
-  "generated_at": "2026-07-03 12:16:34",
-  "overall_pct": 69.1,
+  "report_date": "2026-07-04",
+  "generated_at": "2026-07-04 11:41:24",
+  "overall_pct": 69.3,
   "total_employees": 1096,
-  "compliant_count": 757,
+  "compliant_count": 759,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 747,
-      "compliant": 554,
-      "pct": 74.2
+      "compliant": 555,
+      "pct": 74.3
     },
     "BTI": {
       "total": 62,
@@ -18,8 +18,8 @@
     },
     "Transcend": {
       "total": 106,
-      "compliant": 77,
-      "pct": 72.6
+      "compliant": 78,
+      "pct": 73.6
     },
     "Permian": {
       "total": 153,
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 139,
-      "compliant": 88,
-      "pct": 63.3
+      "compliant": 89,
+      "pct": 64.0
     },
     "Shop": {
       "total": 18,
@@ -140,8 +140,8 @@
       },
       "Levelland": {
         "total": 80,
-        "compliant": 54,
-        "pct": 67.5
+        "compliant": 55,
+        "pct": 68.8
       },
       "Bryan": {
         "total": 47,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 106,
-        "compliant": 77,
-        "pct": 72.6
+        "compliant": 78,
+        "pct": 73.6
       }
     },
     "Permian": {
@@ -303,8 +303,8 @@
     "Rathole": {
       "Levelland": {
         "total": 65,
-        "compliant": 44,
-        "pct": 67.7
+        "compliant": 45,
+        "pct": 69.2
       },
       "North Dakota": {
         "total": 6,
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 618,
-      "compliant": 412,
-      "pct": 66.7
+      "compliant": 413,
+      "pct": 66.8
     },
     "Jourdanton": {
       "total": 35,
@@ -435,8 +435,8 @@
     },
     "Levelland": {
       "total": 108,
-      "compliant": 73,
-      "pct": 67.6
+      "compliant": 74,
+      "pct": 68.5
     },
     "Bryan": {
       "total": 47,
@@ -1831,25 +1831,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Fidel Nunez",
-      "company": "BRHAS",
-      "division": "Shop",
-      "yard": "Midland",
-      "percent_complete": 62,
-      "incomplete_count": 15,
-      "complete_count": 24,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Incident Reporting",
-        "HSE - Spotter Safety Training"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Rosser Orr",
       "company": "Permian",
       "division": "Rentals",
@@ -2073,25 +2054,6 @@
         "HSE - SSE Program",
         "HSE - Benzene Awareness- 0.15",
         "HSE - Confined Space - Permit Required "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Arturo Cerda",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 69,
-      "incomplete_count": 12,
-      "complete_count": 27,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Spotter Safety Training",
-        "HSE - Lock Out/Tag Out ",
-        "HSE - Electrical Grounding and Bonding",
-        "HSE - Electrical Safety "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3522,6 +3484,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Arturo Cerda",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 82,
+      "incomplete_count": 7,
+      "complete_count": 32,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Spotter Safety Training",
+        "HSE - Electrical Grounding and Bonding",
+        "HSE - Electrical Safety ",
+        "HSE - Observation Program "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Victor Contreras",
       "company": "BRHAS",
       "division": "Rathole",
@@ -3593,6 +3574,25 @@
         "HSE - Hot Work - Welding, Cutting, and Brazing",
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Fidel Nunez",
+      "company": "BRHAS",
+      "division": "Shop",
+      "yard": "Midland",
+      "percent_complete": 82,
+      "incomplete_count": 7,
+      "complete_count": 32,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Confined Space - Permit Required ",
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3693,24 +3693,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jared Guerrero",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 84,
-      "incomplete_count": 4,
-      "complete_count": 21,
-      "total_assigned": 25,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Leopoldo Guerrero",
       "company": "BRHAS",
       "division": "Casing",
@@ -3761,25 +3743,6 @@
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Brian Albert",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 85,
-      "incomplete_count": 6,
-      "complete_count": 33,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Hot Work - Welding, Cutting, and Brazing",
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4045,6 +4008,23 @@
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jared Guerrero",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 88,
+      "incomplete_count": 3,
+      "complete_count": 23,
+      "total_assigned": 26,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5060,24 +5040,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Alexis Iniguez",
-      "company": "Transcend",
-      "division": "TD Rig 16",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesus Juarez",
       "company": "BRHAS",
       "division": "Fencing",
@@ -5858,23 +5820,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jacob King",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hot Work - Welding, Cutting, and Brazing",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Christopher LaCoume",
       "company": "BRHAS",
       "division": "Casing",
@@ -6039,6 +5984,22 @@
       "incomplete_training_names": [
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Brian Albert",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness"
       ],
       "status": "In Progress",
@@ -6221,22 +6182,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Gabriel Martinez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 36,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - Aerial Lift Operations "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Gary Mason",
       "company": "BRHAS",
       "division": "Rathole",
@@ -6280,22 +6225,6 @@
       "incomplete_training_names": [
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Michael Reyna Jr",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - Aerial Lift Operations "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -6486,6 +6415,21 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Jacob King",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Nicolas Lopez",
       "company": "BRHAS",
       "division": "Casing",
@@ -6496,6 +6440,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Heat Management"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Gabriel Martinez",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 37,
+      "total_assigned": 38,
+      "incomplete_training_names": [
+        "HSE - Aerial Lift Operations "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-07-05",
-  "generated_at": "2026-07-05 11:42:29",
-  "overall_pct": 69.6,
+  "report_date": "2026-07-06",
+  "generated_at": "2026-07-06 13:55:04",
+  "overall_pct": 69.9,
   "total_employees": 1096,
-  "compliant_count": 763,
+  "compliant_count": 766,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -18,13 +18,13 @@
     },
     "Transcend": {
       "total": 106,
-      "compliant": 79,
-      "pct": 74.5
+      "compliant": 80,
+      "pct": 75.5
     },
     "Permian": {
       "total": 153,
-      "compliant": 64,
-      "pct": 41.8
+      "compliant": 66,
+      "pct": 43.1
     },
     "Valor": {
       "total": 28,
@@ -212,15 +212,15 @@
     "Transcend": {
       "Midland": {
         "total": 106,
-        "compliant": 79,
-        "pct": 74.5
+        "compliant": 80,
+        "pct": 75.5
       }
     },
     "Permian": {
       "Midland": {
         "total": 148,
-        "compliant": 63,
-        "pct": 42.6
+        "compliant": 65,
+        "pct": 43.9
       },
       "Lubbock": {
         "total": 5,
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 618,
-      "compliant": 415,
-      "pct": 67.2
+      "compliant": 418,
+      "pct": 67.6
     },
     "Jourdanton": {
       "total": 35,
@@ -1793,25 +1793,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Dallas Delcore",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 62,
-      "incomplete_count": 15,
-      "complete_count": 24,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Slips, Trips & Falls",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)",
-        "HSE - Job Safety and Environmental Analysis"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Favian Franco",
       "company": "Permian",
       "division": "Rentals",
@@ -2268,25 +2249,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Fernando Cupido",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 74,
-      "incomplete_count": 10,
-      "complete_count": 29,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jose Davila",
       "company": "Valor",
       "division": "Downhole Tools",
@@ -2306,6 +2268,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Dallas Delcore",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Midland",
+      "percent_complete": 74,
+      "incomplete_count": 10,
+      "complete_count": 29,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Ladder Safety",
+        "HSE - Lifting & Back Safety",
+        "HSE - Job Safety and Environmental Analysis",
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Hearing Conservation/Noise Awareness "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Gustavo Dominguez Jr",
       "company": "BRHAS",
       "division": "Casing",
@@ -2320,25 +2301,6 @@
         "HSE - Benzene Awareness- 0.15",
         "HSE - Confined Space - Permit Required ",
         "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Edgar Garcia",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 74,
-      "incomplete_count": 10,
-      "complete_count": 29,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Electrical Grounding and Bonding",
-        "HSE - Electrical Safety ",
-        "HSE - Benzene Awareness- 0.15"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2529,6 +2491,25 @@
         "HSE - Hazard Communication- Chemical Safety",
         "HSE - Behavioral Based Safety",
         "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Fernando Cupido",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 77,
+      "incomplete_count": 9,
+      "complete_count": 30,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Confined Space - Permit Required ",
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3522,6 +3503,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Edgar Garcia",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 82,
+      "incomplete_count": 7,
+      "complete_count": 32,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Electrical Grounding and Bonding",
+        "HSE - Electrical Safety ",
+        "HSE - Confined Space - Permit Required "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Samuel Henderson",
       "company": "Permian",
       "division": "Rentals",
@@ -3767,25 +3767,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Sebastian Herrera",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 85,
-      "incomplete_count": 6,
-      "complete_count": 33,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Behavioral Based Safety",
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Carlos Lopez",
       "company": "Transcend",
       "division": "TD Rig 18",
@@ -3957,23 +3938,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jared Guerrero",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 88,
-      "incomplete_count": 3,
-      "complete_count": 23,
-      "total_assigned": 26,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hazard Communication- Chemical Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Christopher Kuelling",
       "company": "Transcend",
       "division": "TD Rig 20",
@@ -3984,25 +3948,6 @@
       "total_assigned": 40,
       "incomplete_training_names": [
         "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jose Trevino",
-      "company": "Transcend",
-      "division": "Drilling",
-      "yard": "Midland",
-      "percent_complete": 88,
-      "incomplete_count": 5,
-      "complete_count": 35,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Benzene Awareness- 0.15",
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - Aerial Lift Operations ",
@@ -4043,24 +3988,6 @@
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Christopher Cooper",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 89,
-      "incomplete_count": 4,
-      "complete_count": 34,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4474,24 +4401,6 @@
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Issac Avila",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - NORM - Awareness"
       ],
       "status": "In Progress",
@@ -5660,6 +5569,23 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Christopher Cooper",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 35,
+      "total_assigned": 38,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Jesus Cortez",
       "company": "BRHAS",
       "division": "Casing",
@@ -5706,6 +5632,23 @@
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Sebastian Herrera",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 36,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Confined Space - Permit Required ",
+        "HSE - Behavioral Based Safety",
+        "HSE - Heat Management"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5859,6 +5802,22 @@
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jared Guerrero",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 93,
+      "incomplete_count": 2,
+      "complete_count": 26,
+      "total_assigned": 28,
+      "incomplete_training_names": [
+        "HSE - Fire Protection",
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -6301,21 +6260,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jovan Jones",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Benzene Awareness- 0.15"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

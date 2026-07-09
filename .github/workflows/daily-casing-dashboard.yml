@@ -67,6 +67,15 @@ jobs:
           MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
         run: python daily_casing_camera_report.py --no-email
 
+      - name: Run casing director email (schedule only)
+        continue-on-error: true
+        if: github.event_name == 'schedule'
+        env:
+          MOTIVE_API_KEY: ${{ secrets.MOTIVE_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python daily_casing_director_email.py
+
       - name: Run device status report (tiered emails to reps/dispatchers/managers on schedule only)
         continue-on-error: true
         env:

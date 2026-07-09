@@ -88,7 +88,7 @@ YARD_ORDER = ["Midland", "Bryan", "Kilgore", "Hobbs", "Jourdanton", "Laredo", "S
 
 YARD_INFO = {
     "Midland": {
-        "safety_reps": "Michael Hancock & Michael Salazar",
+        "safety_reps": "Ty Bourland & Michael Salazar",
         "manager": "Richie Bentley",
     },
     "Bryan": {
@@ -112,7 +112,7 @@ YARD_INFO = {
         "manager": "Chris Jacobo",
     },
     "San Angelo": {
-        "safety_reps": "Michael Hancock & Michael Salazar",
+        "safety_reps": "Ty Bourland & Michael Salazar",
         "manager": "Jeremy Jones",
     },
 }

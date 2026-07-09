@@ -98,8 +98,8 @@ YARD_ORDER = ["Midland", "Bryan", "Kilgore", "Hobbs", "Jourdanton", "Laredo", "S
 
 YARD_INFO = {
     "Midland": {
-        "safety_reps": "Michael Hancock & Michael Salazar",
-        "safety_rep_emails": ["mhancock@brhas.com", "msalazar@brhas.com"],
+        "safety_reps": "Ty Bourland & Michael Salazar",
+        "safety_rep_emails": ["ty.bourland@brhas.com", "msalazar@brhas.com"],
         "manager": "Richie Bentley",
     },
     "Bryan": {
@@ -128,15 +128,15 @@ YARD_INFO = {
         "manager": "Chris Jacobo",
     },
     "San Angelo": {
-        "safety_reps": "Michael Hancock & Michael Salazar",
-        "safety_rep_emails": ["mhancock@brhas.com", "msalazar@brhas.com"],
+        "safety_reps": "Ty Bourland & Michael Salazar",
+        "safety_rep_emails": ["ty.bourland@brhas.com", "msalazar@brhas.com"],
         "manager": "Jeremy Jones",
     },
 }
 
 # Map safety rep name to their yards for agenda assignments
 SAFETY_REP_YARDS = OrderedDict([
-    ("MICHAEL HANCOCK & MICHAEL SALAZAR", ["Midland", "San Angelo"]),
+    ("TY BOURLAND & MICHAEL SALAZAR", ["Midland", "San Angelo"]),
     ("JUSTIN CONRAD", ["Bryan"]),
     ("JAMES BARNETT (J.P.)", ["Kilgore"]),
     ("ALLEN BATTS", ["Hobbs"]),

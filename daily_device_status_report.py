@@ -105,13 +105,13 @@ SAFETY_DIRECTOR_RECIPIENTS = os.environ.get(
 # Per-yard Safety Reps: daily, their yard(s) only
 # Same reps as the speeding report distribution
 SAFETY_REP_RECIPIENTS = {
-    "Midland":    os.environ.get("DEVICE_REPORT_SAFETY_MIDLAND",    "mhancock@brhas.com, msalazar@brhas.com"),
+    "Midland":    os.environ.get("DEVICE_REPORT_SAFETY_MIDLAND",    "ty.bourland@brhas.com, msalazar@brhas.com"),
     "Bryan":      os.environ.get("DEVICE_REPORT_SAFETY_BRYAN",      "dcordova@brhas.com"),
     "Kilgore":    os.environ.get("DEVICE_REPORT_SAFETY_KILGORE",    "jbarnett@brhas.com"),
     "Hobbs":      os.environ.get("DEVICE_REPORT_SAFETY_HOBBS",      "abatts@brhas.com"),
     "Jourdanton": os.environ.get("DEVICE_REPORT_SAFETY_JOURDANTON", "jspeyrer@brhas.com"),
     "Laredo":     os.environ.get("DEVICE_REPORT_SAFETY_LAREDO",     "jspeyrer@brhas.com"),
-    "San Angelo": os.environ.get("DEVICE_REPORT_SAFETY_SANANGELO",  "mhancock@brhas.com, msalazar@brhas.com"),
+    "San Angelo": os.environ.get("DEVICE_REPORT_SAFETY_SANANGELO",  "ty.bourland@brhas.com, msalazar@brhas.com"),
 }
 
 # Per-yard Dispatch recipients: daily, their yard only

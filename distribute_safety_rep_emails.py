@@ -44,8 +44,8 @@ SAFETY_REP_MAP = [
         ],
     },
     {
-        "name": "Hancock & Salazar",
-        "emails": ["mhancock@brhas.com", "msalazar@brhas.com"],
+        "name": "Bourland & Salazar",
+        "emails": ["ty.bourland@brhas.com", "msalazar@brhas.com"],
         "divisions": [
             ("Casing", "Midland"),
             ("Casing", "San Angelo"),

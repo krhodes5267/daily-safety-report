@@ -228,13 +228,13 @@ SAFETY_REPS = {
     ("Rathole", "Pennsylvania"):  "Sean Fry",
     ("Rathole", "Oklahoma"):      "Wes Franklin",
     ("Rathole", "North Dakota"):  "Wes Franklin",
-    ("Casing", "Midland"):        "Michael Hancock & Michael Salazar",
+    ("Casing", "Midland"):        "Ty Bourland & Michael Salazar",
     ("Casing", "Bryan"):          "Justin Conrad",
     ("Casing", "Kilgore"):        "James Barnett",
     ("Casing", "Hobbs"):          "Allen Batts",
     ("Casing", "Jourdanton"):     "Joey Speyrer",
     ("Casing", "Laredo"):         "Joey Speyrer",
-    ("Casing", "San Angelo"):     "Michael Hancock & Michael Salazar",
+    ("Casing", "San Angelo"):     "Ty Bourland & Michael Salazar",
     ("Butch's Trucking", ""):     "Bernard Bradley",
     ("Transcend Drilling", ""):   "John Snodgrass",
     ("Valor Energy Services", ""): "John Snodgrass",
@@ -267,7 +267,7 @@ YARD_ORDER = {
 
 DIVISION_REPS_SUMMARY = {
     "Rathole": "John Snodgrass, Wes Franklin, Leean Benevides, Sean Fry",
-    "Casing": "Hancock/Salazar, Conrad, Barnett, Batts, Speyrer",
+    "Casing": "Bourland/Salazar, Conrad, Barnett, Batts, Speyrer",
     "Butch's Trucking": "Bernard Bradley",
     "Transcend Drilling": "John Snodgrass",
     "Valor Energy Services": "John Snodgrass",
@@ -312,8 +312,8 @@ SAFETY_REP_MAP = [
         ],
     },
     {
-        "name": "Hancock & Salazar",
-        "emails": ["mhancock@brhas.com", "msalazar@brhas.com"],
+        "name": "Bourland & Salazar",
+        "emails": ["ty.bourland@brhas.com", "msalazar@brhas.com"],
         "divisions": [
             ("Casing", "Midland"),
             ("Casing", "San Angelo"),

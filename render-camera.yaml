@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: brhas-camera-control
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-camera.txt
+    startCommand: gunicorn camera_app:app --bind 0.0.0.0:$PORT --timeout 120 --workers 2
+    envVars:
+      - key: MOTIVE_API_KEY
+        sync: false
+      - key: DISPATCH_PIN
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.12.0

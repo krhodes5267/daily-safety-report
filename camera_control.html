@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRHAS - Dashcam Camera Control</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+  .header { background: #1e293b; border-bottom: 2px solid #334155; padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .subtitle { color: #94a3b8; font-size: 14px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  /* API Key input */
+  .api-section { background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 20px; border: 1px solid #334155; }
+  .api-section label { font-size: 13px; color: #94a3b8; display: block; margin-bottom: 6px; }
+  .api-row { display: flex; gap: 10px; }
+  .api-row input { flex: 1; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 8px 12px; color: #e2e8f0; font-family: monospace; font-size: 14px; }
+  .api-row input:focus { outline: none; border-color: #3b82f6; }
+
+  /* Controls */
+  .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .btn { padding: 8px 16px; border-radius: 6px; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: #3b82f6; color: white; }
+  .btn-primary:hover:not(:disabled) { background: #2563eb; }
+  .btn-danger { background: #ef4444; color: white; }
+  .btn-danger:hover:not(:disabled) { background: #dc2626; }
+  .btn-success { background: #22c55e; color: white; }
+  .btn-success:hover:not(:disabled) { background: #16a34a; }
+  .btn-outline { background: transparent; color: #94a3b8; border: 1px solid #475569; }
+  .btn-outline:hover:not(:disabled) { background: #1e293b; color: #e2e8f0; }
+
+  select { background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 8px 12px; color: #e2e8f0; font-size: 14px; }
+  select:focus { outline: none; border-color: #3b82f6; }
+
+  .search-input { background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 8px 12px; color: #e2e8f0; font-size: 14px; min-width: 200px; }
+  .search-input:focus { outline: none; border-color: #3b82f6; }
+
+  /* Table */
+  .table-wrap { background: #1e293b; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #334155; padding: 10px 14px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600; position: sticky; top: 0; }
+  td { padding: 10px 14px; border-top: 1px solid #1e293b; font-size: 14px; }
+  tr:hover td { background: #253349; }
+  tr.selected td { background: #1e3a5f; }
+
+  .checkbox-col { width: 40px; text-align: center; }
+  input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #3b82f6; }
+
+  /* Status badges */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+  .badge-on { background: #166534; color: #86efac; }
+  .badge-off { background: #7f1d1d; color: #fca5a5; }
+  .badge-pending { background: #713f12; color: #fde047; }
+  .badge-unknown { background: #334155; color: #94a3b8; }
+
+  /* Log */
+  .log-section { margin-top: 20px; }
+  .log-section h3 { font-size: 14px; color: #94a3b8; margin-bottom: 8px; }
+  .log { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 13px; line-height: 1.6; }
+  .log .success { color: #86efac; }
+  .log .error { color: #fca5a5; }
+  .log .info { color: #93c5fd; }
+  .log .warn { color: #fde047; }
+
+  /* Stats bar */
+  .stats { display: flex; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; min-width: 120px; }
+  .stat .label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat .value { font-size: 22px; font-weight: 700; margin-top: 2px; }
+
+  /* Bulk action bar */
+  .bulk-bar { background: #1e3a5f; border: 1px solid #3b82f6; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none; align-items: center; gap: 12px; }
+  .bulk-bar.visible { display: flex; }
+  .bulk-bar .count { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Dashcam Camera Control</h1>
+    <div class="subtitle">BRHAS / Butch's Companies - Personal Vehicle Camera Toggle</div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- API Key -->
+  <div class="api-section">
+    <label>Motive API Key</label>
+    <div class="api-row">
+      <input type="password" id="apiKey" placeholder="Enter your Motive API key" />
+      <button class="btn btn-primary" id="loadBtn" onclick="loadVehicles()">Load Vehicles</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="stats" style="display:none">
+    <div class="stat"><div class="label">Total Vehicles</div><div class="value" id="statTotal">0</div></div>
+    <div class="stat"><div class="label">Cameras ON</div><div class="value" style="color:#86efac" id="statOn">--</div></div>
+    <div class="stat"><div class="label">Cameras OFF</div><div class="value" style="color:#fca5a5" id="statOff">--</div></div>
+    <div class="stat"><div class="label">Selected</div><div class="value" style="color:#93c5fd" id="statSelected">0</div></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls" id="controlsBar" style="display:none">
+    <select id="divisionFilter" onchange="filterTable()">
+      <option value="">All Divisions</option>
+    </select>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search vehicle #..." oninput="filterTable()" />
+    <button class="btn btn-outline" onclick="selectAll()">Select All Visible</button>
+    <button class="btn btn-outline" onclick="selectNone()">Clear Selection</button>
+  </div>
+
+  <!-- Bulk action bar -->
+  <div class="bulk-bar" id="bulkBar">
+    <span class="count" id="bulkCount">0 selected</span>
+    <button class="btn btn-danger" onclick="bulkToggle('OFF')">Turn Cameras OFF</button>
+    <button class="btn btn-success" onclick="bulkToggle('ON')">Turn Cameras ON</button>
+  </div>
+
+  <!-- Vehicle Table -->
+  <div class="table-wrap" id="tableWrap" style="display:none">
+    <table>
+      <thead>
+        <tr>
+          <th class="checkbox-col"><input type="checkbox" id="checkAll" onchange="toggleCheckAll()" /></th>
+          <th>Vehicle #</th>
+          <th>ELD Device ID</th>
+          <th>Division</th>
+          <th>Yard</th>
+          <th>Model</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vehicleBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Activity Log -->
+  <div class="log-section" id="logSection" style="display:none">
+    <h3>Activity Log</h3>
+    <div class="log" id="logBox"></div>
+  </div>
+</div>
+
+<script>
+const BASE = "https://api.gomotive.com/v1";
+
+// Group ID map (from api_config.py)
+const GROUP_ID_MAP = {
+  167175:["Casing","Midland"],169090:["Casing","Bryan"],169092:["Casing","Kilgore"],
+  186740:["Casing","Hobbs"],169091:["Casing","Jourdanton"],186739:["Casing","Laredo"],
+  186741:["Casing","San Angelo"],186746:["Casing","Unknown"],
+  167176:["Rathole","Midland"],220453:["Rathole","Levelland"],274965:["Rathole","Barstow"],
+  186742:["Rathole","Jourdanton"],307752:["Rathole","Ohio"],341789:["Rathole","Pennsylvania"],
+  308775:["Rathole","Oklahoma"],351218:["Rathole","North Dakota"],
+  265996:["Rathole","Jourdanton"],265997:["Rathole","North Dakota"],265998:["Rathole","Oklahoma"],
+  266024:["Rathole","Barstow"],266025:["Rathole","Levelland"],266026:["Rathole","Midland"],
+  266027:["Rathole","Unknown"],266028:["Rathole","Unknown"],290471:["Rathole","Jourdanton"],
+  167180:["Poly Pipe","Midland"],265993:["Poly Pipe","Midland"],296017:["Poly Pipe","Bryan"],
+  296020:["Poly Pipe","Hobbs"],296036:["Poly Pipe","Jourdanton"],296040:["Poly Pipe","Midland"],
+  167177:["Anchors","Midland"],265982:["Anchors","Midland"],
+  247032:["Construction","Midland"],265983:["Construction","Midland"],
+  167179:["Pit Lining","Midland"],265992:["Pit Lining","Midland"],
+  186738:["Environmental","Midland"],265987:["Environmental","Midland"],
+  220456:["Fencing","Midland"],265991:["Fencing","Midland"],
+  329823:["Drilling Tools","Midland"],
+  167178:["Valor","Midland"],265985:["Valor","Levelland"],
+  186743:["BTI","Midland"],265989:["BTI","Midland"],
+  247035:["Transcend","Midland"],265986:["Transcend","Midland"],
+  265984:["Permian","Midland"],265988:["Corporate","Midland"],
+};
+
+let allVehicles = [];
+let selectedIds = new Set();
+
+function apiKey() { return document.getElementById("apiKey").value.trim(); }
+
+function log(msg, cls = "info") {
+  const box = document.getElementById("logBox");
+  document.getElementById("logSection").style.display = "";
+  const line = document.createElement("div");
+  line.className = cls;
+  line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  box.prepend(line);
+}
+
+function resolveDivision(groupIds) {
+  if (!groupIds || !groupIds.length) return ["Unknown", "Unknown"];
+  for (const g of groupIds) {
+    // group_ids can be plain integers or objects with .id
+    const gid = (typeof g === 'object') ? g.id : g;
+    if (GROUP_ID_MAP[gid]) return GROUP_ID_MAP[gid];
+  }
+  return ["Unknown", "Unknown"];
+}
+
+async function apiFetch(path, opts = {}) {
+  const key = apiKey();
+  if (!key) { alert("Enter your Motive API Key first."); throw new Error("No API key"); }
+  const resp = await fetch(`${BASE}${path}`, {
+    ...opts,
+    headers: { "X-Api-Key": key, "Accept": "application/json", "Content-Type": "application/json", ...opts.headers },
+  });
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`HTTP ${resp.status}: ${text}`);
+  }
+  return resp.json();
+}
+
+async function loadVehicles() {
+  const btn = document.getElementById("loadBtn");
+  btn.disabled = true;
+  btn.textContent = "Loading...";
+  allVehicles = [];
+  selectedIds.clear();
+
+  try {
+    let page = 1;
+    while (true) {
+      log(`Fetching vehicles page ${page}...`);
+      const data = await apiFetch(`/vehicles?page_no=${page}&per_page=100`);
+      const vehicles = data.vehicles || [];
+      if (!vehicles.length) break;
+
+      for (const v of vehicles) {
+        const veh = v.vehicle || v;
+        const eld = veh.eld_device || {};
+        if (!eld.id) continue;
+
+        const groupIds = veh.group_ids || veh.groups || [];
+        const [division, yard] = resolveDivision(groupIds);
+
+        allVehicles.push({
+          eld_device_id: eld.id,
+          vehicle_number: veh.number || "",
+          vehicle_name: veh.name || veh.number || "",
+          model: eld.model || "",
+          division, yard, groups,
+        });
+      }
+
+      const pag = data.pagination || {};
+      const total = pag.total || 0;
+      const perPage = pag.per_page || 100;
+      const totalPages = total ? Math.ceil(total / perPage) : 1;
+      if (page >= totalPages) break;
+      page++;
+    }
+
+    allVehicles.sort((a, b) => a.division.localeCompare(b.division) || a.yard.localeCompare(b.yard) || a.vehicle_number.localeCompare(b.vehicle_number));
+
+    log(`Loaded ${allVehicles.length} vehicles with ELD devices.`, "success");
+    populateDivisionFilter();
+    renderTable();
+    updateStats();
+
+    document.getElementById("stats").style.display = "";
+    document.getElementById("controlsBar").style.display = "";
+    document.getElementById("tableWrap").style.display = "";
+  } catch (e) {
+    log(`Error loading vehicles: ${e.message}`, "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Load Vehicles";
+  }
+}
+
+function populateDivisionFilter() {
+  const sel = document.getElementById("divisionFilter");
+  sel.innerHTML = '<option value="">All Divisions</option>';
+  const divs = [...new Set(allVehicles.map(v => v.division))].sort();
+  for (const d of divs) {
+    sel.innerHTML += `<option value="${d}">${d}</option>`;
+  }
+}
+
+function getVisibleVehicles() {
+  const div = document.getElementById("divisionFilter").value;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  return allVehicles.filter(v => {
+    if (div && v.division !== div) return false;
+    if (search && !v.vehicle_number.toLowerCase().includes(search) && !v.vehicle_name.toLowerCase().includes(search)) return false;
+    return true;
+  });
+}
+
+function renderTable() {
+  const tbody = document.getElementById("vehicleBody");
+  const visible = getVisibleVehicles();
+
+  tbody.innerHTML = visible.map(v => `
+    <tr id="row-${v.eld_device_id}" class="${selectedIds.has(v.eld_device_id) ? 'selected' : ''}">
+      <td class="checkbox-col">
+        <input type="checkbox" ${selectedIds.has(v.eld_device_id) ? 'checked' : ''}
+          onchange="toggleSelect('${v.eld_device_id}', this.checked)" />
+      </td>
+      <td><strong>${v.vehicle_number}</strong></td>
+      <td style="font-family:monospace;color:#94a3b8">${v.eld_device_id}</td>
+      <td>${v.division}</td>
+      <td>${v.yard}</td>
+      <td style="color:#64748b">${v.model}</td>
+      <td>
+        <button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="toggleOne('${v.eld_device_id}','OFF')">OFF</button>
+        <button class="btn btn-success" style="padding:4px 10px;font-size:12px" onclick="toggleOne('${v.eld_device_id}','ON')">ON</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function filterTable() { renderTable(); }
+
+function toggleSelect(id, checked) {
+  if (checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  updateStats();
+  renderTable();
+}
+
+function toggleCheckAll() {
+  const checked = document.getElementById("checkAll").checked;
+  const visible = getVisibleVehicles();
+  for (const v of visible) {
+    if (checked) selectedIds.add(v.eld_device_id);
+    else selectedIds.delete(v.eld_device_id);
+  }
+  updateStats();
+  renderTable();
+}
+
+function selectAll() {
+  const visible = getVisibleVehicles();
+  for (const v of visible) selectedIds.add(v.eld_device_id);
+  updateStats();
+  renderTable();
+}
+
+function selectNone() {
+  selectedIds.clear();
+  updateStats();
+  renderTable();
+}
+
+function updateStats() {
+  document.getElementById("statTotal").textContent = allVehicles.length;
+  document.getElementById("statSelected").textContent = selectedIds.size;
+
+  const bar = document.getElementById("bulkBar");
+  const cnt = document.getElementById("bulkCount");
+  if (selectedIds.size > 0) {
+    bar.classList.add("visible");
+    cnt.textContent = `${selectedIds.size} selected`;
+  } else {
+    bar.classList.remove("visible");
+  }
+}
+
+async function toggleOne(eldId, state) {
+  const vehicle = allVehicles.find(v => v.eld_device_id == eldId);
+  const label = vehicle ? vehicle.vehicle_number : eldId;
+
+  log(`Sending camera ${state} for ${label} (${eldId})...`);
+
+  try {
+    const data = await apiFetch(`/cameras/${eldId}`, {
+      method: "PUT",
+      body: JSON.stringify({ camera_state: state }),
+    });
+
+    const reqId = data.req_id;
+    log(`Submitted: req_id=${reqId}, status=${data.req_status}`, "success");
+
+    // Poll for result
+    if (data.req_status === "Submitted" && reqId) {
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts++;
+        try {
+          const status = await apiFetch(`/cameras/${eldId}/${reqId}`);
+          if (status.req_status === "Succeeded") {
+            clearInterval(poll);
+            log(`Camera ${state} CONFIRMED for ${label}`, "success");
+          } else if (status.req_status === "Failed" || status.req_status === "Error") {
+            clearInterval(poll);
+            log(`Camera ${state} FAILED for ${label}: ${status.req_status}`, "error");
+          } else if (attempts >= 10) {
+            clearInterval(poll);
+            log(`Timeout polling ${label} -- device may be offline. Command queued.`, "warn");
+          }
+        } catch (e) {
+          clearInterval(poll);
+          log(`Poll error for ${label}: ${e.message}`, "error");
+        }
+      }, 3000);
+    }
+  } catch (e) {
+    log(`Error toggling ${label}: ${e.message}`, "error");
+  }
+}
+
+async function bulkToggle(state) {
+  if (selectedIds.size === 0) return;
+  const count = selectedIds.size;
+  if (!confirm(`Turn cameras ${state} for ${count} vehicle(s)?`)) return;
+
+  log(`Bulk ${state}: starting ${count} vehicles...`, "info");
+
+  const ids = [...selectedIds];
+  // Process in batches of 5 to avoid rate limiting
+  for (let i = 0; i < ids.length; i += 5) {
+    const batch = ids.slice(i, i + 5);
+    await Promise.all(batch.map(id => toggleOne(id, state)));
+    if (i + 5 < ids.length) {
+      log(`Batch ${Math.floor(i/5)+1} sent, waiting before next batch...`, "info");
+      await new Promise(r => setTimeout(r, 2000));
+    }
+  }
+  log(`Bulk ${state} complete for ${count} vehicles.`, "success");
+}
+
+// Auto-focus API key input
+document.getElementById("apiKey").focus();
+</script>
+</body>
+</html>

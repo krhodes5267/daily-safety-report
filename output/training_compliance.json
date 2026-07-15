@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-07-14",
-  "generated_at": "2026-07-14 11:31:51",
-  "overall_pct": 73.4,
-  "total_employees": 1098,
-  "compliant_count": 806,
+  "report_date": "2026-07-15",
+  "generated_at": "2026-07-15 11:42:51",
+  "overall_pct": 73.6,
+  "total_employees": 1102,
+  "compliant_count": 811,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -17,14 +17,14 @@
       "pct": 73.0
     },
     "Transcend": {
-      "total": 103,
-      "compliant": 84,
-      "pct": 81.6
+      "total": 102,
+      "compliant": 83,
+      "pct": 81.4
     },
     "Permian": {
-      "total": 157,
-      "compliant": 71,
-      "pct": 45.2
+      "total": 162,
+      "compliant": 77,
+      "pct": 47.5
     },
     "Valor": {
       "total": 28,
@@ -211,9 +211,9 @@
     },
     "Transcend": {
       "Midland": {
-        "total": 103,
-        "compliant": 84,
-        "pct": 81.6
+        "total": 102,
+        "compliant": 83,
+        "pct": 81.4
       }
     },
     "BTI": {
@@ -226,13 +226,18 @@
     "Permian": {
       "Midland": {
         "total": 152,
-        "compliant": 70,
-        "pct": 46.1
+        "compliant": 71,
+        "pct": 46.7
       },
       "Lubbock": {
         "total": 5,
         "compliant": 1,
         "pct": 20.0
+      },
+      "Unassigned": {
+        "total": 5,
+        "compliant": 5,
+        "pct": 100.0
       }
     },
     "Valor": {
@@ -424,9 +429,9 @@
       "pct": 98.4
     },
     "Midland": {
-      "total": 619,
+      "total": 618,
       "compliant": 432,
-      "pct": 69.8
+      "pct": 69.9
     },
     "Jourdanton": {
       "total": 31,
@@ -494,8 +499,8 @@
       "pct": 66.7
     },
     "Unassigned": {
-      "total": 1,
-      "compliant": 1,
+      "total": 6,
+      "compliant": 6,
       "pct": 100.0
     },
     "San Angelo": {
@@ -4911,23 +4916,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Kristopher Lorenz",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Carlos Munoz",
       "company": "BTI",
       "division": "Trucking",
@@ -5008,23 +4996,6 @@
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jose Sinforoso-Garcia",
-      "company": "BRHAS",
-      "division": "Poly Pipe",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fire Protection",
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5584,6 +5555,21 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Kristopher Lorenz",
+      "company": "BRHAS",
+      "division": "Rathole",
+      "yard": "Levelland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Aerial Lift Operations "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Gabriel Martinez",
       "company": "BRHAS",
       "division": "Casing",
@@ -5659,21 +5645,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Genaro Salazar",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesus Sanchez Torres",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -5684,6 +5655,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Hot Work - Welding, Cutting, and Brazing"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jose Sinforoso-Garcia",
+      "company": "BRHAS",
+      "division": "Poly Pipe",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Heat Management"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

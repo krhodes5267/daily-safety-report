@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-07-22",
-  "generated_at": "2026-07-22 11:55:11",
-  "overall_pct": 75.5,
+  "report_date": "2026-07-23",
+  "generated_at": "2026-07-23 11:58:03",
+  "overall_pct": 75.8,
   "total_employees": 1116,
-  "compliant_count": 843,
+  "compliant_count": 846,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 753,
-      "compliant": 599,
-      "pct": 79.5
+      "compliant": 601,
+      "pct": 79.8
     },
     "BTI": {
       "total": 65,
@@ -23,8 +23,8 @@
     },
     "Permian": {
       "total": 164,
-      "compliant": 81,
-      "pct": 49.4
+      "compliant": 82,
+      "pct": 50.0
     },
     "Valor": {
       "total": 28,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 400,
-      "compliant": 316,
-      "pct": 79.0
+      "compliant": 317,
+      "pct": 79.2
     },
     "Construction": {
       "total": 17,
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 137,
-      "compliant": 107,
-      "pct": 78.1
+      "compliant": 108,
+      "pct": 78.8
     },
     "Shop": {
       "total": 19,
@@ -112,8 +112,8 @@
     },
     "Jourdanton": {
       "total": 19,
-      "compliant": 15,
-      "pct": 78.9
+      "compliant": 16,
+      "pct": 84.2
     },
     "Laredo": {
       "total": 48,
@@ -130,13 +130,13 @@
       },
       "Levelland": {
         "total": 80,
-        "compliant": 59,
-        "pct": 73.8
+        "compliant": 60,
+        "pct": 75.0
       },
       "Jourdanton": {
         "total": 31,
-        "compliant": 20,
-        "pct": 64.5
+        "compliant": 21,
+        "pct": 67.7
       },
       "Midland": {
         "total": 304,
@@ -226,8 +226,8 @@
     "Permian": {
       "Midland": {
         "total": 154,
-        "compliant": 75,
-        "pct": 48.7
+        "compliant": 76,
+        "pct": 49.4
       },
       "Lubbock": {
         "total": 5,
@@ -259,8 +259,8 @@
     "Rathole": {
       "Levelland": {
         "total": 65,
-        "compliant": 48,
-        "pct": 73.8
+        "compliant": 49,
+        "pct": 75.4
       },
       "North Dakota": {
         "total": 6,
@@ -306,8 +306,8 @@
     "Casing": {
       "Jourdanton": {
         "total": 19,
-        "compliant": 15,
-        "pct": 78.9
+        "compliant": 16,
+        "pct": 84.2
       },
       "Midland": {
         "total": 168,
@@ -430,18 +430,18 @@
     },
     "Midland": {
       "total": 629,
-      "compliant": 454,
-      "pct": 72.2
+      "compliant": 455,
+      "pct": 72.3
     },
     "Levelland": {
       "total": 108,
-      "compliant": 80,
-      "pct": 74.1
+      "compliant": 81,
+      "pct": 75.0
     },
     "Jourdanton": {
       "total": 31,
-      "compliant": 20,
-      "pct": 64.5
+      "compliant": 21,
+      "pct": 67.7
     },
     "Bryan": {
       "total": 48,
@@ -2286,25 +2286,6 @@
       "company": "BRHAS",
       "division": "Rathole",
       "yard": "Barstow",
-      "percent_complete": 77,
-      "incomplete_count": 9,
-      "complete_count": 30,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Spotter Safety Training",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Adam Gonzales",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
       "percent_complete": 77,
       "incomplete_count": 9,
       "complete_count": 30,
@@ -4222,24 +4203,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Victor Nino",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Luis Ocampo Lopez",
       "company": "BRHAS",
       "division": "Casing",
@@ -5055,6 +5018,22 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Victor Nino",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Jourdanton",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Carlos Noguera Maceira",
       "company": "BRHAS",
       "division": "Casing",
@@ -5211,21 +5190,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Brandon Fraire",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Alex Grimaldo",
       "company": "BRHAS",
       "division": "Pit Lining",
@@ -5339,21 +5303,6 @@
       "incomplete_count": 1,
       "complete_count": 37,
       "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "James Rountree",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - SPCC (Spill Prevention Control and Countermeasure)"
       ],

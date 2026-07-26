@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-07-25",
-  "generated_at": "2026-07-25 11:21:45",
-  "overall_pct": 77.1,
+  "report_date": "2026-07-26",
+  "generated_at": "2026-07-26 11:27:09",
+  "overall_pct": 77.2,
   "total_employees": 1110,
-  "compliant_count": 856,
+  "compliant_count": 857,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 749,
-      "compliant": 612,
-      "pct": 81.7
+      "compliant": 613,
+      "pct": 81.8
     },
     "BTI": {
       "total": 64,
@@ -75,8 +75,8 @@
     },
     "Poly Pipe": {
       "total": 60,
-      "compliant": 44,
-      "pct": 73.3
+      "compliant": 45,
+      "pct": 75.0
     },
     "Rathole": {
       "total": 137,
@@ -140,8 +140,8 @@
       },
       "Midland": {
         "total": 304,
-        "compliant": 238,
-        "pct": 78.3
+        "compliant": 239,
+        "pct": 78.6
       },
       "Bryan": {
         "total": 47,
@@ -355,8 +355,8 @@
     "Poly Pipe": {
       "Midland": {
         "total": 60,
-        "compliant": 44,
-        "pct": 73.3
+        "compliant": 45,
+        "pct": 75.0
       }
     },
     "Anchors": {
@@ -430,8 +430,8 @@
     },
     "Midland": {
       "total": 627,
-      "compliant": 455,
-      "pct": 72.6
+      "compliant": 456,
+      "pct": 72.7
     },
     "Levelland": {
       "total": 108,
@@ -4783,22 +4783,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Carlos Noguera Maceira",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - Aerial Lift Operations "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Brandon Novian",
       "company": "BTI",
       "division": "Trucking",
@@ -5016,6 +5000,21 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Carlos Noguera Maceira",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Aerial Lift Operations "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Raul Ponce",
       "company": "BRHAS",
       "division": "Casing",
@@ -5056,21 +5055,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Behavioral Based Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jesus Sanchez Torres",
-      "company": "BRHAS",
-      "division": "Poly Pipe",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hot Work - Welding, Cutting, and Brazing"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

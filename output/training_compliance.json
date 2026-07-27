@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-07-26",
-  "generated_at": "2026-07-26 11:27:09",
-  "overall_pct": 77.2,
+  "report_date": "2026-07-27",
+  "generated_at": "2026-07-27 13:01:46",
+  "overall_pct": 77.3,
   "total_employees": 1110,
-  "compliant_count": 857,
+  "compliant_count": 858,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -18,8 +18,8 @@
     },
     "Transcend": {
       "total": 105,
-      "compliant": 92,
-      "pct": 87.6
+      "compliant": 93,
+      "pct": 88.6
     },
     "Permian": {
       "total": 164,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 105,
-        "compliant": 92,
-        "pct": 87.6
+        "compliant": 93,
+        "pct": 88.6
       }
     },
     "BTI": {
@@ -430,8 +430,8 @@
     },
     "Midland": {
       "total": 627,
-      "compliant": 456,
-      "pct": 72.7
+      "compliant": 457,
+      "pct": 72.9
     },
     "Levelland": {
       "total": 108,
@@ -3061,25 +3061,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Edgar Garcia",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 82,
-      "incomplete_count": 7,
-      "complete_count": 32,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Electrical Grounding and Bonding",
-        "HSE - Electrical Safety ",
-        "HSE - Confined Space - Permit Required "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Samuel Henderson",
       "company": "Permian",
       "division": "Rentals",
@@ -3284,6 +3265,25 @@
         "HSE - Hot Work - Welding, Cutting, and Brazing",
         "HSE - Heat Management",
         "HSE - Aerial Lift Operations "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Edgar Garcia",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 85,
+      "incomplete_count": 6,
+      "complete_count": 33,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Electrical Grounding and Bonding",
+        "HSE - Electrical Safety ",
+        "HSE - Hazard Communication- Chemical Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4558,23 +4558,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Landon Smith",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Hobbs",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 35,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Carlos Villa Ochoa",
       "company": "BTI",
       "division": "Trucking",
@@ -4759,22 +4742,6 @@
       "incomplete_count": 2,
       "complete_count": 37,
       "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jose Morales",
-      "company": "Transcend",
-      "division": "TD Rig 18",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 38,
-      "total_assigned": 40,
       "incomplete_training_names": [
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - NORM - Awareness"
@@ -5070,6 +5037,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Heat Management"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Landon Smith",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Hobbs",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

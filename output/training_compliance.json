@@ -1,25 +1,25 @@
 {
-  "report_date": "2026-08-02",
-  "generated_at": "2026-08-02 11:28:51",
-  "overall_pct": 70.0,
+  "report_date": "2026-08-03",
+  "generated_at": "2026-08-03 13:01:00",
+  "overall_pct": 70.5,
   "total_employees": 1110,
-  "compliant_count": 777,
+  "compliant_count": 783,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 745,
-      "compliant": 574,
-      "pct": 77.0
+      "compliant": 577,
+      "pct": 77.4
     },
     "BTI": {
       "total": 61,
-      "compliant": 37,
-      "pct": 60.7
+      "compliant": 38,
+      "pct": 62.3
     },
     "Transcend": {
       "total": 106,
-      "compliant": 70,
-      "pct": 66.0
+      "compliant": 71,
+      "pct": 67.0
     },
     "Permian": {
       "total": 170,
@@ -28,8 +28,8 @@
     },
     "Valor": {
       "total": 28,
-      "compliant": 21,
-      "pct": 75.0
+      "compliant": 22,
+      "pct": 78.6
     }
   },
   "by_division": {
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 397,
-      "compliant": 324,
-      "pct": 81.6
+      "compliant": 327,
+      "pct": 82.4
     },
     "Construction": {
       "total": 14,
@@ -92,8 +92,8 @@
   "by_yard": {
     "Midland": {
       "total": 164,
-      "compliant": 139,
-      "pct": 84.8
+      "compliant": 142,
+      "pct": 86.6
     },
     "Bryan": {
       "total": 45,
@@ -135,8 +135,8 @@
       },
       "Midland": {
         "total": 303,
-        "compliant": 239,
-        "pct": 78.9
+        "compliant": 242,
+        "pct": 79.9
       },
       "Jourdanton": {
         "total": 37,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 106,
-        "compliant": 70,
-        "pct": 66.0
+        "compliant": 71,
+        "pct": 67.0
       }
     },
     "Permian": {
@@ -236,15 +236,15 @@
     "BTI": {
       "Midland": {
         "total": 61,
-        "compliant": 37,
-        "pct": 60.7
+        "compliant": 38,
+        "pct": 62.3
       }
     },
     "Valor": {
       "Levelland": {
         "total": 28,
-        "compliant": 21,
-        "pct": 75.0
+        "compliant": 22,
+        "pct": 78.6
       }
     }
   },
@@ -318,8 +318,8 @@
       },
       "Midland": {
         "total": 164,
-        "compliant": 139,
-        "pct": 84.8
+        "compliant": 142,
+        "pct": 86.6
       },
       "Bryan": {
         "total": 45,
@@ -425,13 +425,13 @@
     },
     "Midland": {
       "total": 628,
-      "compliant": 414,
-      "pct": 65.9
+      "compliant": 419,
+      "pct": 66.7
     },
     "Levelland": {
       "total": 103,
-      "compliant": 69,
-      "pct": 67.0
+      "compliant": 70,
+      "pct": 68.0
     },
     "Jourdanton": {
       "total": 37,
@@ -3486,25 +3486,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Daniel Carlos",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 79,
-      "incomplete_count": 8,
-      "complete_count": 31,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness",
-        "HSE - Fatigue & Fit For Duty"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Mario Jurado",
       "company": "Permian",
       "division": "Rentals",
@@ -3657,18 +3638,18 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Ricardo Damian",
-      "company": "Transcend",
-      "division": "TD Rig 18",
+      "employee_name": "Daniel Carlos",
+      "company": "BRHAS",
+      "division": "Casing",
       "yard": "Midland",
       "percent_complete": 82,
       "incomplete_count": 7,
-      "complete_count": 33,
-      "total_assigned": 40,
+      "complete_count": 32,
+      "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Heat Management",
         "HSE - Aerial Lift Operations ",
-        "HSE - SSE Program",
+        "HSE - NORM - Awareness",
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness"
       ],
@@ -3918,25 +3899,6 @@
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Joshua Perez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 85,
-      "incomplete_count": 6,
-      "complete_count": 33,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness",
-        "HSE - SSE Program"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5517,24 +5479,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jose Davila",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 89,
-      "incomplete_count": 4,
-      "complete_count": 34,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Spotter Safety Training",
-        "HSE - Lock Out/Tag Out ",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Luis Perez",
       "company": "BRHAS",
       "division": "Casing",
@@ -5820,24 +5764,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Dustin Pady",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesus Perez",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -6048,23 +5974,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Christopher LaCoume",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Saul Madrid",
       "company": "Valor",
       "division": "Downhole Tools",
@@ -6116,23 +6025,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Michael Mccorcle",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 37,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Isaac Moreno",
       "company": "BTI",
       "division": "Trucking",
@@ -6145,6 +6037,23 @@
         "HSE - Hot Work - Welding, Cutting, and Brazing",
         "HSE - Heat Management",
         "HSE - NORM - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Dustin Pady",
+      "company": "Transcend",
+      "division": "TD Rig 4",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 37,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Basic First Aid ",
+        "HSE - Excavation & Trenching"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -6284,6 +6193,22 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Ricardo Damian",
+      "company": "Transcend",
+      "division": "TD Rig 18",
+      "yard": "Midland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 38,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Bloodborne Pathogen - Awareness",
+        "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Wesley Dodge",
       "company": "BRHAS",
       "division": "Shop",
@@ -6332,9 +6257,9 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jeremy Holland",
-      "company": "Permian",
-      "division": "Rentals",
+      "employee_name": "Christopher LaCoume",
+      "company": "BRHAS",
+      "division": "Casing",
       "yard": "Midland",
       "percent_complete": 95,
       "incomplete_count": 2,
@@ -6342,7 +6267,7 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Excavation & Trenching"
+        "HSE - Basic First Aid "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -6427,21 +6352,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Joao Demenjon",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Cedric Dixon",
       "company": "BTI",
       "division": "Trucking",
@@ -6487,16 +6397,16 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Lorenzo Ibarra",
-      "company": "BTI",
-      "division": "Trucking",
+      "employee_name": "Jeremy Holland",
+      "company": "Permian",
+      "division": "Rentals",
       "yard": "Midland",
       "percent_complete": 97,
       "incomplete_count": 1,
       "complete_count": 38,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Basic First Aid "
+        "HSE - Bloodborne Pathogen - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -6536,21 +6446,6 @@
       "company": "BRHAS",
       "division": "Rathole",
       "yard": "Levelland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Basic First Aid "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Robert Portzer",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
       "percent_complete": 97,
       "incomplete_count": 1,
       "complete_count": 38,

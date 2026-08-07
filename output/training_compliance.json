@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-08-06",
-  "generated_at": "2026-08-06 12:10:58",
-  "overall_pct": 73.6,
+  "report_date": "2026-08-07",
+  "generated_at": "2026-08-07 11:01:44",
+  "overall_pct": 73.7,
   "total_employees": 1116,
-  "compliant_count": 821,
+  "compliant_count": 823,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 748,
-      "compliant": 605,
-      "pct": 80.9
+      "compliant": 606,
+      "pct": 81.0
     },
     "BTI": {
       "total": 60,
@@ -28,8 +28,8 @@
     },
     "Valor": {
       "total": 28,
-      "compliant": 22,
-      "pct": 78.6
+      "compliant": 23,
+      "pct": 82.1
     }
   },
   "by_division": {
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 136,
-      "compliant": 104,
-      "pct": 76.5
+      "compliant": 105,
+      "pct": 77.2
     },
     "Shop": {
       "total": 22,
@@ -135,8 +135,8 @@
       },
       "Midland": {
         "total": 300,
-        "compliant": 244,
-        "pct": 81.3
+        "compliant": 245,
+        "pct": 81.7
       },
       "Jourdanton": {
         "total": 38,
@@ -243,8 +243,8 @@
     "Valor": {
       "Levelland": {
         "total": 28,
-        "compliant": 22,
-        "pct": 78.6
+        "compliant": 23,
+        "pct": 82.1
       }
     }
   },
@@ -279,8 +279,8 @@
       },
       "Midland": {
         "total": 17,
-        "compliant": 13,
-        "pct": 76.5
+        "compliant": 14,
+        "pct": 82.4
       },
       "Jourdanton": {
         "total": 14,
@@ -425,13 +425,13 @@
     },
     "Midland": {
       "total": 626,
-      "compliant": 429,
-      "pct": 68.5
+      "compliant": 430,
+      "pct": 68.7
     },
     "Levelland": {
       "total": 105,
-      "compliant": 74,
-      "pct": 70.5
+      "compliant": 75,
+      "pct": 71.4
     },
     "Jourdanton": {
       "total": 38,
@@ -2792,25 +2792,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Carlos Lopez",
-      "company": "Transcend",
-      "division": "TD Rig 18",
-      "yard": "Midland",
-      "percent_complete": 75,
-      "incomplete_count": 10,
-      "complete_count": 30,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Heat Management",
-        "HSE - Aerial Lift Operations "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Raul Arzate",
       "company": "BRHAS",
       "division": "Casing",
@@ -3395,6 +3376,25 @@
         "HSE - Benzene Awareness- 0.15",
         "HSE - Hot Work - Welding, Cutting, and Brazing",
         "HSE - Heat Management"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Carlos Lopez",
+      "company": "Transcend",
+      "division": "TD Rig 18",
+      "yard": "Midland",
+      "percent_complete": 80,
+      "incomplete_count": 8,
+      "complete_count": 32,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Aerial Lift Operations ",
+        "HSE - Fatigue & Fit For Duty"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4406,25 +4406,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Cooper Pope",
-      "company": "BRHAS",
-      "division": "Environmental",
-      "yard": "Midland",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Benzene Awareness- 0.15",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Henry Prado Elizalde",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -4786,25 +4767,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Roger Croney",
-      "company": "Transcend",
-      "division": "TD Rig 20",
-      "yard": "Midland",
-      "percent_complete": 88,
-      "incomplete_count": 5,
-      "complete_count": 35,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Carlos DeLaGarza",
       "company": "Transcend",
       "division": "TD Rig 20",
@@ -4918,24 +4880,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Juan Madrid",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 89,
-      "incomplete_count": 4,
-      "complete_count": 34,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Lock Out/Tag Out ",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Luis Perez",
       "company": "BRHAS",
       "division": "Casing",
@@ -4946,24 +4890,6 @@
       "total_assigned": 9,
       "incomplete_training_names": [
         "HSE - SSE Program"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Bobby Tienda",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 89,
-      "incomplete_count": 4,
-      "complete_count": 34,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5023,18 +4949,18 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Michael Crum",
-      "company": "BRHAS",
-      "division": "Rathole",
+      "employee_name": "Roger Croney",
+      "company": "Transcend",
+      "division": "TD Rig 20",
       "yard": "Midland",
       "percent_complete": 90,
       "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
+      "complete_count": 36,
+      "total_assigned": 40,
       "incomplete_training_names": [
+        "HSE - SSE Program",
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
         "HSE - Excavation & Trenching"
       ],
       "status": "In Progress",
@@ -5448,6 +5374,23 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Juan Madrid",
+      "company": "Valor",
+      "division": "Downhole Tools",
+      "yard": "Levelland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 35,
+      "total_assigned": 38,
+      "incomplete_training_names": [
+        "HSE - Lock Out/Tag Out ",
+        "HSE - Hazard Communication- Chemical Safety",
+        "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Saul Madrid",
       "company": "Valor",
       "division": "Downhole Tools",
@@ -5528,6 +5471,23 @@
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
         "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Cooper Pope",
+      "company": "BRHAS",
+      "division": "Environmental",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 36,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Benzene Awareness- 0.15",
+        "HSE - Bloodborne Pathogen - Awareness",
+        "HSE - Basic First Aid "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

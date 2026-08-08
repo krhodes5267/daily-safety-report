@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-08-07",
-  "generated_at": "2026-08-07 11:01:44",
-  "overall_pct": 73.7,
+  "report_date": "2026-08-08",
+  "generated_at": "2026-08-08 10:42:27",
+  "overall_pct": 73.9,
   "total_employees": 1116,
-  "compliant_count": 823,
+  "compliant_count": 825,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -13,13 +13,13 @@
     },
     "BTI": {
       "total": 60,
-      "compliant": 37,
-      "pct": 61.7
+      "compliant": 38,
+      "pct": 63.3
     },
     "Transcend": {
       "total": 109,
-      "compliant": 79,
-      "pct": 72.5
+      "compliant": 80,
+      "pct": 73.4
     },
     "Permian": {
       "total": 171,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 109,
-        "compliant": 79,
-        "pct": 72.5
+        "compliant": 80,
+        "pct": 73.4
       }
     },
     "Permian": {
@@ -236,8 +236,8 @@
     "BTI": {
       "Midland": {
         "total": 60,
-        "compliant": 37,
-        "pct": 61.7
+        "compliant": 38,
+        "pct": 63.3
       }
     },
     "Valor": {
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 626,
-      "compliant": 430,
-      "pct": 68.7
+      "compliant": 432,
+      "pct": 69.0
     },
     "Levelland": {
       "total": 105,
@@ -3115,25 +3115,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Anthony Trevino",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 77,
-      "incomplete_count": 9,
-      "complete_count": 30,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness",
-        "HSE - SSE Program"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Dylan Ullom",
       "company": "Permian",
       "division": "Rentals",
@@ -3346,6 +3327,25 @@
       "employee_name": "Kalvin Teafatiller",
       "company": "Permian",
       "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 79,
+      "incomplete_count": 8,
+      "complete_count": 31,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Heat Management",
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - Aerial Lift Operations ",
+        "HSE - NORM - Awareness",
+        "HSE - Fatigue & Fit For Duty"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Anthony Trevino",
+      "company": "BRHAS",
+      "division": "Casing",
       "yard": "Midland",
       "percent_complete": 79,
       "incomplete_count": 8,
@@ -4277,25 +4277,6 @@
       "company": "BRHAS",
       "division": "Casing",
       "yard": "Laredo",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Raul Mendoza III",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
       "percent_complete": 87,
       "incomplete_count": 5,
       "complete_count": 34,
@@ -5901,21 +5882,6 @@
       "total_assigned": 40,
       "incomplete_training_names": [
         "HSE - Basic First Aid "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Christopher Kuelling",
-      "company": "Transcend",
-      "division": "TD Rig 20",
-      "yard": "Midland",
-      "percent_complete": 98,
-      "incomplete_count": 1,
-      "complete_count": 39,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - NORM - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

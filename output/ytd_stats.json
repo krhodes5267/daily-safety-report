@@ -1,13 +1,13 @@
 {
-  "report_date": "2026-08-11",
-  "generated_at": "2026-08-11 10:56:33",
-  "ytd_trir": 0.3,
+  "report_date": "2026-08-12",
+  "generated_at": "2026-08-12 11:06:14",
+  "ytd_trir": 0.29,
   "ytd_dart": 0.0,
   "ytd_dart_cases": 0,
   "ytd_recordables": 3,
-  "ytd_man_hours": 2033431,
-  "days_since_lti": 222,
-  "days_since_recordable": 5,
+  "ytd_man_hours": 2042589,
+  "days_since_lti": 223,
+  "days_since_recordable": 6,
   "last_lti_date": null,
   "last_recordable_date": "2026-08-06",
   "by_company": {
@@ -18,15 +18,15 @@
         "Drilling - Rig 18": {
           "last_date": "2026-08-06",
           "ytd_count": 1,
-          "days_since": 5
+          "days_since": 6
         },
         "Drilling - Rig 2": {
           "last_date": "2025-11-05",
           "ytd_count": 0,
-          "days_since": 279
+          "days_since": 280
         }
       },
-      "days_since": 5
+      "days_since": 6
     },
     "Permian": {
       "last_date": "2026-06-23",
@@ -35,10 +35,10 @@
         "Rentals": {
           "last_date": "2026-06-23",
           "ytd_count": 1,
-          "days_since": 49
+          "days_since": 50
         }
       },
-      "days_since": 49
+      "days_since": 50
     },
     "BRHAS": {
       "last_date": "2026-04-15",
@@ -47,125 +47,125 @@
         "Casing": {
           "last_date": "2026-04-15",
           "ytd_count": 1,
-          "days_since": 118
+          "days_since": 119
         }
       },
-      "days_since": 118
+      "days_since": 119
     }
   },
   "stats_by_company": {
     "BRHAS": {
-      "man_hours": 1401134,
+      "man_hours": 1407470,
       "recordables": 1,
       "trir": 0.14,
       "dart": 0.0,
       "dart_cases": 0,
-      "days_since_recordable": 118,
+      "days_since_recordable": 119,
       "last_recordable_date": "2026-04-15",
-      "days_since_lti": 222,
+      "days_since_lti": 223,
       "last_lti_date": null,
       "by_division": {
-        "Casing": 798179,
-        "Rathole": 263288,
-        "Poly Pipe": 109812,
-        "Corporate": 79357,
-        "Pit Lining": 38873,
-        "Fabrication": 17878,
-        "Construction": 20328,
-        "Shop": 19668,
-        "Anchors": 19704,
-        "Fencing": 14636,
-        "Environmental": 11622,
-        "Drilling Tools": 7784
+        "Casing": 801789,
+        "Rathole": 264479,
+        "Poly Pipe": 110309,
+        "Corporate": 79715,
+        "Pit Lining": 39049,
+        "Fabrication": 17959,
+        "Construction": 20419,
+        "Shop": 19757,
+        "Anchors": 19793,
+        "Fencing": 14702,
+        "Environmental": 11675,
+        "Drilling Tools": 7819
       },
       "service_lines": {
         "Casing": {
           "last_date": "2026-04-15",
           "ytd_count": 1,
-          "days_since": 118
+          "days_since": 119
         }
       }
     },
     "Permian": {
-      "man_hours": 234334,
+      "man_hours": 235388,
       "recordables": 1,
       "trir": 0.85,
       "dart": 0.0,
       "dart_cases": 0,
-      "days_since_recordable": 49,
+      "days_since_recordable": 50,
       "last_recordable_date": "2026-06-23",
-      "days_since_lti": 222,
+      "days_since_lti": 223,
       "last_lti_date": null,
       "by_division": {
-        "Rentals": 234334
+        "Rentals": 235388
       },
       "service_lines": {
         "Rentals": {
           "last_date": "2026-06-23",
           "ytd_count": 1,
-          "days_since": 49
+          "days_since": 50
         }
       }
     },
     "BTI": {
-      "man_hours": 187970,
+      "man_hours": 188779,
       "recordables": 0,
       "trir": 0.0,
       "dart": 0.0,
       "dart_cases": 0,
-      "days_since_recordable": 222,
+      "days_since_recordable": 223,
       "last_recordable_date": null,
-      "days_since_lti": 222,
+      "days_since_lti": 223,
       "last_lti_date": null,
       "by_division": {
-        "Trucking": 168503,
-        "Shop": 19467
+        "Trucking": 169228,
+        "Shop": 19551
       },
       "service_lines": {}
     },
     "Transcend": {
-      "man_hours": 168469,
+      "man_hours": 169244,
       "recordables": 1,
-      "trir": 1.19,
+      "trir": 1.18,
       "dart": 0.0,
       "dart_cases": 0,
-      "days_since_recordable": 5,
+      "days_since_recordable": 6,
       "last_recordable_date": "2026-08-06",
-      "days_since_lti": 222,
+      "days_since_lti": 223,
       "last_lti_date": null,
       "by_division": {
-        "TD Rig 20": 40685,
-        "TD Rig 4": 34538,
-        "TD Rig 18": 34176,
-        "TD Rig 16": 31178,
-        "Drilling": 26338,
-        "TD Rig 12": 1552
+        "TD Rig 20": 40872,
+        "TD Rig 4": 34697,
+        "TD Rig 18": 34333,
+        "TD Rig 16": 31321,
+        "Drilling": 26459,
+        "TD Rig 12": 1559
       },
       "service_lines": {
         "Drilling - Rig 18": {
           "last_date": "2026-08-06",
           "ytd_count": 1,
-          "days_since": 5
+          "days_since": 6
         },
         "Drilling - Rig 2": {
           "last_date": "2025-11-05",
           "ytd_count": 0,
-          "days_since": 279
+          "days_since": 280
         }
       }
     },
     "Valor": {
-      "man_hours": 41524,
+      "man_hours": 41708,
       "recordables": 0,
       "trir": 0.0,
       "dart": 0.0,
       "dart_cases": 0,
-      "days_since_recordable": 222,
+      "days_since_recordable": 223,
       "last_recordable_date": null,
-      "days_since_lti": 222,
+      "days_since_lti": 223,
       "last_lti_date": null,
       "by_division": {
-        "Downhole Tools": 41524
+        "Downhole Tools": 41708
       },
       "service_lines": {}
     }

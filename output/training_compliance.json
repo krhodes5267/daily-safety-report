@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-08-15",
-  "generated_at": "2026-08-15 10:31:17",
-  "overall_pct": 77.0,
+  "report_date": "2026-08-16",
+  "generated_at": "2026-08-16 10:31:57",
+  "overall_pct": 77.1,
   "total_employees": 1119,
-  "compliant_count": 862,
+  "compliant_count": 863,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -18,8 +18,8 @@
     },
     "Transcend": {
       "total": 110,
-      "compliant": 92,
-      "pct": 83.6
+      "compliant": 93,
+      "pct": 84.5
     },
     "Permian": {
       "total": 170,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 110,
-        "compliant": 92,
-        "pct": 83.6
+        "compliant": 93,
+        "pct": 84.5
       }
     },
     "Permian": {
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 629,
-      "compliant": 456,
-      "pct": 72.5
+      "compliant": 457,
+      "pct": 72.7
     },
     "Levelland": {
       "total": 105,
@@ -3266,25 +3266,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Edgar Izaguirre",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 82,
-      "incomplete_count": 7,
-      "complete_count": 32,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Spotter Safety Training",
-        "HSE - Lock Out/Tag Out ",
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jaylon McCutcheon",
       "company": "BTI",
       "division": "Trucking",
@@ -3375,6 +3356,25 @@
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Edgar Izaguirre",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 85,
+      "incomplete_count": 6,
+      "complete_count": 33,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Spotter Safety Training",
+        "HSE - Lock Out/Tag Out ",
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Bloodborne Pathogen - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3564,25 +3564,6 @@
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
         "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Jesus Cortez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness",
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4101,25 +4082,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Robert Ramirez",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Michael Reid",
       "company": "BTI",
       "division": "Trucking",
@@ -4507,24 +4469,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Geronimo Fuentes",
-      "company": "Transcend",
-      "division": "TD Rig 2",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Cade Gant",
       "company": "BRHAS",
       "division": "Environmental",
@@ -4627,6 +4571,24 @@
         "HSE - Aerial Lift Operations ",
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
+        "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Robert Ramirez",
+      "company": "BRHAS",
+      "division": "Rathole",
+      "yard": "Levelland",
+      "percent_complete": 90,
+      "incomplete_count": 4,
+      "complete_count": 35,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Excavation & Trenching"
       ],
       "status": "In Progress",
@@ -5038,6 +5000,22 @@
       "incomplete_training_names": [
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
         "HSE - Bloodborne Pathogen - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jesus Cortez",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Midland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - SSE Program"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-08-27",
-  "generated_at": "2026-08-27 20:19:36",
-  "overall_pct": 81.3,
+  "report_date": "2026-08-28",
+  "generated_at": "2026-08-28 21:15:49",
+  "overall_pct": 81.4,
   "total_employees": 1134,
-  "compliant_count": 922,
+  "compliant_count": 923,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -13,8 +13,8 @@
     },
     "BTI": {
       "total": 62,
-      "compliant": 43,
-      "pct": 69.4
+      "compliant": 44,
+      "pct": 71.0
     },
     "Transcend": {
       "total": 113,
@@ -236,8 +236,8 @@
     "BTI": {
       "Midland": {
         "total": 62,
-        "compliant": 43,
-        "pct": 69.4
+        "compliant": 44,
+        "pct": 71.0
       }
     },
     "Valor": {
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 643,
-      "compliant": 508,
-      "pct": 79.0
+      "compliant": 509,
+      "pct": 79.2
     },
     "Levelland": {
       "total": 109,
@@ -2764,25 +2764,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jose Perez Jr",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 79,
-      "incomplete_count": 8,
-      "complete_count": 31,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness",
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Alexi Sacon",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -2840,25 +2821,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jaylon McCutcheon",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 82,
-      "incomplete_count": 7,
-      "complete_count": 32,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Behavioral Based Safety",
-        "HSE - Heat Management",
-        "HSE - Bloodborne Pathogen - Awareness"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Chase Miller",
       "company": "Permian",
       "division": "Rentals",
@@ -2873,25 +2835,6 @@
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness",
         "HSE - SSE Program"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Julio Santillan",
-      "company": "BRHAS",
-      "division": "Anchors",
-      "yard": "Midland",
-      "percent_complete": 82,
-      "incomplete_count": 7,
-      "complete_count": 32,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fire Protection",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2949,6 +2892,25 @@
         "HSE - Benzene Awareness- 0.15",
         "HSE - Hot Work - Welding, Cutting, and Brazing",
         "HSE - Aerial Lift Operations "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jose Perez Jr",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Laredo",
+      "percent_complete": 85,
+      "incomplete_count": 6,
+      "complete_count": 33,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Heat Management",
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - NORM - Awareness",
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3147,25 +3109,6 @@
       "company": "BRHAS",
       "division": "Environmental",
       "yard": "Levelland",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Duany Gomez",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
       "percent_complete": 87,
       "incomplete_count": 5,
       "complete_count": 34,
@@ -3542,6 +3485,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Julio Santillan",
+      "company": "BRHAS",
+      "division": "Anchors",
+      "yard": "Midland",
+      "percent_complete": 87,
+      "incomplete_count": 5,
+      "complete_count": 34,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Fire Protection",
+        "HSE - Hazard Communication- Chemical Safety",
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Toni Silva",
       "company": "Permian",
       "division": "Rentals",
@@ -3740,6 +3702,24 @@
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
+        "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Duany Gomez",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 90,
+      "incomplete_count": 4,
+      "complete_count": 35,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Excavation & Trenching"
       ],
       "status": "In Progress",
@@ -3993,6 +3973,23 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Jaylon McCutcheon",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 36,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Hazard Communication- Chemical Safety",
+        "HSE - Bloodborne Pathogen - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Isaac Moreno",
       "company": "BTI",
       "division": "Trucking",
@@ -4039,23 +4036,6 @@
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
         "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Dario Robles",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hot Work - Welding, Cutting, and Brazing",
-        "HSE - Heat Management",
-        "HSE - NORM - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4209,22 +4189,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Brandon Novian",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Confined Space - Permit Required ",
-        "HSE - Basic First Aid "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Walter Pinkert",
       "company": "Valor",
       "division": "Downhole Tools",
@@ -4257,17 +4221,17 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Michael Reid",
-      "company": "BTI",
-      "division": "Trucking",
+      "employee_name": "Dario Robles",
+      "company": "Permian",
+      "division": "Rentals",
       "yard": "Midland",
       "percent_complete": 95,
       "incomplete_count": 2,
       "complete_count": 37,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty"
+        "HSE - Hot Work - Welding, Cutting, and Brazing",
+        "HSE - NORM - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4375,6 +4339,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - SSE Program"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Brandon Novian",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Basic First Aid "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-09-05",
-  "generated_at": "2026-09-05 13:25:34",
-  "overall_pct": 74.3,
+  "report_date": "2026-09-06",
+  "generated_at": "2026-09-06 13:35:57",
+  "overall_pct": 74.6,
   "total_employees": 1125,
-  "compliant_count": 836,
+  "compliant_count": 839,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 750,
-      "compliant": 589,
-      "pct": 78.5
+      "compliant": 592,
+      "pct": 78.9
     },
     "BTI": {
       "total": 59,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 400,
-      "compliant": 319,
-      "pct": 79.8
+      "compliant": 320,
+      "pct": 80.0
     },
     "Construction": {
       "total": 13,
@@ -75,8 +75,8 @@
     },
     "Poly Pipe": {
       "total": 62,
-      "compliant": 38,
-      "pct": 61.3
+      "compliant": 40,
+      "pct": 64.5
     },
     "Rathole": {
       "total": 137,
@@ -92,8 +92,8 @@
   "by_yard": {
     "Midland": {
       "total": 168,
-      "compliant": 148,
-      "pct": 88.1
+      "compliant": 149,
+      "pct": 88.7
     },
     "Bryan": {
       "total": 43,
@@ -135,8 +135,8 @@
       },
       "Midland": {
         "total": 307,
-        "compliant": 239,
-        "pct": 77.9
+        "compliant": 242,
+        "pct": 78.8
       },
       "Jourdanton": {
         "total": 36,
@@ -313,8 +313,8 @@
     "Casing": {
       "Midland": {
         "total": 168,
-        "compliant": 148,
-        "pct": 88.1
+        "compliant": 149,
+        "pct": 88.7
       },
       "Jourdanton": {
         "total": 22,
@@ -362,8 +362,8 @@
     "Poly Pipe": {
       "Midland": {
         "total": 62,
-        "compliant": 38,
-        "pct": 61.3
+        "compliant": 40,
+        "pct": 64.5
       }
     },
     "Anchors": {
@@ -425,8 +425,8 @@
     },
     "Midland": {
       "total": 638,
-      "compliant": 451,
-      "pct": 70.7
+      "compliant": 454,
+      "pct": 71.2
     },
     "Levelland": {
       "total": 107,
@@ -2479,25 +2479,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Leovardo Rios",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 72,
-      "incomplete_count": 11,
-      "complete_count": 28,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness",
-        "HSE - Fatigue & Fit For Duty"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Juan Esquivel Jr",
       "company": "BRHAS",
       "division": "Rathole",
@@ -2536,20 +2517,20 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Alexi Sacon",
+      "employee_name": "Leovardo Rios",
       "company": "BRHAS",
-      "division": "Poly Pipe",
+      "division": "Casing",
       "yard": "Midland",
       "percent_complete": 74,
       "incomplete_count": 10,
       "complete_count": 29,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Hot Work - Welding, Cutting, and Brazing",
         "HSE - Heat Management",
         "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - NORM - Awareness",
-        "HSE - Fatigue & Fit For Duty"
+        "HSE - Aerial Lift Operations ",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Bloodborne Pathogen - Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2653,25 +2634,6 @@
       "employee_name": "Israel Cabrera",
       "company": "Permian",
       "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 79,
-      "incomplete_count": 8,
-      "complete_count": 31,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Enrique Chavez",
-      "company": "BRHAS",
-      "division": "Poly Pipe",
       "yard": "Midland",
       "percent_complete": 79,
       "incomplete_count": 8,
@@ -3175,6 +3137,25 @@
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
+        "HSE - Excavation & Trenching",
+        "HSE - Ladder Safety"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Enrique Chavez",
+      "company": "BRHAS",
+      "division": "Poly Pipe",
+      "yard": "Midland",
+      "percent_complete": 82,
+      "incomplete_count": 7,
+      "complete_count": 32,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Excavation & Trenching",
         "HSE - Ladder Safety"
       ],
@@ -4317,23 +4298,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Sione Kiteau",
-      "company": "BRHAS",
-      "division": "Poly Pipe",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Steven Lewis",
       "company": "Transcend",
       "division": "TD Rig 4",
@@ -5030,23 +4994,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Michael Zaricor III",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 37,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jose Barrera",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -5058,22 +5005,6 @@
       "incomplete_training_names": [
         "HSE - Ladder Safety",
         "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Marco Becerra Magana",
-      "company": "BRHAS",
-      "division": "Poly Pipe",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fire Protection",
-        "HSE - Fall Protection"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5191,16 +5122,16 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Guadalupe Guerra Parra",
+      "employee_name": "Sione Kiteau",
       "company": "BRHAS",
-      "division": "Fencing",
+      "division": "Poly Pipe",
       "yard": "Midland",
       "percent_complete": 95,
       "incomplete_count": 2,
       "complete_count": 37,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Ladder Safety",
+        "HSE - Fall Protection",
         "HSE - Slips, Trips & Falls"
       ],
       "status": "In Progress",
@@ -5234,22 +5165,6 @@
       "incomplete_training_names": [
         "HSE - Ladder Safety",
         "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Ismael Lopez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -5399,6 +5314,22 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Michael Zaricor III",
+      "company": "Transcend",
+      "division": "TD Rig 4",
+      "yard": "Midland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 38,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Ladder Safety",
+        "HSE - Slips, Trips & Falls"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Joseph Adams",
       "company": "Permian",
       "division": "Rentals",
@@ -5462,6 +5393,21 @@
       "employee_name": "Isaul Flores rocha",
       "company": "BRHAS",
       "division": "Casing",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Slips, Trips & Falls"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Guadalupe Guerra Parra",
+      "company": "BRHAS",
+      "division": "Fencing",
       "yard": "Midland",
       "percent_complete": 97,
       "incomplete_count": 1,
@@ -5594,7 +5540,7 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Pablo Reyes",
+      "employee_name": "Alexi Sacon",
       "company": "BRHAS",
       "division": "Poly Pipe",
       "yard": "Midland",
@@ -5603,7 +5549,7 @@
       "complete_count": 38,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Emergency Response Plans"
+        "HSE - Slips, Trips & Falls"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

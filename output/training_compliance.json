@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-09-14",
-  "generated_at": "2026-09-14 16:20:12",
-  "overall_pct": 79.2,
+  "report_date": "2026-09-15",
+  "generated_at": "2026-09-15 14:49:40",
+  "overall_pct": 79.4,
   "total_employees": 1130,
-  "compliant_count": 895,
+  "compliant_count": 897,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 752,
-      "compliant": 635,
-      "pct": 84.4
+      "compliant": 637,
+      "pct": 84.7
     },
     "BTI": {
       "total": 59,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 403,
-      "compliant": 348,
-      "pct": 86.4
+      "compliant": 349,
+      "pct": 86.6
     },
     "Construction": {
       "total": 13,
@@ -65,8 +65,8 @@
     },
     "Fencing": {
       "total": 10,
-      "compliant": 6,
-      "pct": 60.0
+      "compliant": 7,
+      "pct": 70.0
     },
     "Pit Lining": {
       "total": 23,
@@ -102,8 +102,8 @@
     },
     "Kilgore": {
       "total": 65,
-      "compliant": 48,
-      "pct": 73.8
+      "compliant": 49,
+      "pct": 75.4
     },
     "Hobbs": {
       "total": 46,
@@ -135,8 +135,8 @@
       },
       "Midland": {
         "total": 308,
-        "compliant": 269,
-        "pct": 87.3
+        "compliant": 270,
+        "pct": 87.7
       },
       "Jourdanton": {
         "total": 36,
@@ -160,8 +160,8 @@
       },
       "Kilgore": {
         "total": 65,
-        "compliant": 48,
-        "pct": 73.8
+        "compliant": 49,
+        "pct": 75.4
       },
       "Laredo": {
         "total": 54,
@@ -321,8 +321,8 @@
       },
       "Kilgore": {
         "total": 65,
-        "compliant": 48,
-        "pct": 73.8
+        "compliant": 49,
+        "pct": 75.4
       },
       "Laredo": {
         "total": 54,
@@ -417,8 +417,8 @@
     "Fencing": {
       "Midland": {
         "total": 10,
-        "compliant": 6,
-        "pct": 60.0
+        "compliant": 7,
+        "pct": 70.0
       }
     }
   },
@@ -430,8 +430,8 @@
     },
     "Midland": {
       "total": 642,
-      "compliant": 493,
-      "pct": 76.8
+      "compliant": 494,
+      "pct": 76.9
     },
     "Levelland": {
       "total": 107,
@@ -465,8 +465,8 @@
     },
     "Kilgore": {
       "total": 65,
-      "compliant": 48,
-      "pct": 73.8
+      "compliant": 49,
+      "pct": 75.4
     },
     "Laredo": {
       "total": 54,
@@ -1116,25 +1116,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Justin Buchanan",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 18,
-      "incomplete_count": 32,
-      "complete_count": 7,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesus Paz Jr",
       "company": "Permian",
       "division": "Rentals",
@@ -1225,6 +1206,25 @@
         "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
         "HSE - Access to Medical and Exposure Records",
         "HSE - Incident Reporting"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Justin Buchanan",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 26,
+      "incomplete_count": 29,
+      "complete_count": 10,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Silica Awareness",
+        "HSE - Lifting & Back Safety",
+        "HSE - Personal Protective Equipment (PPE)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3477,23 +3477,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Martin Arellano Jr",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Mark Ayala",
       "company": "BRHAS",
       "division": "Casing",
@@ -4275,22 +4258,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Fernando Cupido",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jose Davila",
       "company": "Valor",
       "division": "Downhole Tools",
@@ -4499,22 +4466,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Yunier Vega",
-      "company": "BRHAS",
-      "division": "Fencing",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Joseph Adams",
       "company": "Permian",
       "division": "Rentals",
@@ -4525,6 +4476,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Slips, Trips & Falls"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Martin Arellano Jr",
+      "company": "BTI",
+      "division": "Trucking",
+      "yard": "Midland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Ladder Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

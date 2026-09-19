@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-09-18",
-  "generated_at": "2026-09-18 14:23:25",
-  "overall_pct": 80.2,
+  "report_date": "2026-09-19",
+  "generated_at": "2026-09-19 13:51:49",
+  "overall_pct": 80.6,
   "total_employees": 1122,
-  "compliant_count": 900,
+  "compliant_count": 904,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 749,
-      "compliant": 641,
-      "pct": 85.6
+      "compliant": 643,
+      "pct": 85.8
     },
     "BTI": {
       "total": 58,
@@ -18,8 +18,8 @@
     },
     "Transcend": {
       "total": 112,
-      "compliant": 100,
-      "pct": 89.3
+      "compliant": 102,
+      "pct": 91.1
     },
     "Permian": {
       "total": 174,
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 136,
-      "compliant": 116,
-      "pct": 85.3
+      "compliant": 118,
+      "pct": 86.8
     },
     "Shop": {
       "total": 22,
@@ -130,8 +130,8 @@
       },
       "Levelland": {
         "total": 78,
-        "compliant": 63,
-        "pct": 80.8
+        "compliant": 64,
+        "pct": 82.1
       },
       "Midland": {
         "total": 305,
@@ -140,8 +140,8 @@
       },
       "Jourdanton": {
         "total": 36,
-        "compliant": 26,
-        "pct": 72.2
+        "compliant": 27,
+        "pct": 75.0
       },
       "Bryan": {
         "total": 43,
@@ -212,8 +212,8 @@
     "Transcend": {
       "Midland": {
         "total": 112,
-        "compliant": 100,
-        "pct": 89.3
+        "compliant": 102,
+        "pct": 91.1
       }
     },
     "Permian": {
@@ -259,8 +259,8 @@
     "Rathole": {
       "Levelland": {
         "total": 62,
-        "compliant": 53,
-        "pct": 85.5
+        "compliant": 54,
+        "pct": 87.1
       },
       "North Dakota": {
         "total": 6,
@@ -279,8 +279,8 @@
       },
       "Jourdanton": {
         "total": 14,
-        "compliant": 7,
-        "pct": 50.0
+        "compliant": 8,
+        "pct": 57.1
       },
       "Barstow": {
         "total": 10,
@@ -425,18 +425,18 @@
     },
     "Midland": {
       "total": 636,
-      "compliant": 494,
-      "pct": 77.7
+      "compliant": 496,
+      "pct": 78.0
     },
     "Levelland": {
       "total": 107,
-      "compliant": 89,
-      "pct": 83.2
+      "compliant": 90,
+      "pct": 84.1
     },
     "Jourdanton": {
       "total": 36,
-      "compliant": 26,
-      "pct": 72.2
+      "compliant": 27,
+      "pct": 75.0
     },
     "Bryan": {
       "total": 43,
@@ -2080,25 +2080,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Francisco Rodriguez",
-      "company": "BRHAS",
-      "division": "Shop",
-      "yard": "Levelland",
-      "percent_complete": 62,
-      "incomplete_count": 15,
-      "complete_count": 24,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Stop Work Authority",
-        "HSE - Spotter Safety Training",
-        "HSE - Lock Out/Tag Out "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Alejandro Vazquez",
       "company": "BRHAS",
       "division": "Casing",
@@ -2227,6 +2208,25 @@
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness",
         "HSE - SSE Program"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Francisco Rodriguez",
+      "company": "BRHAS",
+      "division": "Shop",
+      "yard": "Levelland",
+      "percent_complete": 69,
+      "incomplete_count": 12,
+      "complete_count": 27,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Fire Protection",
+        "HSE - Stop Work Authority",
+        "HSE - Spotter Safety Training",
+        "HSE - Lock Out/Tag Out ",
+        "HSE - Hot Work - Welding, Cutting, and Brazing"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3585,23 +3585,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Adam Gonzales",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesse Hernandez Espinoza",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -3942,23 +3925,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jason Scarborough",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 37,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Dailier Serrano",
       "company": "BRHAS",
       "division": "Pit Lining",
@@ -4109,22 +4075,6 @@
     },
     {
       "employee_name": "Omar Granados",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 36,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Darrell Green",
       "company": "Valor",
       "division": "Downhole Tools",
       "yard": "Levelland",
@@ -4296,6 +4246,21 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Darrell Green",
+      "company": "Valor",
+      "division": "Downhole Tools",
+      "yard": "Levelland",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 37,
+      "total_assigned": 38,
+      "incomplete_training_names": [
+        "HSE - Slips, Trips & Falls"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Karent Ituarte",
       "company": "Permian",
       "division": "Rentals",
@@ -4321,21 +4286,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Michael Mcdaniel",
-      "company": "Transcend",
-      "division": "TD Rig 16",
-      "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4420,21 +4370,6 @@
       "company": "BTI",
       "division": "Trucking",
       "yard": "Midland",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fall Protection"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Ricky Rangel",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Jourdanton",
       "percent_complete": 97,
       "incomplete_count": 1,
       "complete_count": 38,

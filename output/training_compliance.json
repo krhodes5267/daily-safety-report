@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-09-24",
-  "generated_at": "2026-09-24 14:51:35",
-  "overall_pct": 84.4,
+  "report_date": "2026-09-25",
+  "generated_at": "2026-09-25 15:11:42",
+  "overall_pct": 84.5,
   "total_employees": 1101,
-  "compliant_count": 929,
+  "compliant_count": 930,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 734,
-      "compliant": 661,
-      "pct": 90.1
+      "compliant": 662,
+      "pct": 90.2
     },
     "BTI": {
       "total": 56,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 397,
-      "compliant": 366,
-      "pct": 92.2
+      "compliant": 367,
+      "pct": 92.4
     },
     "Construction": {
       "total": 12,
@@ -112,8 +112,8 @@
     },
     "Jourdanton": {
       "total": 22,
-      "compliant": 20,
-      "pct": 90.9
+      "compliant": 21,
+      "pct": 95.5
     },
     "Laredo": {
       "total": 53,
@@ -140,8 +140,8 @@
       },
       "Jourdanton": {
         "total": 35,
-        "compliant": 28,
-        "pct": 80.0
+        "compliant": 29,
+        "pct": 82.9
       },
       "Bryan": {
         "total": 42,
@@ -306,8 +306,8 @@
       },
       "Jourdanton": {
         "total": 22,
-        "compliant": 20,
-        "pct": 90.9
+        "compliant": 21,
+        "pct": 95.5
       },
       "Bryan": {
         "total": 42,
@@ -435,8 +435,8 @@
     },
     "Jourdanton": {
       "total": 35,
-      "compliant": 28,
-      "pct": 80.0
+      "compliant": 29,
+      "pct": 82.9
     },
     "Bryan": {
       "total": 42,
@@ -1206,44 +1206,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jorge Villalobos",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 28,
-      "incomplete_count": 28,
-      "complete_count": 11,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Access to Medical and Exposure Records",
-        "HSE - Incident Reporting"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Eimy Aguirre",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 33,
-      "incomplete_count": 26,
-      "complete_count": 13,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Access to Medical and Exposure Records",
-        "HSE - Incident Reporting"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Mario Mendiola",
       "company": "BRHAS",
       "division": "Casing",
@@ -1258,6 +1220,25 @@
         "HSE - Personal Protective Equipment (PPE)",
         "HSE - Hand & Portable Power Tools",
         "HSE - Hand Protection and Placement"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jorge Villalobos",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 33,
+      "incomplete_count": 26,
+      "complete_count": 13,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Incident Reporting",
+        "HSE - Spotter Safety Training"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1315,6 +1296,25 @@
         "HSE - Incident Reporting",
         "HSE - Spotter Safety Training",
         "HSE - Lock Out/Tag Out "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Eimy Aguirre",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 38,
+      "incomplete_count": 24,
+      "complete_count": 15,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Access to Medical and Exposure Records",
+        "HSE - Incident Reporting"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1856,16 +1856,16 @@
       "company": "Permian",
       "division": "Rentals",
       "yard": "Midland",
-      "percent_complete": 64,
-      "incomplete_count": 14,
-      "complete_count": 25,
+      "percent_complete": 67,
+      "incomplete_count": 13,
+      "complete_count": 26,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Fire Protection",
         "HSE - Job Safety and Environmental Analysis",
         "HSE - Hand & Portable Power Tools",
         "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Incident Reporting"
+        "HSE - Incident Reporting",
+        "HSE - Spotter Safety Training"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3511,21 +3511,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Basic First Aid "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Dustin Longoria",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Jourdanton",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fall Protection"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

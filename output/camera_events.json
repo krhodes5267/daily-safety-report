@@ -1,93 +1,13 @@
 {
-  "report_date": "2026-10-07",
-  "generated_at": "2026-10-08 12:18:04",
-  "total_events": 5,
+  "report_date": "2026-10-08",
+  "generated_at": "2026-10-09 11:54:05",
+  "total_events": 0,
   "summary": {
-    "red": 4,
-    "orange": 1,
+    "red": 0,
+    "orange": 0,
     "yellow": 0
   },
-  "repeat_offenders": {
-    "Rene Rubio": 2
-  },
-  "by_yard": {
-    "Midland": 5
-  },
-  "events": [
-    {
-      "driver": "Rene Rubio",
-      "vehicle": "80723 - TT TECH - RENE RUBIO",
-      "event_type": "drowsiness",
-      "raw_type": "drowsiness",
-      "display_name": "Drowsiness",
-      "tier": "RED",
-      "speed": 69.6,
-      "duration": "4s",
-      "time": "10/07/2026 03:06 AM CT",
-      "location": "31.7189, -103.5856",
-      "yard": "Midland",
-      "coaching_status": "coachable",
-      "coached_at": ""
-    },
-    {
-      "driver": "Rene Rubio",
-      "vehicle": "80723 - TT TECH - RENE RUBIO",
-      "event_type": "drowsiness",
-      "raw_type": "drowsiness",
-      "display_name": "Drowsiness",
-      "tier": "RED",
-      "speed": 69.8,
-      "duration": "3s",
-      "time": "10/07/2026 03:08 AM CT",
-      "location": "31.6969, -103.6061",
-      "yard": "Midland",
-      "coaching_status": "coachable",
-      "coached_at": ""
-    },
-    {
-      "driver": "Ernest Nicely",
-      "vehicle": "3168C - TT TECH- BRIAN NICELY",
-      "event_type": "drowsiness",
-      "raw_type": "drowsiness",
-      "display_name": "Drowsiness",
-      "tier": "RED",
-      "speed": 70.9,
-      "duration": "3s",
-      "time": "10/07/2026 11:58 AM CT",
-      "location": "31.8880, -102.4238",
-      "yard": "Midland",
-      "coaching_status": "coachable",
-      "coached_at": ""
-    },
-    {
-      "driver": "Anthony Ellis",
-      "vehicle": "1973C - TOOLHAULER - ANTHONY ELLIS",
-      "event_type": "drowsiness",
-      "raw_type": "drowsiness",
-      "display_name": "Drowsiness",
-      "tier": "RED",
-      "speed": 53.6,
-      "duration": "3s",
-      "time": "10/07/2026 03:14 PM CT",
-      "location": "31.7698, -103.4260",
-      "yard": "Midland",
-      "coaching_status": "coachable",
-      "coached_at": ""
-    },
-    {
-      "driver": "Joey Kermiar",
-      "vehicle": "22102C - SUPERVISOR - JOEY KERMIAR",
-      "event_type": "hard_brake",
-      "raw_type": "hard_brake",
-      "display_name": "Hard Brake",
-      "tier": "ORANGE",
-      "speed": 40.1,
-      "duration": "2s",
-      "time": "10/07/2026 04:23 PM CT",
-      "location": "31.8749, -102.4166",
-      "yard": "Midland",
-      "coaching_status": "coachable",
-      "coached_at": ""
-    }
-  ]
+  "repeat_offenders": {},
+  "by_yard": {},
+  "events": []
 }

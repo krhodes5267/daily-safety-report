@@ -1,13 +1,46 @@
 {
-  "report_date": "2026-10-08",
-  "generated_at": "2026-10-09 11:54:05",
-  "total_events": 0,
+  "report_date": "2026-10-09",
+  "generated_at": "2026-10-10 10:47:40",
+  "total_events": 2,
   "summary": {
-    "red": 0,
-    "orange": 0,
+    "red": 1,
+    "orange": 1,
     "yellow": 0
   },
   "repeat_offenders": {},
-  "by_yard": {},
-  "events": []
+  "by_yard": {
+    "Kilgore": 2
+  },
+  "events": [
+    {
+      "driver": "Juan Ruiz",
+      "vehicle": "5061C",
+      "event_type": "cell_phone",
+      "raw_type": "cell_phone",
+      "display_name": "Cell Phone",
+      "tier": "RED",
+      "speed": 23.1,
+      "duration": "14s",
+      "time": "10/09/2026 02:09 PM CT",
+      "location": "31.3161, -94.3006",
+      "yard": "Kilgore",
+      "coaching_status": "coached",
+      "coached_at": "2026-10-09T19:48:47Z"
+    },
+    {
+      "driver": "Edgar Velasquez",
+      "vehicle": "5046C",
+      "event_type": "hard_brake",
+      "raw_type": "hard_brake",
+      "display_name": "Hard Brake",
+      "tier": "ORANGE",
+      "speed": 23.9,
+      "duration": "1s",
+      "time": "10/09/2026 06:40 PM CT",
+      "location": "32.1308, -94.3322",
+      "yard": "Kilgore",
+      "coaching_status": "coachable",
+      "coached_at": ""
+    }
+  ]
 }

@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-10-12",
-  "generated_at": "2026-10-12 19:46:52",
-  "overall_pct": 81.4,
-  "total_employees": 1089,
-  "compliant_count": 886,
+  "report_date": "2026-10-13",
+  "generated_at": "2026-10-13 17:31:51",
+  "overall_pct": 82.0,
+  "total_employees": 1086,
+  "compliant_count": 890,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -12,14 +12,14 @@
       "pct": 89.3
     },
     "BTI": {
-      "total": 57,
+      "total": 56,
       "compliant": 39,
-      "pct": 68.4
+      "pct": 69.6
     },
     "Transcend": {
-      "total": 114,
-      "compliant": 90,
-      "pct": 78.9
+      "total": 112,
+      "compliant": 93,
+      "pct": 83.0
     },
     "Permian": {
       "total": 171,
@@ -28,8 +28,8 @@
     },
     "Valor": {
       "total": 29,
-      "compliant": 20,
-      "pct": 69.0
+      "compliant": 21,
+      "pct": 72.4
     }
   },
   "by_division": {
@@ -211,9 +211,9 @@
     },
     "Transcend": {
       "Midland": {
-        "total": 114,
-        "compliant": 90,
-        "pct": 78.9
+        "total": 112,
+        "compliant": 93,
+        "pct": 83.0
       }
     },
     "Permian": {
@@ -235,16 +235,16 @@
     },
     "BTI": {
       "Midland": {
-        "total": 57,
+        "total": 56,
         "compliant": 39,
-        "pct": 68.4
+        "pct": 69.6
       }
     },
     "Valor": {
       "Levelland": {
         "total": 29,
-        "compliant": 20,
-        "pct": 69.0
+        "compliant": 21,
+        "pct": 72.4
       }
     }
   },
@@ -429,14 +429,14 @@
       "pct": 98.3
     },
     "Midland": {
-      "total": 614,
-      "compliant": 483,
-      "pct": 78.7
+      "total": 611,
+      "compliant": 486,
+      "pct": 79.5
     },
     "Levelland": {
       "total": 105,
-      "compliant": 78,
-      "pct": 74.3
+      "compliant": 79,
+      "pct": 75.2
     },
     "Jourdanton": {
       "total": 32,
@@ -745,11 +745,12 @@
       "division": "Casing",
       "yard": "Laredo",
       "percent_complete": 0,
-      "incomplete_count": 1,
+      "incomplete_count": 2,
       "complete_count": 0,
-      "total_assigned": 1,
+      "total_assigned": 2,
       "incomplete_training_names": [
-        "CSP - OXY - Safety Orientation (English)"
+        "CSP - OXY - Safety Orientation (English)",
+        "HSE - 10-4 Defense\u00ae Driver-Enhanced Skills for Sedan_Light_Duty"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2755,25 +2756,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jaylon McCutcheon",
-      "company": "BTI",
-      "division": "Trucking",
-      "yard": "Midland",
-      "percent_complete": 85,
-      "incomplete_count": 6,
-      "complete_count": 33,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Hazard Communication- Chemical Safety",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jose Mendoza Garcia",
       "company": "BRHAS",
       "division": "Pit Lining",
@@ -3001,24 +2983,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jesus Espinoza",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Dropped Objects",
-        "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jesse Hernandez Espinoza",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -3181,24 +3145,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Mauro Solis",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Basic First Aid ",
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Lifting & Back Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Josue Becerra",
       "company": "Permian",
       "division": "Rentals",
@@ -3292,23 +3238,6 @@
       "incomplete_count": 3,
       "complete_count": 36,
       "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Juan De La O",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 35,
-      "total_assigned": 38,
       "incomplete_training_names": [
         "HSE - Silica Awareness",
         "HSE - Lifting & Back Safety",
@@ -3522,23 +3451,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Dustin Pady",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 37,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Dropped Objects",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Carlos Perez",
       "company": "BRHAS",
       "division": "Casing",
@@ -3636,6 +3548,23 @@
         "HSE - Behavioral Based Safety",
         "HSE - Fatigue & Fit For Duty",
         "HSE - Bloodborne Pathogen - Awareness"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Mauro Solis",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Laredo",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 36,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Basic First Aid ",
+        "HSE - Ladder Safety",
+        "HSE - Fall Protection"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -4102,51 +4031,6 @@
       "total_assigned": 40,
       "incomplete_training_names": [
         "HSE - Dropped Objects"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Daniel Galvan",
-      "company": "Transcend",
-      "division": "Drilling",
-      "yard": "Midland",
-      "percent_complete": 98,
-      "incomplete_count": 1,
-      "complete_count": 39,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Sean Kelley",
-      "company": "Transcend",
-      "division": "TD Rig 4",
-      "yard": "Midland",
-      "percent_complete": 98,
-      "incomplete_count": 1,
-      "complete_count": 39,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Dropped Objects"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Modesto Lopez",
-      "company": "Transcend",
-      "division": "TD Rig 16",
-      "yard": "Midland",
-      "percent_complete": 98,
-      "incomplete_count": 1,
-      "complete_count": 39,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Silica Awareness"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

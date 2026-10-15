@@ -1,77 +1,44 @@
 {
-  "report_date": "2026-10-13",
-  "generated_at": "2026-10-14 09:57:33",
-  "total_events": 4,
+  "report_date": "2026-10-14",
+  "generated_at": "2026-10-15 09:46:36",
+  "total_events": 2,
   "summary": {
-    "red": 1,
-    "orange": 3,
+    "red": 2,
+    "orange": 0,
     "yellow": 0
   },
-  "repeat_offenders": {
-    "Joey Kermiar": 2
-  },
+  "repeat_offenders": {},
   "by_yard": {
-    "Midland": 3,
-    "Hobbs": 1
+    "Laredo": 2
   },
   "events": [
     {
-      "driver": "Jose Flores",
-      "vehicle": "34127-TT TECH - JOSE FLORES",
+      "driver": "Omar Vela",
+      "vehicle": "1870c",
       "event_type": "stop_sign_violation",
       "raw_type": "stop_sign_violation",
       "display_name": "Stop Sign Violation",
       "tier": "RED",
-      "speed": 23.5,
+      "speed": 31.8,
       "duration": "10s",
-      "time": "10/13/2026 10:16 PM CT",
-      "location": "31.8561, -102.5005",
-      "yard": "Midland",
-      "coaching_status": "coached",
-      "coached_at": "2026-10-14T03:26:26Z"
+      "time": "10/14/2026 08:37 AM CT",
+      "location": "28.1043, -98.3246",
+      "yard": "Laredo",
+      "coaching_status": "coachable",
+      "coached_at": ""
     },
     {
-      "driver": "Joey Kermiar",
-      "vehicle": "22102C - SUPERVISOR - JOEY KERMIAR",
-      "event_type": "hard_brake",
-      "raw_type": "hard_brake",
-      "display_name": "Hard Brake",
-      "tier": "ORANGE",
-      "speed": 47.0,
-      "duration": "2s",
-      "time": "10/13/2026 01:50 PM CT",
-      "location": "32.0303, -102.1405",
-      "yard": "Midland",
-      "coaching_status": "coached",
-      "coached_at": "2026-10-13T19:23:23Z"
-    },
-    {
-      "driver": "Joey Kermiar",
-      "vehicle": "22102C - SUPERVISOR - JOEY KERMIAR",
-      "event_type": "hard_brake",
-      "raw_type": "hard_brake",
-      "display_name": "Hard Brake",
-      "tier": "ORANGE",
-      "speed": 33.4,
-      "duration": "2s",
-      "time": "10/13/2026 01:55 PM CT",
-      "location": "32.0332, -102.1282",
-      "yard": "Midland",
-      "coaching_status": "coached",
-      "coached_at": "2026-10-13T19:23:31Z"
-    },
-    {
-      "driver": "Leland Hanson",
-      "vehicle": "2263C",
-      "event_type": "unsafe_parking",
-      "raw_type": "unsafe_parking",
-      "display_name": "Unsafe Parking",
-      "tier": "ORANGE",
-      "speed": 0.4,
-      "duration": "3m 50s",
-      "time": "10/13/2026 10:26 AM CT",
-      "location": "32.2037, -103.6710",
-      "yard": "Hobbs",
+      "driver": "Rafael Zepeda",
+      "vehicle": "22101C",
+      "event_type": "close_following",
+      "raw_type": "tailgating",
+      "display_name": "Close Following",
+      "tier": "RED",
+      "speed": 71.2,
+      "duration": "1m 23s",
+      "time": "10/14/2026 01:01 PM CT",
+      "location": "28.2091, -99.3056",
+      "yard": "Laredo",
       "coaching_status": "coachable",
       "coached_at": ""
     }

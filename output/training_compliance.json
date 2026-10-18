@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-10-17",
-  "generated_at": "2026-10-17 13:37:11",
-  "overall_pct": 81.5,
+  "report_date": "2026-10-18",
+  "generated_at": "2026-10-18 13:55:26",
+  "overall_pct": 81.7,
   "total_employees": 1094,
-  "compliant_count": 892,
+  "compliant_count": 894,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 725,
-      "compliant": 633,
-      "pct": 87.3
+      "compliant": 634,
+      "pct": 87.4
     },
     "BTI": {
       "total": 55,
@@ -23,8 +23,8 @@
     },
     "Permian": {
       "total": 174,
-      "compliant": 101,
-      "pct": 58.0
+      "compliant": 102,
+      "pct": 58.6
     },
     "Valor": {
       "total": 29,
@@ -85,8 +85,8 @@
     },
     "Shop": {
       "total": 20,
-      "compliant": 9,
-      "pct": 45.0
+      "compliant": 10,
+      "pct": 50.0
     }
   },
   "by_yard": {
@@ -130,8 +130,8 @@
       },
       "Levelland": {
         "total": 84,
-        "compliant": 66,
-        "pct": 78.6
+        "compliant": 67,
+        "pct": 79.8
       },
       "Midland": {
         "total": 285,
@@ -219,8 +219,8 @@
     "Permian": {
       "Midland": {
         "total": 161,
-        "compliant": 97,
-        "pct": 60.2
+        "compliant": 98,
+        "pct": 60.9
       },
       "Lubbock": {
         "total": 8,
@@ -311,8 +311,8 @@
       },
       "Levelland": {
         "total": 11,
-        "compliant": 6,
-        "pct": 54.5
+        "compliant": 7,
+        "pct": 63.6
       }
     },
     "Casing": {
@@ -430,13 +430,13 @@
     },
     "Midland": {
       "total": 612,
-      "compliant": 501,
-      "pct": 81.9
+      "compliant": 502,
+      "pct": 82.0
     },
     "Levelland": {
       "total": 113,
-      "compliant": 87,
-      "pct": 77.0
+      "compliant": 88,
+      "pct": 77.9
     },
     "Jourdanton": {
       "total": 33,
@@ -1215,25 +1215,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Alex Valentin Morales",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 21,
-      "incomplete_count": 31,
-      "complete_count": 8,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Respiratory Protection ",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Spotter Safety Training"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Guadalupe Garcia Jr",
       "company": "Permian",
       "division": "Rentals",
@@ -1324,6 +1305,25 @@
         "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
         "HSE - Access to Medical and Exposure Records",
         "HSE - Incident Reporting"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Alex Valentin Morales",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 26,
+      "incomplete_count": 29,
+      "complete_count": 10,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Respiratory Protection ",
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Spotter Safety Training"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2051,25 +2051,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Miguel Roman",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 69,
-      "incomplete_count": 12,
-      "complete_count": 27,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Heat Management",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - Aerial Lift Operations ",
-        "HSE - NORM - Awareness",
-        "HSE - SSE Program"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Juan Santillan",
       "company": "BRHAS",
       "division": "Casing",
@@ -2293,6 +2274,25 @@
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
         "HSE - Excavation & Trenching"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Miguel Roman",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 72,
+      "incomplete_count": 11,
+      "complete_count": 28,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Heat Management",
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - NORM - Awareness",
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -3260,23 +3260,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Silas Fortney",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Johnny Forwoodson",
       "company": "BRHAS",
       "division": "Rathole",
@@ -3612,23 +3595,6 @@
         "HSE - Ladder Safety",
         "HSE - Fall Protection",
         "HSE - Slips, Trips & Falls"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Francisco Rodriguez",
-      "company": "BRHAS",
-      "division": "Shop",
-      "yard": "Levelland",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Stop Work Authority",
-        "HSE - Spotter Safety Training",
-        "HSE - SSE Program"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

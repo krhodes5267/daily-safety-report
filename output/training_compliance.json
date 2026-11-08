@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-11-07",
-  "generated_at": "2026-11-07 16:16:36",
-  "overall_pct": 84.0,
+  "report_date": "2026-11-08",
+  "generated_at": "2026-11-08 16:37:34",
+  "overall_pct": 84.2,
   "total_employees": 1089,
-  "compliant_count": 915,
+  "compliant_count": 917,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 721,
-      "compliant": 621,
-      "pct": 86.1
+      "compliant": 623,
+      "pct": 86.4
     },
     "BTI": {
       "total": 53,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 383,
-      "compliant": 337,
-      "pct": 88.0
+      "compliant": 338,
+      "pct": 88.3
     },
     "Construction": {
       "total": 12,
@@ -80,8 +80,8 @@
     },
     "Rathole": {
       "total": 134,
-      "compliant": 108,
-      "pct": 80.6
+      "compliant": 109,
+      "pct": 81.3
     },
     "Shop": {
       "total": 20,
@@ -117,8 +117,8 @@
     },
     "Laredo": {
       "total": 47,
-      "compliant": 27,
-      "pct": 57.4
+      "compliant": 28,
+      "pct": 59.6
     }
   },
   "by_company_location": {
@@ -145,8 +145,8 @@
       },
       "Jourdanton": {
         "total": 35,
-        "compliant": 26,
-        "pct": 74.3
+        "compliant": 27,
+        "pct": 77.1
       },
       "Hobbs": {
         "total": 49,
@@ -165,8 +165,8 @@
       },
       "Laredo": {
         "total": 47,
-        "compliant": 27,
-        "pct": 57.4
+        "compliant": 28,
+        "pct": 59.6
       },
       "Odessa": {
         "total": 12,
@@ -284,8 +284,8 @@
       },
       "Laredo": {
         "total": 47,
-        "compliant": 27,
-        "pct": 57.4
+        "compliant": 28,
+        "pct": 59.6
       },
       "Unassigned": {
         "total": 1,
@@ -321,8 +321,8 @@
       },
       "Jourdanton": {
         "total": 13,
-        "compliant": 6,
-        "pct": 46.2
+        "compliant": 7,
+        "pct": 53.8
       },
       "Barstow": {
         "total": 8,
@@ -445,8 +445,8 @@
     },
     "Jourdanton": {
       "total": 35,
-      "compliant": 26,
-      "pct": 74.3
+      "compliant": 27,
+      "pct": 77.1
     },
     "Hobbs": {
       "total": 49,
@@ -470,8 +470,8 @@
     },
     "Laredo": {
       "total": 47,
-      "compliant": 27,
-      "pct": 57.4
+      "compliant": 28,
+      "pct": 59.6
     },
     "Odessa": {
       "total": 12,
@@ -1039,25 +1039,6 @@
         "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
         "HSE - Incident Reporting",
         "HSE - Spotter Safety Training"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Gerardo Garza",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 49,
-      "incomplete_count": 20,
-      "complete_count": 19,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Job Safety and Environmental Analysis",
-        "HSE - Order & Housekeeping",
-        "HSE - Stop Work Authority",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
-        "HSE - Incident Reporting"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2102,24 +2083,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Shawn Padron",
-      "company": "Transcend",
-      "division": "TD Rig 18",
-      "yard": "Midland",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 36,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Dropped Objects",
-        "HSE - Personal Protective Equipment (PPE)",
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Gerardo Tremont",
       "company": "Permian",
       "division": "Rentals",
@@ -2743,6 +2706,23 @@
       "total_assigned": 40,
       "incomplete_training_names": [
         "HSE - Hand & Portable Power Tools",
+        "HSE - Hand Protection and Placement",
+        "HSE - Respiratory Protection "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Shawn Padron",
+      "company": "Transcend",
+      "division": "TD Rig 18",
+      "yard": "Midland",
+      "percent_complete": 92,
+      "incomplete_count": 3,
+      "complete_count": 37,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Personal Protective Equipment (PPE)",
         "HSE - Hand Protection and Placement",
         "HSE - Respiratory Protection "
       ],
@@ -3397,21 +3377,6 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - SSE Program"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Pedro Perez III",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Jourdanton",
-      "percent_complete": 97,
-      "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

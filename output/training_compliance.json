@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-11-18",
-  "generated_at": "2026-11-18 18:49:44",
-  "overall_pct": 88.4,
+  "report_date": "2026-11-19",
+  "generated_at": "2026-11-19 19:02:36",
+  "overall_pct": 88.7,
   "total_employees": 1082,
-  "compliant_count": 957,
+  "compliant_count": 960,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 726,
-      "compliant": 645,
-      "pct": 88.8
+      "compliant": 646,
+      "pct": 89.0
     },
     "BTI": {
       "total": 53,
@@ -23,8 +23,8 @@
     },
     "Permian": {
       "total": 169,
-      "compliant": 142,
-      "pct": 84.0
+      "compliant": 144,
+      "pct": 85.2
     },
     "Valor": {
       "total": 28,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 384,
-      "compliant": 349,
-      "pct": 90.9
+      "compliant": 350,
+      "pct": 91.1
     },
     "Construction": {
       "total": 12,
@@ -102,8 +102,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 50,
-      "pct": 80.6
+      "compliant": 51,
+      "pct": 82.3
     },
     "Hobbs": {
       "total": 51,
@@ -160,8 +160,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 50,
-        "pct": 80.6
+        "compliant": 51,
+        "pct": 82.3
       },
       "Laredo": {
         "total": 47,
@@ -219,8 +219,8 @@
     "Permian": {
       "Midland": {
         "total": 155,
-        "compliant": 131,
-        "pct": 84.5
+        "compliant": 133,
+        "pct": 85.8
       },
       "Lubbock": {
         "total": 8,
@@ -279,8 +279,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 50,
-        "pct": 80.6
+        "compliant": 51,
+        "pct": 82.3
       },
       "Laredo": {
         "total": 47,
@@ -435,8 +435,8 @@
     },
     "Midland": {
       "total": 595,
-      "compliant": 543,
-      "pct": 91.3
+      "compliant": 545,
+      "pct": 91.6
     },
     "Levelland": {
       "total": 109,
@@ -465,8 +465,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 50,
-      "pct": 80.6
+      "compliant": 51,
+      "pct": 82.3
     },
     "Laredo": {
       "total": 47,
@@ -592,28 +592,9 @@
       "company": "Permian",
       "division": "Rentals",
       "yard": "Lubbock",
-      "percent_complete": 0,
-      "incomplete_count": 39,
-      "complete_count": 0,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Cold Weather Management",
-        "HSE - Job Safety and Environmental Analysis",
-        "HSE - Order & Housekeeping"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Johnny Mitchell",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 3,
-      "incomplete_count": 38,
-      "complete_count": 1,
+      "percent_complete": 5,
+      "incomplete_count": 37,
+      "complete_count": 2,
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Emergency Response Plans",
@@ -849,25 +830,6 @@
         "HSE - Stop Work Authority",
         "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
         "HSE - Incident Reporting"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Guadalupe Garcia Jr",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 54,
-      "incomplete_count": 18,
-      "complete_count": 21,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Cold Weather Management",
-        "HSE - Job Safety and Environmental Analysis",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1139,6 +1101,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Guadalupe Garcia Jr",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Midland",
+      "percent_complete": 67,
+      "incomplete_count": 13,
+      "complete_count": 26,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Cold Weather Management",
+        "HSE - Driver Safety ",
+        "HSE - Electrical Grounding and Bonding"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Christopher Jacobo II",
       "company": "BRHAS",
       "division": "Casing",
@@ -1352,16 +1333,16 @@
       "company": "BRHAS",
       "division": "Rathole",
       "yard": "Levelland",
-      "percent_complete": 77,
-      "incomplete_count": 9,
-      "complete_count": 30,
+      "percent_complete": 79,
+      "incomplete_count": 8,
+      "complete_count": 31,
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - Ladder Safety",
         "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls",
         "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety"
+        "HSE - Lifting & Back Safety",
+        "HSE - Personal Protective Equipment (PPE)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2413,22 +2394,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Juan Madrid",
-      "company": "Valor",
-      "division": "Downhole Tools",
-      "yard": "Levelland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 36,
-      "total_assigned": 38,
-      "incomplete_training_names": [
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Randall Mull",
       "company": "Transcend",
       "division": "TD Rig 18",
@@ -2509,21 +2474,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Roberto Martinez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 96,
-      "incomplete_count": 1,
-      "complete_count": 25,
-      "total_assigned": 26,
-      "incomplete_training_names": [
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "William Canon",
       "company": "BRHAS",
       "division": "Rathole",
@@ -2584,16 +2534,16 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Christopher Moore",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
+      "employee_name": "Juan Madrid",
+      "company": "Valor",
+      "division": "Downhole Tools",
+      "yard": "Levelland",
       "percent_complete": 97,
       "incomplete_count": 1,
-      "complete_count": 38,
-      "total_assigned": 39,
+      "complete_count": 37,
+      "total_assigned": 38,
       "incomplete_training_names": [
-        "HSE - SSE Program"
+        "HSE - Respiratory Protection "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

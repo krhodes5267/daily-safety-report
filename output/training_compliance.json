@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-11-19",
-  "generated_at": "2026-11-19 19:02:36",
-  "overall_pct": 88.7,
+  "report_date": "2026-11-20",
+  "generated_at": "2026-11-20 18:30:45",
+  "overall_pct": 88.8,
   "total_employees": 1082,
-  "compliant_count": 960,
+  "compliant_count": 961,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 726,
-      "compliant": 646,
-      "pct": 89.0
+      "compliant": 647,
+      "pct": 89.1
     },
     "BTI": {
       "total": 53,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 384,
-      "compliant": 350,
-      "pct": 91.1
+      "compliant": 351,
+      "pct": 91.4
     },
     "Construction": {
       "total": 12,
@@ -102,8 +102,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 51,
-      "pct": 82.3
+      "compliant": 52,
+      "pct": 83.9
     },
     "Hobbs": {
       "total": 51,
@@ -160,8 +160,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 51,
-        "pct": 82.3
+        "compliant": 52,
+        "pct": 83.9
       },
       "Laredo": {
         "total": 47,
@@ -279,8 +279,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 51,
-        "pct": 82.3
+        "compliant": 52,
+        "pct": 83.9
       },
       "Laredo": {
         "total": 47,
@@ -465,8 +465,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 51,
-      "pct": 82.3
+      "compliant": 52,
+      "pct": 83.9
     },
     "Laredo": {
       "total": 47,
@@ -588,25 +588,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jerry Torres",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Lubbock",
-      "percent_complete": 5,
-      "incomplete_count": 37,
-      "complete_count": 2,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Cold Weather Management",
-        "HSE - Job Safety and Environmental Analysis",
-        "HSE - Order & Housekeeping"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Brent Graves",
       "company": "Permian",
       "division": "Rentals",
@@ -640,6 +621,25 @@
         "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
         "HSE - Access to Medical and Exposure Records",
         "HSE - Incident Reporting"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jerry Torres",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Lubbock",
+      "percent_complete": 18,
+      "incomplete_count": 32,
+      "complete_count": 7,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Emergency Response Plans",
+        "HSE - Fire Protection",
+        "HSE - Job Safety and Environmental Analysis",
+        "HSE - Order & Housekeeping",
+        "HSE - Stop Work Authority"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -868,25 +868,6 @@
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness",
         "HSE - SSE Program"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Tony Armstrong",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 56,
-      "incomplete_count": 17,
-      "complete_count": 22,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fire Protection",
-        "HSE - Hot Work - Welding, Cutting, and Brazing",
-        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1720,23 +1701,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Reuben Arredondo",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Bryan",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Marco Becerra Magana",
       "company": "BRHAS",
       "division": "Poly Pipe",
@@ -2330,6 +2294,22 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Tony Armstrong",
+      "company": "BRHAS",
+      "division": "Rathole",
+      "yard": "Levelland",
+      "percent_complete": 95,
+      "incomplete_count": 2,
+      "complete_count": 37,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SPCC (Spill Prevention Control and Countermeasure)",
+        "HSE - SSE Program"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Apolonio Damian",
       "company": "Transcend",
       "division": "TD Rig 2",
@@ -2426,22 +2406,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Juan Ruiz",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Behavioral Based Safety",
-        "HSE - Fatigue & Fit For Duty"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Genaro Salazar",
       "company": "Permian",
       "division": "Rentals",
@@ -2458,17 +2422,16 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Angel Vega",
+      "employee_name": "Reuben Arredondo",
       "company": "BRHAS",
       "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 37,
+      "yard": "Bryan",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
       "total_assigned": 39,
       "incomplete_training_names": [
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement"
+        "HSE - Hand & Portable Power Tools"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2619,6 +2582,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - SPCC (Spill Prevention Control and Countermeasure)"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Angel Vega",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Hand & Portable Power Tools"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

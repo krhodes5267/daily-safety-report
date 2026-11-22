@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-11-21",
-  "generated_at": "2026-11-21 17:17:52",
-  "overall_pct": 89.4,
+  "report_date": "2026-11-22",
+  "generated_at": "2026-11-22 17:46:18",
+  "overall_pct": 89.5,
   "total_employees": 1083,
-  "compliant_count": 968,
+  "compliant_count": 969,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 728,
-      "compliant": 653,
-      "pct": 89.7
+      "compliant": 654,
+      "pct": 89.8
     },
     "BTI": {
       "total": 53,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 384,
-      "compliant": 353,
-      "pct": 91.9
+      "compliant": 354,
+      "pct": 92.2
     },
     "Construction": {
       "total": 12,
@@ -102,8 +102,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 53,
-      "pct": 85.5
+      "compliant": 54,
+      "pct": 87.1
     },
     "Hobbs": {
       "total": 51,
@@ -160,8 +160,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 53,
-        "pct": 85.5
+        "compliant": 54,
+        "pct": 87.1
       },
       "Laredo": {
         "total": 47,
@@ -279,8 +279,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 53,
-        "pct": 85.5
+        "compliant": 54,
+        "pct": 87.1
       },
       "Laredo": {
         "total": 47,
@@ -465,8 +465,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 53,
-      "pct": 85.5
+      "compliant": 54,
+      "pct": 87.1
     },
     "Laredo": {
       "total": 47,
@@ -1716,23 +1716,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Bernabe Burgos Jr",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 92,
-      "incomplete_count": 3,
-      "complete_count": 36,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Salvador Bustamante",
       "company": "BRHAS",
       "division": "Casing",
@@ -2257,22 +2240,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Julian Fuentes",
-      "company": "Transcend",
-      "division": "TD Rig 2",
-      "yard": "Midland",
-      "percent_complete": 95,
-      "incomplete_count": 2,
-      "complete_count": 38,
-      "total_assigned": 40,
-      "incomplete_training_names": [
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Carlos Gonzales Jr",
       "company": "BRHAS",
       "division": "Shop",
@@ -2542,6 +2509,21 @@
       "total_assigned": 40,
       "incomplete_training_names": [
         "HSE - Hand & Portable Power Tools"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Julian Fuentes",
+      "company": "Transcend",
+      "division": "TD Rig 2",
+      "yard": "Midland",
+      "percent_complete": 98,
+      "incomplete_count": 1,
+      "complete_count": 39,
+      "total_assigned": 40,
+      "incomplete_training_names": [
+        "HSE - Respiratory Protection "
       ],
       "status": "In Progress",
       "days_since_assignment": 0

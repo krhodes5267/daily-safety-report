@@ -1,15 +1,15 @@
 {
-  "report_date": "2026-11-23",
-  "generated_at": "2026-11-23 22:02:32",
-  "overall_pct": 89.9,
+  "report_date": "2026-11-24",
+  "generated_at": "2026-11-24 20:38:21",
+  "overall_pct": 90.0,
   "total_employees": 1086,
-  "compliant_count": 976,
+  "compliant_count": 977,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
       "total": 731,
-      "compliant": 660,
-      "pct": 90.3
+      "compliant": 661,
+      "pct": 90.4
     },
     "BTI": {
       "total": 52,
@@ -40,8 +40,8 @@
     },
     "Casing": {
       "total": 385,
-      "compliant": 358,
-      "pct": 93.0
+      "compliant": 359,
+      "pct": 93.2
     },
     "Construction": {
       "total": 12,
@@ -102,8 +102,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 54,
-      "pct": 87.1
+      "compliant": 55,
+      "pct": 88.7
     },
     "Hobbs": {
       "total": 51,
@@ -160,8 +160,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 54,
-        "pct": 87.1
+        "compliant": 55,
+        "pct": 88.7
       },
       "Laredo": {
         "total": 48,
@@ -279,8 +279,8 @@
       },
       "Kilgore": {
         "total": 62,
-        "compliant": 54,
-        "pct": 87.1
+        "compliant": 55,
+        "pct": 88.7
       },
       "Laredo": {
         "total": 48,
@@ -465,8 +465,8 @@
     },
     "Kilgore": {
       "total": 62,
-      "compliant": 54,
-      "pct": 87.1
+      "compliant": 55,
+      "pct": 88.7
     },
     "Laredo": {
       "total": 48,
@@ -683,25 +683,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jerry Torres",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Lubbock",
-      "percent_complete": 26,
-      "incomplete_count": 29,
-      "complete_count": 10,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Emergency Response Plans",
-        "HSE - Fire Protection",
-        "HSE - Job Safety and Environmental Analysis",
-        "HSE - Order & Housekeeping",
-        "HSE - Stop Work Authority"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Mario Mendiola",
       "company": "BRHAS",
       "division": "Casing",
@@ -740,25 +721,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Nereo Frausto III",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 33,
-      "incomplete_count": 6,
-      "complete_count": 3,
-      "total_assigned": 9,
-      "incomplete_training_names": [
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)",
-        "HSE - Hand & Portable Power Tools"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Gerardo Montes",
       "company": "Permian",
       "division": "Rentals",
@@ -773,6 +735,25 @@
         "HSE - Benzene Awareness- 0.15",
         "HSE - Hazard Communication- Chemical Safety",
         "HSE - Observation Program "
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jerry Torres",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Lubbock",
+      "percent_complete": 38,
+      "incomplete_count": 24,
+      "complete_count": 15,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Fire Protection",
+        "HSE - Job Safety and Environmental Analysis",
+        "HSE - Order & Housekeeping",
+        "HSE - Stop Work Authority",
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -868,6 +849,24 @@
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness",
         "HSE - SSE Program"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Nereo Frausto III",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Laredo",
+      "percent_complete": 56,
+      "incomplete_count": 4,
+      "complete_count": 5,
+      "total_assigned": 9,
+      "incomplete_training_names": [
+        "HSE - Ladder Safety",
+        "HSE - Fall Protection",
+        "HSE - Hand & Portable Power Tools",
+        "HSE - Hand Protection and Placement"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1481,23 +1480,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jason Rivera",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 86,
-      "incomplete_count": 3,
-      "complete_count": 19,
-      "total_assigned": 22,
-      "incomplete_training_names": [
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Jaime Carmona",
       "company": "BRHAS",
       "division": "Rathole",
@@ -1550,25 +1532,6 @@
         "HSE - Silica Awareness",
         "HSE - Lifting & Back Safety",
         "HSE - Personal Protective Equipment (PPE)"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Carlos Perez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 87,
-      "incomplete_count": 5,
-      "complete_count": 34,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Excavation & Trenching",
-        "HSE - Fall Protection",
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1629,6 +1592,24 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Carlos Perez",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Laredo",
+      "percent_complete": 90,
+      "incomplete_count": 4,
+      "complete_count": 35,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Excavation & Trenching",
+        "HSE - Fall Protection",
+        "HSE - Hand & Portable Power Tools"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Bernardo Plascencia",
       "company": "BRHAS",
       "division": "Rathole",
@@ -1642,24 +1623,6 @@
         "HSE - Aerial Lift Operations ",
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Alejandro Vazquez",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Kilgore",
-      "percent_complete": 90,
-      "incomplete_count": 4,
-      "complete_count": 35,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fall Protection",
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement",
-        "HSE - Respiratory Protection "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -2402,6 +2365,21 @@
       "total_assigned": 39,
       "incomplete_training_names": [
         "HSE - SPCC (Spill Prevention Control and Countermeasure)"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Alejandro Vazquez",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Kilgore",
+      "percent_complete": 97,
+      "incomplete_count": 1,
+      "complete_count": 38,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Fall Protection"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-11-24",
-  "generated_at": "2026-11-24 20:38:21",
-  "overall_pct": 90.0,
+  "report_date": "2026-11-25",
+  "generated_at": "2026-11-25 19:55:11",
+  "overall_pct": 90.1,
   "total_employees": 1086,
-  "compliant_count": 977,
+  "compliant_count": 978,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -23,8 +23,8 @@
     },
     "Permian": {
       "total": 170,
-      "compliant": 146,
-      "pct": 85.9
+      "compliant": 147,
+      "pct": 86.5
     },
     "Valor": {
       "total": 28,
@@ -229,8 +229,8 @@
       },
       "Unassigned": {
         "total": 6,
-        "compliant": 5,
-        "pct": 83.3
+        "compliant": 6,
+        "pct": 100.0
       }
     },
     "BTI": {
@@ -500,8 +500,8 @@
     },
     "Unassigned": {
       "total": 14,
-      "compliant": 13,
-      "pct": 92.9
+      "compliant": 14,
+      "pct": 100.0
     },
     "San Angelo": {
       "total": 1,
@@ -740,25 +740,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Jerry Torres",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Lubbock",
-      "percent_complete": 38,
-      "incomplete_count": 24,
-      "complete_count": 15,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Fire Protection",
-        "HSE - Job Safety and Environmental Analysis",
-        "HSE - Order & Housekeeping",
-        "HSE - Stop Work Authority",
-        "HSE - Hydrogen Sulfide Protection (H2S) - Safety"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Israel Garcia",
       "company": "Permian",
       "division": "Rentals",
@@ -886,6 +867,25 @@
         "HSE - Aerial Lift Operations ",
         "HSE - NORM - Awareness",
         "HSE - Fatigue & Fit For Duty"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Jerry Torres",
+      "company": "Permian",
+      "division": "Rentals",
+      "yard": "Lubbock",
+      "percent_complete": 56,
+      "incomplete_count": 17,
+      "complete_count": 22,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Job Safety and Environmental Analysis",
+        "HSE - Order & Housekeeping",
+        "HSE - Stop Work Authority",
+        "HSE - Hydrogen Sulfide Protection (H2S) - Safety",
+        "HSE - Incident Reporting"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1404,25 +1404,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Larry Bilbrey",
-      "company": "BRHAS",
-      "division": "Rathole",
-      "yard": "Levelland",
-      "percent_complete": 85,
-      "incomplete_count": 6,
-      "complete_count": 33,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - Silica Awareness",
-        "HSE - Lifting & Back Safety",
-        "HSE - Personal Protective Equipment (PPE)",
-        "HSE - Hand & Portable Power Tools",
-        "HSE - Hand Protection and Placement"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "James Bradford Jr",
       "company": "BRHAS",
       "division": "Rathole",
@@ -1475,6 +1456,25 @@
         "HSE - Slips, Trips & Falls",
         "HSE - Hand & Portable Power Tools",
         "HSE - Hand Protection and Placement"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
+      "employee_name": "Larry Bilbrey",
+      "company": "BRHAS",
+      "division": "Rathole",
+      "yard": "Levelland",
+      "percent_complete": 87,
+      "incomplete_count": 5,
+      "complete_count": 34,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - Silica Awareness",
+        "HSE - Lifting & Back Safety",
+        "HSE - Personal Protective Equipment (PPE)",
+        "HSE - Hand Protection and Placement",
+        "HSE - Respiratory Protection "
       ],
       "status": "In Progress",
       "days_since_assignment": 0
@@ -1946,21 +1946,6 @@
         "HSE - Hand & Portable Power Tools",
         "HSE - Hand Protection and Placement",
         "HSE - Respiratory Protection "
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Damian Padilla",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Unassigned",
-      "percent_complete": 92,
-      "incomplete_count": 1,
-      "complete_count": 12,
-      "total_assigned": 13,
-      "incomplete_training_names": [
-        "HSE - Personal Protective Equipment (PPE)"
       ],
       "status": "In Progress",
       "days_since_assignment": 0

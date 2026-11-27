@@ -1,9 +1,9 @@
 {
-  "report_date": "2026-11-26",
-  "generated_at": "2026-11-26 19:32:19",
-  "overall_pct": 90.3,
+  "report_date": "2026-11-27",
+  "generated_at": "2026-11-27 19:28:35",
+  "overall_pct": 90.4,
   "total_employees": 1086,
-  "compliant_count": 981,
+  "compliant_count": 982,
   "overdue_count": 0,
   "by_company": {
     "BRHAS": {
@@ -23,8 +23,8 @@
     },
     "Permian": {
       "total": 170,
-      "compliant": 147,
-      "pct": 86.5
+      "compliant": 148,
+      "pct": 87.1
     },
     "Valor": {
       "total": 28,
@@ -219,8 +219,8 @@
     "Permian": {
       "Midland": {
         "total": 156,
-        "compliant": 135,
-        "pct": 86.5
+        "compliant": 136,
+        "pct": 87.2
       },
       "Lubbock": {
         "total": 8,
@@ -435,8 +435,8 @@
     },
     "Midland": {
       "total": 596,
-      "compliant": 549,
-      "pct": 92.1
+      "compliant": 550,
+      "pct": 92.3
     },
     "Levelland": {
       "total": 111,
@@ -986,25 +986,6 @@
       "days_since_assignment": 0
     },
     {
-      "employee_name": "Ricardo Nino",
-      "company": "BRHAS",
-      "division": "Casing",
-      "yard": "Laredo",
-      "percent_complete": 64,
-      "incomplete_count": 14,
-      "complete_count": 25,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Bloodborne Pathogen - Awareness",
-        "HSE - Basic First Aid ",
-        "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
       "employee_name": "Arron Ojeda",
       "company": "BRHAS",
       "division": "Rathole",
@@ -1138,6 +1119,25 @@
       "days_since_assignment": 0
     },
     {
+      "employee_name": "Ricardo Nino",
+      "company": "BRHAS",
+      "division": "Casing",
+      "yard": "Laredo",
+      "percent_complete": 69,
+      "incomplete_count": 12,
+      "complete_count": 27,
+      "total_assigned": 39,
+      "incomplete_training_names": [
+        "HSE - SSE Program",
+        "HSE - Fatigue & Fit For Duty",
+        "HSE - Excavation & Trenching",
+        "HSE - Ladder Safety",
+        "HSE - Fall Protection"
+      ],
+      "status": "In Progress",
+      "days_since_assignment": 0
+    },
+    {
       "employee_name": "Kinderyck Anders",
       "company": "Permian",
       "division": "Rentals",
@@ -1171,25 +1171,6 @@
         "HSE - Bloodborne Pathogen - Awareness",
         "HSE - Basic First Aid ",
         "HSE - Excavation & Trenching"
-      ],
-      "status": "In Progress",
-      "days_since_assignment": 0
-    },
-    {
-      "employee_name": "Blake Marett",
-      "company": "Permian",
-      "division": "Rentals",
-      "yard": "Midland",
-      "percent_complete": 72,
-      "incomplete_count": 11,
-      "complete_count": 28,
-      "total_assigned": 39,
-      "incomplete_training_names": [
-        "HSE - SSE Program",
-        "HSE - Fatigue & Fit For Duty",
-        "HSE - Ladder Safety",
-        "HSE - Fall Protection",
-        "HSE - Slips, Trips & Falls"
       ],
       "status": "In Progress",
       "days_since_assignment": 0
